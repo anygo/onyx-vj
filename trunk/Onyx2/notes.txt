@@ -1,0 +1,7 @@
+Onyx:
+
+- support for flv, as2 swf not implemented
+
+UI:
+
+- paint preview is bugged with rotation
