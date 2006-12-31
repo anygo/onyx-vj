@@ -63,20 +63,8 @@ package filters {
 			)
 		}
 		
-		public function set step(value:Boolean):void {
-			
-			_step = value;
-			
-			_bmp.copyPixels(content.source, content.source.rect, new Point(0,0));
-			
-		}
-		
-		public function get step():Boolean {
-			return _step;
-		}
-		
 		/**
-		 * 
+		 * 	Applys a filter to the bitmap
 		 */
 		public function applyFilter(bitmapData:BitmapData, bounds:Rectangle):BitmapData {
 			

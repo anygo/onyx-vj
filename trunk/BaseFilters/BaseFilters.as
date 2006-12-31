@@ -35,20 +35,14 @@ package {
 	import flash.display.Sprite;
 	import flash.system.Security;
 	
-	import onyx.external.IFilterLoader;
-	import onyx.external.ITransitionLoader;
 	import onyx.filter.Filter;
-	import onyx.filter.Filter;
+	import onyx.net.IFilterLoader;
+	import onyx.net.ITransitionLoader;
 	
 	import transitions.*;
 	
 	public class BaseFilters extends Sprite implements IFilterLoader, ITransitionLoader {
 
-		public function BaseFilters():void {
-			
-			Security.allowDomain('www.onyx-vj.com');
-
-		}		
 		/**
 		 * 	Tells the onyx engine which filter classes to load
 		 */
@@ -57,7 +51,7 @@ package {
 		}
 		
 		/**
-		 * 
+		 * 	Tells the onyx engine which transitions to loads
 		 */
 		public function registerTransitions():Array {
 			return [BlurTransition, DissolveTransition, ThresholdTransition];

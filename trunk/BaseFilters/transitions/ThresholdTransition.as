@@ -33,11 +33,11 @@ package transitions {
 	import flash.display.BitmapData;
 	import flash.filters.BlurFilter;
 	import flash.filters.ColorMatrixFilter;
+	import flash.geom.ColorTransform;
 	import flash.geom.Point;
 	
 	import onyx.core.BLEND_MODES;
 	import onyx.transition.Transition;
-	import flash.geom.ColorTransform;
 
 	public final class ThresholdTransition extends Transition {
 		
