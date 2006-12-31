@@ -54,5 +54,14 @@ package onyx.events {
 			this.filter = filter;
 			super(type);
 		}
+		
+		override public function clone():Event {
+			
+			var event:FilterEvent = new FilterEvent(super.type, filter);
+			event.index = index;
+			event.definition = definition;
+			
+			return event;
+		}
 	}
 }

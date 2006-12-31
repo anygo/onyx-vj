@@ -30,14 +30,7 @@
  */
 package onyx.content {
 	
-	import flash.display.Bitmap;
-	import flash.display.BitmapData;
-	import flash.display.DisplayObject;
-	import flash.display.Loader;
-	import flash.display.LoaderInfo;
-	import flash.display.MovieClip;
-	import flash.display.Shape;
-	import flash.display.Sprite;
+	import flash.display.*;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.filters.BitmapFilter;
@@ -53,10 +46,12 @@ package onyx.content {
 	import onyx.core.getBaseBitmap;
 	import onyx.core.onyx_internal;
 	import onyx.events.FilterEvent;
-	import onyx.filter.ColorFilter;
-	import onyx.filter.Filter;
-	import onyx.filter.IBitmapFilter;
+	import onyx.filter.*;
 	import onyx.layer.Layer;
+	
+	[Event(name="filter_applied",	type="onyx.events.FilterEvent")]
+	[Event(name="filter_removed",	type="onyx.events.FilterEvent")]
+	[Event(name="filter_moved",		type="onyx.events.FilterEvent")]
 		
 	use namespace onyx_internal;
 	
@@ -110,6 +105,12 @@ package onyx.content {
 		 * 	@private
 		 */
 		private var _source:BitmapData			= getBaseBitmap();
+		
+		/**
+		 * 	@private
+		 * 	Stores last time the draw was executed
+		 */
+		private var _lastTime:uint;
 
 		/**
 		 * 	@constructor
@@ -124,9 +125,12 @@ package onyx.content {
 			_loopStart	= 0;
 			_loopEnd	= _content.totalFrames;
 			
-			_loader.addEventListener(Event.ENTER_FRAME, _onEnterFrame);
+			// create the listener
+			pause(false);
 
 			super(getBaseBitmap());
+			
+			_lastTime = getTimer();
 			
 		}
 
@@ -159,9 +163,9 @@ package onyx.content {
 		 */
 		public function pause(b:Boolean = true):void {
 			if (b) {
-				_loader.removeEventListener(Event.ENTER_FRAME, _onEnterFrame);
+				removeEventListener(Event.ENTER_FRAME, _onEnterFrame);
 			} else {
-				_loader.addEventListener(Event.ENTER_FRAME, _onEnterFrame);
+				addEventListener(Event.ENTER_FRAME, _onEnterFrame);
 			}
 		}
 		
@@ -169,7 +173,7 @@ package onyx.content {
 		 * 	Returns whether the content is paused
 		 */
 		public function isPaused():Boolean {
-			return _loader.hasEventListener(Event.ENTER_FRAME);
+			return hasEventListener(Event.ENTER_FRAME);
 		}
 		
 		/**
@@ -179,7 +183,8 @@ package onyx.content {
 			
 			var diff:int = _loopEnd - _loopStart;
 			
-			var frame:Number = _frame + _framerate;
+			// add the framerate based off the last time
+			var frame:Number = _frame + (_framerate * ((getTimer() - _lastTime) / Onyx.framerate));
 
 			frame = (frame < _loopStart) ? _loopEnd : Math.max(frame % _loopEnd, _loopStart);
 
@@ -194,6 +199,7 @@ package onyx.content {
 				
 			}
 			
+			_lastTime = getTimer();
 		}
 		
 		/**
@@ -206,15 +212,19 @@ package onyx.content {
 			matrix.translate(_x, _y);
 			matrix.scale(_scaleX, _scaleY);
 			matrix.rotate(_rotation);
+
+			// define the clipping Rectangle
+			var clipRect:Rectangle = new Rectangle(_x,_y,320 * _scaleX,240 * _scaleY);
 			
 			// fill the source with nothing
 			_source.fillRect(_source.rect, 0x00000000);
-			_source.draw(_content, matrix, _colorTransform);
+			_source.draw(_content, matrix, _colorTransform, null, clipRect);
+
+			// apply the color filter to the source
+			_source.applyFilter(_source, _source.rect, new Point(0,0), _filter.filter);
 			
 			super.bitmapData.copyPixels(_source, _source.rect, new Point(0,0));
 			applyFilters(super.bitmapData);
-			
-//			super.bitmapData.unlock();
 
 		}
 		
@@ -290,9 +300,11 @@ package onyx.content {
 				parent.removeChild(this);
 			}
 
+			// destroy content
 			_loader.unload();
-			_loader.removeEventListener(Event.ENTER_FRAME, _onEnterFrame);
+			removeEventListener(Event.ENTER_FRAME, _onEnterFrame);
 
+			// kill all filters
 			clearFilters();
 
 			_loader = null;
@@ -312,14 +324,9 @@ package onyx.content {
 			// tell the filter it has started
 			filter.initialize();
 			
-			// we need to check if there are bitmap filters, if so, we need to switch out onEnterFrame with frameBitmap
-			if (filter is BitmapFilter) {
-				_bitmapFilterCount++;
-			}
-			
-			// listen
-			
-
+			// dispatch
+			var event:FilterEvent = new FilterEvent(FilterEvent.FILTER_APPLIED, filter);
+			dispatchEvent(event);
 		}
 		
 		public function removeFilter(filter:Filter):void {
@@ -335,12 +342,8 @@ package onyx.content {
 			// dispatch a filter removed event
 			var event:FilterEvent = new FilterEvent(FilterEvent.FILTER_REMOVED, filter)
 			event.index = index;
-			
-			// we need to check if there are bitmap filters, if so, we need to switch out onEnterFrame with frameBitmap
-			if (filter is BitmapFilter) {
-				_bitmapFilterCount--;
-			}
 
+			dispatchEvent(event);
 		}
 		
 		private function clearFilters():void {

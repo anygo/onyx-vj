@@ -41,7 +41,7 @@ package onyx.content {
 	import onyx.filter.Filter;
 	import onyx.layer.IColorObject;
 	
-	public interface IContent extends IColorObject, IDisposable {
+	public interface IContent extends IColorObject, IDisposable, IEventDispatcher {
 		
 		function get time():Number;
 		function set time(value:Number):void;

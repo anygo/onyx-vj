@@ -37,9 +37,10 @@ package onyx.content {
 	import onyx.filter.Filter;
 	import onyx.layer.IColorObject;
 	import onyx.layer.Layer;
+	import flash.events.EventDispatcher;
 
 	[ExcludeClass]
-	public final class ContentNull implements IContent, IColorObject
+	public final class ContentNull extends EventDispatcher implements IContent, IColorObject
 	{
 		
 		private var _layer:Layer;

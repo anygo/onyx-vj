@@ -47,7 +47,7 @@ package onyx.layer {
 		public static const DISPLAY_TINT:String			= 'tint';
 		public static const DISPLAY_X:String			= 'x';
 		public static const DISPLAY_Y:String			= 'y';
-		public static const DISPLAY_TIMEPERCENT:String	= 'timePercent';
+		public static const DISPLAY_TIME:String			= 'time';
 		
 		// playhead properties
 		public static const PLAYHEAD_RATE:String		= 'framerate';

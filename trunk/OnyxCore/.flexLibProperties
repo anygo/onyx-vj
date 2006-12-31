@@ -1,75 +1,72 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <flexLibProperties version="1">
   <includeClasses>
-    <classEntry path="onyx.external.files.Folder"/>
     <classEntry path="onyx.controls.ControlNumber"/>
-    <classEntry path="onyx.external.Connection"/>
-    <classEntry path="onyx.external.files.CameraObject"/>
+    <classEntry path="onyx.content.IContent"/>
+    <classEntry path="onyx.net.files.Folder"/>
     <classEntry path="onyx.core.StaticDispatcher"/>
-    <classEntry path="onyx.layer.IStageAllowable"/>
     <classEntry path="onyx.core._bitmap"/>
-    <classEntry path="onyx.external.files.FolderList"/>
+    <classEntry path="onyx.net.ITransitionLoader"/>
     <classEntry path="onyx.events.DisplayEvent"/>
     <classEntry path="onyx.sound.SpectrumAnalyzer"/>
     <classEntry path="onyx.controls.IControlObject"/>
     <classEntry path="onyx.layer.LayerSettings"/>
-    <classEntry path="onyx.external.FileBrowser"/>
     <classEntry path="onyx.core.IDisposable"/>
-    <classEntry path="onyx.events.OnyxEvent"/>
     <classEntry path="onyx.content.ContentSWFMovieClip"/>
-    <classEntry path="onyx.external.files.File"/>
+    <classEntry path="onyx.content.Content"/>
     <classEntry path="onyx.core.Console"/>
-    <classEntry path="onyx.controls.ControlRange"/>
     <classEntry path="onyx.events.TransitionEvent"/>
+    <classEntry path="onyx.controls.ControlRange"/>
     <classEntry path="onyx.sound.SpectrumTrigger"/>
     <classEntry path="onyx.core.onyx_internal"/>
     <classEntry path="onyx.settings.Settings"/>
-    <classEntry path="onyx.filter.ColorFilter"/>
     <classEntry path="onyx.sound.SpectrumPeak"/>
+    <classEntry path="onyx.filter.ColorFilter"/>
+    <classEntry path="onyx.net.IStageAllowable"/>
+    <classEntry path="onyx.layer.ContentLoader"/>
     <classEntry path="onyx.controls.ControlUInt"/>
     <classEntry path="onyx.events.SpectrumEvent"/>
+    <classEntry path="onyx.events.ApplicationEvent"/>
     <classEntry path="onyx.filter.IBitmapFilter"/>
-    <classEntry path="onyx.layer.LayerRemote"/>
     <classEntry path="onyx.transition.Transition"/>
+    <classEntry path="onyx.layer.LayerRemote"/>
     <classEntry path="onyx.effect.Effect"/>
     <classEntry path="onyx.core.ErrorDescription"/>
     <classEntry path="onyx.application.OnyxStartUpImage"/>
     <classEntry path="onyx.core.Command"/>
+    <classEntry path="onyx.net.IFilterLoader"/>
+    <classEntry path="onyx.net.FileBrowser"/>
     <classEntry path="onyx.controls.ControlString"/>
     <classEntry path="onyx.events.AssetEvent"/>
-    <classEntry path="onyx.application.InitializationState"/>
     <classEntry path="onyx.content.ContentNull"/>
+    <classEntry path="onyx.application.InitializationState"/>
+    <classEntry path="onyx.net.files.CameraObject"/>
     <classEntry path="onyx.core.getBaseBitmap"/>
+    <classEntry path="onyx.net.files.File"/>
     <classEntry path="onyx.display.Display"/>
     <classEntry path="onyx.controls.Controls"/>
     <classEntry path="onyx.application.RunTimeState"/>
-    <classEntry path="onyx.application.IApplicationState"/>
     <classEntry path="onyx.filter.Filter"/>
-    <classEntry path="onyx.content.ContentFLV"/>
     <classEntry path="onyx.layer.LayerProperties"/>
-    <classEntry path="onyx.external.IFilterLoader"/>
+    <classEntry path="onyx.net.Connection"/>
     <classEntry path="onyx.layer.IColorObject"/>
     <classEntry path="onyx.core.BLEND_MODES"/>
     <classEntry path="onyx.controls.ControlInt"/>
-    <classEntry path="onyx.application.Onyx"/>
     <classEntry path="onyx.layer.ILayer"/>
+    <classEntry path="onyx.application.Onyx"/>
+    <classEntry path="onyx.net.Stream"/>
     <classEntry path="onyx.events.FilterEvent"/>
+    <classEntry path="onyx.events.ContentEvent"/>
     <classEntry path="onyx.controls.Control"/>
     <classEntry path="onyx.events.ControlEvent"/>
+    <classEntry path="onyx.net.files.FolderList"/>
     <classEntry path="onyx.events.LayerEvent"/>
     <classEntry path="onyx.display.RemoteDisplay"/>
-    <classEntry path="onyx.content.ContentSWFSprite"/>
-    <classEntry path="onyx.application.ApplicationState"/>
     <classEntry path="onyx.events.ConsoleEvent"/>
-    <classEntry path="onyx.external.Stream"/>
-    <classEntry path="onyx.external.ITransitionLoader"/>
-    <classEntry path="onyx.layer.IContent"/>
-    <classEntry path="onyx.assets.PixelFont"/>
+    <classEntry path="onyx.application.ApplicationState"/>
     <classEntry path="onyx.layer.Layer"/>
+    <classEntry path="onyx.assets.PixelFont"/>
   </includeClasses>
-  <includeResources>
-    <resourceEntry sourcePath="assets/Pixel.ttf" destPath="assets/Pixel.ttf"/>
-    <resourceEntry sourcePath="assets/onyx.jpg" destPath="assets/onyx.jpg"/>
-  </includeResources>
+  <includeResources/>
   <namespaceManifests/>
 </flexLibProperties>

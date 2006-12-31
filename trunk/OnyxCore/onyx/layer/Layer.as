@@ -54,6 +54,13 @@ package onyx.layer {
 	
 	use namespace onyx_internal;
 	
+	[Event(name="filter_applied",	type="onyx.events.FilterEvent")]
+	[Event(name="filter_removed",	type="onyx.events.FilterEvent")]
+	[Event(name="filter_moved",		type="onyx.events.FilterEvent")]
+	[Event(name="layer_loaded",		type="onyx.events.LayerEvent")]
+	[Event(name="layer_moved",		type="onyx.events.LayerEvent")]
+	[Event(name="progress",			type="flash.events.Event")]
+
 	/**
 	 * 	Layer is the base media for all video objects
 	 */
@@ -93,11 +100,6 @@ package onyx.layer {
 		private var _request:URLRequest;
 		
 		/**
-		 * 	Temporary
-		 */
-		private var _temp:Object;
-		
-		/**
 		 * 	Creates the base bitmap
 		 */
 		private var _source:BitmapData			= getBaseBitmap();
@@ -126,9 +128,8 @@ package onyx.layer {
 			new ControlNumber(	LayerProperties.DISPLAY_X,					null,	-5000,	5000,	0),
 			new ControlNumber(	LayerProperties.DISPLAY_Y,					null,	-5000,	5000,	0),
 			new ControlUInt  (	LayerProperties.DISPLAY_COLOR, 				null),
-			new ControlNumber(	LayerProperties.DISPLAY_TIMEPERCENT,		null,	0,		1,	0),
+			new ControlNumber(	LayerProperties.DISPLAY_TIME,				null,	0,		1,	0),
 			new ControlNumber(	LayerProperties.PLAYHEAD_RATE,				null,	-20,	20,	1),
-			new ControlNumber(	LayerProperties.PLAYHEAD_RND,				null,	-20,	20,	1),
 
 			new ControlNumber(	LayerProperties.PLAYHEAD_START,				null,	0,	1,	0),
 			new ControlNumber(	LayerProperties.PLAYHEAD_END,				null,	0,	1,	1)
@@ -170,7 +171,7 @@ package onyx.layer {
 			
 			var loader:ContentLoader = new ContentLoader(request);
 			loader.addEventListener(ContentEvent.CONTENT_STATUS, _onContentStatus);
-			loader.addEventListener(ProgressEvent.PROGRESS, _onLoadProgress);
+			loader.addEventListener(ProgressEvent.PROGRESS, _forwardEvents);
 		}
 		
 		/**
@@ -198,36 +199,59 @@ package onyx.layer {
 		 */
 		private function _createContent(content:Object):void {
 
-			// destroys the earlier content
-			_content.dispose();
+			_destroyContent();
 
+			// create the content based on the passed in object
 			if (content is Loader) {
 				_content = new ContentSWFMovieClip(content as Loader);
 			}
 			
+			// if it's a displayobject, add it
 			if (_content is DisplayObject) {
 				addChild(_content as DisplayObject);
 			}
-						
+			
+			// listen for events to forward			
+			_content.addEventListener(FilterEvent.FILTER_APPLIED, _forwardEvents);
+			_content.addEventListener(FilterEvent.FILTER_MOVED, _forwardEvents);
+			_content.addEventListener(FilterEvent.FILTER_REMOVED, _forwardEvents);
+			
+			// dispatch a load event
 			var dispatch:LayerEvent = new LayerEvent(LayerEvent.LAYER_LOADED, this);
+			dispatch.layer = this;
 			dispatchEvent(dispatch);
+			
+			// if there are settings, apply them
+			if (_settings) {
+				_settings.apply(this);
+				_settings = null;
+			}
 
+			// dispatch the controls to update
+			_controls.update();
+		}
+		
+		/**
+		 * 	@private
+		 * 	Destroys the current content state
+		 */
+		private function _destroyContent():void {
+			
+			_content.removeEventListener(FilterEvent.FILTER_APPLIED, _forwardEvents);
+			_content.removeEventListener(FilterEvent.FILTER_MOVED, _forwardEvents);
+			_content.removeEventListener(FilterEvent.FILTER_REMOVED, _forwardEvents);
+			
+			// destroys the earlier content
+			_content.dispose();
+			
 		}
 		
 		/**
 		 * 	@private
 		 * 	Listens for events and forwards them
 		 */
-		private function _handleEvents(event:Event):void {
-			dispatchEvent(event);
-		}
-		
-		/**
-		 * 	@private
-		 * 	This forwards progress loading events
-		 */
-		private function _onLoadProgress(event:ProgressEvent):void {
-			dispatchEvent(event);
+		private function _forwardEvents(event:Event):void {
+			dispatchEvent(event.clone());
 		}
 		
 		/**
@@ -274,19 +298,6 @@ package onyx.layer {
 
 			}
 			
-			// dispatch a load event
-			var dispatch:LayerEvent = new LayerEvent(LayerEvent.LAYER_LOADED, this);
-			dispatch.layer = this;
-			dispatchEvent(dispatch);
-			
-			// if there are settings, apply them
-			if (_settings) {
-				_settings.apply(this);
-				_settings = null;
-			}
-
-			_controls.update();
-
 		}
 
 		/**
@@ -666,18 +677,6 @@ package onyx.layer {
 				_content.dispose();
 				
 			}
-
-/*			if (_temp) {
-				if (_temp is LoaderInfo) {
-					var info:LoaderInfo = _temp as LoaderInfo;
-					info.removeEventListener(IOErrorEvent.IO_ERROR, _onLoadHandler);
-					info.removeEventListener(Event.COMPLETE, _onLoadHandler);
-					info.removeEventListener(ProgressEvent.PROGRESS, _onLoadProgress);
-					info.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, _onLoadHandler);
-					info.loader.close();
-				}
-			}
-*/
 
 			// dispatch an unload event
 			dispatchEvent(new LayerEvent(LayerEvent.LAYER_UNLOADED, this));
