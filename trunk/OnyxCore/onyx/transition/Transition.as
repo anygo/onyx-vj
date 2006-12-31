@@ -39,11 +39,11 @@ package onyx.transition {
 	import flash.utils.Timer;
 	import flash.utils.getTimer;
 	
+	import onyx.content.IContent;
 	import onyx.core.getBaseBitmap;
 	import onyx.core.onyx_internal;
-	import onyx.content.IContent;
-	import onyx.layer.ILayer;
 	import onyx.events.TransitionEvent;
+	import onyx.layer.ILayer;
 	
 	use namespace onyx_internal;
 	
