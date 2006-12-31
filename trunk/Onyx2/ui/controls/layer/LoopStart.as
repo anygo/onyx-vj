@@ -37,29 +37,33 @@ package ui.controls.layer {
 	import onyx.controls.Control;
 	import onyx.events.ControlEvent;
 	
-	import ui.assets.AssetRightArrow;
+	import ui.UIManager;
+	import ui.assets.AssetLeftArrow;
 	import ui.controls.UIControl;
+	import ui.layer.UILayer;
 
-	public final class MarkerRight extends Sprite {
-		
+	public final class LoopStart extends Sprite {
+
 		private var _control:Control;
 		
-		public function MarkerRight(control:Control):void {
+		public function LoopStart(control:Control):void {
+			
+			cacheAsBitmap = true;
 			
 			_control = control;
 			_control.addEventListener(ControlEvent.CONTROL_CHANGED, _onChanged);
 
-			var sprite:DisplayObject = addChild(new AssetRightArrow());
-			
-			addEventListener(MouseEvent.MOUSE_DOWN, _onMarkerDown);
+			var sprite:DisplayObject = addChild(new AssetLeftArrow());
+			sprite.x = -sprite.width;
 
+			addEventListener(MouseEvent.MOUSE_DOWN, _onMarkerDown);
 		}
 		
 		/**
 		 * 	@private
 		 */
 		private function _onChanged(event:ControlEvent):void {
-			x = event.value * 176 + 8;
+			x = (event.value * 176) + 8;
 		}
 
 		/**
@@ -84,6 +88,18 @@ package ui.controls.layer {
 		private function _onMarkerUp(event:MouseEvent):void {
 			stage.removeEventListener(MouseEvent.MOUSE_MOVE, _onMarkerMove);
 			stage.removeEventListener(MouseEvent.MOUSE_UP, _onMarkerUp);
+		}
+		
+		/**
+		 * 	Override set x so that we can draw a background on it
+		 */
+		override public function set x(value:Number):void {
+			super.x = value;
+			
+			graphics.clear();
+			graphics.beginFill(0x111111, .8);
+			graphics.drawRect(-super.x + 1,0,super.x - 1,7);
+			graphics.endFill();
 		}
 
 	}

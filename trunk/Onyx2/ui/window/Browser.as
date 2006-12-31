@@ -35,8 +35,8 @@ package ui.window {
 	import flash.media.Camera;
 	import flash.net.URLRequest;
 	
-	import onyx.external.FileBrowser;
-	import onyx.external.files.*;
+	import onyx.net.FileBrowser;
+	import onyx.net.files.*;
 	import onyx.settings.Settings;
 	
 	import ui.assets.AssetCamera;
@@ -161,6 +161,7 @@ package ui.window {
 		private function _onDragDrop(event:DragEvent):void {
 			var uilayer:UILayer = event.currentTarget as UILayer
 			var origin:FileControl = event.origin as FileControl;
+			
 			uilayer.highlight(0, 0);
 			uilayer.load(origin.path);
 			UILayer.selectLayer(uilayer);

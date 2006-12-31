@@ -39,7 +39,7 @@ package ui.controls.browser {
 	import flash.net.URLRequest;
 	import flash.text.TextFormat;
 	
-	import onyx.external.files.File;
+	import onyx.net.files.File;
 	
 	import ui.assets.AssetCamera;
 	import ui.controls.*;

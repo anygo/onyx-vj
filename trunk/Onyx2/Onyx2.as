@@ -50,8 +50,6 @@ package {
 		 */
 		public function Onyx2():void {
 			
-			Security.allowDomain('www.onyx-vj.com');
-			
 			// no scale please thanks
 			stage.align = StageAlign.TOP_LEFT;
 			stage.scaleMode = StageScaleMode.NO_SCALE;

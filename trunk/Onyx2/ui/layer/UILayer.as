@@ -122,8 +122,8 @@ package ui.layer {
 		private var _btnCopy:ButtonClear			= new ButtonClear(10, 10);
 		private var _btnDelete:ButtonClear			= new ButtonClear(10, 10);
 		
-		private var _markerLeft:MarkerLeft;
-		private var _markerRight:MarkerRight;
+		private var _loopStart:LoopStart;
+		private var _loopEnd:LoopEnd;
 		
 		private var _assetLayer:AssetLayer			= new AssetLayer();
 		private var _assetScrub:ScrubArrow 			= new ScrubArrow();
@@ -251,8 +251,8 @@ package ui.layer {
 			// create a temp var
 			var controls:Controls = _layer.controls;
 			
-			_markerLeft = new MarkerLeft(controls.markerLeft);
-			_markerRight = new MarkerRight(controls.markerRight);
+			_loopStart = new LoopStart(controls.loopStart);
+			_loopEnd = new LoopEnd(controls.loopEnd);
 			
 			addChildren(
 			
@@ -281,8 +281,8 @@ package ui.layer {
 				_btnScrub,													1,			135,
 				_filters,													96,			172,
 
-				_markerLeft,												10,			138,
-				_markerRight,												184,		138,
+				_loopStart,												10,			138,
+				_loopEnd,												184,		138,
 				
 				_btnUp,														153,		154,
 				_btnDown,													162,		154,
@@ -304,6 +304,8 @@ package ui.layer {
 		 * 	Handler that is evoked when a layer has finished loading a file
 		 */
 		private function _onLayerLoad(startInterval:Boolean):void {
+			
+			trace('layer loaded');
 				
 			var path:String = _layer.path;
 
@@ -374,8 +376,8 @@ package ui.layer {
 		private function _updatePlayheadHandler(event:Event):void {
 
 			// updates the playhead marker
-			_assetScrub.x = _layer.timePercent * LAYER_WIDTH + LAYER_SCRUB_LEFT;
-			_filename.text = _layer.path + ' ' + _layer.renderTime;
+			_assetScrub.x = _layer.time * LAYER_WIDTH + LAYER_SCRUB_LEFT;
+			_filename.text = _layer.path;
 
 		}
 

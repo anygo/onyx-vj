@@ -32,9 +32,9 @@ package ui.layer {
 	
 	import flash.display.DisplayObject;
 	
+	import onyx.content.IContent;
 	import onyx.controls.*;
 	import onyx.filter.Filter;
-	import onyx.layer.IContent;
 	
 	import ui.assets.AssetLayerFilterBackground;
 	import ui.controls.DropDown;

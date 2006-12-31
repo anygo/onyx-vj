@@ -37,13 +37,12 @@ package ui {
 	import onyx.application.Onyx;
 	import onyx.events.DisplayEvent;
 	import onyx.events.LayerEvent;
-	import onyx.external.files.*;
+	import onyx.layer.Layer;
+	import onyx.net.files.*;
 	
 	import ui.assets.*;
-	import ui.core.ui_internal;
 	import ui.layer.UILayer;
 	import ui.window.*;
-	import onyx.layer.Layer;
 
 	public class UIManager {
 

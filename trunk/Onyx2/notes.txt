@@ -5,3 +5,14 @@ Onyx:
 UI:
 
 - paint preview is bugged with rotation
+- in and out points should mask behind it with 80% gre
+
+Clean-up and re-factoring:
+
+- Event MetaData should be added to all classes that dispatch events
+
+
+High level feature requirements:
+
+- Midi Input
+- Line-in Sound Analysis

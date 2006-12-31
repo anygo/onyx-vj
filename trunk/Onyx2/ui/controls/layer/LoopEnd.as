@@ -30,31 +30,31 @@
  */
 package ui.controls.layer {
 	
+	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	
 	import onyx.controls.Control;
 	import onyx.events.ControlEvent;
 	
-	import ui.assets.AssetLeftArrow;
+	import ui.assets.AssetRightArrow;
 	import ui.controls.UIControl;
-	import flash.display.DisplayObject;
-	import ui.UIManager;
-	import ui.layer.UILayer;
 
-	public final class MarkerLeft extends Sprite {
-
+	public final class LoopEnd extends Sprite {
+		
 		private var _control:Control;
 		
-		public function MarkerLeft(control:Control):void {
+		public function LoopEnd(control:Control):void {
+			
+			cacheAsBitmap = true;
 			
 			_control = control;
 			_control.addEventListener(ControlEvent.CONTROL_CHANGED, _onChanged);
 
-			var sprite:DisplayObject = addChild(new AssetLeftArrow());
-			sprite.x = -sprite.width;
-
+			var sprite:DisplayObject = addChild(new AssetRightArrow());
+			
 			addEventListener(MouseEvent.MOUSE_DOWN, _onMarkerDown);
+
 		}
 		
 		/**
@@ -86,6 +86,18 @@ package ui.controls.layer {
 		private function _onMarkerUp(event:MouseEvent):void {
 			stage.removeEventListener(MouseEvent.MOUSE_MOVE, _onMarkerMove);
 			stage.removeEventListener(MouseEvent.MOUSE_UP, _onMarkerUp);
+		}
+
+		/**
+		 * 	Override set x so that we can draw a background on it
+		 */
+		override public function set x(value:Number):void {
+			super.x = value;
+			
+			graphics.clear();
+			graphics.beginFill(0x111111, .8);
+			graphics.drawRect(0,0,193 - super.x,7);
+			graphics.endFill();
 		}
 
 	}
