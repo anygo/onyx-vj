@@ -28,21 +28,11 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package onyx.events {
+package onyx.net.files {
 	
-	import flash.events.Event;
-	
-	import onyx.display.Display;
-
-	public final class DisplayEvent extends Event {
+	public class CameraObject {
 		
-		public static const DISPLAY_CREATED:String	= 'displaycreate';
-
-		public var display:Display;
-		
-		public function DisplayEvent(type:String):void {
-			super(type);
+		public function CameraObject(name:String):void {
 		}
-		
 	}
 }

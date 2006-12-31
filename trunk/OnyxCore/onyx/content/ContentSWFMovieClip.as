@@ -40,66 +40,123 @@ package onyx.content {
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
+	import flash.filters.BitmapFilter;
+	import flash.geom.ColorTransform;
 	import flash.geom.Matrix;
+	import flash.geom.Point;
+	import flash.geom.Rectangle;
+	import flash.geom.Transform;
+	import flash.utils.getTimer;
 	
 	import onyx.application.Onyx;
+	import onyx.core.IDisposable;
+	import onyx.core.getBaseBitmap;
 	import onyx.core.onyx_internal;
-	import onyx.layer.IContent;
+	import onyx.events.FilterEvent;
+	import onyx.filter.ColorFilter;
+	import onyx.filter.Filter;
+	import onyx.filter.IBitmapFilter;
 	import onyx.layer.Layer;
-	import flash.geom.Rectangle;
-	
+		
 	use namespace onyx_internal;
 	
-	[ExcludeClass]
-	public final class ContentSWFMovieClip implements IContent {
+	public final class ContentSWFMovieClip extends Bitmap implements IContent {
+		
+		include 'ContentProperties.as';
+		
+		/**
+		 * 	@private
+		 * 	Stores the loader object where the content was loaded into
+		 */
+		private var _loader:Loader;
+		
+		/**
+		 * 	@private
+		 * 	Stores a reference to the loader content
+		 */
+		private var _content:MovieClip;
+		
+		/**
+		 * 	@private
+		 * 	The frame number we are currently should navigate to
+		 */
+		private var _frame:Number				= 0;
+		
+		/**
+		 * 	@private
+		 * 	The amount of frames to move per frame
+		 */
+		private var _framerate:Number;
+		
+		/**
+		 * 	@private
+		 * 	The left loop point
+		 */
+		private var _loopStart:int				= 0;
+		
+		/**
+		 * 	@private
+		 * 	The right loop point
+		 */
+		private var _loopEnd:int				= 0;
+		
+		/**
+		 * 	@private
+		 * 	Counts the number of bitmap filters
+		 */
+		private var _bitmapFilterCount:int		= 0;
 		
 		/**
 		 * 	@private
 		 */
-		private var _loader:Loader;
-		private var _layer:Layer;
-		private var _child:MovieClip;
-		private var _frame:Number				= 0;
-		
-		private var _framerate:Number;
-		private var _framernd:int				= 0;
-		private var _markerLeft:int				= 0;
-		private var _markerRight:int			= 0;
-		
-		public function ContentSWFMovieClip(loader:Loader, layer:Layer):void {
+		private var _source:BitmapData			= getBaseBitmap();
+
+		/**
+		 * 	@constructor
+		 */		
+		public function ContentSWFMovieClip(loader:Loader):void {
 			
-			_layer = layer;
-			_loader = loader;
-			_child	= loader.content as MovieClip;
-			_filters = [];
+			_loader		= loader;
+			_content	= loader.content as MovieClip;
 			
-			_framerate = loader.contentLoaderInfo.frameRate / Onyx.framerate;
+			_framerate	= loader.contentLoaderInfo.frameRate / Onyx.framerate;
 			
-			_markerLeft = 0;
-			_markerRight = _child.totalFrames;
+			_loopStart	= 0;
+			_loopEnd	= _content.totalFrames;
 			
 			_loader.addEventListener(Event.ENTER_FRAME, _onEnterFrame);
-			
-			_scaleX = 320 / loader.contentLoaderInfo.width;
-			_scaleY = 240 / loader.contentLoaderInfo.height;
+
+			super(getBaseBitmap());
 			
 		}
-		
+
+		/**
+		 * 	Sets the time
+		 */
 		public function set time(value:Number):void {
-			var frame:int = Math.floor(_child.totalFrames * value);
+			var frame:int = Math.floor(_content.totalFrames * value);
 			_frame = frame;
 			
-			_child.gotoAndStop(frame);
+			_content.gotoAndStop(frame);
 		}
 		
+		/**
+		 * 	Gets the time
+		 */
 		public function get time():Number {
-			return _child.currentFrame;
+			return _frame / _content.totalFrames;
 		}
 		
+		/**
+		 * 	Gets the total time
+		 */
 		public function get totalTime():Number {
-			return _child.totalFrames;
+			return _content.totalFrames;
 		}
 		
+		/**
+		 * 	Pauses content
+		 */
 		public function pause(b:Boolean = true):void {
 			if (b) {
 				_loader.removeEventListener(Event.ENTER_FRAME, _onEnterFrame);
@@ -108,21 +165,62 @@ package onyx.content {
 			}
 		}
 		
+		/**
+		 * 	Returns whether the content is paused
+		 */
 		public function isPaused():Boolean {
 			return _loader.hasEventListener(Event.ENTER_FRAME);
 		}
 		
+		/**
+		 * 	Runs every frame and adds time
+		 */
 		private function _onEnterFrame(event:Event):void {
 			
-			var diff:int = _markerRight - _markerLeft;
+			var diff:int = _loopEnd - _loopStart;
 			
-			_frame += _framerate;
-			_frame = (_frame < _markerLeft) ? _markerRight : Math.max(_frame % _markerRight, _markerLeft);
-			
-			_child.gotoAndStop(Math.floor(_frame));
+			var frame:Number = _frame + _framerate;
+
+			frame = (frame < _loopStart) ? _loopEnd : Math.max(frame % _loopEnd, _loopStart);
+
+			_frame = frame;
+
+			// if the frame is different, update the source bitmap
+			if (frame !== _content.currentFrame) {
+				
+				_content.gotoAndStop(Math.floor(frame));
+				
+				updateSource();
+				
+			}
 			
 		}
 		
+		/**
+		 * 	Updates
+		 */
+		public function updateSource():void {
+			
+			// draw everything
+			var matrix:Matrix = new Matrix();
+			matrix.translate(_x, _y);
+			matrix.scale(_scaleX, _scaleY);
+			matrix.rotate(_rotation);
+			
+			// fill the source with nothing
+			_source.fillRect(_source.rect, 0x00000000);
+			_source.draw(_content, matrix, _colorTransform);
+			
+			super.bitmapData.copyPixels(_source, _source.rect, new Point(0,0));
+			applyFilters(super.bitmapData);
+			
+//			super.bitmapData.unlock();
+
+		}
+		
+		/**
+		 * 	Gets the framerate
+		 */
 		public function get framerate():Number {
 			// get the ratio of the original framerate and the actual framerate
 			var ratio:Number = _loader.contentLoaderInfo.frameRate / Onyx.framerate
@@ -130,55 +228,66 @@ package onyx.content {
 			return _framerate / ratio;
 		}
 
+		/**
+		 * 	Sets framerate
+		 */
 		public function set framerate(value:Number):void {
 			var ratio:Number = _loader.contentLoaderInfo.frameRate / Onyx.framerate
 			
 			_framerate = value * ratio;
 		}
 		
-		public function get framernd():Number {
-			return _framernd;
-		}
-		
-		public function set framernd(value:Number):void {
-			_framernd = value;
+		/**
+		 * 	Gets the beginning loop point
+		 */
+		public function get loopStart():Number {
+			return _loopStart / _content.totalFrames;
 		}
 
-		public function get markerLeft():Number {
-			return _markerLeft / _child.totalFrames;
+		/**
+		 * 	Sets the beginning loop point (percentage)
+		 */		
+		public function set loopStart(value:Number):void {
+			_loopStart = Math.min(Math.max(_content.totalFrames * value, 0), _loopEnd - 1);
+			_frame = Math.max(_frame, _loopStart);
 		}
 		
-		public function set markerLeft(value:Number):void {
-			_markerLeft = Math.min(Math.max(_child.totalFrames * value, 0), _markerRight - 1);
-			_frame = Math.max(_frame, _markerLeft);
+		/**
+		 * 	Gets the end loop point
+		 */
+		public function get loopEnd():Number {
+			return _loopEnd / _content.totalFrames;
 		}
 		
-		public function get markerRight():Number {
-			return _markerRight / _child.totalFrames;
-		}
-		
-		public function set markerRight(value:Number):void {
-			_markerRight = Math.min(Math.max(_child.totalFrames * value, _markerLeft + 1), _child.totalFrames);
+		/**
+		 * 	Sets the end loop point
+		 */
+		public function set loopEnd(value:Number):void {
+			_loopEnd = Math.min(Math.max(_content.totalFrames * value, _loopStart + 1), _content.totalFrames);
 
-			_frame = Math.min(_frame, _markerRight);
+			_frame = Math.min(_frame, _loopEnd);
 		}
 		
+		/**
+		 * 	Gets path to the content
+		 */
 		public function get path():String {
 			return _loader.contentLoaderInfo.url;
 		}
-		
-		public function set timePercent(value:Number):void {
-			_frame = _child.totalFrames * value;
-		}
-		
-		public function get timePercent():Number {
-			return _frame / _child.totalFrames;
-		}
 
+		/**
+		 * 	Destroys the content
+		 */
 		public function dispose():void {
 			
-			if (_child is IDisposable) {
-				(_child as IDisposable).dispose();
+			// dispose it?
+			if (_content is IDisposable) {
+				(_content as IDisposable).dispose();
+			}
+			
+			// remove it?
+			if (parent) {
+				parent.removeChild(this);
 			}
 
 			_loader.unload();
@@ -187,260 +296,9 @@ package onyx.content {
 			clearFilters();
 
 			_loader = null;
-			_child = null;
-			_layer = null;
+			_content = null;
 			_filter = null;
-			_matrix = null;
 			_filters = null;
-
-			_source.dispose();
-			_source = null;
-		}
-
-		
-	
-		import flash.display.BitmapData;
-		import flash.events.Event;
-		import flash.geom.ColorTransform;
-		import flash.geom.Matrix;
-		import flash.geom.Point;
-		import flash.geom.Rectangle;
-		import flash.geom.Transform;
-		import flash.utils.getTimer;
-		
-		import onyx.core.IDisposable;
-		import onyx.core.onyx_internal;
-		import onyx.events.FilterEvent;
-		import onyx.filter.ColorFilter;
-		import onyx.filter.Filter;
-		import onyx.filter.IBitmapFilter;
-		
-		use namespace onyx_internal;
-
-		private var _rect:Rectangle								= new Rectangle(0,0,320,240);
-
-		/**
-		 * 
-		 */
-		private var _source:BitmapData							= new BitmapData(320,240, true, 0x000000);
-
-		/**
-		 * 	@private
-		 */
-		private var _filters:Array							= [];
-
-		/**
-		 * 	@private
-		 * 	Stores the matrix for the content
-		 */
-		private var _matrix:Matrix							= new Matrix();
-		
-		/**
-		 * 	@private
-		 */
-		private var _alpha:Number							= 1;
-
-		/**
-		 * 	@private
-		 */
-		private var _rotation:Number						= 0;
-
-		/**
-		 * 	@private
-		 */
-		private var _colorTransform:ColorTransform			= new ColorTransform(); 
-		
-		/**
-		 * 	@private
-		 */
-		private var _scaleX:Number							= 1;
-
-		/**
-		 * 	@private
-		 */
-		private var _scaleY:Number							= 1;
-
-		/**
-		 * 	@private
-		 */
-		private var _x:Number								= 0;
-
-		/**
-		 * 	@private
-		 */
-		private var _y:Number								= 0;
-
-		/**
-		 * 	@private
-		 */
-		private var _tint:Number							= 0;
-
-		/**
-		 * 	@private
-		 */
-		private var _color:Number							= 0;
-		
-		/**
-		 * 	@private
-		 */
-		private var _filter:ColorFilter						= new ColorFilter();
-		
-		/**
-		 * 	Tint
-		 */
-		public function set tint(value:Number):void {		
-			
-			_tint = value;
-			
-			var r:Number = ((_color & 0xFF0000) >> 16) * value;
-			var g:Number = ((_color & 0x00FF00) >> 8) * value;
-			var b:Number = (_color & 0x0000FF) * value;
-
-			var amount:Number = 1 - value;
-			
-			_colorTransform = new ColorTransform(amount,amount,amount,_alpha,r,g,b);
-		}
-		
-		/**
-		 * 	Sets color
-		 */
-		public function set color(value:uint):void {
-			
-			_color = value;
-			
-			var r:Number = ((_color & 0xFF0000) >> 16) * _tint;
-			var g:Number = ((_color & 0x00FF00) >> 8) * _tint;
-			var b:Number = (_color & 0x0000FF) * _tint;
-
-			var amount:Number = 1 - _tint;
-
-			_colorTransform = new ColorTransform(amount,amount,amount,_alpha,r,g,b);
-		}
-
-		
-		public function set alpha(value:Number):void {
-			_alpha = value;
-			
-			var r:Number = ((_color & 0xFF0000) >> 16) * _tint;
-			var g:Number = ((_color & 0x00FF00) >> 8) * _tint;
-			var b:Number = (_color & 0x0000FF) * _tint;
-
-			var amount:Number = 1 - _tint;
-
-			_colorTransform = new ColorTransform(amount,amount,amount,_alpha,r,g,b);
-		}
-		
-		/**
-		 * 	Gets color
-		 */
-		public function get color():uint {
-			return _color;
-		}
-
-		/**
-		 * 	Gets tint
-		 */
-		public function get tint():Number {
-			return _tint;
-		}
-		
-		/**
-		 * 	Sets x
-		 */
-		public function set x(value:Number):void {
-			_x = value;
-			_buildMatrix();
-		}
-
-		/**
-		 * 	Sets y
-		 */
-		public function set y(value:Number):void {
-			_y = value;
-			_buildMatrix();
-		}
-
-		public function set scaleX(value:Number):void {
-			_scaleX = value;
-			_buildMatrix();
-		}
-
-		public function set scaleY(value:Number):void {
-			_scaleY = value;
-			_buildMatrix();
-		}
-		
-		public function get scaleX():Number {
-			return _scaleX;
-		}
-
-		public function get scaleY():Number {
-			return _scaleY;
-		}
-
-		public function get x():Number {
-			return _x;
-		}
-
-		public function get y():Number {
-			return _y;
-		}
-		
-		public function get alpha():Number {
-			return _alpha;
-		}
-		
-		public function get rotation():Number {
-			return _rotation;
-		}
-
-		public function set rotation(value:Number):void {
-			_rotation = value;
-			_buildMatrix();
-		}
-		
-		public function get saturation():Number {
-			return _filter._saturation;
-		}
-		
-		public function set saturation(value:Number):void {
-			_filter.saturation = value;
-		}
-
-		public function get contrast():Number {
-			return _filter._contrast;
-		}
-
-		public function set contrast(value:Number):void {
-			_filter.contrast = value;
-		}
-
-		public function get brightness():Number {
-			return _filter._brightness;
-		}
-		
-		public function set brightness(value:Number):void {
-			_filter.brightness = value;
-		}
-
-		public function get threshold():int {
-			return _filter._threshold;
-		}
-		
-		public function set threshold(value:int):void {
-			_filter.threshold = value;
-		}
-
-		private function _buildMatrix():void {
-			_rect	= new Rectangle();
-			_rect.x = _x;
-			_rect.y = _y;
-			_rect.width = 320 * _scaleX;
-			_rect.height = 240 * _scaleY;
-
-			_matrix.identity();
-			_matrix.translate(_x, _y);
-			_matrix.scale(_scaleX, _scaleY);
 		}
 
 		public function addFilter(filter:Filter):void {
@@ -454,8 +312,13 @@ package onyx.content {
 			// tell the filter it has started
 			filter.initialize();
 			
-			// dispatch a creation
-			_layer.dispatchEvent(new FilterEvent(FilterEvent.FILTER_APPLIED, filter));
+			// we need to check if there are bitmap filters, if so, we need to switch out onEnterFrame with frameBitmap
+			if (filter is BitmapFilter) {
+				_bitmapFilterCount++;
+			}
+			
+			// listen
+			
 
 		}
 		
@@ -469,10 +332,14 @@ package onyx.content {
 			// dispose the filter
 			filter.dispose();
 
+			// dispatch a filter removed event
 			var event:FilterEvent = new FilterEvent(FilterEvent.FILTER_REMOVED, filter)
 			event.index = index;
 			
-			_layer.dispatchEvent(event);
+			// we need to check if there are bitmap filters, if so, we need to switch out onEnterFrame with frameBitmap
+			if (filter is BitmapFilter) {
+				_bitmapFilterCount--;
+			}
 
 		}
 		
@@ -482,16 +349,12 @@ package onyx.content {
 			}
 		}
 		
-		public function get filters():Array {
+		override public function get filters():Array {
 			return _filters;
 		}
 		
 		public function get rendered():BitmapData {
-			return null; // _layer.bitmapData;
-		}
-		
-		public function get source():BitmapData {
-			return _source;
+			return null;
 		}
 		
 		/**
@@ -519,11 +382,14 @@ package onyx.content {
 		 */
 		public function moveFilterUp(filter:Filter):void {
 			var index:int = _filters.indexOf(filter);
+
 			if (index > 0) {
+
 				_filters.splice(index, 1);
 				_filters.splice(index - 1, 0, filter);
 				
-				_layer.dispatchEvent(new FilterEvent(FilterEvent.FILTER_MOVED, filter));
+				dispatchEvent(new FilterEvent(FilterEvent.FILTER_APPLIED, filter));
+				
 			}
 		}
 		
@@ -536,35 +402,23 @@ package onyx.content {
 				_filters.splice(index, 1);
 				_filters.splice(index + 1, 0, filter);
 
-				_layer.dispatchEvent(new FilterEvent(FilterEvent.FILTER_MOVED, filter));
+				dispatchEvent(new FilterEvent(FilterEvent.FILTER_MOVED, filter));
 			}
 		}
 		
 		/**
-		 * 
+		 * 	Does it have filters?
 		 */
 		public function get hasFilters():Boolean {
 			return (_filters.length > 0);
 		}
 		
 		/**
-		 * 	Draws
+		 * 	Returns the bitmap source
 		 */
-		public function draw():BitmapData {
-			
-			// draw
-			_source.fillRect(_source.rect, 0x00000000);
-			
-			// draw it
-			_source.draw(_loader, _matrix, _colorTransform);
-			
-			// need to apply the color filter
-			_source.applyFilter(_source, _source.rect, new Point(0,0), _filter.filter);
-			
+		public function get source():BitmapData {
 			return _source;
 		}
 		
-		public function buildBitmap():void {
-		}
 	}
 }

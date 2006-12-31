@@ -30,7 +30,13 @@
  */
 package onyx.application
 {
-	internal class ApplicationState
-	{
+	public class ApplicationState {
+		
+		public function initialize(... args:Array):void {
+		}
+		
+		public function terminate():void {
+		}
+		
 	}
 }

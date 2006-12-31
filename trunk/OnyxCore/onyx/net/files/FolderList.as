@@ -1,4 +1,4 @@
- /** 
+/** 
  * Copyright (c) 2003-2006, www.onyx-vj.com
  * All rights reserved.	
  * 
@@ -28,12 +28,16 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package onyx.application
-{
-	public interface IApplicationState {
+package onyx.net.files {
+
+	public final class FolderList {
 		
-		function initialize(... args:Array):void;
-		function terminate():void;
+		public var path:String;
+		public var files:Array	= [];
+		public var folders:Array	= [];
 		
+		public function FolderList(path:String):void {
+			this.path = path;
+		}
 	}
 }

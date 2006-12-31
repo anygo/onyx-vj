@@ -32,13 +32,13 @@ package onyx.application {
 	
 	import onyx.layer.Layer;
 	
-	public final class RunTimeState implements IApplicationState {
+	public final class RunTimeState extends ApplicationState {
 
-		public function initialize(...args):void {
+		override public function initialize(...args):void {
 			Onyx.createLocalDisplay(5);
 		}
 		
-		public function terminate():void {
+		override public function terminate():void {
 		}
 		
 	}

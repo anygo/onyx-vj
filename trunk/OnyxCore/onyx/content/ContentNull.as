@@ -31,13 +31,12 @@
 package onyx.content {
 
 	import flash.display.BitmapData;
+	import flash.display.Sprite;
+	import flash.geom.Rectangle;
 	
 	import onyx.filter.Filter;
 	import onyx.layer.IColorObject;
-	import onyx.layer.IContent;
-	import flash.geom.Rectangle;
 	import onyx.layer.Layer;
-	import flash.display.Sprite;
 
 	[ExcludeClass]
 	public final class ContentNull implements IContent, IColorObject
@@ -85,12 +84,12 @@ package onyx.content {
 		public function set framernd(value:Number):void
 		{
 		}
-		public function get markerRight():Number
+		public function get loopEnd():Number
 		{
 			return 0;
 		}
 		
-		public function set markerRight(value:Number):void
+		public function set loopEnd(value:Number):void
 		{
 		}
 		
@@ -103,11 +102,11 @@ package onyx.content {
 			return null;
 		}
 		
-		public function set markerLeft(value:Number):void
+		public function set loopStart(value:Number):void
 		{
 		}
 		
-		public function get markerLeft():Number
+		public function get loopStart():Number
 		{
 			return 0;
 		}
@@ -381,7 +380,9 @@ package onyx.content {
 			filter.initialize();
 			
 			// dispatch a creation
-			_layer.dispatchEvent(new FilterEvent(FilterEvent.FILTER_APPLIED, filter));
+//			dispatchEvent(new FilterEvent(FilterEvent.FILTER_APPLIED, filter));
+			
+//			_layer.dispatchEvent(new FilterEvent(FilterEvent.FILTER_APPLIED, filter));
 
 		}
 		

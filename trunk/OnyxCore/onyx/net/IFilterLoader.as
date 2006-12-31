@@ -28,17 +28,11 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package onyx.external.files {
+package onyx.net {
 	
-	public final class Folder {
+	public interface IFilterLoader {
 		
-		public var path:String;
-		
-		public function Folder(path:String):void {
-			
-			this.path = path;
-			
-		}
+		function registerFilters():Array;
 		
 	}
 }

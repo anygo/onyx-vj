@@ -28,13 +28,13 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package onyx.external {
+package onyx.net {
 	
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
-	import onyx.external.files.*;
+	import onyx.net.files.*;
 	
 	final public class FileBrowser {
 		

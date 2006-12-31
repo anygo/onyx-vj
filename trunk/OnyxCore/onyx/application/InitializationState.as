@@ -46,20 +46,20 @@ package onyx.application {
 	import onyx.assets.PixelFont;
 	import onyx.core.Console;
 	import onyx.core.onyx_internal;
-	import onyx.external.IFilterLoader;
-	import onyx.external.ITransitionLoader;
+	import onyx.net.IFilterLoader;
+	import onyx.net.ITransitionLoader;
 	import onyx.settings.Settings;
 	
 	use namespace onyx_internal;
 	
-	public final class InitializationState implements IApplicationState {
+	public final class InitializationState extends ApplicationState {
 		
 		private var _filtersToLoad:Array	= [];
 		private var _image:DisplayObject;
 		private var _label:TextField		= new TextField();
 		private var _timer:Timer			= new Timer(500);
 
-		public function initialize(... args:Array):void {
+		override public function initialize(... args:Array):void {
 			
 			_image = new OnyxStartUpImage();
 			Onyx.root.addChild(_image);
@@ -105,6 +105,7 @@ package onyx.application {
 					swfloader.contentLoaderInfo.addEventListener(Event.COMPLETE, _onFilterLoaded);
 					swfloader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, _onFilterLoaded);
 					swfloader.load(new URLRequest(Settings.INITIAL_APP_DIRECTORY + String(i.@name)));
+					
 					_filtersToLoad.push(swfloader);
 					
 					_label.appendText('LOADING ' + String(i.@name).toUpperCase() + '\n');
@@ -123,6 +124,8 @@ package onyx.application {
 			_filtersToLoad.splice(_filtersToLoad.indexOf(info.loader), 1);
 
 			if (!(event is IOErrorEvent)) {
+				
+				trace(info.content is ITransitionLoader);
 				
 				if (info.content is IFilterLoader) {
 					
@@ -167,7 +170,7 @@ package onyx.application {
 			_timer.removeEventListener(TimerEvent.TIMER, _endState);
 			_timer = null;
 			
-			Onyx.loadApplicationState(new RunTimeState());
+			Onyx.loadState(new RunTimeState());
 		}
 		
 		/**
@@ -191,7 +194,7 @@ package onyx.application {
 		/**
 		 * 	Terminates
 		 */
-		public function terminate():void {
+		override public function terminate():void {
 
 			Console.trace(
 				'<font size="14" color="#DCC697"><b>onyx version 3.0a</b></font><br>' + 

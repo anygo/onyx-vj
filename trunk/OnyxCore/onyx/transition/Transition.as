@@ -41,8 +41,9 @@ package onyx.transition {
 	
 	import onyx.core.getBaseBitmap;
 	import onyx.core.onyx_internal;
-	import onyx.layer.IContent;
+	import onyx.content.IContent;
 	import onyx.layer.ILayer;
+	import onyx.events.TransitionEvent;
 	
 	use namespace onyx_internal;
 	
@@ -100,11 +101,11 @@ package onyx.transition {
 			var time:Number = (getTimer() - _startTime) / _duration;
 
 			// first draw the new content
-			var oldbmp:BitmapData = oldContent.draw();
-			bitmapData.copyPixels(oldbmp, oldbmp.rect, new Point(0,0));
+			// var oldbmp:BitmapData = oldContent.draw();
+			// bitmapData.copyPixels(oldbmp, oldbmp.rect, new Point(0,0));
 			
 			// apply transition
-			applyTransition(bitmapData, newContent.draw(), Math.min(time,1));
+			// applyTransition(bitmapData, newContent.draw(), Math.min(time,1));
 			
 			if (time >= 1) {
 				dispose();
@@ -135,7 +136,12 @@ package onyx.transition {
 		 * 	Destroys
 		 */
 		public function dispose():void {
-			_layer.endTransition(this);
+			
+			// dispatch an end transition event
+			var event:TransitionEvent = new TransitionEvent(TransitionEvent.TRANSITION_END)
+			event.transition = this;
+			
+			dispatchEvent(event);
 			
 			this.oldContent	= null;
 			this.newContent	= null;

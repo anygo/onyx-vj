@@ -93,7 +93,7 @@ package onyx.application {
 		/**
 		 * 	Application state
 		 */		
-		private static var _state:IApplicationState;
+		private static var _state:ApplicationState;
 
 		/**
 		 * 	Gets the framerate
@@ -112,7 +112,7 @@ package onyx.application {
 		/**
 		 * 	Loads an application state
 		 */
-		internal static function loadApplicationState(state:IApplicationState, ... args:Array):void {
+		internal static function loadState(state:ApplicationState, ... args:Array):void {
 
 			if (_state) {
 				_state.terminate();
@@ -150,7 +150,7 @@ package onyx.application {
 			
 			Onyx.root = root;
 			
-			loadApplicationState(new InitializationState());
+			loadState(new InitializationState());
 			
 			root.addEventListener(Event.RESIZE, _onResize);
 

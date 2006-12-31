@@ -28,11 +28,21 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package onyx.external {
+package onyx.events {
 	
-	public interface ITransitionLoader {
+	import flash.events.Event;
+
+	/**
+	 * 	This event handles global application events for startup, and displays
+	 */
+	public final class ApplicationEvent extends Event {
 		
-		function registerTransitions():Array;
+		public static const ONYX_STARTUP_START:String	= 'onyxstartstart';
+		public static const ONYX_STARTUP_END:String		= 'onyxstartend';
+		
+		public function ApplicationEvent(type:String):void {
+			super(type);
+		}
 		
 	}
 }

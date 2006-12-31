@@ -28,11 +28,17 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package onyx.external {
+package onyx.net {
+
+	import flash.display.Stage;
 	
-	public interface IFilterLoader {
+	/**
+	 * 	Set this interface to an external sprite if you'd like the stage object
+	 *	to be passed in when the content is loaded
+	 */
+	public interface IStageAllowable {
 		
-		function registerFilters():Array;
+		function set stage(s:Stage):void;
 		
 	}
 }

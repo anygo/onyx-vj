@@ -56,13 +56,13 @@ package onyx.layer {
 		public var threshold:Number;
 		public var blendMode:String;
 		
-		public var timePercent:Number;
+		public var time:Number;
 		public var framerate:Number;
 		public var framernd:Number;
 
 		public var filters:Array;
-		public var markerLeft:Number;
-		public var markerRight:Number;
+		public var loopStart:Number;
+		public var loopEnd:Number;
 		
 		public function LayerSettings(layer:Layer = null):void {
 			
@@ -83,12 +83,11 @@ package onyx.layer {
 				threshold	= layer.threshold;
 				blendMode	= layer.blendMode;
 				
-				timePercent	= layer.timePercent;
+				time		= layer.time;
 				framerate	= layer.framerate;
-				framernd	= layer.framernd;
 
-				markerLeft	= layer.markerLeft;
-				markerRight	= layer.markerRight;
+				loopStart	= layer.loopStart;
+				loopEnd	= layer.loopEnd;
 				
 				filters		= layer.filters.concat();
 				
@@ -116,11 +115,10 @@ package onyx.layer {
 			layer.threshold = threshold;
 			layer.blendMode = blendMode;
 			
-			layer.timePercent = timePercent;
+			layer.time = time;
 			layer.framerate = layer.framerate;
-			layer.framernd = layer.framernd;
-			layer.markerLeft = layer.markerLeft;
-			layer.markerRight = layer.markerRight;
+			layer.loopStart = layer.loopStart;
+			layer.loopEnd = layer.loopEnd;
 			
 			for each (var filter:Filter in filters) {
 				layer.addFilter(filter.clone());

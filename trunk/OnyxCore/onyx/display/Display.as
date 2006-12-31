@@ -30,26 +30,30 @@
  */
 package onyx.display {
 	
+	import flash.display.DisplayObject;
+	import flash.display.Sprite;
+	import flash.events.Event;
 	import flash.geom.Rectangle;
+	import flash.net.URLRequest;
 	
 	import onyx.application.Onyx;
 	import onyx.controls.*;
 	import onyx.core.onyx_internal;
+	import onyx.events.ApplicationEvent;
 	import onyx.events.LayerEvent;
-	import onyx.events.OnyxEvent;
 	import onyx.layer.Layer;
 	import onyx.layer.LayerProperties;
-	import flash.display.DisplayObject;
-	import flash.events.Event;
 	import onyx.layer.LayerSettings;
-	import flash.display.Sprite;
-	import flash.net.URLRequest;
 	import onyx.transition.*;
 	
 	use namespace onyx_internal;
 	
+	/**
+	 * 	
+	 */
 	public class Display extends Sprite {
 		
+		// Background
 		private var _background:Background		= new Background(320, 240, 0x000000);
 		
 		// add the controls that we can bind to
@@ -66,13 +70,19 @@ package onyx.display {
 		public function Display():void {
 			
 			addChild(_background);
-			
+
 		}
 		
-		public function get length():int {
+		/**
+		 * 	Returns the number of layers
+		 */
+		public function get numLayers():int {
 			return _layers.length;
 		}
 		
+		/**
+		 * 	Creates a specified number of layers
+		 */
 		public function createLayers(numLayers:uint):void {
 			
 			while (numLayers-- ) {
@@ -92,10 +102,14 @@ package onyx.display {
 				// dispatch
 				var event:LayerEvent = new LayerEvent(LayerEvent.LAYER_CREATED, layer);
 				
+				// dispatch a layer create event
 				Onyx.dispatcher.dispatchEvent(event);
 			}
 		}
 		
+		/**
+		 * 	When a layer is moved down
+		 */
 		private function _onLayerMoveDown(event:LayerEvent):void {
 			var layer:Layer = event.layer;
 			if (layer._index < _layers.length - 1) {
@@ -103,6 +117,9 @@ package onyx.display {
 			}
 		}
 		
+		/**
+		 * 	When a layer is moved up
+		 */
 		private function _onLayerMoveUp(event:LayerEvent):void {
 			var layer:Layer = event.layer;
 			if (layer._index > 0) {
@@ -110,14 +127,23 @@ package onyx.display {
 			}
 		}
 		
+		/**
+		 * 	Copies a layer
+		 */
 		private function _onLayerCopy(event:LayerEvent):void {
 			copyLayer(event.layer, event.layer.index + 1);
 		}
 		
+		/**
+		 * 	Returns the layers
+		 */
 		public function get layers():Array {
 			return _layers.concat();
 		}
 		
+		/**
+		 * 	Moves a layer to a specified index
+		 */
 		public function moveLayer(layer:Layer, index:int):void {
 			
 			var fromIndex:int = layer.index;
@@ -141,14 +167,23 @@ package onyx.display {
 			toLayer.dispatchEvent(new LayerEvent(LayerEvent.LAYER_MOVE, toLayer));
 		}
 		
+		/**
+		 * 	Gets the display index
+		 */
 		public function get index():int {
 			return _index;
 		}
 		
+		/**
+		 * 	Gets the controls related to the display
+		 */
 		public function get controls():Controls {
 			return _controls;
 		}
 		
+		/**
+		 * 	Copies a layer
+		 */
 		public function copyLayer(layer:Layer, index:int):void {
 			
 			var layerindex:int = layer.index;
@@ -162,7 +197,9 @@ package onyx.display {
 			}
 		}
 		
-		
+		/**
+		 * 	Gets the index of a layer
+		 */
 		public function getIndex(layer:Layer):int {
 			return _layers.indexOf(layer);
 		}
@@ -174,7 +211,7 @@ package onyx.display {
 
 /****
  * 
- * 		HELPER CLASS
+ * 		HELPER CLASS FOR BACKGROUND
  * 
  ****/
 

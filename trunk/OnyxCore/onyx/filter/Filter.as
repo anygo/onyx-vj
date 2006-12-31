@@ -37,13 +37,12 @@ package onyx.filter {
 	import flash.utils.getDefinitionByName;
 	import flash.utils.getQualifiedClassName;
 	
+	import onyx.content.IContent;
 	import onyx.controls.Controls;
 	import onyx.controls.IControlObject;
 	import onyx.core.onyx_internal;
 	import onyx.events.FilterEvent;
 	import onyx.layer.IColorObject;
-	import onyx.layer.IContent;
-	import onyx.controls.Controls;
 	
 	use namespace onyx_internal;
 	
@@ -57,6 +56,9 @@ package onyx.filter {
 		
 		// stores the layer
 		protected var content:IContent;
+		
+		// stores whether the filter is unique and should not be allowed to be duplicated
+		protected var unique:Boolean		= false;
 		
 		// create controls
 		protected var _controls:Controls	= new Controls(this);

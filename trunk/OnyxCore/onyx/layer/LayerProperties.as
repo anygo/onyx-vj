@@ -52,7 +52,7 @@ package onyx.layer {
 		// playhead properties
 		public static const PLAYHEAD_RATE:String		= 'framerate';
 		public static const PLAYHEAD_RND:String			= 'framernd';
-		public static const PLAYHEAD_START:String		= 'markerLeft';
-		public static const PLAYHEAD_END:String			= 'markerRight';
+		public static const PLAYHEAD_START:String		= 'loopStart';
+		public static const PLAYHEAD_END:String			= 'loopEnd';
 	}
 }

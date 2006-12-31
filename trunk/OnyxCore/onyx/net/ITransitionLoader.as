@@ -28,19 +28,11 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package onyx.external.files {
+package onyx.net {
 	
-	public final class File {
+	public interface ITransitionLoader {
 		
-		public var path:String;
-		public var thumbnail:String;
-		
-		public function File(path:String, thumbnail:String):void {
-			
-			this.path = path;
-			this.thumbnail = thumbnail;
-			
-		}
+		function registerTransitions():Array;
 		
 	}
 }

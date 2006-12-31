@@ -28,18 +28,18 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package onyx.events {
-	import flash.events.Event;
-
-	public final class OnyxEvent extends Event {
+package onyx.net.files {
+	
+	public final class File {
 		
-		public static const ONYX_STARTUP_START:String	= 'onyxstartstart';
-		public static const ONYX_STARTUP_END:String		= 'onyxstartend';
-		public static const ONYX_DISPLAY_CREATED:String	= 'displaycreate';
-		public static const ONYX_DISPLAY_REMOVED:String	= 'displayremove';
+		public var path:String;
+		public var thumbnail:String;
 		
-		public function OnyxEvent(type:String):void {
-			super(type);
+		public function File(path:String, thumbnail:String):void {
+			
+			this.path = path;
+			this.thumbnail = thumbnail;
+			
 		}
 		
 	}

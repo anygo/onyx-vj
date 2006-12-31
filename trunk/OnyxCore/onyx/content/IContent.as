@@ -28,17 +28,51 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package onyx.external {
+package onyx.content {
 	
-	import flash.net.NetConnection;
+	import flash.display.BitmapData;
+	import flash.display.DisplayObject;
+	import flash.display.IBitmapDrawable;
+	import flash.events.IEventDispatcher;
+	import flash.geom.Matrix;
+	import flash.geom.Rectangle;
+	
+	import onyx.core.IDisposable;
+	import onyx.filter.Filter;
+	import onyx.layer.IColorObject;
+	
+	public interface IContent extends IColorObject, IDisposable {
+		
+		function get time():Number;
+		function set time(value:Number):void;
 
-	public class Connection extends NetConnection {
+		function get totalTime():Number;
+
+		function get framerate():Number;
+		function set framerate(value:Number):void;
 		
-		internal static const DEFAULT_CONNECTION:Connection = new Connection();
+		function get loopStart():Number;
+		function set loopStart(value:Number):void;
+
+		function get loopEnd():Number;
+		function set loopEnd(value:Number):void;
 		
-		public function Connection():void {
-			if (DEFAULT_CONNECTION) throw new Error('error');
-				connect(null);
-		}
+		function get path():String;
+		
+		function get filters():Array;
+		
+		function get source():BitmapData;
+		
+		function addFilter(filter:Filter):void;
+		function removeFilter(filter:Filter):void;
+
+		function applyFilters(render:BitmapData):void;
+		
+		function pause(b:Boolean = true):void;
+		function getFilterIndex(filter:Filter):int;
+		
+		function moveFilterUp(filter:Filter):void;
+		function moveFilterDown(filter:Filter):void;
+
 	}
 }
