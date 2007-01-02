@@ -28,12 +28,12 @@
 		/**
 		 * 	@private
 		 */
-		private var _scaleX:Number							= 1;
+		private var _scaleX:Number;
 
 		/**
 		 * 	@private
 		 */
-		private var _scaleY:Number							= 1;
+		private var _scaleY:Number;
 
 		/**
 		 * 	@private

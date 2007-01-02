@@ -48,6 +48,7 @@ package onyx.content {
 	import onyx.events.FilterEvent;
 	import onyx.filter.*;
 	import onyx.layer.Layer;
+	import onyx.settings.Settings;
 	
 	[Event(name="filter_applied",	type="onyx.events.FilterEvent")]
 	[Event(name="filter_removed",	type="onyx.events.FilterEvent")]
@@ -119,6 +120,14 @@ package onyx.content {
 			
 			_loader		= loader;
 			_content	= loader.content as MovieClip;
+			
+			if (Settings.LAYER_AUTOSIZE) {
+				var ratioX:Number = 320 / loader.contentLoaderInfo.width;
+				var ratioY:Number = 240 / loader.contentLoaderInfo.height;
+			}
+			
+			_scaleX		= ratioX || 1;
+			_scaleY		= ratioY || 1;
 			
 			_framerate	= loader.contentLoaderInfo.frameRate / Onyx.framerate;
 			
@@ -210,16 +219,13 @@ package onyx.content {
 			
 			// draw everything
 			var matrix:Matrix = new Matrix();
-			matrix.translate(_x, _y);
 			matrix.scale(_scaleX, _scaleY);
 			matrix.rotate(_rotation);
-
-			// define the clipping Rectangle
-			var clipRect:Rectangle = new Rectangle(_x,_y,320 * _scaleX,240 * _scaleY);
+			matrix.translate(_x, _y);
 			
 			// fill the source with nothing
 			_source.fillRect(_source.rect, 0x00000000);
-			_source.draw(_content, matrix, _colorTransform, null, clipRect);
+			_source.draw(_content, matrix, _colorTransform, null, null);
 
 			// apply the color filter to the source
 			_source.applyFilter(_source, _source.rect, new Point(0,0), _filter.filter);

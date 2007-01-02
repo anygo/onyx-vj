@@ -38,6 +38,8 @@ package onyx.settings {
 		public static var INITIAL_DISPLAYS_TO_LOAD:uint		= 5;
 		public static var MUTE_AUDIO:Boolean				= true;
 		public static var COPY_LAYER_FILTERS:Boolean		= false;
+		public static var LAYER_AUTOSIZE:Boolean			= true;
+		public static var LAYER_AUTOSIZE_CONSTRAIN:Boolean	= true;
 		
 		public static const INITIAL_APP_DIRECTORY:String	= 'video/';
 		public static const PLUGINS_DIRECTORY:String		= 'plug-ins/';
