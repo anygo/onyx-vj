@@ -60,7 +60,7 @@ package ui.window {
 		}
 		
 		private function _onConsole(event:ConsoleEvent):void {
-			_text.htmlText += event.message;
+			_text.htmlText += event.message + '<br><br>';
 			_text.scrollV = _text.maxScrollV;
 		}
 		
@@ -74,7 +74,7 @@ package ui.window {
 			x = 6;
 			y = 580;
 
-			_text			= new TextField(187, 100);
+			_text			= new TextField(187, 160);
 			_text.multiline	= true;
 			_text.wordWrap		= true;
 			_text.x			= 2;
@@ -98,7 +98,7 @@ package ui.window {
 			switch (event.keyCode) {
 				// execute
 				case 13:
-					onyx.core.Console.executeCommand(_input.text);
+					executeCommand(_input.text);
 					_input.setSelection(0,_input.text.length);
 					break;
 			}
@@ -106,6 +106,23 @@ package ui.window {
 		
 		private function _onDoubleClick(event:MouseEvent):void {
 			_input.setSelection(0,_input.text.length);
+		}
+		
+		private function executeCommand(command:String):void {
+			
+			var command:String = command.toLowerCase();
+			
+			switch (command) {
+				case 'clear':
+				case 'cls':
+				case 'motd':
+					_text.text = '';
+				
+					break;
+				default:
+					onyx.core.Console.executeCommand(command);
+					break;
+			}
 		}
 		
 	}

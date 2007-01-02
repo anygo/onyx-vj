@@ -42,8 +42,10 @@ package ui.layer {
 	import ui.controls.UIControl;
 	import ui.controls.filter.LayerFilter;
 	import ui.core.UIObject;
-
+	
 	public final class UIFilterSelection extends UIObject {
+		
+		public static const CONTROL_WIDTH:int	= 60;
 		
 		public var filter:Filter;
 		private var _controls:Array = [];
@@ -82,15 +84,15 @@ package ui.layer {
 					uicontrol = new SliderV(control);
 					
 				} else if (control is ControlRange) {
-					uicontrol = new DropDown(control as ControlRange);
+					uicontrol = new DropDown(control as ControlRange, true, CONTROL_WIDTH);
 				}
 				
 				if (uicontrol) {
 	
-					uicontrol.addLabel(control.displayName);
-					uicontrol.x = count * 40 + 4;
-					uicontrol.y = 14;
 					uicontrol.background = true;
+					uicontrol.addLabel(control.displayName, null, CONTROL_WIDTH);
+					uicontrol.x = count * (CONTROL_WIDTH + 2) + 4;
+					uicontrol.y = 14;
 					
 					addChild(uicontrol);
 					_controls.push(uicontrol);

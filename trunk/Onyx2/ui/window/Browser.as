@@ -59,8 +59,8 @@ package ui.window {
 		private static const FOLDER_HEIGHT:int	= 10;
 		
 		// holds our child objects and masks em
-		private var _files:ScrollPane	= new ScrollPane(500, 204);
-		private var _folders:ScrollPane	= new ScrollPane(94, 200);
+		private var _files:ScrollPane	= new ScrollPane(300, 204);
+		private var _folders:ScrollPane	= new ScrollPane(90, 204);
 		
 		// constructor
 		public function Browser():void {
@@ -76,8 +76,8 @@ package ui.window {
 			_files.x = 2;
 			_files.y = 14;
 			
-			_folders.x = 300;
-			_folders.y = 18;
+			_folders.x = 304;
+			_folders.y = 14;
 			_folders.backgroundColor = 0x181a1b;
 			
 			addChild(_folders);
@@ -108,7 +108,8 @@ package ui.window {
 				_folders.addChild(foldercontrol);
 				
 				index = _folders.getChildIndex(foldercontrol);
-				foldercontrol.y = FOLDER_HEIGHT * index;
+				foldercontrol.x = 3;
+				foldercontrol.y = FOLDER_HEIGHT * index + 2;
 				
 			}
 			

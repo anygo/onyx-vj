@@ -44,7 +44,7 @@ package ui.controls.filter {
 		
 		private var _plugin:Plugin;
 		private var _label:TextField = new TextField(70,12);
-		private var _btn:ButtonClear = new ButtonClear(90,12);
+		private var _btn:ButtonClear = new ButtonClear(91,12);
 		private var _bg:AssetLayerFilterInactive = new AssetLayerFilterInactive();
 		
 		public function LibraryFilter(plugin:Plugin):void {

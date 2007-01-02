@@ -46,7 +46,7 @@ package ui.controls {
 		public function addLabel(name:String, align:String = 'center', width:int = -1, height:int = 7):void {
 			
 			var label:TextField = new TextField(width || super.width, height);
-			label.align = align;
+			label.align = align || 'center';
 			label.text = name;
 			label.y = -9;
 

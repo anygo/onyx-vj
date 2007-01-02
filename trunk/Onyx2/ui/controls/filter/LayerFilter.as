@@ -35,7 +35,6 @@ package ui.controls.filter {
 	import flash.utils.getTimer;
 	
 	import onyx.filter.Filter;
-	import onyx.filter.Filter;
 	import onyx.layer.Layer;
 	
 	import ui.assets.AssetLayerFilter;

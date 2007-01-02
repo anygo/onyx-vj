@@ -104,8 +104,8 @@ package ui.layer {
 				selectedLayer.highlight(0,0);
 			}
 			
-			// make the delay slower
-			uilayer._timer.delay = 100;
+			// make the delay faster
+			uilayer._timer.delay = 160;
 			uilayer.highlight(0xCCCCCC, .09);
 			
 			selectedLayer = uilayer;
@@ -143,7 +143,7 @@ package ui.layer {
 		private var _preview:Bitmap							= new Bitmap(new BitmapData(192, 144, true, 0x00000000));
 		private var _filename:TextField						= new TextField(162,16);
 
-		private var _filters:ScrollPane						= new ScrollPane(100,110);
+		private var _filters:Sprite							= new Sprite();
 
 		private var _selectedFilter:LayerFilter;
 		private var _selectedFilterWindow:UIFilterSelection;
@@ -295,7 +295,7 @@ package ui.layer {
 
 				new DropDown(controls.blendMode, false, 124, 12, 'left'),	4,			153,
 				
-				_assetScrub,								LAYER_SCRUB_LEFT,			141,
+				_assetScrub,								LAYER_SCRUB_LEFT,			139,
 				_btnScrub,													1,			135,
 				_filters,													96,			172,
 
@@ -350,9 +350,6 @@ package ui.layer {
 
 			// update the preview			
 			_onUpdateTimer(null);
-			
-			// clears children
-			_filters.clearChildren();
 			
 			// TBD: Need to add filters
 		}
@@ -417,6 +414,8 @@ package ui.layer {
 			removeEventListener(Event.ENTER_FRAME, _updatePlayheadHandler);
 			
 			_layer.pause(true);
+
+			_onScrubMove(event);
 		}
 
 		/**
@@ -424,9 +423,9 @@ package ui.layer {
 		 * 	When the scrubber is moved
 		 */
 		private function _onScrubMove(event:MouseEvent):void {
-			var value:int = Math.min(Math.max(_btnScrub.mouseX,LAYER_SCRUB_LEFT),LAYER_SCRUB_RIGHT);
+			var value:int = Math.min(Math.max(_btnScrub.mouseX - LAYER_SCRUB_LEFT,LAYER_SCRUB_LEFT),LAYER_SCRUB_RIGHT);
 			_assetScrub.x = value;
-			_layer.timePercent = value / LAYER_WIDTH;
+			_layer.time = value / LAYER_WIDTH;
 
 		}
 
@@ -567,7 +566,7 @@ package ui.layer {
 
 			filter.highlight(0xFFFFFF, .4);
 
-			_selectedFilterWindow.y = 302;
+			_selectedFilterWindow.y = 294;
 			_selectedFilterWindow.addControls(filter.filter);
 			
 			_selectedFilter = filter;
@@ -586,13 +585,6 @@ package ui.layer {
 		 */
 		public function get index():int {
 			return _layer.index;
-		}
-		
-		/**
-		 * 
-		 */
-		override public function toString():String {
-			return '[UILayer ' + _layer.index + ']';
 		}
 
 	}

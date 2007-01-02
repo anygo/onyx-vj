@@ -39,9 +39,11 @@ package ui.controls.browser {
 
 	public final class FolderControl extends UIControl {
 		
-		private var _label:TextField = new TextField(95,10);
+		public static const FOLDER_WIDTH:int = 90;
+		
+		private var _label:TextField = new TextField(FOLDER_WIDTH,10);
 		private var _img:Bitmap;
-		private var _btn:ButtonClear = new ButtonClear(95,10);
+		private var _btn:ButtonClear = new ButtonClear(FOLDER_WIDTH + 2,11);
 		
 		public function FolderControl(path:String):void {
 			
@@ -53,6 +55,8 @@ package ui.controls.browser {
 				_label.text = path;
 			}
 			
+			_btn.x = -2;
+			_btn.y = -1;
 			_img.y = 1;
 			_label.x = 9;
 			

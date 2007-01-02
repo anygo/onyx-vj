@@ -85,18 +85,30 @@ package ui.window {
 			addChild(dropdown);
 		}
 		
+		/**
+		 * 
+		 */
 		public function set duration(value:int):void {
 			TransitionWindow.duration = value;
 		}
 		
+		/**
+		 * 
+		 */
 		public function get duration():int {
 			return TransitionWindow.duration;
 		}
 		
+		/**
+		 * 
+		 */
 		public function set transition(value:Plugin):void {
 			TransitionWindow.plugin = value;
 		}
 		
+		/**
+		 * 
+		 */
 		public function get transition():* {
 			return TransitionWindow.plugin;
 		}
