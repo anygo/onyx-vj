@@ -51,6 +51,8 @@ package onyx.filter {
 	 */
 	public class Filter extends EventDispatcher {
 
+		public var description:String;
+
 		// this sets the name of the filter
 		private var _name:String;
 		
@@ -63,51 +65,72 @@ package onyx.filter {
 		// create controls
 		protected var _controls:Controls	= new Controls(this);
 		
-		// constructor
+		/**
+		 * 	@contructor
+		 */
 		final public function Filter(name:String):void {
 			_name = name;
 		}
 		
+		/**
+		 * 	Returns the name of the filter
+		 */
 		final public function get name():String {
 			return _name;
 		}
 		
-		// gets the current position of the filter within the layer
+		/**
+		 * 	Gets the index of the filter
+		 */
 		final public function get index():int {
 			return content.getFilterIndex(this);
 		}
 
-		// called by layer when a filter is added to it
-		onyx_internal function setContent(content:IContent):void {
+		/**
+		 * 	@private
+		 *	Called by layer when a filter is added to it
+		 */
+		onyx_internal final function setContent(content:IContent):void {
 			this.content = content;
 		}
 		
+		/**
+		 * 	Returns the controls related toe the filter
+		 */
 		final public function get controls():Controls {
 			return _controls;
 		}
 		
+		/**
+		 * 	Initialized when the filter is added to the object
+		 */
 		public function initialize():void {
 		}
 		
+		/**
+		 * 	Clones the filter
+		 */
 		public function clone():Filter {
 			return null;
 		}
 		
+		/**
+		 * 	Moves the filter up
+		 */
 		final public function moveUp():void {
-//			var event:FilterEvent = new FilterEvent(FilterEvent.FILTER_MOVE_UP, this)
-//			dispatchEvent(event);
-
 			content.moveFilterUp(this);
-//			content.moveFilter(this, true);
 		}
 		
+		/**
+		 * 	Moves the filter down
+		 */
 		final public function moveDown():void {
-//			var event:FilterEvent = new FilterEvent(FilterEvent.FILTER_MOVE_DOWN, this)
-//			dispatchEvent(event);
-			// content.moveFilter(this, false);
 			content.moveFilterDown(this);
 		}
 		
+		/**
+		 * 	Destroys the filter
+		 */
 		public function dispose():void {
 			_controls.dispose();
 			_controls = null;

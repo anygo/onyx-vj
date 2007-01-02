@@ -32,13 +32,12 @@ package onyx.controls {
 	
 	public final class ControlRange extends Control {
 		
-		public var data:Array;
-		
+		private var _data:Array;
 		private var _defaultvalue:uint;
 		
 		public function ControlRange(name:String, display:String, data:Array, defaultvalue:uint):void {
 			
-			this.data = data;
+			this._data = data;
 			this._defaultvalue = defaultvalue;
 			
 			super(name, display);
@@ -50,15 +49,21 @@ package onyx.controls {
 		}
 		
 		override public function set value(v:*):void {
-			var value:Number = (v is Number) ? v : data.indexOf(v);
-			super.value = data[value];
+			var value:Number = (v is Number) ? v : _data.indexOf(v);
+			super.value = _data[value];
 		}
 		
 		override public function reset():void {
-			target[property] = data[_defaultvalue];
+			target[property] = _data[_defaultvalue];
 		}
 		
-
+		public function set data(value:Array):void {
+			_data = value;
+		}
+		
+		public function get data():Array {
+			return _data;
+		}
 	}
 	
 }

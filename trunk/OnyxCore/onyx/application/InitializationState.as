@@ -46,25 +46,46 @@ package onyx.application {
 	import onyx.assets.PixelFont;
 	import onyx.core.Console;
 	import onyx.core.onyx_internal;
+	import onyx.events.ApplicationEvent;
+	import onyx.events.FilterEvent;
+	import onyx.events.PluginEvent;
+	import onyx.events.TransitionEvent;
+	import onyx.net.IExternalPlugin;
 	import onyx.net.IFilterLoader;
 	import onyx.net.ITransitionLoader;
+	import onyx.net.Plugin;
 	import onyx.settings.Settings;
 	
 	use namespace onyx_internal;
-	
+
+	/**
+	 * 
+	 */	
 	public final class InitializationState extends ApplicationState {
 		
 		private var _filtersToLoad:Array	= [];
 		private var _image:DisplayObject;
 		private var _label:TextField		= new TextField();
-		private var _timer:Timer			= new Timer(500);
+		private var _timer:Timer			= new Timer(300);
 
+		/**
+		 * 	Initializes
+		 */
 		override public function initialize(... args:Array):void {
 			
+			// dispatch a start event
+			Onyx.instance.dispatchEvent(new ApplicationEvent(ApplicationEvent.ONYX_STARTUP_START));
+			
+			// listen for new plugins
+			Onyx.instance.addEventListener(PluginEvent.PLUGIN_LOADED, _onPluginCreate);
+
+			// create the image and a label
 			_image = new OnyxStartUpImage();
 			Onyx.root.addChild(_image);
 			Onyx.root.addChild(_label);
-			Onyx.root.addEventListener(MouseEvent.MOUSE_DOWN, _onMouseDown, true, -1);
+			
+			Onyx.root.addEventListener(MouseEvent.MOUSE_DOWN, _captureEvents, true, -1);
+			Onyx.root.addEventListener(MouseEvent.MOUSE_UP, _captureEvents, true, -1);
 			
 			_label.selectable = false;
 			_label.defaultTextFormat = PixelFont.DEFAULT;
@@ -77,6 +98,14 @@ package onyx.application {
 		}
 		
 		/**
+		 * 	@private
+		 * 	Handler when a plug-in is loaded
+		 */
+		private function _onPluginCreate(event:PluginEvent):void {
+		}
+		
+		/**
+		 * 	@private
 		 * 	Initializes the external filter loading
 		 */
 		private function _loadExternalPlugins():void {
@@ -89,6 +118,7 @@ package onyx.application {
 		}
 		
 		/**
+		 * 	@private
 		 * 	When filter is loaded
 		 */
 		private function _onFiltersLoaded(event:Event):void {
@@ -116,6 +146,7 @@ package onyx.application {
 		}
 		
 		/**
+		 * 	@private
 		 * 	When a filter is loaded
 		 */
 		private function _onFilterLoaded(event:Event):void {
@@ -123,58 +154,60 @@ package onyx.application {
 			var info:LoaderInfo = event.currentTarget as LoaderInfo;
 			_filtersToLoad.splice(_filtersToLoad.indexOf(info.loader), 1);
 
+			// if valid swf
 			if (!(event is IOErrorEvent)) {
 				
-				trace(info.content is ITransitionLoader);
+				var pluginSWF:IExternalPlugin = info.content as IExternalPlugin;
 				
-				if (info.content is IFilterLoader) {
+				if (pluginSWF) {
 					
-					var filters:Array = (info.content as IFilterLoader).registerFilters();
-
-					for each (var filter:Class in filters) {
-						Onyx.registerFilter(filter);
-						_label.appendText('REGISTERING ' + String(filter.name).toUpperCase() + '\n');
+					var plugins:Array = pluginSWF.plugins;
+					
+					for each (var plugin:Plugin in plugins) {
+						
+						Onyx.registerPlugin(plugin);
+						
+						_label.appendText('REGISTERING ' + plugin.name.toUpperCase() + '\n');
 						_label.scrollV = _label.maxScrollV;
 					}
-				
-				}
-
-
-				if (info.content is ITransitionLoader) {
-					
-					var transitions:Array = (info.content as ITransitionLoader).registerTransitions();
-
-					for each (var transition:Class in transitions) {
-						Onyx.registerTransition(transition);
-						_label.appendText('REGISTERING ' + String(transition.name).toUpperCase() + '\n');
-						_label.scrollV = _label.maxScrollV;
-					}
-				
 				}
 			}
 			
+			// no more filters to load
 			if (_filtersToLoad.length == 0) {
-
-				Onyx.root.removeEventListener(Event.ADDED, _onItemAdded);
-				_label.appendText('INITIALIZING ...\n');
-				_label.scrollV = _label.maxScrollV;
-
-				_timer.start();
-				_timer.addEventListener(TimerEvent.TIMER, _endState);
+				_initialize();
 			}
 		}
 		
+		/**
+		 * 	@private
+		 * 	Begin initialization timer
+		 */
+		private function _initialize():void {
+			Onyx.root.removeEventListener(Event.ADDED, _onItemAdded);
+			_label.appendText('INITIALIZING ...\n');
+			_label.scrollV = _label.maxScrollV;
+
+			_timer.start();
+			_timer.addEventListener(TimerEvent.TIMER, _endState);
+		}
+		
+		/**
+		 * 	@private
+		 * 	Ends the timer
+		 */
 		private function _endState(event:TimerEvent):void {
 			
 			_timer.stop();
 			_timer.removeEventListener(TimerEvent.TIMER, _endState);
 			_timer = null;
 			
-			Onyx.loadState(new RunTimeState());
+			// end the state
+			StateManager.removeState(this);
 		}
 		
 		/**
-		 * 
+		 * 	When an item is added, make sure it is below the startup image
 		 */
 		private function _onItemAdded(event:Event):void {
 			
@@ -185,32 +218,44 @@ package onyx.application {
 		}
 		
 		/**
-		 * 	Traps events
+		 * 	@private
+		 * 	Traps all mouse events
 		 */
-		private function _onMouseDown(event:MouseEvent):void {
-			event.stopImmediatePropagation();
+		private function _captureEvents(event:MouseEvent):void {
+			event.stopPropagation();
 		}
 		
 		/**
-		 * 	Terminates
+		 * 	Terminates the state
 		 */
 		override public function terminate():void {
 
+			// remove listeners
+			Onyx.root.removeEventListener(MouseEvent.MOUSE_DOWN, _captureEvents, true);
+			Onyx.root.removeEventListener(MouseEvent.MOUSE_UP, _captureEvents, true);
+			
+			// remove items
+			Onyx.root.removeChild(_image);
+			Onyx.root.removeChild(_label);
+			
+			// clear references
+			_image = null;
+			_label = null;
+			_filtersToLoad = null;
+
+			// we're done initializing
+			Onyx.instance.dispatchEvent(new ApplicationEvent(ApplicationEvent.ONYX_STARTUP_END));
+
+			// dispatch the start-up motd
 			Console.trace(
-				'<font size="14" color="#DCC697"><b>onyx version 3.0a</b></font><br>' + 
-				'copyright 2003-2006 by Daniel Hai.' +
+				'<font size="14" color="#DCC697"><b>onyx version 3.0b</b></font><br>' + 
+				'copyright 2003-2006: www.onyx-vj.com.' +
 				'<br>enter command "help" for more info.<br><br>' +
 				Onyx._filters.length + ' filters loaded.<br>' +
 				Onyx._transitions.length + ' transitions loaded.<br><br>');
 
-			Onyx.root.removeEventListener(MouseEvent.MOUSE_DOWN, _onMouseDown, true);
-			Onyx.root.removeChild(_image);
-			Onyx.root.removeChild(_label);
-			
-			_image = null;
-			_label = null;
-			_filtersToLoad = null;
-		}
+			StateManager.loadState(new RunTimeState());
 
+		}
 	}
 }

@@ -45,6 +45,7 @@ package onyx.display {
 	import onyx.layer.LayerProperties;
 	import onyx.layer.LayerSettings;
 	import onyx.transition.*;
+	import flash.events.EventDispatcher;
 	
 	use namespace onyx_internal;
 	
@@ -64,8 +65,7 @@ package onyx.display {
 			new ControlNumber('scaleY', 'scaleY', 0, 4, 0)
 		);
 		
-		onyx_internal var _layers:Array		= [];
-		onyx_internal var _index:int;
+		private var _layers:Array		= [];
 		
 		public function Display():void {
 			
@@ -102,12 +102,14 @@ package onyx.display {
 				// dispatch
 				var event:LayerEvent = new LayerEvent(LayerEvent.LAYER_CREATED, layer);
 				
-				// dispatch a layer create event
-				Onyx.dispatcher.dispatchEvent(event);
+				// dispatch a layer create
+				var dispatcher:EventDispatcher = Onyx.getInstance();
+				dispatcher.dispatchEvent(event);
 			}
 		}
 		
 		/**
+		 * 	@private
 		 * 	When a layer is moved down
 		 */
 		private function _onLayerMoveDown(event:LayerEvent):void {
@@ -118,6 +120,7 @@ package onyx.display {
 		}
 		
 		/**
+		 * 	@private
 		 * 	When a layer is moved up
 		 */
 		private function _onLayerMoveUp(event:LayerEvent):void {
@@ -128,6 +131,7 @@ package onyx.display {
 		}
 		
 		/**
+		 * 	@private
 		 * 	Copies a layer
 		 */
 		private function _onLayerCopy(event:LayerEvent):void {
@@ -171,7 +175,7 @@ package onyx.display {
 		 * 	Gets the display index
 		 */
 		public function get index():int {
-			return _index;
+			return Onyx._displays.indexOf(this);
 		}
 		
 		/**

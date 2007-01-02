@@ -41,7 +41,6 @@ package onyx.events {
 		onyx_internal static const FILTER_MOVE_UP:String	= 'fmoveup';
 		onyx_internal static const FILTER_MOVE_DOWN:String	= 'fmovedown';
 		
-		public static const FILTER_CREATED:String 	= 'fcreate';
 		public static const FILTER_APPLIED:String	= 'fapply';
 		public static const FILTER_REMOVED:String	= 'fremove';
 		public static const FILTER_MOVED:String		= 'fmove';

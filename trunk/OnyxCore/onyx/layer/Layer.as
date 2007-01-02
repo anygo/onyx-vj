@@ -67,16 +67,6 @@ package onyx.layer {
 	public class Layer extends Sprite implements ILayer {
 		
 		/**
-		 * 	Holds the class for all layer transitions
-		 */
-		public static var transitionClass:Class;
-		
-		/**
-		 * 	Stores the duration for new transitions
-		 */
-		public static var transitionDuration:int	= 2000;
-
-		/**
 		 * 	@private
 		 * 	Stores the transition for layer
 		 */
@@ -103,11 +93,6 @@ package onyx.layer {
 		 * 	Creates the base bitmap
 		 */
 		private var _source:BitmapData			= getBaseBitmap();
-		
-		/**
-		 * 	Temporary variable for how long the layer takes to render
-		 */
-		public var renderTime:int				= 0;
 
 		/**
 		 * 	@private
@@ -161,10 +146,15 @@ package onyx.layer {
 		 * 	Loads a file type into a layer
 		 * 	The path of the file to load into the layer
 		 **/
-		public function load(request:URLRequest, settings:LayerSettings = null):void {
+		public function load(request:URLRequest, settings:LayerSettings = null, transition:Transition = null):void {
 			
 			// do we have settings?
 			_settings = settings;
+			
+			// do we have a transition?
+			this.transition = transition;
+			
+			trace(transition);
 			
 			// store the request
 			_request = request;
@@ -197,13 +187,19 @@ package onyx.layer {
 		 * 	@private
 		 * 	Initializes Content
 		 */
-		private function _createContent(content:Object):void {
+		private function _createContent(metadata:Object):void {
 
 			_destroyContent();
 
 			// create the content based on the passed in object
-			if (content is Loader) {
-				_content = new ContentSWFMovieClip(content as Loader);
+			if (metadata is Loader) {
+				var content:IContent = new ContentSWFMovieClip(metadata as Loader);
+				
+				if (_transition && !(_content is ContentNull)) {
+					_transition.initializeTransition(_content, content, this);	
+				}
+
+				_content = content;
 			}
 			
 			// if it's a displayobject, add it
@@ -270,6 +266,7 @@ package onyx.layer {
 			}
 			
 			// now test to see if we have a transition
+			/*
 			if (transitionClass && !(_content is ContentNull)) {
 
 				_transition = new transitionClass(transitionDuration);
@@ -297,7 +294,7 @@ package onyx.layer {
 				_render();
 
 			}
-			
+			*/
 		}
 
 		/**
@@ -592,8 +589,17 @@ package onyx.layer {
 		 * 	Sets the transition for the layer
 		 */
 		public function set transition(value:Transition):void {
+			
+			if (_transition) {
+				_transition.dispose();
+			}
+			
 			_transition = value;
-			_transition.addEventListener(TransitionEvent.TRANSITION_END, _endTransition);
+			
+			// if we're not setting it to null
+			if (value) {
+				_transition.addEventListener(TransitionEvent.TRANSITION_END, _endTransition);
+			}
 		}
 		
 		/**

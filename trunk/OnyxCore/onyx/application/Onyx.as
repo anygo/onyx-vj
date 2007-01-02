@@ -33,6 +33,7 @@ package onyx.application {
 	import flash.display.Stage;
 	import flash.events.*;
 	import flash.net.*;
+	import flash.utils.Timer;
 	import flash.utils.getQualifiedClassName;
 	
 	import onyx.controls.*;
@@ -42,6 +43,8 @@ package onyx.application {
 	import onyx.events.*;
 	import onyx.filter.*;
 	import onyx.layer.*;
+	import onyx.net.IFilterLoader;
+	import onyx.net.Plugin;
 	import onyx.transition.*;
 	
 	use namespace onyx_internal;
@@ -56,19 +59,14 @@ package onyx.application {
 		);
 		
 		/**
-		 * 	Stores conversion for degrees to radians
-		 */
-		public static const RADIANS:Number = Math.PI / 180;
-		
-		/**
 		 * 	Dispatcher
 		 */
-		onyx_internal static const dispatcher:EventDispatcher = new EventDispatcher();
+		internal static const instance:EventDispatcher = new EventDispatcher();
 		
 		/**
 		 * 	Stores reference to root
 		 */
-		onyx_internal static var root:Stage;
+		internal static var root:Stage;
 		
 		/**
 		 * 	Stores references to all the displays
@@ -78,22 +76,12 @@ package onyx.application {
 		/**
 		 * 	Stores definitions to all the filters
 		 */
-		internal static var _filters:Array		= [];
+		internal static var _filters:Array			= [];
 		
 		/**
 		 * 	Stores definitions for all the transitions
 		 */
-		internal static var _transitions:Array	= [];
-		
-		/**
-		 * 	
-		 */
-		private static var _states:Array			= [];
-
-		/**
-		 * 	Application state
-		 */		
-		private static var _state:ApplicationState;
+		internal static var _transitions:Array		= [];
 
 		/**
 		 * 	Gets the framerate
@@ -108,54 +96,45 @@ package onyx.application {
 		public static function set framerate(value:int):void {
 			root.frameRate = value;
 		}
+				
+		/**
+		 * 	
+		 */
+		public static function getInstance():EventDispatcher {
+			return instance;
+		}
 		
-		/**
-		 * 	Loads an application state
-		 */
-		internal static function loadState(state:ApplicationState, ... args:Array):void {
-
-			if (_state) {
-				_state.terminate();
-			}
-
-			_state = state;
-			state.initialize.apply(state, args);
-		}
-
-		/**
-		 * 	Adds an event listener
-		 */
-		public static function addEventListener(type:String, fn:Function, useCapture:Boolean = false, priority:int = 0, useWeakReference:Boolean = false):void {
-			dispatcher.addEventListener(type, fn, useCapture, priority, useWeakReference);
-		}
-
-		/**
-		 * 	Removes an event listener
-		 */
-		public static function removeEventListener(type:String, fn:Function):void {
-			dispatcher.removeEventListener(type, fn);
-		}
-
-		/**
-		 * 	Tests for an event listener
-		 */
-		public static function hasEventListener(type:String):Boolean {
-			return dispatcher.hasEventListener(type);
-		}
-
 		/**
 		 * 	Initializes the Onyx engine
 		 */
-		public static function initialize(root:Stage):void {
+		public static function initialize(root:Stage):EventDispatcher {
 			
 			Onyx.root = root;
 			
-			loadState(new InitializationState());
-			
-			root.addEventListener(Event.RESIZE, _onResize);
+			// root.addEventListener(Event.RESIZE, _onResize);
 
 			controls.framerate.value = root.frameRate;
+			
+			// create a timer so that objects can listen for events
+			var timer:Timer = new Timer(0);
+			timer.addEventListener(TimerEvent.TIMER, _onInitialize);
+			timer.start();
 
+			return instance;
+		}
+		
+		/**
+		 * 	@private
+		 */
+		private static function _onInitialize(event:TimerEvent):void {
+			
+			var timer:Timer = event.currentTarget as Timer;
+			timer.removeEventListener(TimerEvent.TIMER, _onInitialize);
+			timer.stop();
+
+			// start initialization
+			StateManager.loadState(new InitializationState());
+			
 		}
 		
 		/**
@@ -169,51 +148,30 @@ package onyx.application {
 		}
 		
 		/**
-		 * 	Registers a transition class
+		 * 	Registers plug-ins
 		 */
-		public static function registerTransition(... transitions:Array):void {
+		public static function registerPlugin(plugin:Plugin):void {
 			
-			for each (var transition:Class in transitions) {
-				
-				var instance:Transition = new transition();
-				
-				transition.index = _transitions.push(transition) - 1;
-				transition['name'] = instance.name;
-				
-				var event:TransitionEvent = new TransitionEvent(TransitionEvent.TRANSITION_CREATED);
-				event.definition = transition;
-				
-				dispatcher.dispatchEvent(event);
-				
-			}
-		}
-		
-		/**
-		 * 	Registers a filter
-		 */
-		public static function registerFilter(... filters:Array):void {
-			
-			for each (var filter:Class in filters) {
-				
-				if (filter) {
+			if (plugin.definition) {
 
-					// check for name					
-					var instance:Filter = new filter();
-					
-					filter.index = _filters.push(filter) - 1;
-					
-					filter['name'] = instance.name;
+				var object:Object = new plugin.definition();
 				
-					var event:FilterEvent = new FilterEvent(FilterEvent.FILTER_CREATED, null);
-					event.definition = filter;
-			
-					dispatcher.dispatchEvent(event);
-					
-					instance.dispose();
+				// test the type of object
+				if (object is Filter) {
+					var type:Class = Filter;
+					_filters.push(plugin);
+
+				} else if (object is Transition) {
+					type = Transition;
+					_transitions.push(plugin);
 				}
+				
+				var event:PluginEvent = new PluginEvent(plugin, type);
+				instance.dispatchEvent(event);
+				
 			}
 		}
-		
+				
 		/**
 		 * 	Returns the filter classes
 		 */
@@ -242,7 +200,7 @@ package onyx.application {
 			
 			var display:Display = new Display();
 			display.createLayers(numLayers);
-			display._index = _displays.push(display);
+			_displays.push(display);
 			
 			display.scaleX = 1;
 			display.scaleY = 1;
@@ -254,7 +212,7 @@ package onyx.application {
 
 			var event:DisplayEvent = new DisplayEvent(DisplayEvent.DISPLAY_CREATED);
 			event.display = display;
-			dispatcher.dispatchEvent(event);
+			instance.dispatchEvent(event);
 			
 			return display;
 		}

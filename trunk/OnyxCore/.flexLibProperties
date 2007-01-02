@@ -9,11 +9,13 @@
     <classEntry path="onyx.net.ITransitionLoader"/>
     <classEntry path="onyx.events.DisplayEvent"/>
     <classEntry path="onyx.sound.SpectrumAnalyzer"/>
+    <classEntry path="onyx.core.RADIANS"/>
     <classEntry path="onyx.controls.IControlObject"/>
     <classEntry path="onyx.layer.LayerSettings"/>
     <classEntry path="onyx.core.IDisposable"/>
     <classEntry path="onyx.content.ContentSWFMovieClip"/>
     <classEntry path="onyx.content.Content"/>
+    <classEntry path="onyx.application.StateManager"/>
     <classEntry path="onyx.core.Console"/>
     <classEntry path="onyx.events.TransitionEvent"/>
     <classEntry path="onyx.controls.ControlRange"/>
@@ -42,6 +44,7 @@
     <classEntry path="onyx.application.InitializationState"/>
     <classEntry path="onyx.net.files.CameraObject"/>
     <classEntry path="onyx.core.getBaseBitmap"/>
+    <classEntry path="onyx.events.PluginEvent"/>
     <classEntry path="onyx.net.files.File"/>
     <classEntry path="onyx.display.Display"/>
     <classEntry path="onyx.controls.Controls"/>
@@ -49,6 +52,7 @@
     <classEntry path="onyx.filter.Filter"/>
     <classEntry path="onyx.layer.LayerProperties"/>
     <classEntry path="onyx.net.Connection"/>
+    <classEntry path="onyx.net.Plugin"/>
     <classEntry path="onyx.layer.IColorObject"/>
     <classEntry path="onyx.core.BLEND_MODES"/>
     <classEntry path="onyx.controls.ControlInt"/>
@@ -59,6 +63,7 @@
     <classEntry path="onyx.events.ContentEvent"/>
     <classEntry path="onyx.controls.Control"/>
     <classEntry path="onyx.events.ControlEvent"/>
+    <classEntry path="onyx.net.IExternalPlugin"/>
     <classEntry path="onyx.net.files.FolderList"/>
     <classEntry path="onyx.events.LayerEvent"/>
     <classEntry path="onyx.display.RemoteDisplay"/>
