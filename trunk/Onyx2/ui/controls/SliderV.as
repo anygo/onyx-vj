@@ -68,11 +68,11 @@ package ui.controls {
 			_controlY.addEventListener(ControlEvent.CONTROL_CHANGED, _onControlChange);
 		}
 		
-		private function _onDoubleClick(event:MouseEvent):void {
+		protected function _onDoubleClick(event:MouseEvent):void {
 			_controlY.reset();
 		}
 
-		private function _onMouseDown(event:MouseEvent):void {
+		protected function _onMouseDown(event:MouseEvent):void {
 			
 			_tempY = mouseY + _controlY.value * _multiplier;
 			
@@ -81,18 +81,18 @@ package ui.controls {
 
 		}
 		
-		private function _onMouseMove(event:MouseEvent):void {
+		protected function _onMouseMove(event:MouseEvent):void {
 			_controlY.value = (Math.floor(_tempY - mouseY)) / _multiplier;
 		}
 		
-		private function _onMouseUp(event:MouseEvent):void {
+		protected function _onMouseUp(event:MouseEvent):void {
 			
 			stage.removeEventListener(MouseEvent.MOUSE_MOVE, _onMouseMove);
 			stage.removeEventListener(MouseEvent.MOUSE_UP, _onMouseUp);
 			
 		}
 		
-		private function _onControlChange(event:ControlEvent = null):void {
+		protected function _onControlChange(event:ControlEvent = null):void {
 			_value.text = String(Math.floor(_controlY.value * _multiplier));
 		}
 

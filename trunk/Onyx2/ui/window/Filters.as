@@ -40,6 +40,7 @@ package ui.window {
 	import ui.core.UIObject;
 	import ui.events.DragEvent;
 	import ui.layer.UILayer;
+	import onyx.net.Plugin;
 	
 	public final class Filters extends Window {
 		
@@ -58,31 +59,39 @@ package ui.window {
 			width = 194;
 			height = 220;
 
-			Onyx.addEventListener(FilterEvent.FILTER_CREATED, _onFilterCreate);
+			_createControl();
+
+		}
+		
+		private function _createControl():void {
+			
+			var filters:Array = Onyx.filters;
+			
+			for (var index:int = 0; index < filters.length; index++) {
+				
+				var plugin:Plugin = filters[index];
+				
+				// create library ui item
+				var lib:LibraryFilter = new LibraryFilter(plugin);
+				lib.x = 3 + (Math.floor(index / ITEMS_PER_ROW) * ITEM_LENGTH);
+				lib.y = (index % ITEMS_PER_ROW) * 15 + 13;
+				
+				// add to the array
+				_library.push(lib);
+				
+				// handle events
+				lib.addEventListener(MouseEvent.MOUSE_DOWN, _onMouseDown);
+				lib.addEventListener(MouseEvent.DOUBLE_CLICK, _onDoubleClick);
+				lib.doubleClickEnabled = true;
+				
+				addChild(lib);
+			}
 			
 		}
 		
-		private function _onFilterCreate(event:FilterEvent):void {
-			
-			// create library ui item
-			var lib:LibraryFilter = new LibraryFilter(event.definition);
-			var index:int = lib.index;
-			lib.x = 3 + (Math.floor(index / ITEMS_PER_ROW) * ITEM_LENGTH);
-			lib.y = (index % ITEMS_PER_ROW) * 15 + 13;
-			
-			// add to the array
-			_library.push(lib);
-			
-			// handle events
-			lib.addEventListener(MouseEvent.MOUSE_DOWN, _onMouseDown);
-			lib.addEventListener(MouseEvent.DOUBLE_CLICK, _onDoubleClick);
-			lib.doubleClickEnabled = true;
-			
-			addChild(lib);
-			
-		}
-		
-		// double click auto-loads
+		/**
+		 * 	@private
+		 */
 		private function _onDoubleClick(event:MouseEvent):void {
 			
 			var control:LibraryFilter = event.target as LibraryFilter;

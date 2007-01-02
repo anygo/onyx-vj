@@ -31,22 +31,28 @@
 package ui.window {
 	
 	import onyx.application.Onyx;
+	import onyx.controls.ControlInt;
 	import onyx.controls.ControlRange;
 	import onyx.events.TransitionEvent;
 	import onyx.layer.Layer;
+	import onyx.net.Plugin;
+	import onyx.transition.Transition;
 	
 	import ui.controls.DropDown;
 	
 	public final class TransitionWindow extends Window {
-
-		private var data:Array = [{ name: 'None' }];
+		
 		private var dropdown:DropDown;
+		private var controlTransition:ControlRange;
+		private var controlDuration:ControlInt;
 		
-		private var control:ControlRange = new ControlRange('transition', 'Transition', data, 0);
+		public static var plugin:Plugin;
+		public static var duration:int	= 2000;
 		
+		/**
+		 * 	@Constructor
+		 */
 		public function TransitionWindow():void {
-			
-			control.target = this;
 			
 			title = 'TRANSITIONS';
 			x = 6;
@@ -54,31 +60,45 @@ package ui.window {
 			width = 190;
 			height = 50;
 			
-			Onyx.addEventListener(TransitionEvent.TRANSITION_CREATED, _onTransitionCreate);
+			initialize();
 			
-			dropdown = new DropDown(control, true, 100, 18, 'left', 'name');
-			dropdown.y = 14;
+		}
+		
+		/**
+		 * 	Initialize window
+		 */
+		public function initialize():void {
+			
+			var data:Array = Onyx.transitions;
+			data.unshift(null);
+			
+ 			controlTransition			= new ControlRange('transition', 'Transition', data, 0)
+			controlTransition.target	= this;
+			
+ 			dropdown					= new DropDown(controlTransition, true, 80, 11, 'left', 'name');
+ 			dropdown.background			= true;
+ 			dropdown.addLabel('Transition', 'left');
+
+			dropdown.x = 2;
+			dropdown.y = 22;
+
 			addChild(dropdown);
 		}
 		
+		public function set duration(value:int):void {
+			TransitionWindow.duration = value;
+		}
+		
+		public function get duration():int {
+			return TransitionWindow.duration;
+		}
+		
+		public function set transition(value:Plugin):void {
+			TransitionWindow.plugin = value;
+		}
+		
 		public function get transition():* {
-			return Layer.transitionClass;
-		}
-		
-		public function set transition(value:*):void {
-			Layer.transitionClass = (value is Class) ? value : null;
-		}
-		
-		public function _onTransitionCreate(event:TransitionEvent):void {
-			data.push(event.definition);
-			
-			if (Onyx.transitions.length === 1) {
-				Layer.transitionClass = event.definition;
-			}
-		}
-		
-		override public function dispose():void {
-			Onyx.removeEventListener(TransitionEvent.TRANSITION_CREATED, _onTransitionCreate);
+			return TransitionWindow.plugin;
 		}
 		
 	}

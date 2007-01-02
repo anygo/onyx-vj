@@ -51,6 +51,8 @@ package ui.layer {
 	import onyx.events.LayerEvent;
 	import onyx.filter.Filter;
 	import onyx.layer.Layer;
+	import onyx.net.Plugin;
+	import onyx.transition.Transition;
 	
 	import ui.assets.*;
 	import ui.controls.*;
@@ -59,7 +61,11 @@ package ui.layer {
 	import ui.core.UIObject;
 	import ui.text.Style;
 	import ui.text.TextField;
-	
+	import ui.window.TransitionWindow;
+
+	/**
+	 * 	Controls layers
+	 */	
 	public class UILayer extends UIObject {
 		
 		/**
@@ -74,17 +80,22 @@ package ui.layer {
 
 		private static var _layers:Array			= [];
 
-		// an index of all the layers
+		/**
+		 * 	Returns all layers
+		 */
 		public static function get layers():Array {
 			return _layers;
 		}
-		
+
+		/**
+		 * 	Returns the layer control at a specified index
+		 */		
 		public static function getLayerAt(index:int):UILayer {
 			return _layers[index];
 		}
 
 		/**
-		 * 	@method		Selects a layer
+		 * 	Selects a layer
 		 */
 		public static function selectLayer(uilayer:UILayer):void {
 			
@@ -103,7 +114,7 @@ package ui.layer {
 		}
 		
 		/**
-		 *	@property	The currently selected layer 
+		 *	The currently selected layer 
 		 */
 		public static var selectedLayer:UILayer;
 
@@ -115,24 +126,24 @@ package ui.layer {
 
 		private var _layer:Layer;
 		private var _index:int;
-		private var _monitor:Boolean				= false;
+		private var _monitor:Boolean						= false;
 
-		private var _btnUp:ButtonClear				= new ButtonClear(10, 10);
-		private var _btnDown:ButtonClear			= new ButtonClear(10, 10);
-		private var _btnCopy:ButtonClear			= new ButtonClear(10, 10);
-		private var _btnDelete:ButtonClear			= new ButtonClear(10, 10);
+		private var _btnUp:ButtonClear						= new ButtonClear(10, 10);
+		private var _btnDown:ButtonClear					= new ButtonClear(10, 10);
+		private var _btnCopy:ButtonClear					= new ButtonClear(10, 10);
+		private var _btnDelete:ButtonClear					= new ButtonClear(10, 10);
 		
 		private var _loopStart:LoopStart;
 		private var _loopEnd:LoopEnd;
 		
-		private var _assetLayer:AssetLayer			= new AssetLayer();
-		private var _assetScrub:ScrubArrow 			= new ScrubArrow();
-		private var _btnScrub:ButtonClear			= new ButtonClear(192, 9, false);
-		private var _timer:Timer					= new Timer(2000);
-		private var _preview:Bitmap					= new Bitmap(new BitmapData(192, 144, true, 0x00000000));
-		private var _filename:TextField				= new TextField(162,16);
-		
-		private var _filters:ScrollPane				= new ScrollPane(100,110);
+		private var _assetLayer:AssetLayer					= new AssetLayer();
+		private var _assetScrub:ScrubArrow 					= new ScrubArrow();
+		private var _btnScrub:ButtonClear					= new ButtonClear(192, 16, false);
+		private var _timer:Timer							= new Timer(2000);
+		private var _preview:Bitmap							= new Bitmap(new BitmapData(192, 144, true, 0x00000000));
+		private var _filename:TextField						= new TextField(162,16);
+
+		private var _filters:ScrollPane						= new ScrollPane(100,110);
 
 		private var _selectedFilter:LayerFilter;
 		private var _selectedFilterWindow:UIFilterSelection;
@@ -140,7 +151,6 @@ package ui.layer {
 		/**
 		 * 	@constructor
 		 **/
-
 		public function UILayer(layer:Layer):void {
 			
 			if (!selectedLayer) {
@@ -158,7 +168,7 @@ package ui.layer {
 		}
 		
 		/**
-		 * 	@method		Highlights a layer with a particular color
+		 * 	Highlights a layer with a particular color
 		 *	@param		The color to tint
 		 * 	@param		The amount to tint by
 		 */
@@ -181,7 +191,10 @@ package ui.layer {
 			
 		}
 		
-		// assign handlers
+		/**
+		 * 	@private
+		 * 	assign handlers
+		 */
 		private function _assignHandlers():void {
 			
 			// add layer event handlers
@@ -212,7 +225,8 @@ package ui.layer {
 		}
 		
 		/**
-		 * 
+		 * 	@private
+		 * 	Handler while a file loads
 		 */
 		private function _onLayerProgress(event:ProgressEvent):void {
 			_filename.text = 'LOADING ' + Math.floor(event.bytesLoaded / event.bytesTotal * 100) + '% (' + Math.floor(event.bytesTotal / 1024) + ' kb)';
@@ -242,6 +256,10 @@ package ui.layer {
 			}
 		}
 		
+		/**
+		 * 	@private
+		 * 	Positions all the objects
+		 */
 		private function _draw():void {
 			
 			// make the filename text have a drop shadow
@@ -275,14 +293,14 @@ package ui.layer {
 
 				new SliderV(controls.framerate,10,.1),						47,			276,
 
-				new DropDown(controls.blendMode, false, 124, 12, 'left'),	4,			154,
+				new DropDown(controls.blendMode, false, 124, 12, 'left'),	4,			153,
 				
 				_assetScrub,								LAYER_SCRUB_LEFT,			141,
 				_btnScrub,													1,			135,
 				_filters,													96,			172,
 
-				_loopStart,												10,			138,
-				_loopEnd,												184,		138,
+				_loopStart,													10,			138,
+				_loopEnd,													184,		138,
 				
 				_btnUp,														153,		154,
 				_btnDown,													162,		154,
@@ -294,19 +312,26 @@ package ui.layer {
 		}
 		
 		/**
-		 * 	@method		Loads a layer
+		 * 	Loads a layer
 		 */
 		public function load(path:String):void {
-			_layer.load(new URLRequest(path));
+			
+			var plugin:Plugin = TransitionWindow.plugin;
+			
+			if (plugin) {
+				var transition:Transition = new plugin.definition(TransitionWindow.duration);
+			}
+			
+			_layer.load(new URLRequest(path), null, transition);
+			
 		}
 		
 		/**
+		 * 	@private
 		 * 	Handler that is evoked when a layer has finished loading a file
 		 */
 		private function _onLayerLoad(startInterval:Boolean):void {
 			
-			trace('layer loaded');
-				
 			var path:String = _layer.path;
 
 			var start:int = Math.max(path.lastIndexOf('\\')+1,path.lastIndexOf('/')+1);
@@ -355,6 +380,7 @@ package ui.layer {
 		}
 		
 		/**
+		 * 	@private
 		 * 	Handler that is evoked when an update is called for
 		 */
 		private function _onUpdateTimer(event:TimerEvent):void {
@@ -377,7 +403,6 @@ package ui.layer {
 
 			// updates the playhead marker
 			_assetScrub.x = _layer.time * LAYER_WIDTH + LAYER_SCRUB_LEFT;
-			_filename.text = _layer.path;
 
 		}
 
@@ -500,6 +525,7 @@ package ui.layer {
 		}
 
 		/**
+		 * 	@private
 		 * 	When a filter is moved
 		 */		
 		private function _onFilterMove(event:FilterEvent):void {
@@ -516,7 +542,7 @@ package ui.layer {
 		}
 
 		/**
-		 * 
+		 * 	Re-orders filters
 		 */		
 		public function reorderFilters():void {
 			for (var count:int = 0; count < _filters.numChildren; count++) {
@@ -525,6 +551,9 @@ package ui.layer {
 			}
 		}
 		
+		/**
+		 * 	Selects a filter
+		 */
 		public function selectFilter(filter:LayerFilter):void {
 			
 			if (!_selectedFilterWindow) {
@@ -544,15 +573,24 @@ package ui.layer {
 			_selectedFilter = filter;
 		}
 
+		/**
+		 * 	Moves layer
+		 */
 		public function moveLayer(event:LayerEvent = null):void {
 			x = _layer.index * 200 + LAYER_X;
 			y = LAYER_Y;
 		}
 		
+		/**
+		 * 	Returns the index
+		 */
 		public function get index():int {
 			return _layer.index;
 		}
 		
+		/**
+		 * 
+		 */
 		override public function toString():String {
 			return '[UILayer ' + _layer.index + ']';
 		}

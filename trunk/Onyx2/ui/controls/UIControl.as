@@ -43,12 +43,12 @@ package ui.controls {
 
 	public class UIControl extends UIObject implements IDisposable {
 		
-		public function addLabel(name:String, width:int = 36, height:int = 9):void {
+		public function addLabel(name:String, align:String = 'center', width:int = -1, height:int = 7):void {
 			
-			var label:TextField = new TextField(width, height);
-			label.align = 'center';
+			var label:TextField = new TextField(width || super.width, height);
+			label.align = align;
 			label.text = name;
-			label.y = -11;
+			label.y = -9;
 
 			addChild(label);
 			
@@ -56,7 +56,7 @@ package ui.controls {
 		
 		public function set background(value:Boolean):void {
 			if (value) {
-				var shape:ControlShape = new ControlShape();
+				var shape:ControlShape = new ControlShape(super.width, super.height);
 				addChildAt(shape, 0);
 			}
 		}
@@ -67,11 +67,11 @@ import flash.display.Shape;
 
 final class ControlShape extends Shape {
 	
-	public function ControlShape():void {
+	public function ControlShape(width:int, height:int):void {
 
 		graphics.lineStyle(0, 0x45525c);
 		graphics.beginFill(0x192025);
-		graphics.drawRect(0,0,36,9);
+		graphics.drawRect(0,0,width,height);
 		graphics.endFill();
 		
 		cacheAsBitmap = true;

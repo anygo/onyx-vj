@@ -32,6 +32,7 @@ package ui {
 	
 	import flash.display.Stage;
 	import flash.display.StageQuality;
+	import flash.events.EventDispatcher;
 	import flash.events.KeyboardEvent;
 	
 	import onyx.application.Onyx;
@@ -43,6 +44,7 @@ package ui {
 	import ui.assets.*;
 	import ui.layer.UILayer;
 	import ui.window.*;
+	import onyx.events.ApplicationEvent;
 
 	public class UIManager {
 
@@ -57,23 +59,35 @@ package ui {
 			// low quality
 			root.stage.quality = StageQuality.LOW;
 			
-			// add our windows
-			_loadWindows(Console, PerfMonitor, Browser, Filters, TransitionWindow);
-			
-			// listen for windows created
-			Onyx.addEventListener(LayerEvent.LAYER_CREATED, _onLayerCreate);
-			Onyx.addEventListener(DisplayEvent.DISPLAY_CREATED, _onDisplayCreate);
-
 			// initializes onyx
-			Onyx.initialize(root);
+			var engine:EventDispatcher = Onyx.initialize(root);
 			
+			// wait til we're done initializing
+			engine.addEventListener(ApplicationEvent.ONYX_STARTUP_END, _onInitialize);
+
+			// listen for windows created
+			engine.addEventListener(LayerEvent.LAYER_CREATED, _onLayerCreate);
+			engine.addEventListener(DisplayEvent.DISPLAY_CREATED, _onDisplayCreate);
+
 			// listen for keys
 			root.addEventListener(KeyboardEvent.KEY_DOWN, _onKeyPress);
 			
-//			var layer:Layer = new Layer();
 		}
 		
-		// add windows
+		/**
+		 * 	@private
+		 */
+		private static function _onInitialize(event:ApplicationEvent):void {
+			
+			var engine:EventDispatcher = event.currentTarget as EventDispatcher;
+			engine.removeEventListener(ApplicationEvent.ONYX_STARTUP_END, _onInitialize);
+			
+			_loadWindows(Console, PerfMonitor, Browser, Filters, TransitionWindow);
+		}
+		
+		/**
+		 * 	@private
+		 */
 		private static function _loadWindows(... windowsToLoad:Array):void {
 
 			for each (var window:Class in windowsToLoad) {
@@ -83,14 +97,16 @@ package ui {
 		}
 		
 		/**
-		 * 
+		 * 	@private
 		 */
 		private static function _onDisplayCreate(event:DisplayEvent):void {
 			var display:SettingsWindow = new SettingsWindow(event.display);
 			_root.addChild(display);
 		}
 		
-		// when a layer is created
+		/**
+		 * 	@private
+		 */
 		private static function _onLayerCreate(event:LayerEvent):void {
 			
 			var uilayer:UILayer = new UILayer(event.layer);
@@ -100,6 +116,9 @@ package ui {
 			
 		}
 		
+		/**
+		 * 	@private
+		 */
 		private static function _onKeyPress(event:KeyboardEvent):void {
 			
 			var layer:UILayer;
@@ -125,6 +144,5 @@ package ui {
 					break;
 			}
 		}
-		
 	}
 }

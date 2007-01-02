@@ -89,16 +89,11 @@ package ui.controls {
 		private function _draw(width:int, height:int, align:String, drawBG:Boolean = false):void {
 
 			_button	= new ButtonClear(width, height);
-			_button.y = -1;
 
-			if (drawBG) {
-				graphics.lineStyle(1,0x5c7181);
-				graphics.beginFill(0x202d36);
-				graphics.drawRect(0,0,width,13);
-				graphics.endFill();
-			}
+			super.background = drawBG;
 			
-			_label = new TextField(width, ITEM_HEIGHT, align);
+			_label		= new TextField(width, ITEM_HEIGHT, align);
+			_label.y	= 1;
 
 			addChild(_label);
 			addChild(_button);
@@ -109,11 +104,13 @@ package ui.controls {
 			_items = [];
 			
 			var local:Point = localToGlobal(new Point(0,0));
-			var start:int = Math.max(local.y - (_index * ITEM_HEIGHT), 0 - local.y);
+			var start:int = Math.max(local.y - (_index * ITEM_HEIGHT), 0 - local.y) + 1;
 			
 			for (var count:int = 0; count < _data.length; count++) {
 				
-				var item:Option	= new Option((_bind) ? _data[count][_bind] : _data[count], count, _width, _label.align, _bind);
+				var item:Option	= new Option(
+					(_bind) ? (_data[count] ? _data[count][_bind] : 'None') : _data[count], count, _width, _label.align, _bind)
+				;
 				
 				item.addEventListener(MouseEvent.MOUSE_OVER, _onRollOver);
 				item.addEventListener(MouseEvent.MOUSE_OUT, _onRollOut);
