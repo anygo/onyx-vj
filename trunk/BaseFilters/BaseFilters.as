@@ -36,25 +36,27 @@ package {
 	import flash.system.Security;
 	
 	import onyx.filter.Filter;
+	import onyx.net.IExternalPlugin;
 	import onyx.net.IFilterLoader;
 	import onyx.net.ITransitionLoader;
+	import onyx.net.Plugin;
 	
 	import transitions.*;
 	
-	public class BaseFilters extends Sprite implements IFilterLoader, ITransitionLoader {
+	public class BaseFilters extends Sprite implements IExternalPlugin {
 
-		/**
-		 * 	Tells the onyx engine which filter classes to load
-		 */
-		public function registerFilters():Array {
-			return [Blur, NoiseFilter, FrameRND, Repeater, EchoFilter, BitmapScrollFilter];
-		}
-		
-		/**
-		 * 	Tells the onyx engine which transitions to loads
-		 */
-		public function registerTransitions():Array {
-			return [BlurTransition, DissolveTransition, ThresholdTransition];
+		public function get plugins():Array {
+			return [
+				new Plugin('Blur Transition', BlurTransition, 'Blurs the loaded layer'),
+				new Plugin('DissolveTransition', DissolveTransition, 'Dissolves the loaded layer'),
+				new Plugin('ThresholdTransition', ThresholdTransition, 'Threshold Transition'),
+				new Plugin('Blur', Blur, 'Threshold Transition'),
+				new Plugin('NoiseFilter', NoiseFilter, 'Threshold Transition'),
+				new Plugin('FrameRND', FrameRND, 'Threshold Transition'),
+				new Plugin('Repeater', Repeater, 'Threshold Transition'),
+				new Plugin('EchoFilter', EchoFilter, 'Threshold Transition'),
+				new Plugin('BitmapScrollFilter', BitmapScrollFilter, 'Threshold Transition'),
+			];
 		}
 	}
 }

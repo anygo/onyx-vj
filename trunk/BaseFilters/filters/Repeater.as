@@ -49,7 +49,7 @@ package filters {
 		
 		public var amount:int			= 2;
 
-		private var _step:Boolean		= false;
+		public var step:Boolean		= false;
 		private var _currentStep:int	= 0;
 		private var _bmp:BitmapData		= getBaseBitmap();
 		
@@ -80,7 +80,7 @@ package filters {
 			
 			newbmp.draw(bitmapData, matrix);
 			
-			if (_step) {
+			if (step) {
 				
 				_currentStep = (_currentStep+1) % (amount);
 
@@ -110,7 +110,7 @@ package filters {
 		 */
 		override public function clone():Filter {
 			var filter:Repeater = new Repeater();
-			filter._step = _step;
+			filter.step = step;
 			filter._currentStep = _currentStep;
 			
 			return filter;
