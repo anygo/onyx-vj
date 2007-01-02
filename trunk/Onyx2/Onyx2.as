@@ -41,6 +41,8 @@ package {
 	
 	import ui.UIManager;
 	import ui.core.UIObject;
+	
+	[ExcludeClass]
 
 	[SWF(width="1024", height="768", backgroundColor="#141515", frameRate='24')]
 	public class Onyx2 extends UIObject {
