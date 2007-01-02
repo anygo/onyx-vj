@@ -44,7 +44,7 @@ package onyx.core {
 		public static const removeEventListener:Function = StaticDispatcher.removeEventListener;
 		public static const hasEventListener:Function = StaticDispatcher.hasEventListener;
 		
-		public static function trace(message:String, type:int = 0):void {
+		public static function output(message:String, type:int = 0):void {
 			
 			dispatcher.dispatchEvent(
 				new ConsoleEvent(message, type)
@@ -65,12 +65,9 @@ package onyx.core {
 					
 					try {
 						var message:String = fn.apply(null, commands);
-						trace(message);
 					} catch (e:Error) {
 						trace(e.message);
 					}
-						
-					
 				}
 			}
 		}

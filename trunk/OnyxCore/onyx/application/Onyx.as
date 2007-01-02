@@ -49,6 +49,9 @@ package onyx.application {
 	
 	use namespace onyx_internal;
 	
+	/**
+	 * 	Core Application class that stores all layers, displays, and loaded plugins
+	 */
 	public final class Onyx {
 		
 		/**
@@ -59,29 +62,34 @@ package onyx.application {
 		);
 		
 		/**
+		 * 	@private
 		 * 	Dispatcher
 		 */
 		internal static const instance:EventDispatcher = new EventDispatcher();
 		
 		/**
+		 * 	@private
 		 * 	Stores reference to root
 		 */
-		internal static var root:Stage;
+		onyx_internal static var root:Stage;
 		
 		/**
+		 * 	@private
 		 * 	Stores references to all the displays
 		 */
 		onyx_internal static var _displays:Array	= [];
 		
 		/**
+		 * 	@private
 		 * 	Stores definitions to all the filters
 		 */
-		internal static var _filters:Array			= [];
+		onyx_internal static var _filters:Array			= [];
 		
 		/**
+		 * 	@private
 		 * 	Stores definitions for all the transitions
 		 */
-		internal static var _transitions:Array		= [];
+		onyx_internal static var _transitions:Array		= [];
 
 		/**
 		 * 	Gets the framerate
@@ -173,14 +181,16 @@ package onyx.application {
 		}
 				
 		/**
-		 * 	Returns the filter classes
+		 * 	Returns an array of Plugins that contain filter definitions
+		 * 	@see onyx.net.Plugin
 		 */
 		public static function get filters():Array {
 			return _filters.concat();
 		}
 
 		/**
-		 * 	Returns the filter classes
+		 * 	Returns an array of Plugins that contain transition definitions
+		 * 	@see onyx.net.Plugin
 		 */
 		public static function get transitions():Array {
 			return _transitions.concat();
@@ -195,6 +205,8 @@ package onyx.application {
 
 		/**
 		 * 	Creates a display
+		 * 	@param		The number of layers to create in the display
+		 * 	@returns	Display
 		 */
 		public static function createLocalDisplay(numLayers:int):Display {
 			

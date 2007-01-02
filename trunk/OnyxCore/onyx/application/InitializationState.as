@@ -44,6 +44,7 @@ package onyx.application {
 	import flash.utils.Timer;
 	
 	import onyx.assets.PixelFont;
+	import onyx.core.Command;
 	import onyx.core.Console;
 	import onyx.core.onyx_internal;
 	import onyx.events.ApplicationEvent;
@@ -247,12 +248,8 @@ package onyx.application {
 			Onyx.instance.dispatchEvent(new ApplicationEvent(ApplicationEvent.ONYX_STARTUP_END));
 
 			// dispatch the start-up motd
-			Console.trace(
-				'<font size="14" color="#DCC697"><b>onyx version 3.0b</b></font><br>' + 
-				'copyright 2003-2006: www.onyx-vj.com.' +
-				'<br>enter command "help" for more info.<br><br>' +
-				Onyx._filters.length + ' filters loaded.<br>' +
-				Onyx._transitions.length + ' transitions loaded.<br><br>');
+			Command.help();
+			Command.help('plugins');
 
 			StateManager.loadState(new RunTimeState());
 

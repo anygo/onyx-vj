@@ -154,8 +154,6 @@ package onyx.layer {
 			// do we have a transition?
 			this.transition = transition;
 			
-			trace(transition);
-			
 			// store the request
 			_request = request;
 			
@@ -174,7 +172,6 @@ package onyx.layer {
 			if (event.content) {
 				
 				var loaderObj:Object = event.content;
-				
 				_createContent(loaderObj);
 				
 			// there was an error, dispatch it
@@ -189,7 +186,10 @@ package onyx.layer {
 		 */
 		private function _createContent(metadata:Object):void {
 
-			_destroyContent();
+			// if we don't have a transition, automatically destroy the earlier content
+			if (!_transition) {
+				_destroyContent();
+			}
 
 			// create the content based on the passed in object
 			if (metadata is Loader) {
@@ -233,12 +233,13 @@ package onyx.layer {
 		 */
 		private function _destroyContent():void {
 			
+			// destroys the earlier content
+			_content.dispose();
+
+			// removes listener forwarding
 			_content.removeEventListener(FilterEvent.FILTER_APPLIED, _forwardEvents);
 			_content.removeEventListener(FilterEvent.FILTER_MOVED, _forwardEvents);
 			_content.removeEventListener(FilterEvent.FILTER_REMOVED, _forwardEvents);
-			
-			// destroys the earlier content
-			_content.dispose();
 			
 		}
 		
@@ -250,53 +251,6 @@ package onyx.layer {
 			dispatchEvent(event.clone());
 		}
 		
-		/**
-		 * 	@private
-		 * 	This is called when content has finished loading from a contentLoader;
-		 *	The loader which is loading content (swf, jpg, png, etc)
-		 **/
-		private function _addContent(content:IContent):void {
-
-			// content is null
-			if (_content is ContentNull) {
-
-				// create new bitmap
-//				bitmapData = getBaseBitmap();
-
-			}
-			
-			// now test to see if we have a transition
-			/*
-			if (transitionClass && !(_content is ContentNull)) {
-
-				_transition = new transitionClass(transitionDuration);
-				_transition.initializeTransition(_content, content, this);
-
-				_content = content;
-
-				removeEventListener(Event.ENTER_FRAME, _render);
-				addEventListener(Event.ENTER_FRAME, _renderTransition);
-				
-				_renderTransition();
-
-			} else {
-
-				// kill old content
-				_content.dispose();
-
-				_content = content;
-
-				// render frames
-				removeEventListener(Event.ENTER_FRAME, _renderTransition);
-				addEventListener(Event.ENTER_FRAME, _render);
-				
-				// render
-				_render();
-
-			}
-			*/
-		}
-
 		/**
 		 * 	Sets time
 		 */
@@ -316,13 +270,6 @@ package onyx.layer {
 		 */
 		public function get totalTime():Number {
 			return _content.totalTime;
-		}
-
-		/**
-		 * 	Sets the playhead time
-		 */
-		public function set timePercent(value:Number):void {
-			_content.time = value;
 		}
 		
 		/**
@@ -595,11 +542,7 @@ package onyx.layer {
 			}
 			
 			_transition = value;
-			
-			// if we're not setting it to null
-			if (value) {
-				_transition.addEventListener(TransitionEvent.TRANSITION_END, _endTransition);
-			}
+
 		}
 		
 		/**
@@ -626,47 +569,12 @@ package onyx.layer {
 		}
 		
 		/**
-		 * 
+		 * 	Returns the filters
 		 */
 		override public function get filters():Array {
 			return _content.filters;
 		}
 
-		/**
-		 * 	The enterframe event for rendering filters
-		 */
-		private function _render(event:Event = null):void {
-
-/*			var start:int = getTimer();
-
-			bitmapData.lock();		
-			bitmapData.fillRect(bitmapData.rect, 0x00000000);
-
-			var contentBitmapData:BitmapData = _content.draw();
-			bitmapData.copyPixels(contentBitmapData, contentBitmapData.rect, new Point(0, 0));
-			_content.applyFilters(bitmapData);
-			
-			bitmapData.unlock();
-						
-			renderTime = getTimer() - start;
-*/
-		}
-
-		
-		/**
-		 * 	@private
-		 * 	The enterframe event for rendering a transition
-		 */
-		private function _renderTransition(event:Event = null):void {
-/*
-			// fill in nothing
-			bitmapData.fillRect(bitmapData.rect, 0x00000000);
-
-			// draw the transition
-			_transition.calculateTransition(bitmapData);
-*/
-		}
-		
 		/**
 		 * 	Unloads the layer
 		 **/
@@ -688,8 +596,8 @@ package onyx.layer {
 			dispatchEvent(new LayerEvent(LayerEvent.LAYER_UNLOADED, this));
 			
 			// remove listener
-			removeEventListener(Event.ENTER_FRAME, _render);
-			removeEventListener(Event.ENTER_FRAME, _renderTransition);
+			// removeEventListener(Event.ENTER_FRAME, _render);
+			// removeEventListener(Event.ENTER_FRAME, _renderTransition);
 			
 			// remove content
 			_content = new ContentNull();
@@ -715,10 +623,10 @@ package onyx.layer {
 			oldcontent.dispose();
 			
 			// remove listener
-			removeEventListener(Event.ENTER_FRAME, _renderTransition);
+			// removeEventListener(Event.ENTER_FRAME, _renderTransition);
 
 			// remove listener
-			addEventListener(Event.ENTER_FRAME, _render);
+			// addEventListener(Event.ENTER_FRAME, _render);
  
 		}
 		
@@ -730,7 +638,7 @@ package onyx.layer {
 			var matrix:Matrix = new Matrix();
 			matrix.scale(scaleX, scaleY);
 
-			bmp.draw(_content.source, matrix);
+			bmp.draw(_content.bitmapData, matrix);
 			
 		}
 		

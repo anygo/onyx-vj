@@ -57,7 +57,7 @@ package onyx.content {
 	
 	public final class ContentSWFMovieClip extends Bitmap implements IContent {
 		
-		include 'ContentProperties.as';
+		include 'ContentProperties.txt';
 		
 		/**
 		 * 	@private
@@ -142,6 +142,7 @@ package onyx.content {
 			_frame = frame;
 			
 			_content.gotoAndStop(frame);
+			updateSource();
 		}
 		
 		/**
@@ -285,34 +286,6 @@ package onyx.content {
 			return _loader.contentLoaderInfo.url;
 		}
 
-		/**
-		 * 	Destroys the content
-		 */
-		public function dispose():void {
-			
-			// dispose it?
-			if (_content is IDisposable) {
-				(_content as IDisposable).dispose();
-			}
-			
-			// remove it?
-			if (parent) {
-				parent.removeChild(this);
-			}
-
-			// destroy content
-			_loader.unload();
-			removeEventListener(Event.ENTER_FRAME, _onEnterFrame);
-
-			// kill all filters
-			clearFilters();
-
-			_loader = null;
-			_content = null;
-			_filter = null;
-			_filters = null;
-		}
-
 		public function addFilter(filter:Filter):void {
 			
 			// it's alive!
@@ -346,18 +319,19 @@ package onyx.content {
 			dispatchEvent(event);
 		}
 		
+		/**
+		 * 	@private
+		 * 	Clears all the filters
+		 */
 		private function clearFilters():void {
+			
 			for (var count:int = _filters.length - 1; count >= 0; count--) {
-				removeFilter(_filters[count] as Filter);
+				removeFilter(_filters[0] as Filter);
 			}
 		}
 		
 		override public function get filters():Array {
 			return _filters;
-		}
-		
-		public function get rendered():BitmapData {
-			return null;
 		}
 		
 		/**
@@ -422,6 +396,35 @@ package onyx.content {
 		public function get source():BitmapData {
 			return _source;
 		}
-		
+
+
+		/**
+		 * 	Destroys the content
+		 */
+		public function dispose():void {
+			
+			// dispose it?
+			if (_content is IDisposable) {
+				(_content as IDisposable).dispose();
+			}
+			
+			// remove it?
+			if (parent) {
+				parent.removeChild(this);
+			}
+
+			// destroy content
+			_loader.unload();
+			removeEventListener(Event.ENTER_FRAME, _onEnterFrame);
+
+			// kill all filters
+			clearFilters();
+
+			_loader = null;
+			_content = null;
+			_filter = null;
+			_filters = null;
+		}
+
 	}
 }

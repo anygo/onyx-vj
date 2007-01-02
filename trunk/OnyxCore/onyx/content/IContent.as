@@ -43,11 +43,24 @@ package onyx.content {
 	
 	public interface IContent extends IColorObject, IDisposable, IEventDispatcher {
 		
+		/**
+		 * 	Returns the time of the content in percent
+		 */
 		function get time():Number;
+		
+		/**
+		 * 	@private
+		 */
 		function set time(value:Number):void;
 
+		/**
+		 * 	Returns total time
+		 */
 		function get totalTime():Number;
 
+		/**
+		 * 	Sets the framerate
+		 */
 		function get framerate():Number;
 		function set framerate(value:Number):void;
 		
@@ -73,6 +86,8 @@ package onyx.content {
 		
 		function moveFilterUp(filter:Filter):void;
 		function moveFilterDown(filter:Filter):void;
+		
+		function get bitmapData():BitmapData;
 
 	}
 }

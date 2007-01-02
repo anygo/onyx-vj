@@ -30,40 +30,62 @@
  */
 package onyx.core {
 
+	import onyx.application.Onyx;
 	import onyx.display.Display;
 	import onyx.layer.Layer;
-	import onyx.application.Onyx;
+	import onyx.jobs.StatJob;
+	
+	use namespace onyx_internal;
 
-	internal final class Command {
+	public final class Command {
 		
-		private static var _display:Display;
-
-		/*
-		public static function display(num:int):String {
-			var display:Display = Engine.getDisplayAt(num);
+		public static function help(... args:Array):void {
 			
-			if (!display) {
-				return 'Display not found.';
-			} else {
-				_display = display;
-				return 'Using Display #' + num;
+			var text:String;
+			
+			switch (args[0]) {
+				case 'command':
+				case 'commands':
+				
+					text =	_createHeader('commands') + 'plugins: shows # of plugins<br>' +
+							'clear: clears the text<br>' +
+							'stat [time:int]:	tests all layers for average rendering time';
+				
+					break;
+				case 'contributors':
+					text =	'contributors<br>-------------<br>Daniel Hai: http://www.danielhai.com'
+					break;
+				case 'plugins':
+					text =	Onyx.filters.length + ' filters loaded.<br>' +
+							Onyx.transitions.length + ' transitions loaded.';
+					break;
+				case 'stat':
+					text =	_createHeader('stat') + 'tests framerate and layer rendering times.<br><br>usage: stat [numSeconds:int]<br>';
+					break;
+				default:
+					text =	_createHeader('<b>onyx 3.0b</b>', 21) + 
+							'copyright 2003-2006: www.onyx-vj.com.' +
+							'<br>enter command "help commands" for more information about commands.';
+					break;
 			}
-		}
-		
-		public static function layer(num:int, prop:String, value:Number):String {
-			
-			if (!_display) {
-				return 'No display selected.  Use command "display 0" to select a display.';
-			}
-			
-			var layer:Layer = _display.getLayerAt(0);
-			layer[prop] = value;
-			
-			return 'setting ' + prop + ' to ' + value;
+			// dispatch the start-up motd
+			Console.output(text);
 	
 		}
-		*/
-
+		
+		private static function _createHeader(command:String, size:int = 14):String {
+			return '<font size="' + size + '" color="#DCC697">' + command + '</font><br><br>';
+		}
+		
+		/**
+		 * 	Finds out
+		 */
+		public static function stat(... args:Array):void {
+			
+			// does a stat job for a specified amount of time
+			var time:int = args[0] || 2000;
+			
+			var job:StatJob = new StatJob(time);
+		}
 	}
-
 }

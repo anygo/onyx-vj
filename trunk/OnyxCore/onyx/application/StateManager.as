@@ -1,5 +1,8 @@
 package onyx.application {
 	
+	/**
+	 * 	Manager class that loads and removes states
+	 */
 	public final class StateManager {
 		
 		/**

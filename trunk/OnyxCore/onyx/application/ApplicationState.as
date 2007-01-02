@@ -28,13 +28,22 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package onyx.application
-{
+package onyx.application {
+	
+	/**
+	 * 	Base class for application states
+	 */
 	public class ApplicationState {
 		
+		/**
+		 * 	Called when the application state is initialized
+		 */
 		public function initialize(... args:Array):void {
 		}
 		
+		/**
+		 * 	Called when the application state is removed
+		 */
 		public function terminate():void {
 		}
 		
