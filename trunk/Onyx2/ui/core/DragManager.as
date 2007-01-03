@@ -102,6 +102,9 @@ package ui.core {
 			}
 		}
 		
+		/**
+		 * 	@private
+		 */
 		private static function _onObjectMove(event:MouseEvent):void {
 			_dragTarget.x = event.stageX - _offsetX;
 			_dragTarget.y = event.stageY - _offsetY;
