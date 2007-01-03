@@ -46,6 +46,9 @@ package ui {
 	import ui.window.*;
 	import onyx.events.ApplicationEvent;
 
+	/**
+	 * 	Class that handles top-level management of all ui objects
+	 */
 	public class UIManager {
 
 		private static var _root:Stage;
