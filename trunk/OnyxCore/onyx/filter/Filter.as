@@ -43,13 +43,14 @@ package onyx.filter {
 	import onyx.core.onyx_internal;
 	import onyx.events.FilterEvent;
 	import onyx.layer.IColorObject;
+	import onyx.core.IDisposable;
 	
 	use namespace onyx_internal;
 	
 	/**
 	 * 	The base Filter class
 	 */
-	public class Filter extends EventDispatcher {
+	public class Filter extends EventDispatcher implements IDisposable {
 
 		public var description:String;
 

@@ -44,13 +44,14 @@ package onyx.transition {
 	import onyx.core.onyx_internal;
 	import onyx.events.TransitionEvent;
 	import onyx.layer.ILayer;
+	import onyx.core.IDisposable;
 	
 	use namespace onyx_internal;
 	
 	/**
 	 * 	Transition
 	 */
-	public class Transition extends EventDispatcher {
+	public class Transition extends EventDispatcher implements IDisposable {
 		
 		/** @private **/
 		onyx_internal var _duration:int;
@@ -64,14 +65,20 @@ package onyx.transition {
 		/** @private **/
 		onyx_internal var newContent:IContent;
 		
-		/** stores name of the transition **/
+		/** 
+		 * 	@private
+		 * 	stores name of the transition
+		 */
 		public var name:String;
 		
-		/** stores layer **/
+		/**
+		 * 	@private
+		 * 	Stores layer
+		 */
 		private var _layer:ILayer;
 		
 		/**
-		 * 	Constructor
+		 * 	@constructor
 		 */
 		public function Transition(name:String, duration:int = 2000):void {
 			this.name = name;
@@ -147,9 +154,6 @@ package onyx.transition {
 			this.newContent	= null;
 			_layer			= null;
 		}
-		
-		override public function toString():String {
-			return name;
-		}
+
 	}
 }

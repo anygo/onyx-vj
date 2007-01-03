@@ -52,21 +52,34 @@ package onyx.application {
 	import onyx.events.PluginEvent;
 	import onyx.events.TransitionEvent;
 	import onyx.net.IExternalPlugin;
-	import onyx.net.IFilterLoader;
-	import onyx.net.ITransitionLoader;
 	import onyx.net.Plugin;
 	import onyx.settings.Settings;
 	
 	use namespace onyx_internal;
 
 	/**
-	 * 
+	 * 	State that loads external plugins and registers them
 	 */	
 	public final class InitializationState extends ApplicationState {
 		
+		/**
+		 * 	@private
+		 */
 		private var _filtersToLoad:Array	= [];
+
+		/**
+		 * 	@private
+		 */
 		private var _image:DisplayObject;
+
+		/**
+		 * 	@private
+		 */
 		private var _label:TextField		= new TextField();
+
+		/**
+		 * 	@private
+		 */
 		private var _timer:Timer			= new Timer(300);
 
 		/**
@@ -77,9 +90,6 @@ package onyx.application {
 			// dispatch a start event
 			Onyx.instance.dispatchEvent(new ApplicationEvent(ApplicationEvent.ONYX_STARTUP_START));
 			
-			// listen for new plugins
-			Onyx.instance.addEventListener(PluginEvent.PLUGIN_LOADED, _onPluginCreate);
-
 			// create the image and a label
 			_image = new OnyxStartUpImage();
 			Onyx.root.addChild(_image);
@@ -96,13 +106,6 @@ package onyx.application {
 			_label.height = 60;
 			
 			_loadExternalPlugins();
-		}
-		
-		/**
-		 * 	@private
-		 * 	Handler when a plug-in is loaded
-		 */
-		private function _onPluginCreate(event:PluginEvent):void {
 		}
 		
 		/**
@@ -208,6 +211,7 @@ package onyx.application {
 		}
 		
 		/**
+		 * 	@private
 		 * 	When an item is added, make sure it is below the startup image
 		 */
 		private function _onItemAdded(event:Event):void {
@@ -251,6 +255,7 @@ package onyx.application {
 			Command.help();
 			Command.help('plugins');
 
+			// load the run time state
 			StateManager.loadState(new RunTimeState());
 
 		}

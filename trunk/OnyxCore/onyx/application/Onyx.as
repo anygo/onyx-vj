@@ -43,9 +43,9 @@ package onyx.application {
 	import onyx.events.*;
 	import onyx.filter.*;
 	import onyx.layer.*;
-	import onyx.net.IFilterLoader;
 	import onyx.net.Plugin;
 	import onyx.transition.*;
+	import onyx.core.IDisposable;
 	
 	use namespace onyx_internal;
 	
@@ -162,7 +162,7 @@ package onyx.application {
 			
 			if (plugin.definition) {
 
-				var object:Object = new plugin.definition();
+				var object:IDisposable = new plugin.definition();
 				
 				// test the type of object
 				if (object is Filter) {
@@ -174,9 +174,7 @@ package onyx.application {
 					_transitions.push(plugin);
 				}
 				
-				var event:PluginEvent = new PluginEvent(plugin, type);
-				instance.dispatchEvent(event);
-				
+				object.dispose();
 			}
 		}
 				
