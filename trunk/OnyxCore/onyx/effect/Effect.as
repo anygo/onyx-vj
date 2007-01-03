@@ -28,9 +28,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package onyx.effect
-{
-	public class Effect
-	{
+package onyx.effect {
+	
+	public class Effect {
 	}
 }

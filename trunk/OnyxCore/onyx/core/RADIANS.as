@@ -30,6 +30,8 @@
  */
 package onyx.core {
 
+	[ExcludeClass]
+
 	public const RADIANS:Number = Math.PI / 180;
 
 }

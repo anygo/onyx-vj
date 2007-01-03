@@ -43,6 +43,7 @@ package onyx.content {
 	
 	import onyx.application.Onyx;
 	import onyx.core.IDisposable;
+	import onyx.core.POINT;
 	import onyx.core.getBaseBitmap;
 	import onyx.core.onyx_internal;
 	import onyx.events.FilterEvent;
@@ -56,7 +57,7 @@ package onyx.content {
 		
 	use namespace onyx_internal;
 	
-	public final class ContentSWFMovieClip extends Bitmap implements IContent {
+	public final class ContentMC extends Bitmap implements IContent {
 		
 		include 'ContentProperties.txt';
 		
@@ -116,7 +117,7 @@ package onyx.content {
 		/**
 		 * 	@constructor
 		 */		
-		public function ContentSWFMovieClip(loader:Loader):void {
+		public function ContentMC(loader:Loader):void {
 			
 			_loader		= loader;
 			_content	= loader.content as MovieClip;
@@ -228,9 +229,9 @@ package onyx.content {
 			_source.draw(_content, matrix, _colorTransform, null, null);
 
 			// apply the color filter to the source
-			_source.applyFilter(_source, _source.rect, new Point(0,0), _filter.filter);
+			_source.applyFilter(_source, _source.rect, POINT, _filter.filter);
 			
-			super.bitmapData.copyPixels(_source, _source.rect, new Point(0,0));
+			super.bitmapData.copyPixels(_source, _source.rect, POINT);
 			applyFilters(super.bitmapData);
 
 		}
@@ -290,110 +291,6 @@ package onyx.content {
 		 */
 		public function get path():String {
 			return _loader.contentLoaderInfo.url;
-		}
-
-		public function addFilter(filter:Filter):void {
-			
-			// it's alive!
-			filter.setContent(this);
-			
-			// push the layer into the array
-			_filters.push(filter);
-			
-			// tell the filter it has started
-			filter.initialize();
-			
-			// dispatch
-			var event:FilterEvent = new FilterEvent(FilterEvent.FILTER_APPLIED, filter);
-			dispatchEvent(event);
-		}
-		
-		public function removeFilter(filter:Filter):void {
-			
-			var index:int = _filters.indexOf(filter);
-			if (index >= 0) {
-				_filters.splice(index, 1);
-			}
-
-			// dispose the filter
-			filter.dispose();
-
-			// dispatch a filter removed event
-			var event:FilterEvent = new FilterEvent(FilterEvent.FILTER_REMOVED, filter)
-			event.index = index;
-
-			dispatchEvent(event);
-		}
-		
-		/**
-		 * 	@private
-		 * 	Clears all the filters
-		 */
-		private function clearFilters():void {
-			
-			for (var count:int = _filters.length - 1; count >= 0; count--) {
-				removeFilter(_filters[0] as Filter);
-			}
-		}
-		
-		override public function get filters():Array {
-			return _filters;
-		}
-		
-		/**
-		 * 	Applies filters to bitmap
-		 */
-		public function applyFilters(bitmapData:BitmapData):void {
-			
-			// loop through and apply filters			
-			for each (var filter:Filter in _filters) {
-				if (filter is IBitmapFilter) {
-					bitmapData = (filter as IBitmapFilter).applyFilter(bitmapData, bitmapData.rect);
-				}
-			}
-		}
-		
-		/**
-		 * 	Gets a filter's index
-		 */
-		public function getFilterIndex(filter:Filter):int {
-			return _filters.indexOf(filter);
-		}
-		
-		/**
-		 * 
-		 */
-		public function moveFilterUp(filter:Filter):void {
-			var index:int = _filters.indexOf(filter);
-
-			if (index > 0) {
-
-				_filters.splice(index, 1);
-				_filters.splice(index - 1, 0, filter);
-				
-				dispatchEvent(new FilterEvent(FilterEvent.FILTER_APPLIED, filter));
-				
-			}
-		}
-		
-		/**
-		 * 
-		 */
-		public function moveFilterDown(filter:Filter):void {
-			var index:int = _filters.indexOf(filter);
-			if (index < _filters.length - 1) {
-				_filters.splice(index, 1);
-				_filters.splice(index + 1, 0, filter);
-
-				dispatchEvent(new FilterEvent(FilterEvent.FILTER_MOVED, filter));
-			}
-		}
-		
-		/**
-		 * 	Does it have filters?
-		 */
-		public function get hasFilters():Boolean {
-			return (_filters.length > 0);
 		}
 		
 		/**

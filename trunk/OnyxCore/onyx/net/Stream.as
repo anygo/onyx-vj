@@ -34,11 +34,17 @@ package onyx.net {
 	import flash.events.Event;
 	import flash.net.NetStream;
 
+	/**
+	 * 	Base NetStream class
+	 */
 	public final class Stream extends NetStream {
 
 		public var metadata:Object;
 		private var _path:String;
 
+		/**
+		 * 	@constructor
+		 */
 		public function Stream(path:String):void {
 			_path = path;
 			
@@ -48,13 +54,16 @@ package onyx.net {
 			pause();
 		}
 		
+		/**
+		 * 	Returns pathname 
+		 */
 		public function get path():String {
 			return _path;
 		}
 		
-		private function _eventHandler(event:Event):void {
-		}
-		
+		/**
+		 * 	When metadata is returned, dispatch an event.complete event
+		 */
 		public function onMetaData(info:Object):void {
 			metadata = info;
 			dispatchEvent(new Event(Event.COMPLETE));

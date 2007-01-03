@@ -31,7 +31,11 @@
 package onyx.layer {
 	
 	import flash.events.EventDispatcher;
-	
+
+	/**
+	 * 	Currently not implemented
+	 */
+	[ExcludeClass]
 	public class LayerRemote extends EventDispatcher
 	{
 	}

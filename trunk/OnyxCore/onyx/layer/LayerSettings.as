@@ -38,6 +38,9 @@ package onyx.layer {
 	
 	use namespace onyx_internal;
 
+	/**
+	 * 	This class stores settings that can be applied to layers
+	 */
 	public class LayerSettings extends EventDispatcher {
 
 		public var x:Number;
@@ -64,6 +67,9 @@ package onyx.layer {
 		public var loopStart:Number;
 		public var loopEnd:Number;
 		
+		/**
+		 * 	@constructor
+		 */
 		public function LayerSettings(layer:Layer = null):void {
 			
 			if (layer) {
@@ -95,9 +101,15 @@ package onyx.layer {
 
 		}
 		
+		/**
+		 * 	Loads settings info from xml
+		 */
 		public function loadFromXML(xml:XML):void {
 		}
 		
+		/**
+		 * 	Applies values to a layer
+		 */
 		public function apply(layer:Layer):void {
 			
 			layer.x = x;

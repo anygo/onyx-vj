@@ -32,6 +32,9 @@ package onyx.net {
 	
 	import flash.net.NetConnection;
 
+	/**
+	 * 	Core NetConnection Class
+	 */
 	public class Connection extends NetConnection {
 		
 		internal static const DEFAULT_CONNECTION:Connection = new Connection();

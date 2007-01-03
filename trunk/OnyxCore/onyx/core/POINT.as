@@ -28,11 +28,12 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package onyx.net {
-	
-	public interface ITransitionLoader {
-		
-		function registerTransitions():Array;
-		
-	}
+package onyx.core {
+
+	import flash.geom.Point;
+
+	[ExcludeClass]
+
+	public const POINT:Point = new Point(0,0);
+
 }

@@ -28,10 +28,13 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
 package onyx.application {
 	
 	import flash.display.Bitmap;
 	
+	[ExcludeClass]
+
 	[Embed(source='/assets/onyx.jpg')]
 	public final class OnyxStartUpImage extends Bitmap {
 	}

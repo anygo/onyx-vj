@@ -30,6 +30,9 @@
  */
 package onyx.net.files {
 	
+	/**
+	 * 	Core File Class
+	 */
 	public final class File {
 		
 		public var path:String;

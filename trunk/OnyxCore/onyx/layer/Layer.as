@@ -193,7 +193,9 @@ package onyx.layer {
 
 			// create the content based on the passed in object
 			if (metadata is Loader) {
-				var content:IContent = new ContentSWFMovieClip(metadata as Loader);
+				
+				var loader:Loader = metadata as Loader;
+				var content:IContent = (loader.content is MovieClip) ? new ContentMC(loader) : new ContentSprite(loader);
 				
 				if (_transition && !(_content is ContentNull)) {
 					_transition.initializeTransition(_content, content, this);	

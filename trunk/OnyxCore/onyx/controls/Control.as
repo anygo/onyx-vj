@@ -34,6 +34,10 @@ package onyx.controls {
 	
 	import onyx.events.ControlEvent;
 	
+	/**
+	 *	Base Control Class, dispatches when values have changed, as well as 
+	 *	enforces limits on values
+	 */
 	public class Control extends EventDispatcher {
 
 		// set by Controls

@@ -32,6 +32,9 @@ package onyx.layer {
 	
 	import onyx.filter.Filter;
 	
+	/**
+	 * 	Base interface for DisplayObject interface as well as tint, saturation etc
+	 */
 	public interface IColorObject {
 		
 		function set color(value:uint):void;

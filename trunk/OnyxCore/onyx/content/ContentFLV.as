@@ -28,11 +28,3 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package onyx.net {
-	
-	public interface IFilterLoader {
-		
-		function registerFilters():Array;
-		
-	}
-}

@@ -34,8 +34,12 @@ package onyx.net {
 	import flash.events.EventDispatcher;
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
+	
 	import onyx.net.files.*;
 	
+	/**
+	 * 	Stores a cache of directories - so re-querying will not be necessary
+	 */
 	final public class FileBrowser {
 		
 		// loads xml

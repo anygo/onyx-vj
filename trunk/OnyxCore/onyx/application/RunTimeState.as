@@ -32,10 +32,14 @@ package onyx.application {
 	
 	import onyx.layer.Layer;
 	
+	/**
+	 *	Class that listens for runtime states
+	 */
 	public final class RunTimeState extends ApplicationState {
 
 		override public function initialize(...args):void {
 			Onyx.createLocalDisplay(5);
+			StateManager.removeState(this);
 		}
 		
 		override public function terminate():void {

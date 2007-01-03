@@ -30,6 +30,9 @@
  */
 package onyx.layer {
 	
+	/**
+	 * 	Stores property names for layers
+	 */
 	public final class LayerProperties {
 		
 		// display properties
