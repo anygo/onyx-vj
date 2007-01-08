@@ -1,4 +1,0 @@
-High level feature requirements:
-
-- Midi Input
-- Line-in Sound Analysis
