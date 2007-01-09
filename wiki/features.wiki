@@ -4,12 +4,6 @@
 
 - Transitions is currently broken, needs to be fixed
 
-- Camera Support
-
-- AV1M/Sprite Support
-
 - Apollo M2 Build
 
 - Windows EXE
-
-- FLV Support
