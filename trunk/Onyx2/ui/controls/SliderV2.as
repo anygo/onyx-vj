@@ -44,8 +44,12 @@ package ui.controls {
 		
 		private var _controlY:Control;
 		private var _controlX:Control;
+		
 		private var _tempY:Number;
 		private var _tempX:Number;
+		
+		private var _mouseY:int;
+		private var _mouseX:int;
 
 		private var _multiplier:Number;
 		private var _factor:Number;
@@ -113,8 +117,11 @@ package ui.controls {
 		 */
 		private function _onMouseDownNormal(event:MouseEvent):void {
 			
-			_tempY = (_controlY.value) - (mouseY / _multiplier);
-			_tempX = (_controlX.value) - (mouseX / _multiplier);
+			_mouseY = mouseY;
+			_mouseX = mouseX;
+			
+			_tempY = (_controlY.value * _multiplier);
+			_tempX = (_controlX.value * _multiplier);
 			
 			stage.addEventListener(MouseEvent.MOUSE_MOVE, _onMouseMoveNormal);
 			stage.addEventListener(MouseEvent.MOUSE_UP, _onMouseUp);
@@ -125,17 +132,17 @@ package ui.controls {
 		 * 	@private
 		 */
 		private function _onMouseMoveNormal(event:MouseEvent):void {
+
+			var diffX:Number = (_mouseX - mouseX) / _factor;
+			var diffY:Number = (_mouseY - mouseY) / _factor;
 			
 			if (event.shiftKey) {
-				var x:Number = (mouseY + mouseX) / _multiplier / 2;
-				var y:Number = x;
-			} else {
-				x = mouseY / _multiplier;
-				y = mouseX / _multiplier;
+				diffX = diffY = (diffX + diffY) / 2;
 			}
 			
-			_controlY.value = _tempY + x;
-			_controlX.value = _tempY + y;
+			_controlX.value = (diffX + _tempX) / _multiplier;
+			_controlY.value = (diffY + _tempY) / _multiplier;
+			
 		}
 
 		/**
@@ -143,8 +150,11 @@ package ui.controls {
 		 */
 		private function _onMouseDownInvert(event:MouseEvent):void {
 			
-			_tempY = (mouseY / _multiplier) - (_controlY.value * _multiplier);
-			_tempX = (mouseX / _multiplier) - (_controlX.value * _multiplier);
+			_mouseY = mouseY;
+			_mouseX = mouseX;
+			
+			_tempY = (_controlY.value * _multiplier);
+			_tempX = (_controlX.value * _multiplier);
 			
 			stage.addEventListener(MouseEvent.MOUSE_MOVE, _onMouseMoveInvert);
 			stage.addEventListener(MouseEvent.MOUSE_UP, _onMouseUp);
@@ -155,16 +165,17 @@ package ui.controls {
 		 * 	@private
 		 */
 		private function _onMouseMoveInvert(event:MouseEvent):void {
-			
+
+			var diffX:Number = (_mouseX - mouseX) / _factor;
+			var diffY:Number = (_mouseY - mouseY) / _factor;
+
 			if (event.shiftKey) {
-				
-				trace(mouseY, _tempY);
-				trace(mouseX, _tempX);
-				
-			} else {
-				_controlY.value = (mouseY - _tempY) / _multiplier;
-				_controlX.value = (mouseX - _tempX) / _multiplier;
+				diffX = diffY = (diffX + diffY) / 2;
 			}
+			
+			_controlX.value = (_tempX - diffX) / _multiplier;
+			_controlY.value = (_tempY - diffY) / _multiplier;
+			
 		}
 		
 		/**

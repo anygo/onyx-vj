@@ -20,6 +20,7 @@ package ui.layer {
 		 * 	@constructor
 		 */		
 		public function ControlPage():void {
+			super(true);
 		}
 		
 		/**

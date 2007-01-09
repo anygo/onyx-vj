@@ -31,14 +31,13 @@
 package ui.controls.filter {
 
 	import onyx.filter.Filter;
-	import onyx.filter.Filter;
+	import onyx.net.Plugin;
 	
 	import ui.assets.AssetLayerFilterInactive;
 	import ui.controls.ButtonClear;
 	import ui.controls.UIControl;
 	import ui.text.Style;
 	import ui.text.TextField;
-	import onyx.net.Plugin;
 	
 	public final class LibraryFilter extends UIControl {
 		
@@ -67,8 +66,8 @@ package ui.controls.filter {
 			addChild(_btn);
 		}
 		
-		public function get filter():Filter {
-			return new _plugin.definition();
+		public function get filter():Plugin {
+			return _plugin;
 		}
 	}
 }

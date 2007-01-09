@@ -45,6 +45,8 @@ package ui.events {
 		 * 	The object that started the drag
 		 */
 		public var origin:UIObject;
+		public var ctrlKey:Boolean;
+		public var shiftKey:Boolean;
 		
 		/**
 		 * 

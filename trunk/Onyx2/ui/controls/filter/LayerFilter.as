@@ -34,8 +34,10 @@ package ui.controls.filter {
 	import flash.events.MouseEvent;
 	import flash.utils.getTimer;
 	
+	import onyx.application.Onyx;
 	import onyx.filter.Filter;
 	import onyx.layer.Layer;
+	import onyx.net.Plugin;
 	
 	import ui.assets.AssetLayerFilter;
 	import ui.controls.ButtonClear;
@@ -70,7 +72,27 @@ package ui.controls.filter {
 		 * 	@private
 		 */
 		private function _onDeleteDown(event:MouseEvent):void {
-			_layer.removeFilter(filter);
+			
+			if (event.ctrlKey) {
+				
+				var plugin:Plugin		= Onyx.getDefinition(filter.name);
+				var filterClass:Class	= plugin.definition;
+				var layers:Array		= UILayer.getValidLayers();
+				
+				for each (var layer:UILayer in layers) {
+					var filters:Array = layer.layer.filters;
+					
+					for each (var filter:Filter in filters) {
+						if (filter is filterClass) {
+							layer.layer.removeFilter(filter);
+							break;
+						}
+					}
+				}
+			} else {
+				_layer.removeFilter(filter);
+			}
+			
 			event.stopPropagation();
 		}
 		

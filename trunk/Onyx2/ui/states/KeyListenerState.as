@@ -43,7 +43,6 @@ package ui.states {
 					break;
 				case 38:
 				case 40:
-					trace('key');
 					break;
 			}
 		}

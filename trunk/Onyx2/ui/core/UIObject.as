@@ -61,9 +61,15 @@ package ui.core {
 			var dispatcher:EventDispatcher = event.currentTarget as EventDispatcher;
 			
 			if (_doubleObject == dispatcher) {
-				if (getTimer() - _doubleTime < 250) {
+				if (getTimer() - _doubleTime < 300) {
 					event.stopPropagation();
-					dispatcher.dispatchEvent(new MouseEvent(MouseEvent.DOUBLE_CLICK));
+					
+					var e:MouseEvent = new MouseEvent(MouseEvent.DOUBLE_CLICK);
+					e.ctrlKey	= event.ctrlKey;
+					e.altKey	= event.altKey;
+					e.shiftKey	= event.shiftKey;
+					
+					dispatcher.dispatchEvent(e);
 				}
 			}
 			

@@ -113,6 +113,17 @@ package ui.layer {
 			uilayer.moveToTop();
 		}
 		
+		public static function getValidLayers():Array {
+			
+			var arr:Array = [];
+			
+			for each (var layer:UILayer in _layers) {
+				arr.push(layer);
+			}
+			
+			return arr;
+		}
+		
 		/**
 		 *	The currently selected layer 
 		 */
@@ -415,7 +426,7 @@ package ui.layer {
 		}
 
 		/**
-		 * 
+		 * 	@private
 		 */
 		private function _onPageSelect(event:MouseEvent):void {
 			var target:LayerPageButton = event.currentTarget as LayerPageButton;
@@ -779,5 +790,6 @@ package ui.layer {
 		public function get layer():Layer {
 			return _layer;
 		}
+
 	}
 }

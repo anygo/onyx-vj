@@ -35,9 +35,9 @@ package ui.core {
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
+	import flash.geom.ColorTransform;
 	
 	import ui.events.DragEvent;
-	import flash.geom.ColorTransform;
 	
 	public class DragManager {
 		
@@ -130,6 +130,9 @@ package ui.core {
 			if (_currentTarget) {
 				
 				var dragEvent:DragEvent = new DragEvent(DragEvent.DRAG_DROP);
+				dragEvent.ctrlKey = event.ctrlKey;
+				dragEvent.shiftKey = event.shiftKey;
+
 				dragEvent.origin = _origin;
 				
 				_currentTarget.dispatchEvent(dragEvent);
@@ -158,13 +161,23 @@ package ui.core {
 		private static function _onRollTarget(event:MouseEvent):void {
 			if (event.currentTarget !== _currentTarget) {
 				_currentTarget = event.currentTarget as DisplayObject;
-				_currentTarget.dispatchEvent(new DragEvent(DragEvent.DRAG_OVER));
+				
+				var dragEvent:DragEvent = new DragEvent(DragEvent.DRAG_OVER);
+				dragEvent.ctrlKey = event.ctrlKey;
+				dragEvent.shiftKey = event.shiftKey;
+
+				_currentTarget.dispatchEvent(dragEvent);
 			}
 		}
 
 		// rolled out of a target
 		private static function _onRollOutTarget(event:MouseEvent):void {
-			_currentTarget.dispatchEvent(new DragEvent(DragEvent.DRAG_OUT));
+
+			var dragEvent:DragEvent = new DragEvent(DragEvent.DRAG_OUT);
+			dragEvent.ctrlKey = event.ctrlKey;
+			dragEvent.shiftKey = event.shiftKey;
+
+			_currentTarget.dispatchEvent(dragEvent);
 			_currentTarget = null;
 		}
 

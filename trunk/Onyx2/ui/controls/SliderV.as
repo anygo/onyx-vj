@@ -33,11 +33,11 @@ package ui.controls {
 	import flash.events.MouseEvent;
 	
 	import onyx.controls.Control;
+	import onyx.controls.ControlNumber;
 	import onyx.events.ControlEvent;
 	
 	import ui.text.Style;
 	import ui.text.TextField;
-	import onyx.controls.ControlNumber;
 	
 	public class SliderV extends UIControl {
 		
@@ -48,6 +48,7 @@ package ui.controls {
 
 		protected var _button:ButtonClear;
 		protected var _value:TextField;
+		protected var _mouseY:int;
 		
 		public function SliderV(options:UIOptions, controlY:Control):void {
 
@@ -106,7 +107,8 @@ package ui.controls {
 		 */
 		protected function _onMouseDown(event:MouseEvent):void {
 			
-			_tempY = mouseY + _controlY.value * _multiplier;
+			_mouseY = mouseY;
+			_tempY = _controlY.value * _multiplier;
 			
 			stage.addEventListener(MouseEvent.MOUSE_MOVE, _onMouseMove);
 			stage.addEventListener(MouseEvent.MOUSE_UP, _onMouseUp);
@@ -117,7 +119,9 @@ package ui.controls {
 		 * 	@private
 		 */
 		protected function _onMouseMove(event:MouseEvent):void {
-			_controlY.value = (Math.floor(_tempY - mouseY)) / _multiplier;
+			
+			var diff:int = (_mouseY - mouseY) / _factor;
+			_controlY.value = (diff + _tempY) / _multiplier;
 		}
 		
 		/**

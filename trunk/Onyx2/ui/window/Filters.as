@@ -34,13 +34,14 @@ package ui.window {
 	
 	import onyx.application.Onyx;
 	import onyx.events.FilterEvent;
+	import onyx.net.Plugin;
 	
 	import ui.controls.filter.LibraryFilter;
 	import ui.core.DragManager;
 	import ui.core.UIObject;
 	import ui.events.DragEvent;
 	import ui.layer.UILayer;
-	import onyx.net.Plugin;
+	import onyx.filter.Filter;
 	
 	public final class Filters extends Window {
 		
@@ -94,12 +95,20 @@ package ui.window {
 		 */
 		private function _onDoubleClick(event:MouseEvent):void {
 			
-			var control:LibraryFilter = event.target as LibraryFilter;
-			UILayer.selectedLayer.addFilter(control.filter);
+			var control:LibraryFilter	= event.target as LibraryFilter;
+			var plugin:Plugin			= control.filter;
+			
+			if (event.ctrlKey) {
+				_applyToAll(plugin);
+			} else {
+				UILayer.selectedLayer.addFilter(new plugin.definition());
+			}
 			
 		}
 		
-		// when we start dragging
+		/**
+		 * 	@private
+		 */
 		private function _onMouseDown(event:MouseEvent):void {
 			
 			var control:LibraryFilter = event.currentTarget as LibraryFilter;
@@ -107,24 +116,52 @@ package ui.window {
 			
 		}
 		
-		// drag functions
+		/**
+		 * 	@private
+		 */
 		private function _onDragOver(event:DragEvent):void {
 			var obj:UIObject = event.currentTarget as UIObject;
 			obj.highlight(0x800800, .15);
 		}
 		
+		/**
+		 * 	@private
+		 */
 		private function _onDragOut(event:DragEvent):void {
 			var obj:UIObject = event.currentTarget as UIObject;
 			obj.highlight(0, 0);
 		}
 		
+		/**
+		 * 	@private
+		 */
 		private function _onDragDrop(event:DragEvent):void {
-			var uilayer:UILayer = event.currentTarget as UILayer
-			var origin:LibraryFilter = event.origin as LibraryFilter;
+			var uilayer:UILayer			= event.currentTarget as UILayer
+			var origin:LibraryFilter	= event.origin as LibraryFilter;
+			var plugin:Plugin			= origin.filter;
 			uilayer.highlight(0, 0);
 
 			UILayer.selectLayer(uilayer);
-			UILayer.selectedLayer.addFilter(origin.filter);
+			
+			if (event.ctrlKey) {
+
+				_applyToAll(plugin);
+
+			} else {
+				
+				UILayer.selectedLayer.addFilter(new plugin.definition());
+				
+			}
+		}
+		
+		/**
+		 * 
+		 */
+		private function _applyToAll(plugin:Plugin):void {
+			var layers:Array = UILayer.getValidLayers();
+			for each (var layer:UILayer in layers) {
+				layer.addFilter(new plugin.definition());
+			}
 		}
 	}
 }
