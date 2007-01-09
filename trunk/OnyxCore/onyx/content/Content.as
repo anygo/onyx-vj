@@ -444,9 +444,16 @@ package onyx.content {
 		}
 		
 		/**
+		 * 
+		 */
+		override public function set filters(value:Array):void {
+			throw new Error('set filters overridden');
+		}
+		/**
 		 * 	Returns filters
 		 */
 		override public function get filters():Array {
+			
 			return _filters;
 		}
 		
@@ -681,5 +688,6 @@ package onyx.content {
 			// content will be part of layer, so make sure it doesn't bubble
 			event.stopPropagation();
 		}
+
 	}
 }

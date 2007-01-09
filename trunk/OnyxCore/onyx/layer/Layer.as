@@ -559,7 +559,7 @@ package onyx.layer {
 		 * 	Returns the filters
 		 */
 		override public function get filters():Array {
-			return _content.filters;
+			return _content.filters.concat();
 		}
 		
 		/**

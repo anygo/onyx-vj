@@ -10,6 +10,9 @@ package onyx.controls {
 			this.controlY = controlY;
 			this.controlX = controlX;
 			
+			controlY.metadata = metadata;
+			controlX.metadata = metadata;
+			
 			super(property, displayName, metadata);
 		}
 		

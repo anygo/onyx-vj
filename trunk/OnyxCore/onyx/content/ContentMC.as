@@ -195,7 +195,7 @@ package onyx.content {
 		 */
 		override public function get framerate():Number {
 			// get the ratio of the original framerate and the actual framerate
-			var ratio:Number = _loader.contentLoaderInfo.frameRate / Onyx.framerate
+			var ratio:Number = _loader.contentLoaderInfo.frameRate / Onyx.framerate;
 			
 			return (_framerate / ratio);
 		}
