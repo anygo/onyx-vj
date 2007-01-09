@@ -622,23 +622,24 @@ package onyx.layer {
 		public function unload():void {
 
 			// disposes content
-			if (_content) {
-				
+			if (!(_content is ContentNull)) {
+
+				// store the current content				
 				var content:IContent = _content;
-				_content = new ContentNull();
-				
-				// if content is a displayobject, remove it
-				if (content is DisplayObject) {
-					super.removeChild(content as DisplayObject);
-				}
 
-				content.dispose();
+				// destroy the content
+				_destroyContent();
+
+				// set content to nothing					
+				_content			= new ContentNull();
 				
+				// change the property target to this layer
+				_properties.target	= this;
+				
+				// dispatch an unload event
+				super.dispatchEvent(new LayerEvent(LayerEvent.LAYER_UNLOADED, this));
+
 			}
-
-			// dispatch an unload event
-			super.dispatchEvent(new LayerEvent(LayerEvent.LAYER_UNLOADED, this));
-			
 		}
 		
 		/**

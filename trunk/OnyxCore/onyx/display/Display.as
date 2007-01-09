@@ -30,6 +30,8 @@
  */
 package onyx.display {
 	
+	import flash.display.Bitmap;
+	import flash.display.BitmapData;
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -49,8 +51,6 @@ package onyx.display {
 	import onyx.layer.LayerProperties;
 	import onyx.layer.LayerSettings;
 	import onyx.transition.*;
-	import flash.display.BitmapData;
-	import flash.display.Bitmap;
 	
 	use namespace onyx_internal;
 	
