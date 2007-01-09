@@ -31,31 +31,40 @@
 package ui.window {
 
 	import flash.events.MouseEvent;
+	import flash.system.System;
 	
 	import onyx.application.Onyx;
+	import onyx.controls.ControlColor;
+	import onyx.controls.Controls;
 	import onyx.display.Display;
 	
+	import ui.controls.ColorPicker;
 	import ui.controls.SliderV2;
+	import ui.controls.TextButton;
 	import ui.controls.UIOptions;
 	import ui.core.UIObject;
-	import onyx.controls.ControlColor;
-	import ui.controls.ColorPicker;
+	import ui.controls.TextControlPopUp;
 
 	public final class SettingsWindow extends Window {
 		
 		private var _controlXY:SliderV2;
 		private var _controlScale:SliderV2;
 		private var _controlColor:ColorPicker;
+		private var _controlXML:TextButton;
 		
 		public function SettingsWindow(display:Display):void {
 			
 			title = 'SETTINGS WINDOW';
 			
-			var options:UIOptions = new UIOptions();
+			var options:UIOptions	= new UIOptions();
+			options.width			= 50;
+			
+			var controls:Controls	= display.controls;
 
-			_controlXY		= new SliderV2(options, display.controls.getControl('position'));
-			_controlScale	= new SliderV2(options, display.controls.getControl('scale'));
-			_controlColor	= new ColorPicker(options, display.controls.getControl('backgroundColor'));
+			_controlXY		= new SliderV2(options, controls.getControl('position'));
+			_controlScale	= new SliderV2(options, controls.getControl('scale'));
+			_controlColor	= new ColorPicker(options, controls.getControl('backgroundColor'));
+			_controlXML		= new TextButton(options, 'save layers');
 			
 			_controlXY.y	= 24;
 			_controlScale.y = 47;
@@ -63,22 +72,35 @@ package ui.window {
 			_controlXY.x	= 2;
 			_controlScale.x = 2;
 			_controlColor.x = 2;
+			_controlXML.x	= 2;
+			_controlXML.y	= 83;
 			
 			addChild(_controlXY);
 			addChild(_controlScale);
 			addChild(_controlColor);
+			addChild(_controlXML);
 			
 			width = 190;
 			
 			x = 200;
 			y = 542;
 			
-			addEventListener(MouseEvent.MOUSE_DOWN, _onMouseDown)
+			_controlXML.addEventListener(MouseEvent.MOUSE_DOWN, _onMouseDown)
 		}
 		
 		private function _onMouseDown(event:MouseEvent):void {
 			var display:Display = Onyx.displays[0];
-			trace(display.toXML());
+			var text:String		= display.toXML().normalize();
+			
+			var popup:TextControlPopUp = new TextControlPopUp(this, 200, 200, 'Copied to clipboard\n\n' + text);
+
+			// saves breaks
+			var arr:Array = text.split(String.fromCharCode(10));
+			text		= arr.join(String.fromCharCode(13,10));
+			
+			System.setClipboard(text);
+			
+			event.stopPropagation();
 		}
 	}
 }

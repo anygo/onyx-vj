@@ -51,7 +51,7 @@ package ui.controls {
 		
 		public function SliderV(options:UIOptions, controlY:Control):void {
 
-			super(options, controlY.display);
+			super(options, true, controlY.display);
 			
 			var width:int			= options.width;
 			var height:int			= options.height;

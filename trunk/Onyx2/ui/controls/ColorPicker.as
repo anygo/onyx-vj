@@ -54,7 +54,7 @@ package ui.controls {
 		 */		
 		public function ColorPicker(options:UIOptions, control:Control):void {
 			
-			super(options, control.display);
+			super(options, true, control.display);
 			
 			_control = control as ControlUInt;
 			

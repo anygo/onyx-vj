@@ -57,7 +57,8 @@ package ui.window {
 			
 			addChild(_background);
 			addChild(_title);
-			
+		
+			super(true);	
 		}
 		
 		public function set title(t:String):void {
@@ -76,10 +77,16 @@ package ui.window {
 			_background.height = h;
 		}
 		
+		/**
+		 * 	Allows window to be dragged
+		 */
 		public function set draggable(drag:Boolean):void {
 			addEventListener(MouseEvent.MOUSE_DOWN, _dragMouseDown);
 		}
 		
+		/**
+		 * 
+		 */
 		private function _dragMouseDown(event:MouseEvent):void {
 			/* check to see if thet mouse is hitting the title bar */
 			if (mouseY < 13) {

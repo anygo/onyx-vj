@@ -36,10 +36,9 @@ package ui.text {
 		
 		public function TextInput(width:int = 100, height:int = 16, align:String = 'left'):void {
 
-			type = TextFieldType.INPUT;
-			
 			super(width, height, align, true, true);
 
+			type = TextFieldType.INPUT;
 		}
 
 	}

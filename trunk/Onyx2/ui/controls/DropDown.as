@@ -59,7 +59,7 @@ package ui.controls {
 			
 			var control:ControlRange = range as ControlRange;
 			
-			super(options, control.display);
+			super(options, true, control.display);
 			
 			_bind = bind;
 			_width = options.width;
@@ -85,7 +85,6 @@ package ui.controls {
 			
 			// cache
 			cacheAsBitmap = true;
-
 		}
 		
 		/**

@@ -33,6 +33,7 @@ package ui.controls {
 	import flash.display.DisplayObject;
 	import flash.display.Shape;
 	import flash.display.Sprite;
+	import flash.geom.ColorTransform;
 	
 	import onyx.controls.Control;
 	import onyx.core.IDisposable;
@@ -41,7 +42,6 @@ package ui.controls {
 	import ui.core.UIObject;
 	import ui.text.Style;
 	import ui.text.TextField;
-	import flash.geom.ColorTransform;
 
 	public class UIControl extends UIObject implements IDisposable {
 		
@@ -51,7 +51,7 @@ package ui.controls {
 		/**
 		 * 	
 		 */
-		public function UIControl(options:UIOptions, label:String = null):void {
+		public function UIControl(options:UIOptions, movesToTop:Boolean = false, label:String = null):void {
 			
 			if (options) {
 			
@@ -64,22 +64,7 @@ package ui.controls {
 				}
 			}
 			
-		}
-		
-		/**
-		 * 	Adds a label to the control
-		 */
-		private function addLabel(name:String, align:String, width:int, height:int):void {
-			
-			var label:TextField = new TextField(width + 3, height);
-			label.textColor		= 0x96abbc;
-			label.align = align || 'center';
-			label.text = name.toUpperCase();
-			label.y = -8;
-			label.mouseEnabled = false;
-
-			addChild(label);
-			
+			super(movesToTop);
 		}
 	}
 }

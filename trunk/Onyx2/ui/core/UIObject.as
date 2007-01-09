@@ -39,6 +39,8 @@ package ui.core {
 	import flash.utils.getTimer;
 	
 	import onyx.core.IDisposable;
+	
+	import ui.text.TextField;
 
 	/**
 	 * 	Base UIObject Class
@@ -80,25 +82,13 @@ package ui.core {
 		private static var _doubleTime:int;
 		
 		/**
-		 * 	Adds Children
-		 */
-		public function addChildren(... args:Array):void {
-			
-			var len:int = args.length;
-			for (var count:int = 0; count < len; count+=3) {
-				args[count].x = args[count+1];
-				args[count].y = args[count+2];
-				addChild(args[count]);
-			}
-			
-		}
-		
-		/**
 		 * 	@constructor
 		 */
-		public function UIObject():void {
+		public function UIObject(movesToTop:Boolean = false):void {
 
-			addEventListener(MouseEvent.MOUSE_DOWN, moveToTop);
+			if (movesToTop) {
+				addEventListener(MouseEvent.MOUSE_DOWN, moveToTop);
+			}
 
 		}
 		
@@ -112,6 +102,7 @@ package ui.core {
 				removeEventListener(MouseEvent.MOUSE_DOWN, _mouseDown, true);
 			}
 		}
+		
 		/**
 		 * 	Removes all children
 		 */
@@ -159,6 +150,29 @@ package ui.core {
 				parent.setChildIndex(this, parent.numChildren - 1);
 			}
 		}	
+		
+		/**
+		 * 	Creates a background
+		 */
+		protected function displayBackground(width:int, height:int):void {
+			if (!background) {
+				background = new ControlShape(width, height);
+				addChildAt(background, 0);
+			}
+		}
+
+		/**
+		 * 	Adds Children
+		 */
+		public function addChildren(... args:Array):void {
+			
+			var len:int = args.length;
+			for (var count:int = 0; count < len; count+=3) {
+				args[count].x = args[count+1];
+				args[count].y = args[count+2];
+				addChild(args[count]);
+			}
+		}
 
 		/**
 		 * 	Disposes the UIObject
@@ -174,16 +188,24 @@ package ui.core {
 			removeEventListener(MouseEvent.MOUSE_DOWN, moveToTop, true);
 
 		}
+
 		
 		/**
-		 * 	Creates a background
+		 * 	Adds a label to the control
 		 */
-		protected function displayBackground(width:int, height:int):void {
-			if (!background) {
-				background = new ControlShape(width, height);
-				addChildAt(background, 0);
-			}
+		protected function addLabel(name:String, align:String, width:int, height:int, offset:int = -8):void {
+			
+			var label:TextField = new TextField(width + 3, height);
+			label.textColor		= 0x96abbc;
+			label.align			= align || 'center';
+			label.text			= name.toUpperCase();
+			label.y				= offset;
+			label.mouseEnabled	= false;
+
+			addChild(label);
+			
 		}
+
 	}
 }
 

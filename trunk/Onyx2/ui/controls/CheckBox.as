@@ -46,7 +46,8 @@ package ui.controls {
 
 			_control = control;
 
-			super(options, control.display);
+			super(options, true, control.display);
+			
 			_value = control.value;
 
 			_label			= new TextField(options.width + 3, options.height, 'center');

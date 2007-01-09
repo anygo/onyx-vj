@@ -31,24 +31,17 @@
 package ui.layer {
 	
 	import flash.display.*;
-	import flash.events.Event;
-	import flash.events.MouseEvent;
-	import flash.events.ProgressEvent;
-	import flash.events.TimerEvent;
+	import flash.events.*;
 	import flash.filters.DropShadowFilter;
 	import flash.geom.ColorTransform;
 	import flash.geom.Matrix;
 	import flash.net.URLRequest;
-	import flash.utils.Dictionary;
 	import flash.utils.Timer;
 	
-	import onyx.application.InitializationState;
 	import onyx.application.Onyx;
 	import onyx.application.StateManager;
 	import onyx.controls.*;
-	import onyx.events.ControlEvent;
-	import onyx.events.FilterEvent;
-	import onyx.events.LayerEvent;
+	import onyx.events.*;
 	import onyx.filter.Filter;
 	import onyx.layer.Layer;
 	import onyx.layer.LayerProperties;
@@ -162,7 +155,7 @@ package ui.layer {
 		private var _assetScrub:ScrubArrow 					= new ScrubArrow();
 
 		/** @private **/
-		private var _btnScrub:ButtonClear					= new ButtonClear(192, 16, false);
+		private var _btnScrub:ButtonClear					= new ButtonClear(192, 12, false);
 
 		/** @private **/
 		private var _timer:Timer							= new Timer(2000);
@@ -210,6 +203,8 @@ package ui.layer {
 			_draw();
 			
 			_assignHandlers();
+			
+			super(true);
 		}
 		
 		/**
@@ -361,7 +356,7 @@ package ui.layer {
 
 				new DropDown(dropOptions, props.blendMode),							4,			153,
 				_assetScrub,										 		SCRUB_LEFT,			139,
-				_btnScrub,															1,			135,
+				_btnScrub,															1,			139,
 				_filterPane,														110,		182,
 
 				_btnUp,																153,		154,
@@ -452,6 +447,12 @@ package ui.layer {
 			if (_layer.controls) {
 				var page:LayerPage = _pages[2];
 				page.controls = _layer.controls;
+
+				// check if we're on the custom controls page
+				if (_selectedPage == 2) {
+					_controlPage.addControls(_layer.controls);
+				}
+
 			}
 			
 			// set name
@@ -465,10 +466,6 @@ package ui.layer {
 			
 			// make sure the timer is running
 			_timer.start();
-			
-			// update the preview (not working?)
-			// _onUpdateTimer(null);
-
 		}
 		
 		/**
@@ -478,10 +475,10 @@ package ui.layer {
 		private function _onLayerUnLoad(event:LayerEvent):void {
 			
 			var page:LayerPage = _pages[2];
-			if (page.controls) {
+/*			if (page.controls) {
 				page.controls = null;
 			}
-			selectPage(0);
+*/			selectPage(0);
 			
 			_timer.stop();
 			_timer.removeEventListener(TimerEvent.TIMER, _onUpdateTimer);
