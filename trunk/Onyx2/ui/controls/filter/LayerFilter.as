@@ -77,23 +77,27 @@ package ui.controls.filter {
 				
 				var plugin:Plugin		= Onyx.getDefinition(filter.name);
 				var filterClass:Class	= plugin.definition;
-				var layers:Array		= UILayer.getValidLayers();
+				var layers:Array		= UILayer.layers;
 				
 				for each (var layer:UILayer in layers) {
-					var filters:Array = layer.layer.filters;
 					
-					for each (var filter:Filter in filters) {
-						if (filter is filterClass) {
-							layer.layer.removeFilter(filter);
-							break;
+					if (layer.layer !== _layer) {
+						var filters:Array = layer.layer.filters;
+						
+						for each (var filter:Filter in filters) {
+							if (filter is filterClass) {
+								layer.layer.removeFilter(filter);
+								break;
+							}
 						}
 					}
 				}
-			} else {
-				_layer.removeFilter(filter);
-			}
 			
-			event.stopPropagation();
+			}
+
+			_layer.removeFilter(this.filter);
+			
+			// event.stopPropagation();
 		}
 		
 		/**

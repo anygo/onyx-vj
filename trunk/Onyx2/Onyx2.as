@@ -46,7 +46,7 @@ package {
 	
 	[ExcludeClass]
 
-	[SWF(width="1024", height="768", backgroundColor="#141515", frameRate='24')]
+	[SWF(width="1024", height="768", backgroundColor="#141515", frameRate='30')]
 	public class Onyx2 extends UIObject {
 		
 		/**
@@ -59,8 +59,6 @@ package {
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 
 			UIManager.initialize(stage);
-		
 		}
-		
 	}
 }

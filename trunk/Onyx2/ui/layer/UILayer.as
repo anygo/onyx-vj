@@ -113,17 +113,6 @@ package ui.layer {
 			uilayer.moveToTop();
 		}
 		
-		public static function getValidLayers():Array {
-			
-			var arr:Array = [];
-			
-			for each (var layer:UILayer in _layers) {
-				arr.push(layer);
-			}
-			
-			return arr;
-		}
-		
 		/**
 		 *	The currently selected layer 
 		 */
@@ -662,6 +651,9 @@ package ui.layer {
 			
 			// reorder filters
 			reorderFilters();
+			
+			// select it
+			selectFilter(filter);
 		}
 		
 		/**
@@ -789,6 +781,18 @@ package ui.layer {
 		 */
 		public function get layer():Layer {
 			return _layer;
+		}
+		
+		/**
+		 * 
+		 */
+		public function selectFilterUp(up:Boolean):void {
+			if (_selectedFilter) {
+				var index:int = _selectedFilter.filter.index + (up ? -1 : 1);
+				selectFilter(_filters[index]);
+			} else {
+				selectFilter(_filters[int((up) ? _filters.length - 1 : 0)]);
+			}
 		}
 
 	}

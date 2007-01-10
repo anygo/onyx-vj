@@ -158,7 +158,7 @@ package ui.window {
 		 * 
 		 */
 		private function _applyToAll(plugin:Plugin):void {
-			var layers:Array = UILayer.getValidLayers();
+			var layers:Array = UILayer.layers;
 			for each (var layer:UILayer in layers) {
 				layer.addFilter(new plugin.definition());
 			}

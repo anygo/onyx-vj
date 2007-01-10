@@ -42,7 +42,10 @@ package ui.states {
 
 					break;
 				case 38:
+					UILayer.selectedLayer.selectFilterUp(true);
+					break;
 				case 40:
+					UILayer.selectedLayer.selectFilterUp(false);
 					break;
 			}
 		}

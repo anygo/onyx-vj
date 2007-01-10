@@ -133,16 +133,17 @@ package ui.controls {
 		 */
 		private function _onMouseMoveNormal(event:MouseEvent):void {
 
-			var diffX:Number = (_mouseX - mouseX) / _factor;
-			var diffY:Number = (_mouseY - mouseY) / _factor;
-			
+
+			var x:Number = (_tempX + ((_mouseX - mouseX) / _factor));
+			var y:Number = (_tempY + ((_mouseY - mouseY) / _factor));
+
 			if (event.shiftKey) {
-				diffX = diffY = (diffX + diffY) / 2;
+				x = y = (x + y) / 2;
 			}
 			
-			_controlX.value = (diffX + _tempX) / _multiplier;
-			_controlY.value = (diffY + _tempY) / _multiplier;
-			
+			_controlX.value = x / _multiplier;
+			_controlY.value = y / _multiplier;
+
 		}
 
 		/**
@@ -166,15 +167,15 @@ package ui.controls {
 		 */
 		private function _onMouseMoveInvert(event:MouseEvent):void {
 
-			var diffX:Number = (_mouseX - mouseX) / _factor;
-			var diffY:Number = (_mouseY - mouseY) / _factor;
+			var x:Number = _tempX - ((_mouseX - mouseX) / _factor);
+			var y:Number = _tempY - ((_mouseY - mouseY) / _factor);
 
 			if (event.shiftKey) {
-				diffX = diffY = (diffX + diffY) / 2;
+				x = y = (x + y) / 2;
 			}
 			
-			_controlX.value = (_tempX - diffX) / _multiplier;
-			_controlY.value = (_tempY - diffY) / _multiplier;
+			_controlX.value = x / _multiplier;
+			_controlY.value = y / _multiplier;
 			
 		}
 		

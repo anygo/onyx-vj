@@ -34,14 +34,14 @@ package ui.window {
 	import flash.events.MouseEvent;
 	
 	import onyx.core.Console;
-	import onyx.core.onyx_internal;
+	import onyx.core.onyx_ns;
 	import onyx.events.ConsoleEvent;
 	
 	import ui.text.Style;
 	import ui.text.TextField;
 	import ui.text.TextInput;
 	
-	use namespace onyx_internal;
+	use namespace onyx_ns;
 	
 	public final class Console extends Window {
 		
