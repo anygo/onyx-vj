@@ -51,7 +51,7 @@ package ui.window {
 		
 		public function Console():void {
 			
-			onyx.core.Console.addEventListener(ConsoleEvent.CONSOLE_TRACE, _onConsole);
+			onyx.core.Console.getInstance().addEventListener(ConsoleEvent.CONSOLE_TRACE, _onConsole);
 			
 			_draw();
 			
