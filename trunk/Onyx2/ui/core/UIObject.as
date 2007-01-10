@@ -95,7 +95,8 @@ package ui.core {
 			if (movesToTop) {
 				addEventListener(MouseEvent.MOUSE_DOWN, moveToTop);
 			}
-
+			
+			tabEnabled = false;
 		}
 		
 		/**

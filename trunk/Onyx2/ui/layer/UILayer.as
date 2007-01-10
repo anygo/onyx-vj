@@ -99,12 +99,12 @@ package ui.layer {
 		public static function selectLayer(uilayer:UILayer):void {
 			
 			if (selectedLayer) {
-				selectedLayer._timer.delay = 2000;
+				selectedLayer._timer.delay = 2200;
 				selectedLayer.highlight(0,0);
 			}
 			
 			// make the delay faster
-			uilayer._timer.delay = 160;
+			uilayer._timer.delay = 220;
 			
 			uilayer.highlight(0x3186d6,.13);
 			

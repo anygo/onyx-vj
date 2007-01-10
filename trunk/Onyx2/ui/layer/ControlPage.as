@@ -21,6 +21,7 @@ package ui.layer {
 		 */		
 		public function ControlPage():void {
 			super(true);
+			mouseEnabled = false;
 		}
 		
 		/**

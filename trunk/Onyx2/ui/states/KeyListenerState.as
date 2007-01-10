@@ -2,6 +2,7 @@ package ui.states {
 	
 	import flash.display.Stage;
 	import flash.events.KeyboardEvent;
+	import flash.ui.Keyboard;
 	
 	import onyx.application.ApplicationState;
 	
@@ -46,6 +47,10 @@ package ui.states {
 					break;
 				case 40:
 					UILayer.selectedLayer.selectFilterUp(false);
+					break;
+				case Keyboard.TAB:
+				
+					event.stopPropagation();
 					break;
 			}
 		}
