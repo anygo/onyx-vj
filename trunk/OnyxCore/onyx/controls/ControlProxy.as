@@ -16,6 +16,12 @@ package onyx.controls {
 			super(property, displayName, metadata);
 		}
 		
+		override public function setValue(v:*):* {
+		}
+		
+		override public function set value(v:*):void {
+		}
+		
 		override public function get value():* {
 			return null;
 		}

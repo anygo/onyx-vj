@@ -113,7 +113,7 @@ package onyx.layer {
 			var extension:String = path.substr(path.lastIndexOf('.')+1, path.length).toLowerCase();
 			
 			// if it's an onx file, pass it over to the display
-			if (extension === 'mix') {
+			if (extension === 'mix' || extension === 'xml') {
 				
 				if (parent is Display) {
 					(parent as Display).load(request, this);

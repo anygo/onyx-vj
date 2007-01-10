@@ -120,8 +120,6 @@ package onyx.filter {
 				var oldvalue:Number = _threshold;
 				var thresh:Number = -256;
 				
-//				trace(thresh);
-				
 				_threshold = value;
 /*				applyMatrix(
 					[	0, 0, 0, 0,  thresh, 

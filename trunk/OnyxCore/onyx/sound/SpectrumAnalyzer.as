@@ -105,8 +105,6 @@ package onyx.sound {
 		// analyze all our stuff!
 		private function _analyzeSpectrum(event:TimerEvent):void {
 			
-			trace('analyzing');
-			
 			var start:int = getTimer(), i:int;
 			
 			// grab our bytes
@@ -136,8 +134,6 @@ package onyx.sound {
 			
 			// dispatch that we've analyzed the bytes
 			dispatchEvent(spectrumEvent);
-			
-			// trace(getTimer() - start);
 			
 		}
 		

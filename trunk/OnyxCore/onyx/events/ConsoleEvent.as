@@ -34,17 +34,15 @@ package onyx.events
 
 	public class ConsoleEvent extends Event {
 
-		public static const CONSOLE_TRACE:String = 'trace';
+		public static const OUTPUT:String = 'output';
 		
-		public var message:String
-		public var messageType:int;
+		public var message:String;
 		
-		public function ConsoleEvent(message:String, messageType:int):void {
+		public function ConsoleEvent(message:String):void {
 			
 			this.message = message;
-			this.messageType = messageType;
 			
-			super(CONSOLE_TRACE);
+			super(OUTPUT);
 			
 		}
 	}

@@ -141,7 +141,7 @@ package onyx.filter {
 			var plugin:Plugin = Onyx.getDefinition(_name);
 			var filter:Filter = new plugin.definition();
 			
-			for each (var control:Control in _controls.array) {
+			for each (var control:Control in _controls) {
 				var newControl:Control = filter.controls.getControl(control.name);
 				newControl.value = control.value;
 			}

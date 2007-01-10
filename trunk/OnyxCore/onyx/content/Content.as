@@ -140,12 +140,6 @@ package onyx.content {
 		 * 	Stores the content that we're gonna draw
 		 */
 		private var _content:IBitmapDrawable;
-
-		/**
-		 *	@private
-		 *	Stores last render time
-		 */
-		private var _delayRender:Boolean;
 		
 		// stores controls
 		protected var __color:Control;
@@ -533,57 +527,43 @@ package onyx.content {
 		 */
 		protected function render(event:Event = null, update:Boolean = true):void {
 			
-			if (!_delayRender) {
+			// lock the bitmaps
+			_source.lock();
+			super.bitmapData.lock();
 
-				// lock the bitmaps
-				_source.lock();
-				super.bitmapData.lock();
+			if (update) {
 
-				var start:int = getTimer();
+				// store a temporary rendered			
+				_rendered.copyPixels(bitmapData, bitmapData.rect, POINT);
+			
+				// draw everything
 
-				if (update) {
-	
-					// store a temporary rendered			
-					_rendered.copyPixels(bitmapData, bitmapData.rect, POINT);
-				
-					// draw everything
+				_matrix.identity();
+				_matrix.scale(_scaleX, _scaleY);
+				_matrix.rotate(_rotation);
+				_matrix.translate(_x, _y);
+			
+				// if rotation is 0, send a clipRect, otherwise, don't clip
+				var rect:Rectangle = (_rotation === 0) ? new Rectangle(0, 0, Math.max(320 / _scaleX, 320), Math.max(240 / _scaleY, 240)) : null;
 
-					_matrix.identity();
-					_matrix.scale(_scaleX, _scaleY);
-					_matrix.rotate(_rotation);
-					_matrix.translate(_x, _y);
-				
-					// if rotation is 0, send a clipRect, otherwise, don't clip
-					var rect:Rectangle = (_rotation === 0) ? new Rectangle(0, 0, Math.max(320 / _scaleX, 320), Math.max(240 / _scaleY, 240)) : null;
-
-					// if it's a contentobject, we're gonna let it render itself
-					if (_content is IContentObject) {
-						(_content as IContentObject).render(_source, _matrix, rect);
-					} else {
-						_drawContent(_matrix, rect);
-					}
+				// if it's a contentobject, we're gonna let it render itself
+				if (_content is IContentObject) {
+					(_content as IContentObject).render(_source, _matrix, _colorTransform, rect);
+				} else {
+					_drawContent(_matrix, rect);
 				}
-			
-				// apply the color filter to the source
-				_source.applyFilter(_source, _source.rect, POINT, _filter.filter);
-
-				super.bitmapData.copyPixels(_source, _source.rect, POINT);
-			
-				_applyFilters(super.bitmapData);
-			
-				// unlock them
-				_source.unlock();
-				super.bitmapData.unlock();
-
-				// slow rendering, delay the frame draw for one frame
-				if (getTimer() - start > 9) {
-					_delayRender = true;
-				}
-
-				return;
-			} else {
-				_delayRender = false;
 			}
+		
+			// apply the color filter to the source
+			_source.applyFilter(_source, _source.rect, POINT, _filter.filter);
+
+			super.bitmapData.copyPixels(_source, _source.rect, POINT);
+		
+			_applyFilters(super.bitmapData);
+		
+			// unlock them
+			_source.unlock();
+			super.bitmapData.unlock();
 		}
 		
 		/**

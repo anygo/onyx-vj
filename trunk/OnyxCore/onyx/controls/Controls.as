@@ -55,7 +55,7 @@ package onyx.controls {
 				
 				control.target = _target;
 				
-				_definitions[control.name] = control
+				_definitions[control.name] = control;
 				
 				if (control is ControlProxy) {
 					var proxy:ControlProxy = control as ControlProxy;

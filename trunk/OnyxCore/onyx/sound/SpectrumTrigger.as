@@ -72,7 +72,7 @@ package onyx.sound {
 				// before settings, let's check the amount
 				if (amplitude - _highPeak > .14)  {
 					
-					trace('PEAK');
+//					TBD: dispatch PEAK
 
 				}
 				

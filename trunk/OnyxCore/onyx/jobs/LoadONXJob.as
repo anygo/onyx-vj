@@ -7,8 +7,9 @@ package onyx.jobs {
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
 	
-	import onyx.layer.Layer;
+	import onyx.core.Console;
 	import onyx.display.Display;
+	import onyx.layer.Layer;
 	import onyx.layer.LayerSettings;
 	
 	public final class LoadONXJob {
@@ -32,14 +33,14 @@ package onyx.jobs {
 		 */
 		private function _onURLHandler(event:Event):void {
 			
-			trace(event);
-			
 			var loader:URLLoader = event.currentTarget as URLLoader;
 			loader.removeEventListener(Event.COMPLETE, _onURLHandler);
 			loader.removeEventListener(IOErrorEvent.IO_ERROR, _onURLHandler);
 			
 			// success
-			if (!(event is IOErrorEvent)) {
+			if (event is IOErrorEvent) {
+			} else {
+				
 				try {
 					
 					var xml:XML			= new XML(loader.data);
@@ -56,9 +57,8 @@ package onyx.jobs {
 						if (layer) {
 							var settings:LayerSettings	= new LayerSettings();
 							settings.loadFromXML(layerXML);
-							layer.load(new URLRequest(settings.path), settings);
 							
-							trace(settings.path);
+							layer.load(new URLRequest(settings.path), settings);
 							
 						// break out
 						} else {
@@ -67,6 +67,7 @@ package onyx.jobs {
 					}
 					
 				} catch(e:Error) {
+					Console.output(e.message)
 				}
 				
 			}

@@ -122,7 +122,7 @@ package onyx.controls {
 		 * 
 		 */
 		override public function toString():String {
-			return '[' + getQualifiedClassName(this) + ']';
+			return '[' + getQualifiedClassName(this) + ': ' + name + '=' + value + ']';
 		}
 		
 	}

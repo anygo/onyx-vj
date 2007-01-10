@@ -36,11 +36,14 @@ package onyx.layer {
 	import onyx.application.Onyx;
 	import onyx.content.IContent;
 	import onyx.controls.Control;
+	import onyx.controls.ControlProxy;
 	import onyx.controls.ControlValue;
 	import onyx.controls.Controls;
+	import onyx.core.Console;
 	import onyx.core.onyx_ns;
 	import onyx.filter.Filter;
 	import onyx.net.Plugin;
+	import onyx.controls.IControlObject;
 	
 	use namespace onyx_ns;
 
@@ -146,6 +149,8 @@ package onyx.layer {
 				}
 			}
 			
+			// TBD: needs to be cleaned up
+			
 			if (xml.filters) {
 				
 				filters = [];
@@ -160,15 +165,47 @@ package onyx.layer {
 						var filter:Filter = new plugin.definition();
 						
 						for each (controlXML in filterXML.*) {
-							name = controlXML.name();
-							filter[name] = _parseBoolean(controlXML);
+							
+							_xmlToTarget(controlXML, filter.controls);
+							
 						}
 						
 						filters.push(filter);
 						
 					}
 				}
+			}
+		}
+		
+		/**
+		 * 	@private
+		 */
+		private function _xmlToTarget(xml:XML, controls:Controls):void {
+
+			try {
 				
+				// proxy control
+				if (xml.hasComplexContent()) {
+					for each (var proxy:XML in xml.*) {
+
+						name			= proxy.name();
+						value			= _parseBoolean(xml);
+						
+						control			= controls.getControl(name);
+						control.value	= value;
+					}
+				// individual property
+				} else {
+
+					var name:String 	= xml.name();
+					var value:*			= _parseBoolean(xml);
+					var control:Control	= controls.getControl(name);
+					control.value		= value;
+
+				}
+
+			} catch (e:Error) {
+				Console.output(e.message);
 			}
 		}
 		
@@ -177,7 +214,16 @@ package onyx.layer {
 		 */
 		private function _parseBoolean(value:*):* {
 			var name:String = value;
-			return (name === 'false') ? false : value;
+			
+			if (name === 'false') {
+				return false;
+			} else if (name === 'true') {
+				return true;
+			} else if (name is Number) {
+				return Number(name);
+			} 
+			
+			return name;
 		}
 		
 		/**
@@ -214,8 +260,12 @@ package onyx.layer {
 			// apply controls
 			if (controls && content.controls) {
 				for each (var control:Control in controls) {
-					var targetControl:Control = content.controls.getControl(control.name);
-					targetControl.value = control.value;
+					try {
+						var targetControl:Control = content.controls.getControl(control.name);
+						targetControl.value = control.value;
+					} catch (e:Error) {
+						Console.output(e.message);
+					}
 				}
 			}
 		}
@@ -250,7 +300,7 @@ package onyx.layer {
 			
 				for each (var filter:Filter in filters) {
 					
-					var prop:XML = _controlsToXML(<filter id={filter.name}/>, filter.controls);
+					var prop:XML = _controlsToXML.apply(this, [<filter id={filter.name}/>].concat(filter.controls));
 					filterXML.appendChild(prop);
 					
 				}
@@ -276,7 +326,7 @@ package onyx.layer {
 		/**
 		 * 
 		 */
-		private function _controlsToXML(xml:XML, controls:Controls):XML {
+		private function _controlsToXML(xml:XML, ... controls:Array):XML {
 			
 			var propXML:XML;
 			
@@ -286,7 +336,14 @@ package onyx.layer {
 					var value:String = (control.value as Number).toFixed(3);
 					propXML = <{name}>{value}</{name}>;
 				} else {
-					propXML = <{name}>{control.value}</{name}>;
+					if (control is ControlProxy) {
+						var proxy:ControlProxy = control as ControlProxy;
+						propXML = <{name}></{name}>;
+						_controlsToXML.apply(null, [propXML, proxy.controlX, proxy.controlY]);
+						
+					} else {
+						propXML = <{name}>{control.value}</{name}>;
+					}
 				}
 				
 				xml.appendChild(propXML);

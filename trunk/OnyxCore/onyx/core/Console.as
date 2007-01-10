@@ -49,7 +49,7 @@ package onyx.core {
 		public static function output(... args:Array):void {
 			
 			dispatcher.dispatchEvent(
-				new ConsoleEvent(args.join(' '), 0)
+				new ConsoleEvent(args.join(' '))
 			);
 		}
 		
@@ -68,7 +68,7 @@ package onyx.core {
 					try {
 						var message:String = fn.apply(null, commands);
 					} catch (e:Error) {
-						trace(e.message);
+						output(e.message);
 					}
 				}
 			}
