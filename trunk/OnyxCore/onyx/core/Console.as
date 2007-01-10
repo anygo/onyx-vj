@@ -35,14 +35,16 @@ package onyx.core {
 	import onyx.display.Display;
 	import onyx.events.ConsoleEvent;
 
-	public final class Console extends StaticDispatcher {
+	public final class Console extends EventDispatcher {
 		
 		public static const MESSAGE_NONE:int	= 0;
 		public static const MESSAGE_SYSTEM:int	= 1;
 		
-		public static const addEventListener:Function = StaticDispatcher.addEventListener;
-		public static const removeEventListener:Function = StaticDispatcher.removeEventListener;
-		public static const hasEventListener:Function = StaticDispatcher.hasEventListener;
+		private static const dispatcher:EventDispatcher	= new EventDispatcher();
+		
+		public static function getInstance():EventDispatcher {
+			return dispatcher;
+		}
 		
 		public static function output(... args:Array):void {
 			

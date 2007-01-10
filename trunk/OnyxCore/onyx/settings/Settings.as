@@ -30,9 +30,7 @@
  */
 package onyx.settings {
 	
-	import onyx.core.StaticDispatcher;
-	
-	public final class Settings extends StaticDispatcher {
+	public final class Settings {
 		
 //		public static var PATH_SETTINGS_FILE:String			= 'settings.xml';
 		public static var INITIAL_DISPLAYS_TO_LOAD:uint		= 5;
