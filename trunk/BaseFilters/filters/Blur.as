@@ -31,38 +31,50 @@
 package filters {
 	
 	import flash.display.BitmapData;
+	import flash.events.TimerEvent;
 	import flash.filters.BlurFilter;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
+	import flash.utils.Timer;
 	
-	import onyx.controls.ControlInt;
-	import onyx.controls.ControlProxy;
-	import onyx.controls.ControlRange;
-	import onyx.controls.Controls;
-	import onyx.core.onyx_internal;
+	import onyx.controls.*;
+	import onyx.core.BOOLEAN;
+	import onyx.core.onyx_ns;
 	import onyx.filter.Filter;
 	import onyx.filter.IBitmapFilter;
+	import onyx.tween.*;
 	
-	use namespace onyx_internal;
+	use namespace onyx_ns;
 
 	public final class Blur extends Filter implements IBitmapFilter {
 		
-		private var _filter:flash.filters.BlurFilter	= new flash.filters.BlurFilter();
-		private var _blur:int;
-		private var _quality:int;
+		public var mindelay:Number						= .4;
+		public var maxdelay:Number						= 1;
+
+		private var _tween:Boolean;
+		private var _timer:Timer;
+		private var _blurX:int							= 4;
+		private var _blurY:int							= 4;
+		private var _filter:BlurFilter;
 		
 		public function Blur():void {
 
-			super('Blur');
-			
-			_controls.addControl(
+			super(
+				'Blur', 
+				false,
 				new ControlProxy('blur', 'blur',
-					new ControlInt('blurX', 'blurX', 0, 42, 2),
-					new ControlInt('blurY', 'blurY', 0, 42, 2),
+					new ControlInt('blurX', 'blurX', 0, 42, 4),
+					new ControlInt('blurY', 'blurY', 0, 42, 4),
 					{ factor: 5, invert: true }
 				),
-				new ControlInt('quality', 'quality', 0, 4, 1)
+				new ControlNumber('mindelay',	'Min Delay', .1, 50, .1),
+				new ControlNumber('maxdelay',	'Min Delay', .1, 50, 1),
+				new ControlRange('tween', 'tween', BOOLEAN)
 			);
+		}
+		
+		override public function initialize():void {
+			_filter = new flash.filters.BlurFilter(_blurX, _blurY)
 		}
 		
 		public function applyFilter(bitmapData:BitmapData, bounds:Rectangle):BitmapData {
@@ -75,37 +87,68 @@ package filters {
 		}
 		
 		public function set blurX(x:int):void {
-			_filter.blurX = x;
+			_filter.blurX = _blurX = _controls.getControl('blurX').setValue(x);
 		}
 		
 		public function get blurX():int {
 			return _filter.blurX;
 		}
 		
-		public function set blurY(Y:int):void {
-			_filter.blurY = Y;
+		public function set blurY(y:int):void {
+			_filter.blurY = _blurY = _controls.getControl('blurY').setValue(y);
 		}
 		
 		public function get blurY():int {
 			return _filter.blurY;
 		}
 		
-		public function set quality(q:int):void {
-			_filter.quality = q + 1;
-		}
-		
-		public function get blur():int {
-			return (_filter.blurX + _filter.blurY) / 2;
-		}
-		
-		public function set blur(b:int):void {
-			
-			_filter.blurX = b;
-			_filter.blurY = b;
-		}
-
 		public function get quality():int {
 			return _filter.quality;
+		}
+		
+		public function get tween():Boolean {
+			return _tween;
+		}
+		
+		public function set tween(value:Boolean):void {
+			if (value) {
+				_timer = (_timer) ? _timer : new Timer(100);
+				_timer.addEventListener(TimerEvent.TIMER, _onTimer);
+				_timer.start();
+				
+			} else {
+				if (_timer) {
+					_timer.removeEventListener(TimerEvent.TIMER, _onTimer);
+					_timer.stop();
+					_timer = null;
+				}
+			}
+		}
+		
+		private function _onTimer(event:TimerEvent):void {
+
+			var delay:int = (((maxdelay - mindelay) * Math.random()) + mindelay) * 1000; 
+			_timer.delay = delay;
+			
+			new Tween(
+				_filter, 
+				Math.min(200, delay),
+				new TweenProperty('blurX', _filter.blurX, int(_blurX * Math.random())),
+				new TweenProperty('blurY', _filter.blurY, int(_blurY * Math.random()))
+			);
+			
+		}
+		
+		override public function dispose():void {
+			
+			if (_timer) {
+				_timer.stop();
+				_timer.removeEventListener(TimerEvent.TIMER, _onTimer);
+				_timer = null;
+			}
+			
+			Tween.stopTweens(_filter);
+			_filter = null;
 		}
 	}
 }

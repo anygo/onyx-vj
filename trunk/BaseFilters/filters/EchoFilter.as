@@ -61,9 +61,10 @@ package filters {
 		private var _count:int					= 0;
 		
 		public function EchoFilter():void {
-			super('Echo Filter');
-			
-			_controls.addControl(
+
+			super(
+				'Echo Filter', 
+				false,
 				new ControlNumber('feedAlpha', 'Echo Alpha', 0, 1, .09),
 				new ControlRange('feedBlend', 'Echo Blend', BLEND_MODES, 9),
 				new ControlNumber('mixAlpha', 'Mix Alpha', 0, 1, .02),

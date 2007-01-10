@@ -49,11 +49,13 @@ package {
 //				new Plugin('Blur Transition', BlurTransition, 'Blurs the loaded layer'),
 //				new Plugin('Dissolve Transition', DissolveTransition, 'Dissolves the loaded layer'),
 //				new Plugin('Threshold Transition', ThresholdTransition, 'Threshold Transition'),
-				new Plugin('Blur', Blur, 'Threshold Transition'),
+				new Plugin('Blur Filter', Blur, 'Threshold Transition'),
 				new Plugin('Noise Filter', NoiseFilter, 'Threshold Transition'),
+				new Plugin('Repeater Filter', Repeater, 'Threshold Transition'),
+				new Plugin('FeedBack Filter', FeedbackFilter, 'Feedback Filter'),
+				new Plugin('Blink', Blink, 'Blinks the layer'),
 				new Plugin('FrameRND', FrameRND, 'Threshold Transition'),
-				new Plugin('Repeater', Repeater, 'Threshold Transition'),
-				new Plugin('Blink', Blink, 'Blinks the layer')
+				new Plugin('Mover Scaler', MoverScaler, 'Moves and Scales Object')
 			];
 		}
 	}

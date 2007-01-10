@@ -37,10 +37,12 @@ package filters {
 	
 	import onyx.controls.Control;
 	import onyx.controls.ControlInt;
+	import onyx.controls.ControlNumber;
+	import onyx.controls.ControlRange;
 	import onyx.controls.Controls;
 	import onyx.filter.Filter;
-	import onyx.controls.ControlRange;
-	import onyx.controls.ControlNumber;
+	import onyx.tween.*;
+	import onyx.tween.easing.*;
 
 	public final class FrameRND extends Filter {
 		
@@ -52,12 +54,13 @@ package filters {
 		public var maxdelay:Number	= 2;
 		public var minframe:Number	= .6;
 		public var maxframe:Number	= 4;
+		public var smooth:Boolean	= true;
 		
 		public function FrameRND():void {
 
-			super('Frame Rate', true);
-			
-			_controls.addControl(
+			super(
+				'Frame Rate',
+				true,
 				new ControlNumber('mindelay',	'Min Delay', .1, 50, .5),
 				new ControlNumber('maxdelay',	'Min Delay', .1, 50, 2),
 				new ControlRange('rndframe',	'RND Frame', [true, false], 0),
@@ -65,19 +68,14 @@ package filters {
 				new ControlNumber('maxframe',	'max framerate', .2, 8, 4)
 			)
 		}
-		
+
+		/**
+		 * 	initialize
+		 */		
 		override public function initialize():void {
 			_timer = new Timer(100);
 			_timer.start();
 			_timer.addEventListener(TimerEvent.TIMER, _onTimer);
-		}
-		
-		public function get delay():Number {
-			return _timer.delay / 1000;
-		}
-		
-		public function set delay(value:Number):void {
-			_timer.delay = value * 1000;
 		}
 		
 		/**
@@ -85,13 +83,24 @@ package filters {
 		 */
 		private function _onTimer(event:Event):void {
 
-			_timer.delay = ((maxdelay - mindelay) + mindelay) * 1000;
+			var delay:int = (((maxdelay - mindelay) * Math.random()) + mindelay) * 1000;
+			_timer.delay = delay;
 			
 			if (rndframe) {
 				content.time = Math.random();
 			}
 			
-			content.framerate = (((maxframe - minframe) * Math.random()) + minframe) * (Math.random() <= .5 ? 1 : -1);
+			var framerate:Number = (((maxframe - minframe) * Math.random()) + minframe) * (Math.random() <= .5 ? 1 : -1);
+			
+			if (smooth) {
+				if (Math.random() > .5) {
+					new Tween(content, Math.min(delay, 200), new TweenProperty('framerate', 0, 1));
+					return;
+				}
+			}
+			
+			content.framerate = framerate;
+			
 		}
 
 		/**
