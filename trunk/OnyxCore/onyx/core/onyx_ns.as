@@ -38,5 +38,5 @@ package onyx.core {
 	 * 	Needed for non-public/private methods
 	 * 
 	 **/
-	public namespace onyx_internal = 'http://www.danielhai.com/source/onyx/internal/';
+	public namespace onyx_ns = 'http://www.onyx-vj.com/';
 }

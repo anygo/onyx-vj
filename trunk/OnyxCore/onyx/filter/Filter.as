@@ -31,6 +31,7 @@
 package onyx.filter {
 	
 	import flash.display.BitmapData;
+	import flash.display.Stage;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.net.FileFilter;
@@ -43,13 +44,12 @@ package onyx.filter {
 	import onyx.controls.Controls;
 	import onyx.controls.IControlObject;
 	import onyx.core.IDisposable;
-	import onyx.core.onyx_internal;
+	import onyx.core.onyx_ns;
 	import onyx.events.FilterEvent;
 	import onyx.layer.IColorObject;
 	import onyx.net.Plugin;
-	import flash.display.Stage;
 	
-	use namespace onyx_internal;
+	use namespace onyx_ns;
 	
 	/**
 	 * 	The base Filter class
@@ -59,7 +59,7 @@ package onyx.filter {
 		public var description:String;
 
 		// this sets the name of the filter
-		private var _name:String;
+		onyx_ns var _name:String;
 		
 		// stores the layer
 		protected var content:IContent;
@@ -68,17 +68,21 @@ package onyx.filter {
 		protected var stage:Stage;
 		
 		// stores whether the filter is unique and should not be allowed to be duplicated
-		public var unique:Boolean;
+		onyx_ns var _unique:Boolean;
 		
 		// create controls
-		protected var _controls:Controls	= new Controls(this);
+		private var _controls:Controls	= new Controls(this);
 		
 		/**
 		 * 	@contructor
 		 */
-		final public function Filter(name:String, unique:Boolean = false):void {
+		final public function Filter(name:String, unique:Boolean, ... controls:Array):void {
+			
 			_name = name;
-			this.unique = unique;
+			_unique = unique;
+			
+			_controls.addControl.apply(null, controls);
+			
 		}
 		
 		/**
@@ -99,7 +103,7 @@ package onyx.filter {
 		 * 	@private
 		 *	Called by layer when a filter is added to it
 		 */
-		onyx_internal final function setContent(content:IContent, stage:Stage):void {
+		onyx_ns final function setContent(content:IContent, stage:Stage):void {
 			this.content	= content;
 			this.stage		= stage;
 		}
@@ -107,7 +111,7 @@ package onyx.filter {
 		/**
 		 * 	@private
 		 */
-		onyx_internal final function cleanContent():void {
+		onyx_ns final function cleanContent():void {
 			content	= null;
 			stage		= null;
 			

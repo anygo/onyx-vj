@@ -33,9 +33,9 @@ package onyx.controls {
 	import flash.events.EventDispatcher;
 	import flash.utils.Dictionary;
 	
-	import onyx.core.onyx_internal;
+	import onyx.core.onyx_ns;
 	
-	use namespace onyx_internal;
+	use namespace onyx_ns;
 
 	dynamic public class Controls extends Array {
 		
@@ -77,7 +77,7 @@ package onyx.controls {
 		/**
 		 * 
 		 */
-		onyx_internal function set target(value:Object):void {
+		onyx_ns function set target(value:Object):void {
 			for each (var control:Control in this) {
 				control.target = value;
 				// control.update();

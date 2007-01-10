@@ -45,7 +45,7 @@ package onyx.layer {
 	import onyx.net.Stream;
 	import onyx.transition.Transition;
 	
-	use namespace onyx_internal;
+	use namespace onyx_ns;
 	
 	[Event(name="filter_applied",	type="onyx.events.FilterEvent")]
 	[Event(name="filter_removed",	type="onyx.events.FilterEvent")]
@@ -69,7 +69,7 @@ package onyx.layer {
 		 * 	@private
 		 * 	Stores the content
 		 */
-		onyx_internal var	_content:IContent			= new ContentNull();
+		onyx_ns var	_content:IContent			= new ContentNull();
 
 		/**
 		 * 	@private
@@ -660,7 +660,7 @@ package onyx.layer {
 		 * 	@private
 		 * 	Use this method to dispatch methods to the layer itself (not content
 		 */
-		onyx_internal function dispatch(event:Event):void {
+		onyx_ns function dispatch(event:Event):void {
 			super.dispatchEvent(event);
 		}
 		

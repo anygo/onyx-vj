@@ -100,6 +100,7 @@ package onyx.layer {
 				case 'jpeg':
 				case 'png':
 				case 'swf':
+				case 'onx':
 				
 					var loader:Loader  = new Loader();
 					loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, _onLoadHandler);
@@ -150,7 +151,13 @@ package onyx.layer {
 			if (!(event is ErrorEvent)) {
 				
 				var loader:Loader	= info.loader;
-				var content:IContent = (loader.content is MovieClip) ? new ContentMC(loader, _props) : new ContentSprite(loader, _props);
+				var content:IContent;
+				
+				if (loader.content is MovieClip) {
+					content = new ContentMC(loader, _props);
+				} else {
+					content = new ContentSprite(loader, _props)
+				}
 			}
 			
 			_dispatchContent(content, event);

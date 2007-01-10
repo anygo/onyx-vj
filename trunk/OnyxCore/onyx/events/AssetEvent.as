@@ -32,9 +32,9 @@ package onyx.events {
 	
 	import flash.events.Event;
 	
-	import onyx.core.onyx_internal;
+	import onyx.core.onyx_ns;
 	
-	use namespace onyx_internal;
+	use namespace onyx_ns;
 
 	public final class AssetEvent extends Event {
 		

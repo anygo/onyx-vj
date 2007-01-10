@@ -44,13 +44,14 @@ package onyx.content {
 	import onyx.net.IContentObject;
 	import onyx.net.Plugin;
 	import onyx.settings.Settings;
+	import onyx.tween.Tween;
 	import onyx.utils.ArrayUtil;
 	
 	[Event(name="filter_applied",	type="onyx.events.FilterEvent")]
 	[Event(name="filter_removed",	type="onyx.events.FilterEvent")]
 	[Event(name="filter_moved",		type="onyx.events.FilterEvent")]
 		
-	use namespace onyx_internal;
+	use namespace onyx_ns;
 	
 	[ExcludeClass]
 	public class Content extends Bitmap implements IContent {
@@ -125,6 +126,11 @@ package onyx.content {
 		
 		/**
 		 * 	@private
+		 */
+		protected var _rendered:BitmapData						= getBaseBitmap();
+		
+		/**
+		 * 	@private
 		 * 	Stores the layer's controls so that the external content can use them
 		 */
 		private var _controls:Controls;
@@ -134,6 +140,12 @@ package onyx.content {
 		 * 	Stores the content that we're gonna draw
 		 */
 		private var _content:IBitmapDrawable;
+
+		/**
+		 *	@private
+		 *	Stores last render time
+		 */
+		private var _delayRender:Boolean;
 		
 		// stores controls
 		protected var __color:Control;
@@ -382,7 +394,7 @@ package onyx.content {
 		 */
 		public function addFilter(filter:Filter):void {
 			
-			if (filter.unique) {
+			if (filter._unique) {
 				
 				var plugin:Plugin = Onyx.getDefinition(filter.name);
 				
@@ -521,29 +533,57 @@ package onyx.content {
 		 */
 		protected function render(event:Event = null, update:Boolean = true):void {
 			
-			if (update) {
-				
-				// draw everything
-				var matrix:Matrix = new Matrix();
-				matrix.scale(_scaleX, _scaleY);
-				matrix.rotate(_rotation);
-				matrix.translate(_x, _y);
-				
-				var rect:Rectangle = (_rotation === 0) ? new Rectangle(0, 0, Math.max(320 / _scaleX, 320), Math.max(240 / _scaleY, 240)) : null;
+			if (!_delayRender) {
 
-				if (_content is IContentObject) {
-					(_content as IContentObject).render(_source, matrix, rect);
-				} else {
-					_drawContent(matrix, rect);
+				// lock the bitmaps
+				_source.lock();
+				super.bitmapData.lock();
+
+				var start:int = getTimer();
+
+				if (update) {
+	
+					// store a temporary rendered			
+					_rendered.copyPixels(bitmapData, bitmapData.rect, POINT);
+				
+					// draw everything
+
+					_matrix.identity();
+					_matrix.scale(_scaleX, _scaleY);
+					_matrix.rotate(_rotation);
+					_matrix.translate(_x, _y);
+				
+					// if rotation is 0, send a clipRect, otherwise, don't clip
+					var rect:Rectangle = (_rotation === 0) ? new Rectangle(0, 0, Math.max(320 / _scaleX, 320), Math.max(240 / _scaleY, 240)) : null;
+
+					// if it's a contentobject, we're gonna let it render itself
+					if (_content is IContentObject) {
+						(_content as IContentObject).render(_source, _matrix, rect);
+					} else {
+						_drawContent(_matrix, rect);
+					}
 				}
-				
-			}
 			
-			// apply the color filter to the source
-			_source.applyFilter(_source, _source.rect, POINT, _filter.filter);
+				// apply the color filter to the source
+				_source.applyFilter(_source, _source.rect, POINT, _filter.filter);
 
-			super.bitmapData.copyPixels(_source, _source.rect, POINT);
-			_applyFilters(super.bitmapData);
+				super.bitmapData.copyPixels(_source, _source.rect, POINT);
+			
+				_applyFilters(super.bitmapData);
+			
+				// unlock them
+				_source.unlock();
+				super.bitmapData.unlock();
+
+				// slow rendering, delay the frame draw for one frame
+				if (getTimer() - start > 9) {
+					_delayRender = true;
+				}
+
+				return;
+			} else {
+				_delayRender = false;
+			}
 		}
 		
 		/**
@@ -611,6 +651,8 @@ package onyx.content {
 			// don't render anymore
 			removeEventListener(Event.ENTER_FRAME, render);
 			
+			Tween.stopTweens(this);
+			
 			// if it takes events, pass em on
 			if (_content is IEventDispatcher) {
 				removeEventListener(MouseEvent.MOUSE_DOWN,	_forwardEvents);
@@ -651,6 +693,7 @@ package onyx.content {
 
 			// dispose
 			_source.dispose();
+			_rendered.dispose();
 
 			// dispose
 			bitmapData.dispose();
@@ -664,14 +707,14 @@ package onyx.content {
 		}
 		
 		/**
-		 * 
+		 * 	Sets blendmode
 		 */
 		override public function set blendMode(value:String):void {
 			super.blendMode = __blendMode.setValue(value);
 		}
 		
 		/**
-		 * 
+		 * 	Returns content controls
 		 */
 		public function get controls():Controls {
 			return _controls;
@@ -687,6 +730,13 @@ package onyx.content {
 			
 			// content will be part of layer, so make sure it doesn't bubble
 			event.stopPropagation();
+		}
+		
+		/**
+		 * 
+		 */
+		public function get previousRender():BitmapData {
+			return _rendered;
 		}
 
 	}

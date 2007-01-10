@@ -45,5 +45,7 @@ package onyx.settings {
 		public static const PLUGINS_DIRECTORY:String		= 'plugins/';
 		public static const PLUGINS_XML:String				= 'filter.xml';
 	
+		public static const SLOW_RENDER_SKIPS_FRAMES:Boolean= true;
+
 	}
 }

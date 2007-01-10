@@ -1,11 +1,12 @@
 package onyx.net {
 	
-	import flash.display.Stage;
 	import flash.display.BitmapData;
-	import onyx.content.IContent;
-	import onyx.core.IDisposable;
+	import flash.display.Stage;
 	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
+	
+	import onyx.content.IContent;
+	import onyx.core.IDisposable;
 	
 	public interface IContentObject extends IDisposable {
 		

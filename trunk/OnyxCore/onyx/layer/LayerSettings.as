@@ -38,11 +38,11 @@ package onyx.layer {
 	import onyx.controls.Control;
 	import onyx.controls.ControlValue;
 	import onyx.controls.Controls;
-	import onyx.core.onyx_internal;
+	import onyx.core.onyx_ns;
 	import onyx.filter.Filter;
 	import onyx.net.Plugin;
 	
-	use namespace onyx_internal;
+	use namespace onyx_ns;
 
 	/**
 	 * 	This class stores settings that can be applied to layers

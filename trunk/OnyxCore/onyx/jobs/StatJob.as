@@ -35,9 +35,9 @@ package onyx.jobs {
 	
 	import onyx.application.Onyx;
 	import onyx.core.Console;
-	import onyx.core.onyx_internal;
+	import onyx.core.onyx_ns;
 	
-	use namespace onyx_internal;
+	use namespace onyx_ns;
 	
 	public final class StatJob extends TimerJob {
 		

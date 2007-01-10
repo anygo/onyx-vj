@@ -52,10 +52,10 @@ package onyx.content {
 	[Event(name="filter_removed",	type="onyx.events.FilterEvent")]
 	[Event(name="filter_moved",		type="onyx.events.FilterEvent")]
 		
-	use namespace onyx_internal;
+	use namespace onyx_ns;
 	
 	[ExcludeClass]
-	public final class ContentMC extends Content implements IContent {
+	public class ContentMC extends Content implements IContent {
 
 		/**
 		 * 	@private

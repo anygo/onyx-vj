@@ -32,14 +32,14 @@ package onyx.events {
 	
 	import flash.events.Event;
 	
-	import onyx.core.onyx_internal;
+	import onyx.core.onyx_ns;
 	import onyx.layer.Layer;
 	
-	use namespace onyx_internal;
+	use namespace onyx_ns;
 
 	public final class LayerEvent extends Event {
 		
-		onyx_internal static const LAYER_COPY_LAYER:String	= 'layercopy';
+		onyx_ns static const LAYER_COPY_LAYER:String	= 'layercopy';
 
 		public static const LAYER_LOADED:String				= 'layerload';
 		public static const LAYER_UNLOADED:String			= 'layerunload';

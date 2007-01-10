@@ -33,9 +33,9 @@ package onyx.filter {
 	import flash.filters.ColorMatrixFilter;
 	import flash.geom.Matrix;
 	
-	import onyx.core.onyx_internal;
+	import onyx.core.onyx_ns;
 	
-	use namespace onyx_internal;
+	use namespace onyx_ns;
 	
 	public final class ColorFilter {
 
@@ -66,22 +66,22 @@ package onyx.filter {
 		/**
 		 * 	@private
 		 */
-		onyx_internal var _threshold:int				= 0;
+		onyx_ns var _threshold:int				= 0;
 
 		/**
 		 * 	@private
 		 */
-		onyx_internal var _brightness:Number			= 0;
+		onyx_ns var _brightness:Number			= 0;
 
 		/**
 		 * 	@private
 		 */
-		onyx_internal var _contrast:Number				= 0;
+		onyx_ns var _contrast:Number				= 0;
 
 		/**
 		 * 	@private
 		 */
-		onyx_internal var _saturation:Number			= 1;
+		onyx_ns var _saturation:Number			= 1;
 		
 		/**
 		 * 	@private
@@ -96,12 +96,12 @@ package onyx.filter {
 		/**
 		 * 	@private
 		 */
-		onyx_internal var _color:uint					= 0;
+		onyx_ns var _color:uint					= 0;
 		
 		/**
 		 * 	@private
 		 */
-		onyx_internal var _tint:Number					= 0;
+		onyx_ns var _tint:Number					= 0;
 
 		/**
 		 * 	Returns threshold
@@ -289,6 +289,19 @@ package onyx.filter {
 			}
 			
 			return temp;
+		}
+		
+		/**
+		 * 
+		 */
+		private function _calcMatrix():void {
+		}
+		
+		/**
+		 * 
+		 */
+		public function changed():Boolean {
+			return true;
 		}
 
 	}

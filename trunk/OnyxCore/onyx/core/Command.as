@@ -35,7 +35,7 @@ package onyx.core {
 	import onyx.layer.Layer;
 	import onyx.jobs.StatJob;
 	
-	use namespace onyx_internal;
+	use namespace onyx_ns;
 
 	public final class Command {
 		

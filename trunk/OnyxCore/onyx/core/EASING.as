@@ -28,66 +28,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package onyx.content {
-	
-	import flash.display.BitmapData;
-	import flash.display.DisplayObject;
-	import flash.display.IBitmapDrawable;
-	import flash.events.IEventDispatcher;
-	import flash.geom.Matrix;
-	import flash.geom.Rectangle;
-	import flash.geom.Transform;
-	
-	import onyx.controls.Controls;
-	import onyx.controls.IControlObject;
-	import onyx.core.IDisposable;
-	import onyx.filter.Filter;
-	import onyx.layer.IColorObject;
-	import onyx.layer.Layer;
-	
-	public interface IContent extends IControlObject, IColorObject, IDisposable, IEventDispatcher {
-		
-		/**
-		 * 	Returns the time of the content in percent
-		 */
-		function get time():Number;
-		
-		/**
-		 * 	@private
-		 */
-		function set time(value:Number):void;
+package onyx.core {
 
-		/**
-		 * 	Returns total time
-		 */
-		function get totalTime():int;
+	public const EASING:Array = [];
 
-		/**
-		 * 	Sets the framerate
-		 */
-		function get framerate():Number;
-		function set framerate(value:Number):void;
-		
-		function get loopStart():Number;
-		function set loopStart(value:Number):void;
-
-		function get loopEnd():Number;
-		function set loopEnd(value:Number):void;
-		
-		function get filters():Array;
-		
-		function get source():BitmapData;
-		function get previousRender():BitmapData;
-		
-		function addFilter(filter:Filter):void;
-		function removeFilter(filter:Filter):void;
-		function getFilterIndex(filter:Filter):int;
-		function moveFilter(filter:Filter, index:int):void;
-		
-		function pause(b:Boolean = true):void;
-		
-		function get bitmapData():BitmapData;
-		
-		function get transform():Transform;
-	}
 }

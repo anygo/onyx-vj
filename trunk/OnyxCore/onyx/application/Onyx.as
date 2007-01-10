@@ -38,7 +38,7 @@ package onyx.application {
 	
 	import onyx.controls.*;
 	import onyx.core.Console;
-	import onyx.core.onyx_internal;
+	import onyx.core.onyx_ns;
 	import onyx.display.Display;
 	import onyx.events.*;
 	import onyx.filter.*;
@@ -48,7 +48,7 @@ package onyx.application {
 	import onyx.core.IDisposable;
 	import flash.utils.Dictionary;
 	
-	use namespace onyx_internal;
+	use namespace onyx_ns;
 	
 	/**
 	 * 	Core Application class that stores all layers, displays, and loaded plugins
@@ -72,19 +72,19 @@ package onyx.application {
 		 * 	@private
 		 * 	Stores reference to root
 		 */
-		onyx_internal static var root:Stage;
+		onyx_ns static var root:Stage;
 		
 		/**
 		 * 	@private
 		 * 	Stores references to all the displays
 		 */
-		onyx_internal static var _displays:Array	= [];
+		onyx_ns static var _displays:Array	= [];
 		
 		/**
 		 * 	@private
 		 * 	Stores definitions to all the filters
 		 */
-		onyx_internal static var _filters:Array			= [];
+		onyx_ns static var _filters:Array			= [];
 		
 		/**
 		 * 	@private
@@ -96,7 +96,7 @@ package onyx.application {
 		 * 	@private
 		 * 	Stores definitions for all the transitions
 		 */
-		onyx_internal static var _transitions:Array		= [];
+		onyx_ns static var _transitions:Array		= [];
 
 		/**
 		 * 	Gets the framerate

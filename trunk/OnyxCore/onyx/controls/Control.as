@@ -33,10 +33,10 @@ package onyx.controls {
 	import flash.events.EventDispatcher;
 	import flash.utils.getQualifiedClassName;
 	
-	import onyx.core.onyx_internal;
+	import onyx.core.onyx_ns;
 	import onyx.events.ControlEvent;
 	
-	use namespace onyx_internal;
+	use namespace onyx_ns;
 	
 	[Event(name='control_changed', type='onyx.events.ControlEvent')]
 	
@@ -47,7 +47,7 @@ package onyx.controls {
 	public class Control extends EventDispatcher {
 
 		// set by Controls
-		onyx_internal var _target:Object;
+		onyx_ns var _target:Object;
 
 		// stores the display name		
 		public var display:String;

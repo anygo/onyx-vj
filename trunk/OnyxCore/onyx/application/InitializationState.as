@@ -47,7 +47,7 @@ package onyx.application {
 	import onyx.assets.PixelFont;
 	import onyx.core.Command;
 	import onyx.core.Console;
-	import onyx.core.onyx_internal;
+	import onyx.core.onyx_ns;
 	import onyx.events.ApplicationEvent;
 	import onyx.events.FilterEvent;
 	import onyx.events.PluginEvent;
@@ -56,7 +56,7 @@ package onyx.application {
 	import onyx.net.Plugin;
 	import onyx.settings.Settings;
 	
-	use namespace onyx_internal;
+	use namespace onyx_ns;
 
 	/**
 	 * 	State that loads external plugins and registers them

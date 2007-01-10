@@ -41,12 +41,12 @@ package onyx.transition {
 	
 	import onyx.content.IContent;
 	import onyx.core.getBaseBitmap;
-	import onyx.core.onyx_internal;
+	import onyx.core.onyx_ns;
 	import onyx.events.TransitionEvent;
 	import onyx.layer.ILayer;
 	import onyx.core.IDisposable;
 	
-	use namespace onyx_internal;
+	use namespace onyx_ns;
 	
 	/**
 	 * 	Transition
@@ -54,16 +54,16 @@ package onyx.transition {
 	public class Transition extends EventDispatcher implements IDisposable {
 		
 		/** @private **/
-		onyx_internal var _duration:int;
+		onyx_ns var _duration:int;
 
 		/** @private **/
 		private var _startTime:int;
 
 		/** @private **/
-		onyx_internal var oldContent:IContent;
+		onyx_ns var oldContent:IContent;
 
 		/** @private **/
-		onyx_internal var newContent:IContent;
+		onyx_ns var newContent:IContent;
 		
 		/** 
 		 * 	@private
@@ -88,7 +88,7 @@ package onyx.transition {
 		/**
 		 * 	@private
 		 */
-		onyx_internal final function initializeTransition(oldContent:IContent, newContent:IContent, layer:ILayer):void {
+		onyx_ns final function initializeTransition(oldContent:IContent, newContent:IContent, layer:ILayer):void {
 			
 			_layer = layer;
 			
@@ -103,7 +103,7 @@ package onyx.transition {
 		/**
 		 * 	@private
 		 */
-		onyx_internal final function calculateTransition(bitmapData:BitmapData):void {
+		onyx_ns final function calculateTransition(bitmapData:BitmapData):void {
 
 			var time:Number = (getTimer() - _startTime) / _duration;
 

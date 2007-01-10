@@ -43,7 +43,7 @@ package onyx.display {
 	
 	import onyx.application.Onyx;
 	import onyx.controls.*;
-	import onyx.core.onyx_internal;
+	import onyx.core.onyx_ns;
 	import onyx.events.ApplicationEvent;
 	import onyx.events.LayerEvent;
 	import onyx.jobs.LoadONXJob;
@@ -52,7 +52,7 @@ package onyx.display {
 	import onyx.layer.LayerSettings;
 	import onyx.transition.*;
 	
-	use namespace onyx_internal;
+	use namespace onyx_ns;
 	
 	/**
 	 * 	

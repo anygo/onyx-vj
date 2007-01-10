@@ -43,7 +43,7 @@ package onyx.content {
 	
 	import onyx.controls.Controls;
 	import onyx.core.IDisposable;
-	import onyx.core.onyx_internal;
+	import onyx.core.onyx_ns;
 	import onyx.events.FilterEvent;
 	import onyx.filter.ColorFilter;
 	import onyx.filter.Filter;
@@ -267,6 +267,10 @@ package onyx.content {
 		}
 		
 		public function get controls():Controls {
+			return null;
+		}
+		
+		public function get previousRender():BitmapData {
 			return null;
 		}
 			

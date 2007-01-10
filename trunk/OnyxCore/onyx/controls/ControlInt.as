@@ -30,10 +30,10 @@
  */
 package onyx.controls {
 	
-	import onyx.core.onyx_internal;
+	import onyx.core.onyx_ns;
 	import onyx.events.ControlEvent;
 
-	use namespace onyx_internal;
+	use namespace onyx_ns;
 	
 	public final class ControlInt extends ControlNumber {
 		
