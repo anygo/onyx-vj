@@ -71,7 +71,7 @@ package onyx.filter {
 		onyx_ns var _unique:Boolean;
 		
 		// create controls
-		private var _controls:Controls	= new Controls(this);
+		protected var _controls:Controls	= new Controls(this);
 		
 		/**
 		 * 	@contructor

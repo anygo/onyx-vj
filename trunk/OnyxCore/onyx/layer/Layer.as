@@ -624,6 +624,9 @@ package onyx.layer {
 			// disposes content
 			if (!(_content is ContentNull)) {
 
+				// dispatch an unload event
+				super.dispatchEvent(new LayerEvent(LayerEvent.LAYER_UNLOADED, this));
+
 				// store the current content				
 				var content:IContent = _content;
 
@@ -635,9 +638,6 @@ package onyx.layer {
 				
 				// change the property target to this layer
 				_properties.target	= this;
-				
-				// dispatch an unload event
-				super.dispatchEvent(new LayerEvent(LayerEvent.LAYER_UNLOADED, this));
 
 			}
 		}

@@ -28,44 +28,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package onyx.controls {
+package onyx.core {
 
-	import onyx.core.onyx_ns;
-	import onyx.events.ControlEvent;
-	
-	use namespace onyx_ns;
+	public const BOOLEAN:Array = [false, true];
 
-	public final class ControlRange extends Control {
-		
-		private var _data:Array;
-		private var _defaultvalue:uint;
-		
-		public function ControlRange(name:String, display:String, data:Array, defaultvalue:uint = 0, options:Object = null):void {
-			
-			this._data = data;
-			this._defaultvalue = defaultvalue;
-			
-			super(name, display, options);
-			
-		}
-		
-		override public function setValue(v:*):* {
-			dispatchEvent(new ControlEvent(v));
-			return v;
-		}
-		
-		override public function reset():void {
-			_target[name] = _data[_defaultvalue];
-		}
-		
-		public function set data(value:Array):void {
-			_data = value;
-			dispatchEvent(new ControlEvent(_target[name]));
-		}
-		
-		public function get data():Array {
-			return _data;
-		}
-	}
-	
 }
