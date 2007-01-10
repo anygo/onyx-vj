@@ -475,10 +475,10 @@ package ui.layer {
 		private function _onLayerUnLoad(event:LayerEvent):void {
 			
 			var page:LayerPage = _pages[2];
-/*			if (page.controls) {
+			if (page.controls) {
 				page.controls = null;
 			}
-*/			selectPage(0);
+			selectPage(0);
 			
 			_timer.stop();
 			_timer.removeEventListener(TimerEvent.TIMER, _onUpdateTimer);

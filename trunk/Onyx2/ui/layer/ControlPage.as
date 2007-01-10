@@ -24,19 +24,26 @@ package ui.layer {
 		}
 		
 		/**
-		 * 	@private
+		 * 	
+		 */
+		public function removeControls():void {
+			for each (var uicontrol:UIControl in _controls) {
+				uicontrol.dispose();
+			}
+			_controls = [];
+		}
+		
+		/**
+		 * 	
 		 */
 		public function addControls(controls:Array):void {
 			
 			var uicontrol:UIControl, x:int = 0, y:int = 0;
 			var options:UIOptions	= UIOptions.DEFAULT;
 			var _width:int			= 60;
-
-			for each (uicontrol in _controls) {
-				uicontrol.dispose();
-			}
-			_controls = [];			
 			
+			removeControls();
+
 			for each (var control:Control in controls) {
 				
 				uicontrol = null;
