@@ -86,7 +86,7 @@ package ui.window {
 		}
 		
 		private function _triggered(event:SpectrumEvent):void {
-			trace(event);
+			// trace(event);
 		}
 	}
 }

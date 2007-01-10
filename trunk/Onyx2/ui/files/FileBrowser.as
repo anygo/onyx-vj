@@ -38,6 +38,7 @@ package ui.files {
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
 	
+	import onyx.core.Console;
 	import onyx.settings.Settings;
 	
 	import ui.assets.AssetCamera;
@@ -98,8 +99,14 @@ package ui.files {
 		 * 	@private
 		 */
 		private static function _onLoadHandler(event:Event):void {
-			
-			if (!(event is IOErrorEvent)) {
+
+			// error			
+			if (event is IOErrorEvent) {
+				
+				Console.output((event as IOErrorEvent).text);
+
+			// success
+			} else {
 	
 				var loader:URLLoader = event.currentTarget as URLLoader;
 	

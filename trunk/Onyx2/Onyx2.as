@@ -46,7 +46,7 @@ package {
 	
 	[ExcludeClass]
 
-	[SWF(width="1024", height="768", backgroundColor="#141515", frameRate='30')]
+	[SWF(width="1024", height="768", backgroundColor="#141515", frameRate='24')]
 	public class Onyx2 extends UIObject {
 		
 		/**
