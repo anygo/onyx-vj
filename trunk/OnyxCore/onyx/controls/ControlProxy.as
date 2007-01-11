@@ -1,5 +1,8 @@
 package onyx.controls {
 	
+	import onyx.core.onyx_ns;
+	use namespace onyx_ns;
+	
 	public final class ControlProxy extends Control {
 		
 		public var controlY:Control;
@@ -17,16 +20,21 @@ package onyx.controls {
 		}
 		
 		override public function setValue(v:*):* {
+			if (v is Array) {
+				controlX.value = v[0];
+				controlY.value = v[1];
+			}
 		}
 		
 		override public function set value(v:*):void {
+			setValue(v);
 		}
 		
 		override public function get value():* {
-			return null;
+			return [controlX.value, controlY.value];
 		}
 
-		override public function set target(value:Object):void {
+		override public function set target(value:IControlObject):void {
 			controlY.target = value;
 			controlX.target = value;
 		}

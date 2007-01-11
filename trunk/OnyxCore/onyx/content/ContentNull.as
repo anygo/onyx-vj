@@ -273,6 +273,9 @@ package onyx.content {
 		public function get previousRender():BitmapData {
 			return null;
 		}
+		
+		public function set matrix(value:Matrix):void {
+		}
 			
 	}
 }

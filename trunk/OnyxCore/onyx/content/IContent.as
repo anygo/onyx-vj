@@ -88,6 +88,6 @@ package onyx.content {
 		
 		function get bitmapData():BitmapData;
 		
-		function get transform():Transform;
+		function set matrix(value:Matrix):void;
 	}
 }

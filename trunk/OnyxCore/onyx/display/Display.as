@@ -57,7 +57,7 @@ package onyx.display {
 	/**
 	 * 	
 	 */
-	public class Display extends Sprite {
+	public class Display extends Sprite implements IControlObject {
 		
 		/** @private **/
 		private var _backgroundColor:uint		= 0x000000;
@@ -65,27 +65,37 @@ package onyx.display {
 		/** @private **/
 		private var _background:BitmapData		= new BitmapData(320, 240, false, _backgroundColor);
 		
+		/** @private **/
+		private var __scaleX:Control			= new ControlNumber('scaleX', 'scaleX', 0, 4, 1);
+		private var __scaleY:Control			= new ControlNumber('scaleY', 'scaleY', 0, 4, 1);
+		private var __x:Control					= new ControlInt('x', 'x', 0, 2000, 640);
+		private var __y:Control					= new ControlInt('y', 'y', 0, 2000, 480);
+		private var _size:DisplaySize			= DisplaySize.SIZES[0];
+		
 		// add the controls that we can bind to
-		private const _controls:Controls = new Controls(this,
-			new ControlProxy(
-				'position', 'position',
-				new ControlInt('x', 'x', 0, 2000, 640),
-				new ControlInt('y', 'y', 0, 2000, 480)
-			),
-			new ControlProxy(
-				'scale', 'scale',
-				new ControlNumber('scaleX', 'scaleX', 0, 4, 1),
-				new ControlNumber('scaleY', 'scaleY', 0, 4, 1),
-				{ multiplier: 100 }
-			),
-			new ControlColor(
-				'backgroundColor', 'backgroundColor'
-			)
-		);
+		private var _controls:Controls;
 		
 		private var _layers:Array		= [];
 		
 		public function Display():void {
+			
+			_controls = new Controls(this,
+				new ControlProxy(
+					'position', 'position',
+					__x,
+					__y,
+					{ invert:true }
+				),
+				new ControlProxy(
+					'scale', 'scale',
+					__scaleX,
+					__scaleY,
+					{ multiplier: 100, invert:true }
+				),
+				new ControlColor(
+					'backgroundColor', 'backgroundColor'
+				)
+			);
 			
 			addEventListener(MouseEvent.MOUSE_OVER, _onMouseOver);
 			addEventListener(MouseEvent.MOUSE_OUT, _onMouseOut);
@@ -259,8 +269,61 @@ package onyx.display {
 			_background.fillRect(_background.rect, _backgroundColor);
 		}
 		
+		/**
+		 * 
+		 */
+		override public function set x(value:Number):void {
+			super.x = __x.setValue(value);
+		}
+		
+		/**
+		 * 
+		 */
+		override public function set y(value:Number):void {
+			super.y = __y.setValue(value);
+		}
+		
+		/**
+		 * 
+		 */
+		override public function set scaleX(value:Number):void {
+			super.scaleX = __scaleX.setValue(value);
+		}
+		
+		/**
+		 * 
+		 */
+		override public function set scaleY(value:Number):void {
+			super.scaleY = __scaleY.setValue(value);
+		}
+		
+		/**
+		 * 
+		 */
 		public function get backgroundColor():uint {
 			return _backgroundColor;
+		}
+		
+		/**
+		 * 
+		 */
+		public function set size(value:DisplaySize):void {
+			_size	= value;
+			scaleX	= value.scale;
+			scaleY	= value.scale;
+		}
+		
+		/**
+		 * 
+		 */
+		public function get size():DisplaySize {
+			return _size;
+		}
+		
+		/**
+		 * 
+		 */
+		public function dispose():void {
 		}
 	}
 }

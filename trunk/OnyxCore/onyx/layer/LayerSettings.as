@@ -162,7 +162,7 @@ package onyx.layer {
 					
 					if (plugin) {
 						
-						var filter:Filter = new plugin.definition();
+						var filter:Filter = plugin.getDefinition() as Filter;
 						
 						for each (controlXML in filterXML.*) {
 							
@@ -205,7 +205,7 @@ package onyx.layer {
 				}
 
 			} catch (e:Error) {
-				Console.output(e.message);
+				Console.output(name, e.message);
 			}
 		}
 		

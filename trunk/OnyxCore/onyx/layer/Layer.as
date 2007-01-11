@@ -69,7 +69,7 @@ package onyx.layer {
 		 * 	@private
 		 * 	Stores the content
 		 */
-		onyx_ns var	_content:IContent			= new ContentNull();
+		onyx_ns var	_content:IContent					= new ContentNull();
 
 		/**
 		 * 	@private

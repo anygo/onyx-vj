@@ -71,7 +71,12 @@ package onyx.content {
 		 * 	@private
 		 * 	Stores the matrix for the content
 		 */
-		private var _matrix:Matrix								= new Matrix();
+		private var _renderMatrix:Matrix;
+		
+		/**
+		 * 	The concatenated matrix
+		 */
+		private var _matrix:Matrix;
 		
 		/**
 		 * 	@private
@@ -139,7 +144,7 @@ package onyx.content {
 		 * 	@private
 		 * 	Stores the content that we're gonna draw
 		 */
-		private var _content:IBitmapDrawable;
+		private var _content:DisplayObject;
 		
 		// stores controls
 		protected var __color:Control;
@@ -162,7 +167,7 @@ package onyx.content {
 		/**
 		 * 	@constructor
 		 */		
-		public function Content(props:LayerProperties, content:IBitmapDrawable):void {
+		public function Content(props:LayerProperties, content:DisplayObject):void {
 
 			// set bitmap
 			super(getBaseBitmap());
@@ -278,22 +283,26 @@ package onyx.content {
 		 * 	Sets x
 		 */
 		override public function set x(value:Number):void {
-			_x = __x.setValue(value);
+			_x				= __x.setValue(value);
+			_renderMatrix	= null;
 		}
 
 		/**
 		 * 	Sets y
 		 */
 		override public function set y(value:Number):void {
-			_y = __y.setValue(value);;
+			_y				= __y.setValue(value);
+			_renderMatrix	= null;
 		}
 
 		override public function set scaleX(value:Number):void {
-			_scaleX = __scaleX.setValue(value);
+			_scaleX			= __scaleX.setValue(value);
+			_renderMatrix	= null;
 		}
 
 		override public function set scaleY(value:Number):void {
-			_scaleY = __scaleY.setValue(value);
+			_scaleY			= __scaleY.setValue(value);
+			_renderMatrix	= null;
 		}
 		
 		override public function get scaleX():Number {
@@ -393,7 +402,7 @@ package onyx.content {
 				var plugin:Plugin = Onyx.getDefinition(filter.name);
 				
 				for each (var otherFilter:Filter in _filters) {
-					if (otherFilter is plugin.definition) {
+					if (otherFilter is plugin._definition) {
 						return;
 					}
 				}
@@ -535,22 +544,27 @@ package onyx.content {
 
 				// store a temporary rendered			
 				_rendered.copyPixels(bitmapData, bitmapData.rect, POINT);
-			
-				// draw everything
-
-				_matrix.identity();
-				_matrix.scale(_scaleX, _scaleY);
-				_matrix.rotate(_rotation);
-				_matrix.translate(_x, _y);
-			
+				
+				if (!_renderMatrix) {
+					_renderMatrix = new Matrix();
+					_renderMatrix.scale(_scaleX, _scaleY);
+					_renderMatrix.rotate(_rotation);
+					_renderMatrix.translate(_x, _y);
+				}
+				
+				var matrix:Matrix = _renderMatrix.clone();
+				if (_matrix) {
+					matrix.concat(_matrix);
+				}
+				
 				// if rotation is 0, send a clipRect, otherwise, don't clip
 				var rect:Rectangle = (_rotation === 0) ? new Rectangle(0, 0, Math.max(320 / _scaleX, 320), Math.max(240 / _scaleY, 240)) : null;
 
 				// if it's a contentobject, we're gonna let it render itself
 				if (_content is IContentObject) {
-					(_content as IContentObject).render(_source, _matrix, _colorTransform, rect);
+					(_content as IContentObject).render(_source, matrix, _colorTransform, rect);
 				} else {
-					_drawContent(_matrix, rect);
+					_drawContent(matrix, rect);
 				}
 			}
 		
@@ -573,7 +587,7 @@ package onyx.content {
 
 			// fill the source with nothing
 			_source.fillRect(_source.rect, 0x00000000);
-			_source.draw(_content, matrix, _colorTransform, null, clipRect);
+			_source.draw(_content, matrix, _colorTransform, null, clipRect, true);
 			
 		}
 				
@@ -718,6 +732,12 @@ package onyx.content {
 		public function get previousRender():BitmapData {
 			return _rendered;
 		}
-
+		
+		/**
+		 * 
+		 */
+		public function set matrix(value:Matrix):void {
+			_matrix = value;
+		}
 	}
 }

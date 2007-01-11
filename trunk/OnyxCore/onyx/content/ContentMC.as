@@ -122,7 +122,7 @@ package onyx.content {
 			_mc			= loader.content as MovieClip;
 			
 			// sets the framerate based on the swf framerate
-			_framerate		= loader.contentLoaderInfo.frameRate / Onyx.framerate;
+			_framerate		= loader.contentLoaderInfo.frameRate / framerate;
 			_totalFrames	= _mc.totalFrames;
 
 			// sets the last time we executed

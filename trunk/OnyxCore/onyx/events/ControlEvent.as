@@ -33,7 +33,7 @@ package onyx.events {
 
 	public final class ControlEvent extends Event {
 		
-		public static const CONTROL_CHANGED:String = 'control_change';
+		public static const CHANGE:String = 'c_ch';
 		
 		public var value:*;
 		
@@ -41,7 +41,7 @@ package onyx.events {
 			
 			value = v;
 			
-			super(CONTROL_CHANGED);
+			super(CHANGE);
 		}
 		
 	}

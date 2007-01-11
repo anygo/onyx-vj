@@ -41,9 +41,11 @@ package onyx.filter {
 	import onyx.application.Onyx;
 	import onyx.content.IContent;
 	import onyx.controls.Control;
+	import onyx.controls.ControlProxy;
 	import onyx.controls.Controls;
 	import onyx.controls.IControlObject;
 	import onyx.core.IDisposable;
+	import onyx.core.PluginBase;
 	import onyx.core.onyx_ns;
 	import onyx.events.FilterEvent;
 	import onyx.layer.IColorObject;
@@ -54,33 +56,31 @@ package onyx.filter {
 	/**
 	 * 	The base Filter class
 	 */
-	public class Filter extends EventDispatcher implements IControlObject {
+	public class Filter extends PluginBase implements IControlObject {
 
 		public var description:String;
-
-		// this sets the name of the filter
-		onyx_ns var _name:String;
 		
 		// stores the layer
 		protected var content:IContent;
 		
-		//
+		// stores the stage object we're gonna pass in:
+		// this is so that the filter can listen for onEnterFrame events
 		protected var stage:Stage;
 		
 		// stores whether the filter is unique and should not be allowed to be duplicated
 		onyx_ns var _unique:Boolean;
 		
 		// create controls
-		protected var _controls:Controls	= new Controls(this);
+		protected var _controls:Controls;
 		
 		/**
 		 * 	@contructor
 		 */
-		final public function Filter(name:String, unique:Boolean, ... controls:Array):void {
+		final public function Filter(unique:Boolean, ... controls:Array):void {
 			
-			_name = name;
 			_unique = unique;
 			
+			_controls = new Controls(this);
 			_controls.addControl.apply(null, controls);
 			
 		}
@@ -139,7 +139,7 @@ package onyx.filter {
 		 */
 		final public function clone():Filter {
 			var plugin:Plugin = Onyx.getDefinition(_name);
-			var filter:Filter = new plugin.definition();
+			var filter:Filter = plugin.getDefinition() as Filter;
 			
 			for each (var control:Control in _controls) {
 				var newControl:Control = filter.controls.getControl(control.name);

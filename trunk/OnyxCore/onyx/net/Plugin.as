@@ -31,6 +31,10 @@
 package onyx.net {
 
 	import onyx.core.IDisposable;
+	import onyx.core.PluginBase;
+	import onyx.core.onyx_ns;
+	
+	use namespace onyx_ns;
 	
 	/**
 	 * 	Base class for external files
@@ -45,7 +49,7 @@ package onyx.net {
 		/**
 		 * 	Class definition for the object
 		 */
-		public var definition:Class;
+		onyx_ns var _definition:Class;
 		
 		/**
 		 * 	Stores the description for the plug-in (for use in UI)
@@ -53,12 +57,24 @@ package onyx.net {
 		public var description:String;
 		
 		/**
+		 * 
+		 */
+		public var type:Class;
+		
+		/**
 		 * 	@constructor
 		 */
 		public function Plugin(name:String, definition:Class, description:String):void {
 			this.name = name;
-			this.definition = definition;
+			_definition = definition;
 			this.description = description;
+		}
+		
+		public function getDefinition():Object {
+			var obj:PluginBase = new _definition() as PluginBase;
+			obj._name = name;
+			
+			return obj;
 		}
 
 	}

@@ -16,14 +16,14 @@ package onyx.tween {
 		protected static var _definition:Dictionary	= new Dictionary(true);
 		
 		public static function stopTweens(target:Object):void {
-			var existing:Array = _definition[target];
+			var existing:Dictionary = _definition[target];
 			
 			if (existing) {
 				for each (var tween:Tween in existing) {
 					tween.dispose();
 				}
 				
-				_definition[target] = null;
+				delete _definition[target];
 			}
 		}
 		
@@ -39,18 +39,20 @@ package onyx.tween {
 		public function Tween(target:Object, ms:int, ... args:Array):void {
 			
 			// register the tween to the _definitions array
-			var existing:Array = _definition[target];
+			var existing:Dictionary = _definition[target];
 			if (existing) {
-				existing.push(this);
+				existing[this]		= this;
 			} else {
-				_definition[target] = [this];
+				var dict:Dictionary = new Dictionary(true);
+				dict[this]			= this;
+				_definition[target] = dict;
 			}
 			
 			_target = target;
 			_ms = ms;
 			_props = args;
 			
-			_timer = new Timer(30);
+			_timer = new Timer(40);
 			_timer.addEventListener(TimerEvent.TIMER, _onTimer);
 			_timer.start();
 			_startTime = getTimer();
@@ -74,10 +76,10 @@ package onyx.tween {
 		}
 		
 		public function stop():void {
-			var existing:Array = _definition[_target];
+			var existing:Dictionary = _definition[_target];
 			
 			if (existing) {
-				existing.splice(existing.indexOf(this), 1);
+				delete existing[this];
 			}
 			
 			dispose();

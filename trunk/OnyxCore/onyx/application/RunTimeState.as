@@ -38,7 +38,6 @@ package onyx.application {
 	public final class RunTimeState extends ApplicationState {
 
 		override public function initialize(...args):void {
-			Onyx.createLocalDisplay(5);
 			StateManager.removeState(this);
 		}
 		

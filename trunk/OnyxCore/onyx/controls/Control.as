@@ -38,7 +38,7 @@ package onyx.controls {
 	
 	use namespace onyx_ns;
 	
-	[Event(name='control_changed', type='onyx.events.ControlEvent')]
+	[Event(name='change', type='onyx.events.ControlEvent')]
 	
 	/**
 	 *	Base Control Class, dispatches when values have changed, as well as 
@@ -47,7 +47,7 @@ package onyx.controls {
 	public class Control extends EventDispatcher {
 
 		// set by Controls
-		onyx_ns var _target:Object;
+		onyx_ns var _target:IControlObject;
 
 		// stores the display name		
 		public var display:String;
@@ -114,15 +114,8 @@ package onyx.controls {
 		/**
 		 * 	Changes the target
 		 */
-		public function set target(value:Object):void {
+		public function set target(value:IControlObject):void {
 			_target = value;
-		}
-		
-		/**
-		 * 
-		 */
-		override public function toString():String {
-			return '[' + getQualifiedClassName(this) + ': ' + name + '=' + value + ']';
 		}
 		
 	}

@@ -40,18 +40,19 @@ package onyx.transition {
 	import flash.utils.getTimer;
 	
 	import onyx.content.IContent;
+	import onyx.core.IDisposable;
+	import onyx.core.PluginBase;
 	import onyx.core.getBaseBitmap;
 	import onyx.core.onyx_ns;
 	import onyx.events.TransitionEvent;
 	import onyx.layer.ILayer;
-	import onyx.core.IDisposable;
 	
 	use namespace onyx_ns;
 	
 	/**
 	 * 	Transition
 	 */
-	public class Transition extends EventDispatcher implements IDisposable {
+	public class Transition extends PluginBase implements IDisposable {
 		
 		/** @private **/
 		onyx_ns var _duration:int;

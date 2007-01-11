@@ -33,11 +33,13 @@ package onyx.application {
 	import flash.display.Stage;
 	import flash.events.*;
 	import flash.net.*;
+	import flash.utils.Dictionary;
 	import flash.utils.Timer;
 	import flash.utils.getQualifiedClassName;
 	
 	import onyx.controls.*;
 	import onyx.core.Console;
+	import onyx.core.IDisposable;
 	import onyx.core.onyx_ns;
 	import onyx.display.Display;
 	import onyx.events.*;
@@ -45,28 +47,19 @@ package onyx.application {
 	import onyx.layer.*;
 	import onyx.net.Plugin;
 	import onyx.transition.*;
-	import onyx.core.IDisposable;
-	import flash.utils.Dictionary;
 	
 	use namespace onyx_ns;
 	
 	/**
 	 * 	Core Application class that stores all layers, displays, and loaded plugins
 	 */
-	public final class Onyx {
-		
-		/**
-		 * 	STATIC VARIABLES
-		 **/
-		public static const controls:Controls = new Controls(Onyx,
-			new ControlInt(LayerProperties.FRAMERATE, null, 1, 30, 20)
-		);
+	public final class Onyx extends EventDispatcher {
 		
 		/**
 		 * 	@private
 		 * 	Dispatcher
 		 */
-		internal static const instance:EventDispatcher = new EventDispatcher();
+		internal static const instance:Onyx = new Onyx();
 		
 		/**
 		 * 	@private
@@ -111,7 +104,7 @@ package onyx.application {
 		public static function set framerate(value:int):void {
 			root.frameRate = value;
 		}
-				
+		
 		/**
 		 * 	
 		 */
@@ -127,8 +120,7 @@ package onyx.application {
 			Onyx.root = root;
 			
 			// root.addEventListener(Event.RESIZE, _onResize);
-
-			controls.getControl('framerate').value = root.frameRate;
+			// instance._controls.getControl('framerate').value = root.frameRate;
 			
 			// create a timer so that objects can listen for events
 			var timer:Timer = new Timer(0);
@@ -167,21 +159,21 @@ package onyx.application {
 		 */
 		public static function registerPlugin(plugin:Plugin):void {
 			
-			if (plugin.definition) {
+			if (plugin._definition) {
 
-				var object:IDisposable = new plugin.definition();
+				var object:IDisposable = plugin.getDefinition() as IDisposable;
 				
 				// test the type of object
 				if (object is Filter) {
 					var type:Class = Filter;
 					_filters.push(plugin);
-					_definition[(object as Filter).name] = plugin;
+					_definition[plugin.name] = plugin;
 
 				} else if (object is Transition) {
 					type = Transition;
 					_transitions.push(plugin);
 
-					_definition[(object as Transition).name] = plugin;
+					_definition[plugin.name] = plugin;
 				}
 				
 				object.dispose();
@@ -243,6 +235,5 @@ package onyx.application {
 			
 			return display;
 		}
-		
 	}
 }
