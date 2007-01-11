@@ -33,7 +33,7 @@ package onyx.layer {
 	import flash.events.EventDispatcher;
 	import flash.net.URLRequest;
 	
-	import onyx.application.Onyx;
+	import onyx.core.Onyx;
 	import onyx.content.IContent;
 	import onyx.controls.Control;
 	import onyx.controls.ControlProxy;

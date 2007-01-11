@@ -36,6 +36,7 @@ package onyx.layer {
 	import flash.net.URLRequest;
 	import flash.utils.getTimer;
 	
+	import onyx.constants.*;
 	import onyx.content.*;
 	import onyx.controls.*;
 	import onyx.core.*;

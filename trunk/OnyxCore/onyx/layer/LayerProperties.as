@@ -31,8 +31,7 @@
 package onyx.layer {
 	
 	import onyx.controls.*;
-	import onyx.core.BLEND_MODES;
-	
+	import onyx.constants.*;;
 	/**
 	 * 	Stores property names for layers
 	 */
