@@ -134,6 +134,12 @@ package ui.controls {
 			transform.color = c;
 			_preview.transform.colorTransform = transform;
 		}
+		
+		override public function dispose():void {
+			removeEventListener(MouseEvent.MOUSE_DOWN, _onMouseDown);
+			
+			super.dispose();			
+		}
 	}
 }
 
@@ -144,7 +150,7 @@ import flash.display.Shape;
 /**
  *
  */
-class Picker extends Sprite {
+final class Picker extends Sprite {
 	
 	public var cursor:Shape				= new Shape();
 	public var asset:AssetColorPicker	= new AssetColorPicker();

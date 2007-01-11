@@ -13,8 +13,6 @@ package ui.controls {
 		
 		private var _control:ControlString;
 		private var _label:TextField;
-		private var _font:Font;
-		private var _popup:TextControlPopUp;
 		
 		public function TextControl(options:UIOptions, control:Control):void {
 			
@@ -44,6 +42,8 @@ package ui.controls {
 		override public function dispose():void {
 			
 			removeEventListener(MouseEvent.MOUSE_DOWN, _onMouseDown);
+			_control = null;
+			_label = null;
 			
 			super.dispose();
 		}

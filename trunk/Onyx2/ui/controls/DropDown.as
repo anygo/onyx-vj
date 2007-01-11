@@ -56,7 +56,7 @@ package ui.controls {
 		private var _bind:String;
 		
 		public function DropDown(options:UIOptions, range:Control, align:String = 'left', bind:String = null):void {
-			
+
 			var control:ControlRange = range as ControlRange;
 			
 			super(options, true, control.display);
@@ -65,7 +65,7 @@ package ui.controls {
 			_width = options.width;
 			
 			_control = control;
-			_control.addEventListener(ControlEvent.CONTROL_CHANGED, _onChanged);
+			_control.addEventListener(ControlEvent.CHANGE, _onChanged);
 			
 			// assign the data provider
 			_data = control.data;
@@ -132,7 +132,9 @@ package ui.controls {
 			graphics.lineStyle(0, 0x96abbc, .5);
 			graphics.drawRect(-1, start - local.y - 1, _width + 1, _data.length * ITEM_HEIGHT + 2);
 			
-			for (var count:int = 0; count < _data.length; count++) {
+			var len:int = _data.length;
+			
+			for (var count:int = 0; count < len; count++) {
 				
 				var item:Option	= new Option(
 					(_bind) ? (_data[count] ? _data[count][_bind] : 'None') : _data[count], count, _width, _label.align, _bind)
@@ -191,11 +193,15 @@ package ui.controls {
 		
 		override public function dispose():void {
 			
-			_control.removeEventListener(ControlEvent.CONTROL_CHANGED, _onChanged);
+			_control.removeEventListener(ControlEvent.CHANGE, _onChanged);
 			
 			// add listeners			
 			_button.removeEventListener(MouseEvent.MOUSE_DOWN, _onPress);
 			_button.removeEventListener(MouseEvent.MOUSE_WHEEL, _onWheel);
+			
+			_label 	= null;
+			_button = null;
+			_control = null;
 			
 			super.dispose();
 		}

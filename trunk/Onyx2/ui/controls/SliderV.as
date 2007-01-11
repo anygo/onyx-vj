@@ -85,7 +85,7 @@ package ui.controls {
 			addEventListener(MouseEvent.DOUBLE_CLICK, _onDoubleClick);
 			addEventListener(MouseEvent.MOUSE_WHEEL, _onMouseWheel);
 			
-			_controlY.addEventListener(ControlEvent.CONTROL_CHANGED, _onControlChange);
+			_controlY.addEventListener(ControlEvent.CHANGE, _onControlChange);
 		}
 		
 		/**
@@ -154,11 +154,11 @@ package ui.controls {
 		override public function dispose():void {
 
 			// clean up events
-			removeEventListener(MouseEvent.MOUSE_DOWN, _onMouseDown);
-			removeEventListener(MouseEvent.DOUBLE_CLICK, _onDoubleClick);
-			removeEventListener(MouseEvent.MOUSE_WHEEL, _onMouseWheel);
+			removeEventListener(MouseEvent.MOUSE_DOWN,		_onMouseDown);
+			removeEventListener(MouseEvent.DOUBLE_CLICK,	_onDoubleClick);
+			removeEventListener(MouseEvent.MOUSE_WHEEL,	_onMouseWheel);
 			
-			_controlY.removeEventListener(ControlEvent.CONTROL_CHANGED, _onControlChange);
+			_controlY.removeEventListener(ControlEvent.CHANGE, _onControlChange);
 
 			// remove display objects
 

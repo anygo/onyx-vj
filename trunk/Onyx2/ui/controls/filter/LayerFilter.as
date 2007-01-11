@@ -35,6 +35,7 @@ package ui.controls.filter {
 	import flash.utils.getTimer;
 	
 	import onyx.application.Onyx;
+	import onyx.core.onyx_ns;
 	import onyx.filter.Filter;
 	import onyx.layer.Layer;
 	import onyx.net.Plugin;
@@ -46,6 +47,8 @@ package ui.controls.filter {
 	import ui.layer.UILayer;
 	import ui.text.Style;
 	import ui.text.TextField;
+	
+	use namespace onyx_ns;
 
 	public final class LayerFilter extends UIObject {
 		
@@ -76,7 +79,7 @@ package ui.controls.filter {
 			if (event.ctrlKey) {
 				
 				var plugin:Plugin		= Onyx.getDefinition(filter.name);
-				var filterClass:Class	= plugin.definition;
+				var filterClass:Class	= plugin._definition;
 				var layers:Array		= UILayer.layers;
 				
 				for each (var layer:UILayer in layers) {

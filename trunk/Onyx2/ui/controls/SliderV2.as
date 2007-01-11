@@ -97,8 +97,8 @@ package ui.controls {
 			doubleClickEnabled = true;
 			addEventListener(MouseEvent.DOUBLE_CLICK, _onDoubleClick);
 
-			_controlY.addEventListener(ControlEvent.CONTROL_CHANGED, _onControlChange);
-			_controlX.addEventListener(ControlEvent.CONTROL_CHANGED, _onControlChange);
+			_controlY.addEventListener(ControlEvent.CHANGE, _onControlChange);
+			_controlX.addEventListener(ControlEvent.CHANGE, _onControlChange);
 			
 			addEventListener(MouseEvent.MOUSE_DOWN, (invert) ? _onMouseDownInvert : _onMouseDownNormal);
 

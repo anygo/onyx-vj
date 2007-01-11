@@ -30,15 +30,21 @@
  */
 package ui.controls.layer
 {
-	import flash.display.Sprite;
-	import ui.assets.AssetLayerMarker;
 	import flash.display.DisplayObject;
+	import flash.display.Sprite;
+	
+	import ui.assets.AssetLayerMarker;
 
 	public final class ScrubArrow extends Sprite {
 		
 		public function ScrubArrow():void {
+			
+			mouseEnabled = false;
+			
 			var sprite:DisplayObject = addChild(new AssetLayerMarker());
 			sprite.x = sprite.width / 2;
+			
+			cacheAsBitmap = true;
 		}
 		
 	}

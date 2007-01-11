@@ -61,6 +61,7 @@ package ui.controls {
 				stage.removeEventListener(MouseEvent.MOUSE_DOWN, _captureMouse, false);
 				stage.removeChild(this);
 				
+				dispose();
 			}
 			
 			event.stopPropagation();

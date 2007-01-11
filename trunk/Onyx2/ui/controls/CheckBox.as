@@ -30,10 +30,12 @@
  */
 package ui.controls {
 
-	import onyx.controls.Control;
 	import flash.events.MouseEvent;
-	import onyx.events.ControlEvent;
 	import flash.geom.ColorTransform;
+	
+	import onyx.controls.Control;
+	import onyx.events.ControlEvent;
+	
 	import ui.text.TextField;
 	
 	public class CheckBox extends UIControl {
@@ -58,7 +60,7 @@ package ui.controls {
 
 			_onChanged();
 			
-			_control.addEventListener(ControlEvent.CONTROL_CHANGED, _onChanged);
+			_control.addEventListener(ControlEvent.CHANGE, _onChanged);
 			
 			addEventListener(MouseEvent.MOUSE_DOWN, _onMouseDown);
 		}
@@ -74,10 +76,12 @@ package ui.controls {
 		}
 		
 		override public function dispose():void {
-			_control.removeEventListener(ControlEvent.CONTROL_CHANGED, _onChanged);
+			_control.removeEventListener(ControlEvent.CHANGE, _onChanged);
 			_control = null;
+			_label	= null;
 			
 			removeEventListener(MouseEvent.MOUSE_DOWN, _onMouseDown);
+			super.dispose();
 		}
 		
 	}

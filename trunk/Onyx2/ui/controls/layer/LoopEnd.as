@@ -51,7 +51,7 @@ package ui.controls.layer {
 			cacheAsBitmap 	= true;
 			
 			_control = control;
-			_control.addEventListener(ControlEvent.CONTROL_CHANGED, _onChanged);
+			_control.addEventListener(ControlEvent.CHANGE, _onChanged);
 
 			var sprite:DisplayObject = addChild(new AssetRightArrow());
 			
