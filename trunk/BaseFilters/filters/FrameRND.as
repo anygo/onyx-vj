@@ -59,7 +59,6 @@ package filters {
 		public function FrameRND():void {
 
 			super(
-				'Frame Rate',
 				true,
 				new ControlNumber('mindelay',	'Min Delay', .1, 50, .5),
 				new ControlNumber('maxdelay',	'Min Delay', .1, 50, 2),

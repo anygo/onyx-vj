@@ -63,7 +63,6 @@ package filters {
 		public function EchoFilter():void {
 
 			super(
-				'Echo Filter', 
 				false,
 				new ControlNumber('feedAlpha', 'Echo Alpha', 0, 1, .09),
 				new ControlRange('feedBlend', 'Echo Blend', BLEND_MODES, 9),

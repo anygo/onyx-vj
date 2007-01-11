@@ -45,17 +45,19 @@ package {
 
 		public function get plugins():Array {
 			return [
-				new Plugin('Echo Filter', EchoFilter, 'Threshold Transition'),
+				new Plugin('Echo Filter', 		EchoFilter, 'Threshold Transition'),
+				new Plugin('Blur Filter', 		Blur, 'Threshold Transition'),
+				new Plugin('Noise Filter',		NoiseFilter, 'Threshold Transition'),
+				new Plugin('Repeater Filter',	Repeater, 'Threshold Transition'),
+				new Plugin('FeedBack Filter',	FeedbackFilter, 'Feedback Filter'),
+				new Plugin('Blink Effect', 		Blink, 'Blinks the layer'),
+				new Plugin('Frame Random', 		FrameRND, 'Threshold Transition'),
+				new Plugin('MoveScale Effect', 	MoverScaler, 'Moves and Scales Object'),
+				new Plugin('Matrix Effect',		MatrixEffect, ''),
+				new Plugin('Paste Filter',		PasteFilter, '')
 //				new Plugin('Blur Transition', BlurTransition, 'Blurs the loaded layer'),
 //				new Plugin('Dissolve Transition', DissolveTransition, 'Dissolves the loaded layer'),
 //				new Plugin('Threshold Transition', ThresholdTransition, 'Threshold Transition'),
-				new Plugin('Blur Filter', Blur, 'Threshold Transition'),
-				new Plugin('Noise Filter', NoiseFilter, 'Threshold Transition'),
-				new Plugin('Repeater Filter', Repeater, 'Threshold Transition'),
-				new Plugin('FeedBack Filter', FeedbackFilter, 'Feedback Filter'),
-				new Plugin('Blink', Blink, 'Blinks the layer'),
-				new Plugin('FrameRND', FrameRND, 'Threshold Transition'),
-				new Plugin('Mover Scaler', MoverScaler, 'Moves and Scales Object')
 			];
 		}
 	}

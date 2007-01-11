@@ -48,7 +48,6 @@ package filters {
 		public function Blink():void {
 
 			super(	
-				'Blink', 
 				true,
 				new ControlInt('delay',		'delay',		1,	20,	1, { factor: 5 }),
 				new ControlNumber('min',	'min alpha',	0,	1,	1),

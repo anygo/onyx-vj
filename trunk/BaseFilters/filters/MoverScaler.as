@@ -20,7 +20,6 @@ package filters {
 		public function MoverScaler():void {
 
 			super(
-				'MoverScaler',
 				true,
 				new ControlNumber('mindelay',	'Min Delay', .1, 50, .4),
 				new ControlNumber('maxdelay',	'Min Delay', .1, 50, 1),

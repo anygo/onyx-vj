@@ -48,7 +48,6 @@ package filters {
 		public function NoiseFilter():void {
 			
 			super(
-				'Noise Filter', 
 				false,
 				new ControlInt('amount','Amount', 0, 100, 4),
 				new ControlRange('greyscale', 'GreyScale', [false, true], 0)

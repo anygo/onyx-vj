@@ -56,7 +56,6 @@ package filters {
 		public function Repeater():void {
 			
 			super(
-				'Repeater', 
 				true,
 				new ControlInt('amount', 'amount', 2, 42, 2)
 			)

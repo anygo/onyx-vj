@@ -16,7 +16,6 @@ package filters {
 		
 		public function FeedbackFilter():void {
 			super(
-				'Feedback',
 				false,
 				new ControlNumber('scale',	'scale', .01, 2, .99)
 			)

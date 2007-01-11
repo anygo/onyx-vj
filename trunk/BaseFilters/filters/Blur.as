@@ -55,12 +55,11 @@ package filters {
 		private var _timer:Timer;
 		private var _blurX:int							= 4;
 		private var _blurY:int							= 4;
-		private var _filter:BlurFilter;
+		private var _filter:BlurFilter					= new BlurFilter(_blurX, _blurY)
 		
 		public function Blur():void {
 
 			super(
-				'Blur', 
 				false,
 				new ControlProxy('blur', 'blur',
 					new ControlInt('blurX', 'blurX', 0, 42, 4),
@@ -71,10 +70,6 @@ package filters {
 				new ControlNumber('maxdelay',	'Min Delay', .1, 50, 1),
 				new ControlRange('tween', 'tween', BOOLEAN)
 			);
-		}
-		
-		override public function initialize():void {
-			_filter = new flash.filters.BlurFilter(_blurX, _blurY)
 		}
 		
 		public function applyFilter(bitmapData:BitmapData, bounds:Rectangle):BitmapData {
