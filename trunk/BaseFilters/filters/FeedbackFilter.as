@@ -25,8 +25,7 @@ package filters {
 			new Tween(content, 1000, new TweenProperty('alpha', 0, 1, Sine.easeIn));
 		}
 		
-		public function applyFilter(source:BitmapData, bounds:Rectangle):BitmapData {
-			return source;
+		public function applyFilter(source:BitmapData, bounds:Rectangle):void {
 		}
 	}
 }

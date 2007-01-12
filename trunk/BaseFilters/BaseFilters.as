@@ -54,7 +54,7 @@ package {
 				new Plugin('Frame Random', 		FrameRND, 'Threshold Transition'),
 				new Plugin('MoveScale Effect', 	MoverScaler, 'Moves and Scales Object'),
 				new Plugin('Matrix Effect',		MatrixEffect, ''),
-				new Plugin('Paste Filter',		PasteFilter, '')
+				new Plugin('Bleed Filter',		PasteFilter, '')
 //				new Plugin('Blur Transition', BlurTransition, 'Blurs the loaded layer'),
 //				new Plugin('Dissolve Transition', DissolveTransition, 'Dissolves the loaded layer'),
 //				new Plugin('Threshold Transition', ThresholdTransition, 'Threshold Transition'),

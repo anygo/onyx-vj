@@ -36,7 +36,7 @@ package transitions {
 	import flash.geom.ColorTransform;
 	import flash.geom.Point;
 	
-	import onyx.core.BLEND_MODES;
+	import onyx.constants.BLEND_MODES;
 	import onyx.transition.Transition;
 
 	public final class ThresholdTransition extends Transition {

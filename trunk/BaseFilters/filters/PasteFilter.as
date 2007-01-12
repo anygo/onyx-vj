@@ -1,16 +1,17 @@
 package filters {
 	
 	import flash.display.BitmapData;
+	import flash.filters.BlurFilter;
 	import flash.geom.ColorTransform;
 	import flash.geom.Matrix;
+	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	
-	import onyx.core.POINT;
+	import onyx.constants.POINT;
 	import onyx.core.getBaseBitmap;
 	import onyx.filter.Filter;
 	import onyx.filter.IBitmapFilter;
-	import flash.geom.Point;
-	import flash.filters.BlurFilter;
+	import flash.filters.DisplacementMapFilter;
 
 	public final class PasteFilter extends Filter implements IBitmapFilter {
 		
@@ -30,26 +31,17 @@ package filters {
 			_transform	= new ColorTransform();
 		}
 		
-		public function applyFilter(bitmapData:BitmapData, bounds:Rectangle):BitmapData {
+		public function applyFilter(bitmapData:BitmapData, bounds:Rectangle):void {
 			
 			// _source.fillRect(_source.rect, 0x00000000);
-			_source.applyFilter(_source, _source.rect, new Point(0,0), new BlurFilter());
+			_source.applyFilter(_source, _source.rect, new Point(0,0), new BlurFilter(4,4));
 			
-			var boxX:int		= 160 * Math.random();
-			var boxY:int		= 120 * Math.random();
+			var transform:ColorTransform	= new ColorTransform(1,1,1,.2);
+			var orig:ColorTransform			= new ColorTransform(1,1,1,.8);
 			
-			var rect:Rectangle	= new Rectangle(boxX, boxY, 160, 120);
-			var matrix:Matrix	= new Matrix();
-			matrix.translate(-boxX, -boxY);
-			matrix.scale(Math.random() * 2, Math.random() * 2);
+			_source.draw(bitmapData, null, transform, 'overlay', null);
 			
-			var transform:ColorTransform	= new ColorTransform(1,1,1,Math.random());
-			
-			_source.draw(bitmapData, matrix, transform, 'multiply', rect);
-			
-			bitmapData.draw(_source);
-			
-			return bitmapData;
+			bitmapData.draw(_source, null, orig);
 		}
 	}
 }

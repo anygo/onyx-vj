@@ -64,7 +64,7 @@ package filters {
 		/**
 		 * 	Applys a filter to the bitmap
 		 */
-		public function applyFilter(bitmapData:BitmapData, bounds:Rectangle):BitmapData {
+		public function applyFilter(bitmapData:BitmapData, bounds:Rectangle):void {
 			
 			var amount:int = amount;
 			var square:int = amount * amount;
@@ -86,8 +86,6 @@ package filters {
 					Math.floor(count / amount) * scaleY)
 				);
 			}
-
-			return bitmapData;
 		}
 		
 		/**

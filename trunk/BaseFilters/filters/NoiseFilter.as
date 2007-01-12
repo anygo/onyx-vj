@@ -44,6 +44,7 @@ package filters {
 		
 		private var _amount:Number		= .25;
 		private var _greyscale:Boolean	= true;
+		private var _noise:BitmapData	= new BitmapData(320,240,false,0x000000);
 		
 		public function NoiseFilter():void {
 			
@@ -54,16 +55,12 @@ package filters {
 			);
 		}
 		
-		public function applyFilter(bmp:BitmapData, bounds:Rectangle):BitmapData {
+		public function applyFilter(bmp:BitmapData, bounds:Rectangle):void {
 			
-			var noise:BitmapData = new BitmapData(bmp.width, bmp.height, false, 0x000000);
-			noise.noise(Math.random() * 100, 0, _amount * 255, 7, _greyscale);
+			_noise.noise(Math.random() * 100, 0, _amount * 255, 7, _greyscale);
 			
-			bmp.draw(noise, new Matrix(), null, 'overlay');
+			bmp.draw(_noise, new Matrix(), null, 'overlay');
 			
-			noise.dispose();
-
-			return bmp;
 		}
 		
 		public function set amount(a:int):void {
@@ -83,6 +80,8 @@ package filters {
 		}
 		
 		override public function dispose():void {
+			_noise.dispose();
+			_noise = null;
 		}
 		
 		override public function initialize():void {

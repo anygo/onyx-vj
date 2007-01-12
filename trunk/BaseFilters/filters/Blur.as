@@ -37,8 +37,8 @@ package filters {
 	import flash.geom.Rectangle;
 	import flash.utils.Timer;
 	
+	import onyx.constants.*;
 	import onyx.controls.*;
-	import onyx.core.BOOLEAN;
 	import onyx.core.onyx_ns;
 	import onyx.filter.Filter;
 	import onyx.filter.IBitmapFilter;
@@ -72,9 +72,8 @@ package filters {
 			);
 		}
 		
-		public function applyFilter(bitmapData:BitmapData, bounds:Rectangle):BitmapData {
+		public function applyFilter(bitmapData:BitmapData, bounds:Rectangle):void {
 			bitmapData.applyFilter(bitmapData, bitmapData.rect, new Point(0,0), _filter);
-			return bitmapData;
 		}
 		
 		public function terminate():void {
