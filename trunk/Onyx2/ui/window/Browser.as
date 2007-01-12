@@ -48,6 +48,7 @@ package ui.window {
 	import ui.layer.UILayer;
 	import ui.text.Style;
 	import ui.text.TextField;
+	import onyx.layer.LayerSettings;
 
 	/**
 	 * 	File Explorer
@@ -170,7 +171,13 @@ package ui.window {
 		 */
 		private function _onDoubleClick(event:MouseEvent):void {
 			var control:FileControl = event.target as FileControl;
-			UILayer.selectedLayer.load(control.path);
+
+			if (event.ctrlKey && UILayer.selectedLayer.layer.path) {
+				var settings:LayerSettings = new LayerSettings();
+				settings.load(UILayer.selectedLayer.layer);
+			}
+			
+			UILayer.selectedLayer.load(control.path, settings);
 		}
 		
 		/**
@@ -222,7 +229,13 @@ package ui.window {
 			var origin:FileControl = event.origin as FileControl;
 			
 			uilayer.highlight(0, 0);
-			uilayer.load(origin.path);
+
+			if (event.ctrlKey && uilayer.layer.path) {
+				var settings:LayerSettings = new LayerSettings();
+				settings.load(uilayer.layer);
+			}
+
+			uilayer.load(origin.path, settings);
 			UILayer.selectLayer(uilayer);
 		}
 	}

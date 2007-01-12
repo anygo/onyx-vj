@@ -2,8 +2,8 @@ package ui.states {
 	
 	import flash.events.MouseEvent;
 	
-	import onyx.application.ApplicationState;
-	import onyx.application.StateManager;
+	import onyx.states.ApplicationState;
+	import onyx.states.StateManager;
 	import onyx.layer.Layer;
 	
 	import ui.layer.UILayer;

@@ -30,7 +30,7 @@
  */
 package ui.window {
 	
-	import onyx.application.Onyx;
+	import onyx.core.Onyx;
 	import onyx.controls.ControlInt;
 	import onyx.controls.ControlRange;
 	import onyx.events.TransitionEvent;
@@ -70,7 +70,8 @@ package ui.window {
 		 * 	Initialize window
 		 */
 		public function initialize():void {
-			
+
+/*			
 			var data:Array = Onyx.transitions;
 			data.unshift(null);
 			
@@ -86,6 +87,7 @@ package ui.window {
 			dropdown.y = 20;
 
 			addChild(dropdown);
+*/
 		}
 		
 		/**

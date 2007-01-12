@@ -33,7 +33,7 @@ package ui.window
 	import flash.events.Event;
 	import flash.utils.getTimer;
 	
-	import onyx.application.Onyx;
+	import onyx.core.Onyx;
 	import onyx.controls.Control;
 	import onyx.controls.ControlInt;
 	import onyx.events.ControlEvent;
@@ -43,7 +43,6 @@ package ui.window
 	public final class PerfMonitor extends Window {
 		
 		private var _lasttime:int = getTimer();
-		private var _framerate:Control;
 		
 		private var _target:TextField = new TextField(55,9);
 		private var _label:TextField = new TextField(55,9);
@@ -52,10 +51,6 @@ package ui.window
 			
 			super();
 			
-			_framerate = Onyx.controls.getControl('framerate');
-			_framerate.addEventListener(ControlEvent.CONTROL_CHANGED, _frameRateChange);
-			_label.text = _framerate.value;
-
 			_draw();
 			
 			_applyEventHandlers();
@@ -68,7 +63,7 @@ package ui.window
 			title = 'PERFORMANCE';
 			
 			x = 760;
-			y = 484;
+			y = 384;
 			
 			width = 60;
 			height = 30;
@@ -80,10 +75,6 @@ package ui.window
 			
 			// _frameRateChange();
 
-		}
-		
-		private function _frameRateChange(event:ControlEvent = null):void {
-			_target.text = 'target: ' + _framerate.value;
 		}
 		
 		private function _applyEventHandlers():void {
@@ -115,9 +106,7 @@ package ui.window
 			
 			removeEventListener(Event.ENTER_FRAME, _onEnterFrame);
 			removeEventListener(Event.ADDED, _onAdded);
-			_framerate.removeEventListener(ControlEvent.CONTROL_CHANGED, _frameRateChange);
 
-			_framerate = null;
 			_target = null;
 			_label = null;
 			_lasttime = NaN;

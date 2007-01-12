@@ -33,17 +33,21 @@ package ui.window {
 	import flash.events.MouseEvent;
 	import flash.system.System;
 	
-	import onyx.application.Onyx;
+	import onyx.controls.Control;
 	import onyx.controls.ControlColor;
+	import onyx.controls.ControlRange;
 	import onyx.controls.Controls;
+	import onyx.core.Onyx;
 	import onyx.display.Display;
+	import onyx.display.DisplaySize;
 	
 	import ui.controls.ColorPicker;
+	import ui.controls.DropDown;
 	import ui.controls.SliderV2;
 	import ui.controls.TextButton;
+	import ui.controls.TextControlPopUp;
 	import ui.controls.UIOptions;
 	import ui.core.UIObject;
-	import ui.controls.TextControlPopUp;
 
 	public final class SettingsWindow extends Window {
 		
@@ -51,6 +55,7 @@ package ui.window {
 		private var _controlScale:SliderV2;
 		private var _controlColor:ColorPicker;
 		private var _controlXML:TextButton;
+		private var _controlSize:DropDown;
 		
 		public function SettingsWindow(display:Display):void {
 			
@@ -62,23 +67,28 @@ package ui.window {
 			var controls:Controls	= display.controls;
 
 			_controlXY		= new SliderV2(options, controls.getControl('position'));
-			_controlScale	= new SliderV2(options, controls.getControl('scale'));
+
 			_controlColor	= new ColorPicker(options, controls.getControl('backgroundColor'));
 			_controlXML		= new TextButton(options, 'save layers');
 			
+			var control:Control = new ControlRange('size', 'size', DisplaySize.SIZES);
+			control.target		= display;
+
+			_controlSize	= new DropDown(options, control, 'left', 'name');
+			
 			_controlXY.y	= 24;
-			_controlScale.y = 47;
 			_controlColor.y = 70;
 			_controlXY.x	= 2;
-			_controlScale.x = 2;
 			_controlColor.x = 2;
 			_controlXML.x	= 2;
 			_controlXML.y	= 83;
+			_controlSize.x	= 60;
+			_controlSize.y	= 24;
 			
 			addChild(_controlXY);
-			addChild(_controlScale);
 			addChild(_controlColor);
 			addChild(_controlXML);
+			addChild(_controlSize);
 			
 			width = 190;
 			

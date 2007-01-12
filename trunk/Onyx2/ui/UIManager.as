@@ -30,17 +30,18 @@
  */
 package ui {
 	
+	import flash.display.Bitmap;
 	import flash.display.Stage;
 	import flash.display.StageQuality;
 	import flash.events.EventDispatcher;
 	
-	import onyx.application.Onyx;
-	import onyx.application.StateManager;
+	import onyx.core.Onyx;
 	import onyx.display.Display;
 	import onyx.events.ApplicationEvent;
 	import onyx.events.DisplayEvent;
 	import onyx.events.LayerEvent;
 	import onyx.layer.Layer;
+	import onyx.states.StateManager;
 	
 	import ui.assets.*;
 	import ui.layer.UILayer;
@@ -52,9 +53,14 @@ package ui {
 	 */
 	public class UIManager {
 
+		/**
+		 * 	@private
+		 */
 		private static var _root:Stage;
 		
-		// initialize
+		/**
+		 * 	initialize
+		 */
 		public static function initialize(root:Stage):void {
 			
 			// store the root
@@ -68,10 +74,6 @@ package ui {
 			
 			// wait til we're done initializing
 			engine.addEventListener(ApplicationEvent.ONYX_STARTUP_END, _onInitialize);
-
-			// listen for windows created
-			engine.addEventListener(LayerEvent.LAYER_CREATED, _onLayerCreate);
-			engine.addEventListener(DisplayEvent.DISPLAY_CREATED, _onDisplayCreate);
 		}
 		
 		/**
@@ -80,9 +82,15 @@ package ui {
 		private static function _onInitialize(event:ApplicationEvent):void {
 			
 			var engine:EventDispatcher = event.currentTarget as EventDispatcher;
-			engine.removeEventListener(ApplicationEvent.ONYX_STARTUP_END, _onInitialize);
-			
+
 			_loadWindows(Console, PerfMonitor, Browser, Filters, TransitionWindow);
+
+			// listen for windows created
+			engine.removeEventListener(ApplicationEvent.ONYX_STARTUP_END, _onInitialize);
+			engine.addEventListener(LayerEvent.LAYER_CREATED, _onLayerCreate);
+			engine.addEventListener(DisplayEvent.DISPLAY_CREATED, _onDisplayCreate);
+			
+			Onyx.createLocalDisplay(5);
 			
 			StateManager.loadState(new KeyListenerState(), _root);
 		}
@@ -115,7 +123,6 @@ package ui {
 			uilayer.reOrderLayer();
 
 			_root.addChildAt(uilayer, 0);
-
 		}
 	}
 }

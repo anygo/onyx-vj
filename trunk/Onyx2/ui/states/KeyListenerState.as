@@ -4,12 +4,12 @@ package ui.states {
 	import flash.events.KeyboardEvent;
 	import flash.ui.Keyboard;
 	
-	import onyx.application.ApplicationState;
+	import onyx.states.ApplicationState;
 	
 	import ui.layer.UILayer;
 
-	public final class KeyListenerState extends ApplicationState
-	{
+	public final class KeyListenerState extends ApplicationState {
+		
 		override public function initialize(... args:Array):void {
 			var root:Stage = args[0];
 			
@@ -48,10 +48,14 @@ package ui.states {
 				case 40:
 					UILayer.selectedLayer.selectFilterUp(false);
 					break;
-				case Keyboard.TAB:
-				
-					event.stopPropagation();
+				case 49:
+				case 50:
+				case 51:
+					for each (layer in UILayer.layers) {
+						layer.selectPage(event.keyCode - 49);
+					}
 					break;
+				default:
 			}
 		}
 

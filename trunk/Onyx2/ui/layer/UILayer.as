@@ -38,14 +38,15 @@ package ui.layer {
 	import flash.net.URLRequest;
 	import flash.utils.Timer;
 	
-	import onyx.application.Onyx;
-	import onyx.application.StateManager;
 	import onyx.controls.*;
+	import onyx.core.Onyx;
 	import onyx.events.*;
 	import onyx.filter.Filter;
 	import onyx.layer.Layer;
 	import onyx.layer.LayerProperties;
+	import onyx.layer.LayerSettings;
 	import onyx.net.Plugin;
+	import onyx.states.StateManager;
 	import onyx.transition.Transition;
 	
 	import ui.assets.*;
@@ -99,12 +100,12 @@ package ui.layer {
 		public static function selectLayer(uilayer:UILayer):void {
 			
 			if (selectedLayer) {
-				selectedLayer._timer.delay = 2200;
+				selectedLayer._timer.delay = 3000;
 				selectedLayer.highlight(0,0);
 			}
 			
 			// make the delay faster
-			uilayer._timer.delay = 220;
+			uilayer._timer.delay = 750;
 			
 			uilayer.highlight(0x3186d6,.13);
 			
@@ -161,7 +162,7 @@ package ui.layer {
 		private var _timer:Timer							= new Timer(2000);
 
 		/** @private **/
-		private var _preview:Bitmap							= new Bitmap(new BitmapData(192, 144, true, 0x00000000));
+		public var preview:Bitmap							= new Bitmap(new BitmapData(192, 144, true, 0x00000000));
 
 		/** @private **/
 		private var _filename:TextField						= new TextField(162,16);
@@ -350,7 +351,7 @@ package ui.layer {
 			addChildren(
 			
 				_assetLayer,														0,			0,
-				_preview,															1,			1,
+				preview,															1,			1,
 				_filename,															3,			3,
 				_controlPage,														6,			193,
 
@@ -375,8 +376,8 @@ package ui.layer {
 		/**
 		 * 	Loads a layer
 		 */
-		public function load(path:String):void {
-			_layer.load(new URLRequest(path), null);
+		public function load(path:String, settings:LayerSettings = null):void {
+			_layer.load(new URLRequest(path), settings);
 			
 		}
 		
@@ -466,6 +467,9 @@ package ui.layer {
 			
 			// make sure the timer is running
 			_timer.start();
+			
+			// update the bitmap
+			_onUpdateTimer(null);
 		}
 		
 		/**
@@ -487,7 +491,7 @@ package ui.layer {
 			_assetScrub.x = SCRUB_LEFT;
 			
 			removeEventListener(Event.ENTER_FRAME, _updatePlayheadHandler);
-			_preview.bitmapData.fillRect(_preview.bitmapData.rect, 0x000000);
+			preview.bitmapData.fillRect(preview.bitmapData.rect, 0x000000);
 		}
 		
 		/**
@@ -497,7 +501,7 @@ package ui.layer {
 		private function _onUpdateTimer(event:TimerEvent):void {
 			
 			// updates the bitmap
-			var bmp:BitmapData = _preview.bitmapData;
+			var bmp:BitmapData = preview.bitmapData;
 			bmp.fillRect(bmp.rect, 0x00000000);
 
 			// draw			
@@ -600,8 +604,8 @@ package ui.layer {
 		 * 	Forwards mouse events to the layer based on clicking the preview
 		 */
 		private function _forwardMouse(event:MouseEvent):void {
-			event.localX = _preview.mouseX / .6 / _layer.scaleX;
-			event.localY = _preview.mouseY / .6 / _layer.scaleY;
+			event.localX = preview.mouseX / .6 / _layer.scaleX;
+			event.localY = preview.mouseY / .6 / _layer.scaleY;
 			
 			_layer.dispatchEvent(event);
 		}
@@ -662,7 +666,9 @@ package ui.layer {
 		 */
 		private function _onFilterRemoved(event:FilterEvent):void {
 			
-			for (var count:int = 0; count < _filters.length; count++) {
+			var len:int = _filters.length;
+			
+			for (var count:int = 0; count < len; count++) {
 				var filter:LayerFilter = _filters[count];
 				if (filter.filter === event.filter) {
 					_filters.splice(count, 1);

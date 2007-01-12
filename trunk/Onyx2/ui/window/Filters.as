@@ -32,7 +32,7 @@ package ui.window {
 	
 	import flash.events.MouseEvent;
 	
-	import onyx.application.Onyx;
+	import onyx.core.Onyx;
 	import onyx.events.FilterEvent;
 	import onyx.net.Plugin;
 	
@@ -67,8 +67,9 @@ package ui.window {
 		private function _createControl():void {
 			
 			var filters:Array = Onyx.filters;
+			var len:int = filters.length;
 			
-			for (var index:int = 0; index < filters.length; index++) {
+			for (var index:int = 0; index < len; index++) {
 				
 				var plugin:Plugin = filters[index];
 				
@@ -101,7 +102,7 @@ package ui.window {
 			if (event.ctrlKey) {
 				_applyToAll(plugin);
 			} else {
-				UILayer.selectedLayer.addFilter(new plugin.definition());
+				UILayer.selectedLayer.addFilter(plugin.getDefinition() as Filter);
 			}
 			
 		}
@@ -149,7 +150,7 @@ package ui.window {
 
 			} else {
 				
-				UILayer.selectedLayer.addFilter(new plugin.definition());
+				UILayer.selectedLayer.addFilter(plugin.getDefinition() as Filter);
 				
 			}
 		}
@@ -160,7 +161,7 @@ package ui.window {
 		private function _applyToAll(plugin:Plugin):void {
 			var layers:Array = UILayer.layers;
 			for each (var layer:UILayer in layers) {
-				layer.addFilter(new plugin.definition());
+				layer.addFilter(plugin.getDefinition() as Filter);
 			}
 		}
 	}

@@ -34,7 +34,7 @@ package ui.controls.filter {
 	import flash.events.MouseEvent;
 	import flash.utils.getTimer;
 	
-	import onyx.application.Onyx;
+	import onyx.core.Onyx;
 	import onyx.core.onyx_ns;
 	import onyx.filter.Filter;
 	import onyx.layer.Layer;
