@@ -33,17 +33,17 @@ package onyx.layer {
 	import flash.events.EventDispatcher;
 	import flash.net.URLRequest;
 	
-	import onyx.core.Onyx;
 	import onyx.content.IContent;
 	import onyx.controls.Control;
 	import onyx.controls.ControlProxy;
 	import onyx.controls.ControlValue;
 	import onyx.controls.Controls;
+	import onyx.controls.IControlObject;
 	import onyx.core.Console;
+	import onyx.core.Onyx;
 	import onyx.core.onyx_ns;
 	import onyx.filter.Filter;
 	import onyx.net.Plugin;
-	import onyx.controls.IControlObject;
 	
 	use namespace onyx_ns;
 
@@ -158,7 +158,7 @@ package onyx.layer {
 				for each (var filterXML:XML in xml.filters.*) {
 					
 					var name:String			= filterXML.@id;
-					var plugin:Plugin		= Onyx.getDefinition(name);
+					var plugin:Plugin		= Filter.getDefinition(name);
 					
 					if (plugin) {
 						

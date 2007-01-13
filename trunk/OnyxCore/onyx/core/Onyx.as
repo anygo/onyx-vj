@@ -73,21 +73,9 @@ package onyx.core {
 		
 		/**
 		 * 	@private
-		 * 	Stores definitions to all the filters
-		 */
-		onyx_ns static var _filters:Array			= [];
-		
-		/**
-		 * 	@private
-		 * 	stores definitions by name for fast reference
-		 */
-		private static var _definition:Dictionary	= new Dictionary(true);
-		
-		/**
-		 * 	@private
 		 * 	Stores definitions for all the transitions
-		 */
 		onyx_ns static var _transitions:Array		= [];
+		 */
 
 		/**
 		 * 	Gets the framerate
@@ -163,16 +151,17 @@ package onyx.core {
 				
 				// test the type of object
 				if (object is Filter) {
-					var type:Class = Filter;
-					_filters.push(plugin);
-					_definition[plugin.name] = plugin;
-
-				} else if (object is Transition) {
+					
+					Filter.registerPlugin(plugin);
+					
+				}
+				
+				/* else if (object is Transition) {
 					type = Transition;
 					_transitions.push(plugin);
 
 					_definition[plugin.name] = plugin;
-				}
+				}*/
 				
 				object.dispose();
 			}
@@ -180,26 +169,26 @@ package onyx.core {
 		
 		/**
 		 * 	Returns class definition from filter type
-		 */
 		public static function getDefinition(name:String):Plugin {
 			return _definition[name];
 		}
+		 */
 	
 		/**
 		 * 	Returns an array of Plugins that contain filter definitions
 		 * 	@see onyx.net.Plugin
-		 */
 		public static function get filters():Array {
 			return _filters.concat();
 		}
+		 */
 
 		/**
 		 * 	Returns an array of Plugins that contain transition definitions
 		 * 	@see onyx.net.Plugin
-		 */
 		public static function get transitions():Array {
 			return _transitions.concat();
 		}
+		 */
 		
 		/**
 		 * 	Returns all the displays

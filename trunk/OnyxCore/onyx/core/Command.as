@@ -30,10 +30,10 @@
  */
 package onyx.core {
 
-	import onyx.core.Onyx;
 	import onyx.display.Display;
-	import onyx.layer.Layer;
+	import onyx.filter.Filter;
 	import onyx.jobs.StatJob;
+	import onyx.layer.Layer;
 	
 	use namespace onyx_ns;
 
@@ -56,8 +56,8 @@ package onyx.core {
 					text =	'contributors<br>-------------<br>Daniel Hai: http://www.danielhai.com'
 					break;
 				case 'plugins':
-					text =	Onyx.filters.length + ' filters loaded.<br>' +
-							Onyx.transitions.length + ' transitions loaded.';
+					text =	Filter.filters.length + ' filters loaded.<br>';
+//							Onyx.transitions.length + ' transitions loaded.';
 					break;
 				case 'stat':
 					text =	_createHeader('stat') + 'tests framerate and layer rendering times.<br><br>usage: stat [numSeconds:int]<br>';

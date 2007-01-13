@@ -399,7 +399,7 @@ package onyx.content {
 			
 			if (filter._unique) {
 				
-				var plugin:Plugin = Onyx.getDefinition(filter.name);
+				var plugin:Plugin = Filter.getDefinition(filter.name);
 				
 				for each (var otherFilter:Filter in _filters) {
 					if (otherFilter is plugin._definition) {

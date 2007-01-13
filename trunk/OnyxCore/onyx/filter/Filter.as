@@ -35,6 +35,7 @@ package onyx.filter {
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.net.FileFilter;
+	import flash.utils.Dictionary;
 	import flash.utils.getDefinitionByName;
 	import flash.utils.getQualifiedClassName;
 	
@@ -57,6 +58,37 @@ package onyx.filter {
 	 * 	The base Filter class
 	 */
 	public class Filter extends PluginBase implements IControlObject {
+		
+		/**
+		 * 	@private
+		 * 	Stores definitions
+		 */
+		private static var _definition:Object	= new Object();
+		
+		/**
+		 * 	@private
+		 */
+		private static var _filters:Array		= [];
+		
+		/**
+		 * 	Registers a plugin
+		 */
+		onyx_ns static function registerPlugin(plugin:Plugin):void {
+		}
+
+		/**
+		 * 	Returns a definition
+		 */
+		public static function getDefinition(name:String):Plugin {
+			return _definition[name];
+		}
+		
+		/**
+		 * 
+		 */
+		public static function get filters():Array {
+			return _filters.concat();
+		}
 
 		public var description:String;
 		
@@ -138,7 +170,7 @@ package onyx.filter {
 		 * 	Clones the filter
 		 */
 		final public function clone():Filter {
-			var plugin:Plugin = Onyx.getDefinition(_name);
+			var plugin:Plugin = Filter.getDefinition(_name);
 			var filter:Filter = plugin.getDefinition() as Filter;
 			
 			for each (var control:Control in _controls) {
