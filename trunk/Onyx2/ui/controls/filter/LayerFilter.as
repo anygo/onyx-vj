@@ -78,7 +78,7 @@ package ui.controls.filter {
 			
 			if (event.ctrlKey) {
 				
-				var plugin:Plugin		= Onyx.getDefinition(filter.name);
+				var plugin:Plugin		= Filter.getDefinition(filter.name);
 				var filterClass:Class	= plugin._definition;
 				var layers:Array		= UILayer.layers;
 				

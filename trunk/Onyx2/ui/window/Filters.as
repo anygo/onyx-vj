@@ -66,7 +66,7 @@ package ui.window {
 		
 		private function _createControl():void {
 			
-			var filters:Array = Onyx.filters;
+			var filters:Array = Filter.filters;
 			var len:int = filters.length;
 			
 			for (var index:int = 0; index < len; index++) {
