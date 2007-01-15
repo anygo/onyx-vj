@@ -29,18 +29,21 @@
  * 
  */
 
-package onyx.net {
+package onyx.plugin {
 	
-	/**
-	 * 	External Loading SWF's must implement this interface to load plugins.
-	 */
-	public interface IPluginObject {
+	import flash.display.BitmapData;
+	import flash.display.Stage;
+	import flash.geom.Matrix;
+	import flash.geom.Rectangle;
+	
+	import onyx.content.IContent;
+	import onyx.core.IDisposable;
+	import flash.geom.ColorTransform;
+	
+	public interface IContentObject extends IDisposable {
 		
-		/**
-		 * 	Returns a list of plugins inside the external swf
-		 * 	@see onyx.net.Plugin;
-		 */
-		function get plugins():Array;
+		function initialize(stage:Stage, content:IContent):void
+		function render(source:BitmapData, matrix:Matrix, transform:ColorTransform, clipRect:Rectangle):void;
 		
 	}
 }

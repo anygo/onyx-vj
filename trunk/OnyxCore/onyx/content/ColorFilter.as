@@ -28,7 +28,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package onyx.filter {
+package onyx.content {
 	
 	import flash.filters.ColorMatrixFilter;
 	import flash.geom.Matrix;
@@ -37,7 +37,7 @@ package onyx.filter {
 	
 	use namespace onyx_ns;
 	
-	public final class ColorFilter {
+	internal final class ColorFilter {
 
 
 		/**
@@ -121,24 +121,8 @@ package onyx.filter {
 				var thresh:Number = -256;
 				
 				_threshold = value;
-/*				applyMatrix(
-					[	0, 0, 0, 0,  thresh, 
-						0, 0, 0, 0,  thresh, 
-						0, 0, 0, 0,  thresh, 
-						0, 0, 0, 0, 0
-					]
-				);
-*/
 				applyMatrix();
 			}
-
-
-			/* values 0 through 2 */
-			// if (t != _threshold) {
-			//	_threshold = t;
-			//	applyMatrix();
-			//}
-			
 		}
 
 		/**

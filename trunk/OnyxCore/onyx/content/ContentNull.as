@@ -45,7 +45,6 @@ package onyx.content {
 	import onyx.core.IDisposable;
 	import onyx.core.onyx_ns;
 	import onyx.events.FilterEvent;
-	import onyx.filter.ColorFilter;
 	import onyx.filter.Filter;
 	import onyx.filter.IBitmapFilter;
 	import onyx.layer.IColorObject;

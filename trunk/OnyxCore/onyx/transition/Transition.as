@@ -29,7 +29,7 @@
  * 
  */
 package onyx.transition {
-	
+
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.events.EventDispatcher;
@@ -46,6 +46,7 @@ package onyx.transition {
 	import onyx.core.onyx_ns;
 	import onyx.events.TransitionEvent;
 	import onyx.layer.ILayer;
+	import onyx.plugin.Plugin;
 	
 	use namespace onyx_ns;
 	
@@ -53,6 +54,39 @@ package onyx.transition {
 	 * 	Transition
 	 */
 	public class Transition extends PluginBase implements IDisposable {
+
+		/**
+		 * 	@private
+		 * 	Stores definitions
+		 */
+		private static var _definition:Object	= new Object();
+		
+		/**
+		 * 	@private
+		 */
+		private static var _transitions:Array		= [];
+		
+		/**
+		 * 	Registers a plugin
+		 */
+		onyx_ns static function registerPlugin(plugin:Plugin):void {
+			_definition[plugin.name] = plugin;
+			_transitions.push(plugin);
+		}
+
+		/**
+		 * 	Returns a definition
+		 */
+		public static function getDefinition(name:String):Plugin {
+			return _definition[name];
+		}
+		
+		/**
+		 * 
+		 */
+		public static function get transitions():Array {
+			return _transitions.concat();
+		}
 		
 		/** @private **/
 		onyx_ns var _duration:int;

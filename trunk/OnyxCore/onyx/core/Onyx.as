@@ -42,7 +42,7 @@ package onyx.core {
 	import onyx.events.*;
 	import onyx.filter.*;
 	import onyx.layer.*;
-	import onyx.net.Plugin;
+	import onyx.plugin.Plugin;
 	import onyx.states.*;
 	import onyx.transition.*;
 	
@@ -154,37 +154,19 @@ package onyx.core {
 					
 					Filter.registerPlugin(plugin);
 					
-				}
-				
-				/* else if (object is Transition) {
-					type = Transition;
-					_transitions.push(plugin);
+				} else if (object is Transition) {
+					
+					Transition.registerPlugin(plugin);
 
-					_definition[plugin.name] = plugin;
-				}*/
+				}
 				
 				object.dispose();
 			}
 		}
-		
-		/**
-		 * 	Returns class definition from filter type
-		public static function getDefinition(name:String):Plugin {
-			return _definition[name];
-		}
-		 */
-	
-		/**
-		 * 	Returns an array of Plugins that contain filter definitions
-		 * 	@see onyx.net.Plugin
-		public static function get filters():Array {
-			return _filters.concat();
-		}
-		 */
 
 		/**
 		 * 	Returns an array of Plugins that contain transition definitions
-		 * 	@see onyx.net.Plugin
+		 * 	@see onyx.plugin.Plugin
 		public static function get transitions():Array {
 			return _transitions.concat();
 		}

@@ -43,7 +43,7 @@ package onyx.layer {
 	import onyx.core.Onyx;
 	import onyx.core.onyx_ns;
 	import onyx.filter.Filter;
-	import onyx.net.Plugin;
+	import onyx.plugin.Plugin;
 	
 	use namespace onyx_ns;
 

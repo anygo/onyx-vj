@@ -28,9 +28,26 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package onyx.sound
-{
-	public class SpectrumPeak
-	{
+package onyx.events {
+	
+	import flash.events.Event;
+	
+	import onyx.sound.SpectrumAnalyzer;
+	import onyx.sound.SpectrumTrigger;
+
+	public final class SpectrumEvent extends Event {
+		
+		public static const SPECTRUM_ANALYZED:String		= 'sdone';
+		public static const SPECTRUM_TRIGGER:String		= 'strigger';
+		
+		public var analysis:Array;
+		public var range:SpectrumTrigger;
+		
+		public function SpectrumEvent(type:String):void {
+			
+			super(type);
+			
+		}
+		
 	}
 }

@@ -36,9 +36,9 @@ package onyx.content {
 	import flash.filters.BitmapFilter;
 	
 	import onyx.controls.Controls;
-	import onyx.settings.Settings;
 	import onyx.layer.LayerProperties;
 	import onyx.layer.LayerSettings;
+	import onyx.settings.Settings;
 	
 	[Event(name="filter_applied",	type="onyx.events.FilterEvent")]
 	[Event(name="filter_removed",	type="onyx.events.FilterEvent")]
@@ -56,7 +56,7 @@ package onyx.content {
 		/**
 		 * 
 		 */
-		private var _content:Sprite;
+		private var _sprite:Sprite;
 
 		/**
 		 * 
@@ -74,7 +74,7 @@ package onyx.content {
 		public function ContentSprite(loader:Loader, props:LayerProperties):void {
 			
 			_loader		= loader;
-			_content	= loader.content as Sprite;
+			_sprite	= loader.content as Sprite;
 
 			// resize?
 			if (Settings.LAYER_AUTOSIZE) {
@@ -83,7 +83,7 @@ package onyx.content {
 			}
 			
 			// pass controls
-			super(props, _content);
+			super(props, _sprite);
 			
 		}
 		
@@ -95,8 +95,8 @@ package onyx.content {
 			// destroy content
 			_loader.unload();
 
-			_loader		= null;
-			_content	= null;
+			_loader	= null;
+			_sprite	= null;
 			
 			super.dispose();
 		}

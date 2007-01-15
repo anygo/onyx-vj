@@ -28,8 +28,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package onyx.filter
-{
+package onyx.filter {
+	
 	import flash.display.BitmapData;
 	import flash.geom.Rectangle;
 	

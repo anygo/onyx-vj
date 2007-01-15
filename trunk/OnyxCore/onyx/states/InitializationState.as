@@ -50,8 +50,8 @@ package onyx.states {
 	import onyx.events.FilterEvent;
 	import onyx.events.PluginEvent;
 	import onyx.events.TransitionEvent;
-	import onyx.net.IPluginObject;
-	import onyx.net.Plugin;
+	import onyx.plugin.IPluginLoader;
+	import onyx.plugin.Plugin;
 	import onyx.settings.Settings;
 	
 	use namespace onyx_ns;
@@ -170,7 +170,7 @@ package onyx.states {
 			// if valid swf
 			if (!(event is IOErrorEvent)) {
 				
-				var pluginSWF:IPluginObject = info.content as IPluginObject;
+				var pluginSWF:IPluginLoader = info.content as IPluginLoader;
 				
 				if (pluginSWF) {
 					

@@ -50,7 +50,7 @@ package onyx.filter {
 	import onyx.core.onyx_ns;
 	import onyx.events.FilterEvent;
 	import onyx.layer.IColorObject;
-	import onyx.net.Plugin;
+	import onyx.plugin.Plugin;
 	
 	use namespace onyx_ns;
 	
@@ -74,6 +74,8 @@ package onyx.filter {
 		 * 	Registers a plugin
 		 */
 		onyx_ns static function registerPlugin(plugin:Plugin):void {
+			_definition[plugin.name] = plugin;
+			_filters.push(plugin);
 		}
 
 		/**
@@ -90,8 +92,6 @@ package onyx.filter {
 			return _filters.concat();
 		}
 
-		public var description:String;
-		
 		// stores the layer
 		protected var content:IContent;
 		

@@ -32,7 +32,7 @@ package onyx.events {
 
 	import flash.events.Event;
 	
-	import onyx.net.Plugin;
+	import onyx.plugin.Plugin;
 	
 	public class PluginEvent extends Event {
 

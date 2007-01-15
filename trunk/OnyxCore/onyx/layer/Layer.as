@@ -153,6 +153,8 @@ package onyx.layer {
 			} else {
 			
 				var contentEvent:LayerContentEvent = event as LayerContentEvent;
+				
+				trace(contentEvent.content);
 
 				// if we have content, we have a successful load
 				if (contentEvent.content) {

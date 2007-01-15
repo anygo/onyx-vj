@@ -41,8 +41,8 @@ package onyx.content {
 	import onyx.events.FilterEvent;
 	import onyx.filter.*;
 	import onyx.layer.*;
-	import onyx.net.IContentObject;
-	import onyx.net.Plugin;
+	import onyx.plugin.IContentObject;
+	import onyx.plugin.Plugin;
 	import onyx.settings.Settings;
 	import onyx.tween.Tween;
 	import onyx.utils.ArrayUtil;
@@ -138,13 +138,13 @@ package onyx.content {
 		 * 	@private
 		 * 	Stores the layer's controls so that the external content can use them
 		 */
-		private var _controls:Controls;
+		protected var _controls:Controls;
 		
 		/**
 		 * 	@private
 		 * 	Stores the content that we're gonna draw
 		 */
-		private var _content:DisplayObject;
+		protected var _content:IBitmapDrawable;
 		
 		// stores controls
 		protected var __color:Control;
@@ -167,7 +167,7 @@ package onyx.content {
 		/**
 		 * 	@constructor
 		 */		
-		public function Content(props:LayerProperties, content:DisplayObject):void {
+		public function Content(props:LayerProperties, content:IBitmapDrawable):void {
 
 			// set bitmap
 			super(new BitmapData(320, 240, true, 0x00000000));
@@ -468,7 +468,6 @@ package onyx.content {
 		 * 	Returns filters
 		 */
 		override public function get filters():Array {
-			
 			return _filters;
 		}
 		
@@ -531,6 +530,12 @@ package onyx.content {
 		}
 		
 		/**
+		 * 
+		 */
+		protected function renderContent():void {
+		}
+		
+		/**
 		 * 	@private
 		 * 	Renders the content
 		 */
@@ -543,7 +548,7 @@ package onyx.content {
 			if (update) {
 
 				// store a temporary rendered			
-				_rendered.copyPixels(bitmapData, bitmapData.rect, POINT);
+				// _rendered.copyPixels(bitmapData, bitmapData.rect, POINT);
 				
 				if (!_renderMatrix) {
 					_renderMatrix = new Matrix();

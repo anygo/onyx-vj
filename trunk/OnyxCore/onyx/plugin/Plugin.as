@@ -28,59 +28,54 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package onyx.sound {
+package onyx.plugin {
+
+	import onyx.core.IDisposable;
+	import onyx.core.PluginBase;
+	import onyx.core.onyx_ns;
 	
-	import flash.events.EventDispatcher;
-	import flash.utils.getTimer;
-	import onyx.events.SpectrumEvent;
-
-	public final class SpectrumTrigger extends EventDispatcher {
+	use namespace onyx_ns;
+	
+	/**
+	 * 	Base class for external files
+	 */
+	public final class Plugin {
 		
-		internal var start:int; // 0 - 255
-		internal var end:int	// 0 - 255
+		/**
+		 * 	Stores the name for the plug-in
+		 */
+		public var name:String;
 		
-		private var _lowPeak:Number		= 0;
-		private var _lowSample:Number	= 0;
-		private var _highPeak:Number	= 0;
-		private var _highSample:Number	= 0;
+		/**
+		 * 	Class definition for the object
+		 */
+		onyx_ns var _definition:Class;
 		
-		public function SpectrumTrigger(start:int, end:int):void {
-			
-			this.start = start;
-			this.end = end;
-			
+		/**
+		 * 	Stores the description for the plug-in (for use in UI)
+		 */
+		public var description:String;
+		
+		/**
+		 * 
+		 */
+		public var type:Class;
+		
+		/**
+		 * 	@constructor
+		 */
+		public function Plugin(name:String, definition:Class, description:String):void {
+			this.name = name;
+			_definition = definition;
+			this.description = description;
 		}
 		
-		internal function analyze(analysis:Array):void {
+		public function getDefinition():Object {
+			var obj:PluginBase = new _definition() as PluginBase;
+			obj._name = name;
 			
-			var currentTime:int = getTimer();
-			var amplitude:Number = 0;
-
-			var itemcount:Number = 1;
-			
-			for (var count:int = start; count < end; count++) {
-
-				// only count numbers that are greater then 0
-				amplitude += analysis[count];
-			}
-			
-			amplitude /= (end - start);
-
-			// these are for hits
-			if (amplitude > _highPeak || currentTime - _highSample > 300) {
-				
-				// before settings, let's check the amount
-				if (amplitude - _highPeak > .14)  {
-					
-//					TBD: dispatch PEAK
-
-				}
-				
-				_highPeak = amplitude;
-				_highSample = currentTime;
-				
-			}
-			
+			return obj;
 		}
+
 	}
 }

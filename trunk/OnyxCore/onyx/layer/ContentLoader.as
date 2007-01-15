@@ -40,6 +40,7 @@ package onyx.layer {
 	import flash.events.ProgressEvent;
 	import flash.events.SecurityErrorEvent;
 	import flash.media.Camera;
+	import flash.media.Sound;
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
 	
@@ -100,8 +101,6 @@ package onyx.layer {
 				case 'jpeg':
 				case 'png':
 				case 'swf':
-				case 'onx':
-				
 					var loader:Loader  = new Loader();
 					loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, _onLoadHandler);
 					loader.contentLoaderInfo.addEventListener(Event.COMPLETE, _onLoadHandler);
@@ -110,8 +109,29 @@ package onyx.layer {
 					loader.load(request);
 					
 					break;
+				case 'mp3':
+				
+					var sound:Sound		= new Sound();
+					sound.addEventListener(Event.COMPLETE, _onSoundHandler);
+					sound.addEventListener(IOErrorEvent.IO_ERROR, _onSoundHandler);
+					sound.addEventListener(ProgressEvent.PROGRESS, _onLoadProgress);
+					sound.load(request);
+					break;
 			}
 
+		}
+		
+		/**
+		 * 	@private
+		 * 	Handles events when a sound object retrieves it's ID3 information
+		 */
+		private function _onSoundHandler(event:Event):void {
+			var sound:Sound = event.currentTarget as Sound;
+			sound.removeEventListener(Event.COMPLETE, _onSoundHandler);
+			sound.removeEventListener(IOErrorEvent.IO_ERROR, _onSoundHandler);
+			sound.removeEventListener(ProgressEvent.PROGRESS, _onLoadProgress);
+			
+			_dispatchContent(new ContentMP3(sound, _props), event);
 		}
 		
 		/**
@@ -124,7 +144,6 @@ package onyx.layer {
 			stream.removeEventListener(Event.COMPLETE, _onStreamComplete);
 			
 			_dispatchContent(new ContentFLV(stream, _props), event);
-
 
 		}
 		
