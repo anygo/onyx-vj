@@ -45,7 +45,7 @@ package ui.layer {
 	import onyx.layer.Layer;
 	import onyx.layer.LayerProperties;
 	import onyx.layer.LayerSettings;
-	import onyx.net.Plugin;
+	import onyx.plugin.Plugin;
 	import onyx.states.StateManager;
 	import onyx.transition.Transition;
 	
@@ -71,8 +71,8 @@ package ui.layer {
 
 		public static const LAYER_X:int				= 6;
 		public static const LAYER_Y:int				= 6;
-		public static const SCRUB_LEFT:int	= 3;
-		public static const SCRUB_RIGHT:int	= 176;
+		public static const SCRUB_LEFT:int			= 3;
+		public static const SCRUB_RIGHT:int			= 173;
 		public static const LAYER_WIDTH:int			= SCRUB_RIGHT - SCRUB_LEFT;
 
 		/**
@@ -541,10 +541,10 @@ package ui.layer {
 		 * 	When the scrubber is moved
 		 */
 		private function _onScrubMove(event:MouseEvent):void {
-			var value:int = Math.min(Math.max(_btnScrub.mouseX - SCRUB_LEFT, SCRUB_LEFT), SCRUB_RIGHT);
+			var value:int = Math.min(Math.max(_btnScrub.mouseX, SCRUB_LEFT), SCRUB_RIGHT);
 			_assetScrub.x = value;
-			_layer.time = value / LAYER_WIDTH;
-
+			_layer.time = (value - SCRUB_LEFT) / LAYER_WIDTH;
+			
 		}
 
 		/**

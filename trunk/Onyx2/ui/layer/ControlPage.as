@@ -74,6 +74,7 @@ package ui.layer {
 				
 				uicontrol.x = metadata.x || x;
 				uicontrol.y = metadata.y || y;
+				
 				_controls.push(uicontrol);
 				
 				x += options.width + 4;

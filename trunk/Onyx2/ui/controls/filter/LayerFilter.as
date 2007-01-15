@@ -38,7 +38,7 @@ package ui.controls.filter {
 	import onyx.core.onyx_ns;
 	import onyx.filter.Filter;
 	import onyx.layer.Layer;
-	import onyx.net.Plugin;
+	import onyx.plugin.Plugin;
 	
 	import ui.assets.AssetLayerFilter;
 	import ui.controls.ButtonClear;

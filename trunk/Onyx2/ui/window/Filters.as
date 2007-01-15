@@ -34,14 +34,14 @@ package ui.window {
 	
 	import onyx.core.Onyx;
 	import onyx.events.FilterEvent;
-	import onyx.net.Plugin;
+	import onyx.filter.Filter;
+	import onyx.plugin.Plugin;
 	
 	import ui.controls.filter.LibraryFilter;
 	import ui.core.DragManager;
 	import ui.core.UIObject;
 	import ui.events.DragEvent;
 	import ui.layer.UILayer;
-	import onyx.filter.Filter;
 	
 	public final class Filters extends Window {
 		

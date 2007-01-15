@@ -30,92 +30,84 @@
  */
 package ui.window {
 	
-	import onyx.core.Onyx;
 	import onyx.controls.ControlInt;
 	import onyx.controls.ControlRange;
+	import onyx.controls.Controls;
+	import onyx.controls.IControlObject;
+	import onyx.core.Onyx;
 	import onyx.events.TransitionEvent;
 	import onyx.layer.Layer;
-	import onyx.net.Plugin;
+	import onyx.plugin.Plugin;
 	import onyx.transition.Transition;
 	
 	import ui.controls.DropDown;
+	import ui.controls.SliderV;
 	import ui.controls.UIOptions;
 	
-	public final class TransitionWindow extends Window {
+	public final class TransitionWindow extends Window implements IControlObject {
 		
 		private var dropdown:DropDown;
-		private var controlTransition:ControlRange;
-		private var controlDuration:ControlInt;
 		
-		public static var plugin:Plugin;
-		public static var duration:int	= 2000;
+		public var plugin:Plugin;
+		public var duration:int	= 2000;
+		
+		private var _controls:Controls;
 		
 		/**
 		 * 	@Constructor
 		 */
 		public function TransitionWindow():void {
+
+			// grab data, create a "none" object
+			var data:Array = Transition.transitions;
+			data.unshift(null);
+			
+			// init controls
+			_controls = new Controls(this,
+				new ControlRange('transition', 'Layer Transition', data, 0),
+				new ControlInt('duration', 'Duration', 1, 5, 3, { factor: 10 })
+			);
+			
+			var options:UIOptions	= new UIOptions();
+			options.width			= 100;
+			
+ 			dropdown				= new DropDown(options, _controls.getControl('transition'), 'left', 'name');
+			dropdown.x = 2;
+			dropdown.y = 20;
+			
+			var slider:SliderV		= new SliderV(UIOptions.DEFAULT, _controls.getControl('duration'));
+			
+			addChild(slider);
+			
+			slider.x	= 100;
+			slider.y = 20;
+
+			addChild(dropdown);
 			
 			title = 'TRANSITIONS';
 			x = 6;
 			y = 542;
 			width = 190;
 			height = 34;
-			
-			initialize();
-			
-			
 		}
 		
-		/**
-		 * 	Initialize window
-		 */
-		public function initialize():void {
-
-/*			
-			var data:Array = Onyx.transitions;
-			data.unshift(null);
-			
-			var options:UIOptions	= new UIOptions();
-			options.width			= 100;
-			
- 			controlTransition			= new ControlRange('transition', 'Layer Transition', data, 0)
-			controlTransition.target	= this;
-			
- 			dropdown					= new DropDown(options, controlTransition, 'left', 'name');
-
-			dropdown.x = 2;
-			dropdown.y = 20;
-
-			addChild(dropdown);
-*/
-		}
-		
-		/**
-		 * 
-		 */
-		public function set duration(value:int):void {
-			TransitionWindow.duration = value;
-		}
-		
-		/**
-		 * 
-		 */
-		public function get duration():int {
-			return TransitionWindow.duration;
+		public function get controls():Controls {
+			return _controls;
 		}
 		
 		/**
 		 * 
 		 */
 		public function set transition(value:Plugin):void {
-			TransitionWindow.plugin = value;
+			plugin = value;
+			trace(value);
 		}
 		
 		/**
 		 * 
 		 */
-		public function get transition():* {
-			return TransitionWindow.plugin;
+		public function get transition():Plugin {
+			return plugin;
 		}
 		
 	}
