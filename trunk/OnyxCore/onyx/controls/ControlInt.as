@@ -37,11 +37,24 @@ package onyx.controls {
 	
 	public final class ControlInt extends ControlNumber {
 		
+		/**
+		 * 	Stores default mouse factor
+		 */
 		public static const DEFAULT_FACTOR:Object		= { multiplier: 1 };
 		
+		/**
+		 * 	@private
+		 */
 		private var _min:int;
+		
+		/**
+		 * 	@private
+		 */
 		private var _max:int;
 
+		/**
+		 * 	@constructor
+		 */
 		public function ControlInt(	property:String,
 									display:String,
 									min:int,

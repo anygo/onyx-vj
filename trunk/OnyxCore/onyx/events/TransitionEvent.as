@@ -33,14 +33,16 @@ package onyx.events {
 	import flash.events.Event;
 	
 	import onyx.transition.Transition;
+	import onyx.content.Content;
 
 	public final class TransitionEvent extends Event {
 		
 		public static const TRANSITION_END:String		= 'tend';
 		
-		public var transition:Transition;
+		public var content:Content;
 		
-		public function TransitionEvent(type:String):void {
+		public function TransitionEvent(type:String, content:Content):void {
+			this.content = content;
 			super(type);
 		}
 	}

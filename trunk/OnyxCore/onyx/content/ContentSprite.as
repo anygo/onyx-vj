@@ -39,13 +39,14 @@ package onyx.content {
 	import onyx.layer.LayerProperties;
 	import onyx.layer.LayerSettings;
 	import onyx.settings.Settings;
+	import onyx.layer.Layer;
 	
 	[Event(name="filter_applied",	type="onyx.events.FilterEvent")]
 	[Event(name="filter_removed",	type="onyx.events.FilterEvent")]
 	[Event(name="filter_moved",		type="onyx.events.FilterEvent")]
 	
 	[ExcludeClass]
-	public class ContentSprite extends Content implements IContent {
+	public class ContentSprite extends Content {
 		
 		/**
 		 * 	@private
@@ -71,7 +72,7 @@ package onyx.content {
 		/**
 		 * 	@constructor
 		 */		
-		public function ContentSprite(loader:Loader, props:LayerProperties):void {
+		public function ContentSprite(layer:Layer, loader:Loader):void {
 			
 			_loader		= loader;
 			_sprite	= loader.content as Sprite;
@@ -83,7 +84,7 @@ package onyx.content {
 			}
 			
 			// pass controls
-			super(props, _sprite);
+			super(layer, _sprite);
 			
 		}
 		

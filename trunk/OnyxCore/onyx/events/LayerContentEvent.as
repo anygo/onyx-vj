@@ -32,14 +32,17 @@ package onyx.events {
 	
 	import flash.events.Event;
 	
-	import onyx.content.IContent;
+	import onyx.content.Content;
 	import onyx.layer.LayerSettings;
+	import onyx.transition.Transition;
 
 	[ExcludeClass]
 	public final class LayerContentEvent extends Event {
 		
-		public var content:IContent;
+		public var contentType:Class;
+		public var reference:Object;
 		public var settings:LayerSettings;
+		public var transition:Transition;
 		
 		public function LayerContentEvent(type:String):void {
 			super(type);

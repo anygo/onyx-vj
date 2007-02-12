@@ -52,6 +52,7 @@ package onyx.layer {
 	import onyx.events.LayerContentEvent;
 	import onyx.net.Connection;
 	import onyx.net.Stream;
+	import onyx.transition.Transition;
 
 	[Event(name='complete',			type='flash.events.Event')]
 	[Event(name='security_error',	type='flash.events.SecurityErrorEvent')]
@@ -63,21 +64,26 @@ package onyx.layer {
 	 */
 	internal final class ContentLoader extends EventDispatcher {
 		
-		private var _props:LayerProperties;
+		/**
+		 * 	@private
+		 */
 		private var _settings:LayerSettings;
 		
 		/**
-		 * 	@Constructor
+		 * 	@private
+		 * 	Transition to load with
 		 */
-		public function ContentLoader():void {
-		}
+		private var _transition:Transition;
 		
-		public function load(request:URLRequest, extension:String, props:LayerProperties, settings:LayerSettings):void {
+		/**
+		 * 	Loads a file
+		 */
+		public function load(request:URLRequest, extension:String, settings:LayerSettings, transition:Transition):void {
 			
 			var path:String = request.url;
 			
-			_props = props;
 			_settings = settings || new LayerSettings();
+			_transition = transition;
 		
 			// do different stuff based on the extension
 			switch (extension) {
@@ -91,11 +97,19 @@ package onyx.layer {
 					var names:Array = Camera.names;
 					var name:String = path.substr(0, path.length - 4);
 					
-					var content:IContent = new ContentCamera(Camera.getCamera(names.indexOf(name) as String), _props);
-					
-					_dispatchContent(content, new Event(Event.COMPLETE));
+					_dispatchContent(ContentCamera, Camera.getCamera(String(names.indexOf(name))), new Event(Event.COMPLETE));
 					
 					break;
+					
+				case 'mp3':
+				
+					var sound:Sound		= new Sound();
+					sound.addEventListener(Event.COMPLETE, _onSoundHandler);
+					sound.addEventListener(IOErrorEvent.IO_ERROR, _onSoundHandler);
+					sound.addEventListener(ProgressEvent.PROGRESS, _onLoadProgress);
+					sound.load(request);
+					break;
+
 				// load a loader if we're any other type of file
 				case 'jpg':
 				case 'jpeg':
@@ -108,14 +122,6 @@ package onyx.layer {
 					loader.contentLoaderInfo.addEventListener(SecurityErrorEvent.SECURITY_ERROR, _onLoadHandler);
 					loader.load(request);
 					
-					break;
-				case 'mp3':
-				
-					var sound:Sound		= new Sound();
-					sound.addEventListener(Event.COMPLETE, _onSoundHandler);
-					sound.addEventListener(IOErrorEvent.IO_ERROR, _onSoundHandler);
-					sound.addEventListener(ProgressEvent.PROGRESS, _onLoadProgress);
-					sound.load(request);
 					break;
 			}
 
@@ -131,7 +137,7 @@ package onyx.layer {
 			sound.removeEventListener(IOErrorEvent.IO_ERROR, _onSoundHandler);
 			sound.removeEventListener(ProgressEvent.PROGRESS, _onLoadProgress);
 			
-			_dispatchContent(new ContentMP3(sound, _props), event);
+			_dispatchContent(ContentMP3, sound, event);
 		}
 		
 		/**
@@ -143,7 +149,7 @@ package onyx.layer {
 			var stream:Stream = event.currentTarget as Stream;
 			stream.removeEventListener(Event.COMPLETE, _onStreamComplete);
 			
-			_dispatchContent(new ContentFLV(stream, _props), event);
+			_dispatchContent(ContentFLV, stream, event);
 
 		}
 		
@@ -170,36 +176,34 @@ package onyx.layer {
 			if (!(event is ErrorEvent)) {
 				
 				var loader:Loader	= info.loader;
-				var content:IContent;
-				
-				if (loader.content is MovieClip) {
-					content = new ContentMC(loader, _props);
-				} else {
-					content = new ContentSprite(loader, _props)
-				}
+				var type:Class = (loader.content is MovieClip) ? ContentMC : ContentSprite;
+
 			}
-			
-			_dispatchContent(content, event);
+
+			_dispatchContent(type, loader, event);
 			
 		}
 		
 		/**
 		 * 	@private
 		 */
-		private function _dispatchContent(content:IContent, event:Event):void {
-			
-			_props = null;
+		private function _dispatchContent(contentType:Class, reference:Object, event:Event):void {
 			
 			if (event is ErrorEvent) {
 				dispatchEvent(event);
 			} else {
 				var dispatch:LayerContentEvent = new LayerContentEvent(Event.COMPLETE);
-				dispatch.content = content;
+				dispatch.contentType = contentType;
+				dispatch.reference = reference;
 				dispatch.settings = _settings;
+				dispatch.transition = _transition;
 				dispatchEvent(dispatch);
 			}
 
+			// dispose
 			_settings = null;
+			_transition = null;
+			
 		}
 	}
 }

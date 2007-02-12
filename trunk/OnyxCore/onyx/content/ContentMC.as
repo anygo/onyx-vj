@@ -31,15 +31,14 @@
 package onyx.content {
 	
 	import flash.display.*;
-	import flash.events.Event;
-	import flash.events.EventDispatcher;
-	import flash.events.MouseEvent;
+	import flash.events.*;
 	import flash.geom.ColorTransform;
 	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
 	import flash.geom.Transform;
 	import flash.utils.getTimer;
 	
+	import onyx.constants.POINT;
 	import onyx.controls.*;
 	import onyx.core.*;
 	import onyx.events.FilterEvent;
@@ -54,7 +53,7 @@ package onyx.content {
 	use namespace onyx_ns;
 	
 	[ExcludeClass]
-	public class ContentMC extends Content implements IContent {
+	public class ContentMC extends Content {
 
 		/**
 		 * 	@private
@@ -115,14 +114,15 @@ package onyx.content {
 		/**
 		 * 	@constructor
 		 */		
-		public function ContentMC(loader:Loader, props:LayerProperties):void {
+		public function ContentMC(layer:Layer, loader:Loader):void {
 			
-			_loader		= loader;
-			_mc			= loader.content as MovieClip;
+			_loader			= loader;
+			_mc				= loader.content as MovieClip;
 			
 			// sets the framerate based on the swf framerate
 			_framerate		= loader.contentLoaderInfo.frameRate / framerate;
 			_totalFrames	= _mc.totalFrames;
+			_frame			= 0;
 
 			// sets the last time we executed
 			_lastTime = getTimer();
@@ -133,7 +133,7 @@ package onyx.content {
 				_ratioY = 240 / loader.contentLoaderInfo.height;
 			}
 			
-			super(props, _mc);
+			super(layer, _mc);
 		}
 
 		/**
@@ -160,14 +160,14 @@ package onyx.content {
 		}
 		
 		/**
-		 * 	@private
-		 * 	Runs every frame and adds time
+		 * 	Updates the bimap source
 		 */
-		override protected function render(event:Event = null, update:Boolean = true):void {
+		override public function render(layer:BitmapData, transform:RenderTransform = null):void {
 			
 			if (!_paused) {
 				
-				var time:int = 1000 / (getTimer() - _lastTime);
+				// TBD: sometimes get infinity, need to figure out why
+				var time:int = 1000 / ((getTimer() - _lastTime)) || Onyx.framerate;
 				
 				// add the framerate based off the last time
 				var frame:Number = _frame + ((Onyx.framerate / time) * _framerate);
@@ -182,10 +182,24 @@ package onyx.content {
 
 			// if the frame is different, update the source bitmap
 			if (_frame !== _mc.currentFrame) {
+				
+				// change frames
 				_mc.gotoAndStop(Math.floor(_frame));
-				super.render(event, update);
+				
+				// full render
+				super.render(layer, transform);
+				
 			} else {
-				super.render(event, false);
+				
+				// copy pixels to our "rendered" buffer
+				_rendered.copyPixels(_source, _source.rect, POINT);
+				
+				// apply filters the rendered bitmap
+				applyFilters();
+	
+				// copy the pixels back to the layer
+				layer.copyPixels(_rendered, _rendered.rect, POINT);
+				
 			}
 		}
 		
@@ -207,7 +221,7 @@ package onyx.content {
 
 			_framerate = value * ratio;
 
-			__framerate.setValue(value);
+			super.framerate = value;
 		}
 
 		

@@ -39,21 +39,25 @@ package onyx.transition {
 	import flash.utils.Timer;
 	import flash.utils.getTimer;
 	
+	import onyx.content.Content;
 	import onyx.content.IContent;
+	import onyx.controls.*;
 	import onyx.core.IDisposable;
 	import onyx.core.PluginBase;
+	import onyx.core.RenderTransform;
 	import onyx.core.getBaseBitmap;
 	import onyx.core.onyx_ns;
 	import onyx.events.TransitionEvent;
-	import onyx.layer.ILayer;
+	import onyx.plugin.IRenderable;
 	import onyx.plugin.Plugin;
+	import onyx.tween.easing.Linear;
 	
 	use namespace onyx_ns;
 	
 	/**
 	 * 	Transition
 	 */
-	public class Transition extends PluginBase implements IDisposable {
+	public class Transition extends PluginBase implements IControlObject {
 
 		/**
 		 * 	@private
@@ -72,6 +76,7 @@ package onyx.transition {
 		onyx_ns static function registerPlugin(plugin:Plugin):void {
 			_definition[plugin.name] = plugin;
 			_transitions.push(plugin);
+			
 		}
 
 		/**
@@ -88,78 +93,65 @@ package onyx.transition {
 			return _transitions.concat();
 		}
 		
-		/** @private **/
+		/**
+		 * 	@private
+		 * 	Stores duration of the transition
+		 */
 		onyx_ns var _duration:int;
-
-		/** @private **/
-		private var _startTime:int;
-
-		/** @private **/
-		onyx_ns var oldContent:IContent;
-
-		/** @private **/
-		onyx_ns var newContent:IContent;
 		
 		/** 
 		 * 	@private
-		 * 	stores name of the transition
+		 * 	The content that is currently loaded
 		 */
-		public var name:String;
+		protected var currentContent:IContent;
+
+		/** 
+		 * 	@private
+		 * 	The new content that is loading in
+		 */
+		protected var loadedContent:IContent;
 		
 		/**
 		 * 	@private
-		 * 	Stores layer
+		 * 	Stores transition controls
 		 */
-		private var _layer:ILayer;
+		private var _controls:Controls;
+		
+		/**
+		 * 	@private
+		 */
+		private var _easing:Function;
 		
 		/**
 		 * 	@constructor
 		 */
-		public function Transition(name:String, duration:int = 2000):void {
-			this.name = name;
-			_duration = duration;
+		public function Transition(easing:Function = null):void {
+			_easing	 	= easing || Linear.easeIn;
+			
+			_controls = new Controls(this);
 		}
 		
 		/**
-		 * 	@private
+		 * 	Returns name of the transition
 		 */
-		onyx_ns final function initializeTransition(oldContent:IContent, newContent:IContent, layer:ILayer):void {
-			
-			_layer = layer;
-			
-			this.oldContent = oldContent;
-			this.newContent = newContent;
-			
-			_startTime = getTimer();
-
-			// initialize();
+		final public function get name():String {
+			return _name;
 		}
-		
+
 		/**
-		 * 	@private
+		 * 	Called when the transition is first loaded
 		 */
-		onyx_ns final function calculateTransition(bitmapData:BitmapData):void {
-
-			var time:Number = (getTimer() - _startTime) / _duration;
-
-			// first draw the new content
-			// var oldbmp:BitmapData = oldContent.draw();
-			// bitmapData.copyPixels(oldbmp, oldbmp.rect, new Point(0,0));
-			
-			// apply transition
-			// applyTransition(bitmapData, newContent.draw(), Math.min(time,1));
-			
-			if (time >= 1) {
-				dispose();
-			}
-		}
-
 		public function initialize():void {
 		}
 		
-		public function applyTransition(oldContent:BitmapData, newContent:BitmapData, time:Number):void {
+		/**
+		 * 	Renders content onto the source bitmap
+		 * 	@returns	Return true if Onyx is to render the content
+		 * 	@returns	Return false if the Transition will render the content itself
+		 */
+		public function apply(ratio:Number):void {
 		}
-
+		
 		/**
 		 * 	Sets duration
 		 */		
@@ -175,20 +167,46 @@ package onyx.transition {
 		}
 		
 		/**
+		 * 	Internal function that sets the old and new content variables
+		 */
+		onyx_ns final function setContent(current:Content, loaded:Content):void {
+			currentContent	= current;
+			loadedContent	=  loaded;
+		}
+		
+		/**
+		 * 	Controls for the transition
+		 */
+		final public function get controls():Controls {
+			return _controls;
+		}
+
+		/**
+		 * 	Clones a transition
+		 */
+		final public function clone():Transition {
+			
+			var plugin:Plugin = Transition.getDefinition(_name);
+			var transition:Transition = plugin.getDefinition() as Transition;
+			
+			// loops through controls
+			for each (var control:Control in _controls) {
+				var newControl:Control = transition.controls.getControl(control.name);
+				newControl.value = control.value;
+			}
+			
+			transition._duration = _duration;
+			
+			return transition;
+		}
+		
+		/**
 		 * 	Destroys
 		 */
 		public function dispose():void {
 			
-			// dispatch an end transition event
-			var event:TransitionEvent = new TransitionEvent(TransitionEvent.TRANSITION_END)
-			event.transition = this;
-			
-			dispatchEvent(event);
-			
-			this.oldContent	= null;
-			this.newContent	= null;
-			_layer			= null;
+			currentContent	= null;
+			loadedContent	= null;
 		}
-
 	}
 }

@@ -33,17 +33,16 @@ package onyx.plugin {
 	
 	import flash.display.BitmapData;
 	import flash.display.Stage;
+	import flash.geom.ColorTransform;
 	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
 	
-	import onyx.content.IContent;
+	import onyx.content.Content;
 	import onyx.core.IDisposable;
-	import flash.geom.ColorTransform;
 	
-	public interface IContentObject extends IDisposable {
+	public interface IContentObject extends IRenderable, IDisposable {
 		
-		function initialize(stage:Stage, content:IContent):void
-		function render(source:BitmapData, matrix:Matrix, transform:ColorTransform, clipRect:Rectangle):void;
+		function initialize(stage:Stage, content:Content):void;
 		
 	}
 }

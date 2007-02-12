@@ -32,6 +32,7 @@ package onyx.content {
 	
 	import flash.display.*;
 	import flash.events.*;
+	import flash.filters.ColorMatrixFilter;
 	import flash.geom.*;
 	import flash.utils.getTimer;
 	
@@ -53,8 +54,12 @@ package onyx.content {
 		
 	use namespace onyx_ns;
 	
-	[ExcludeClass]
-	public class Content extends Bitmap implements IContent {
+	public class Content extends EventDispatcher implements IContent {
+		
+		/**
+		 * 	@private
+		 */
+		onyx_ns var _layer:Layer;
 		
 		/**
 		 * 	@private
@@ -71,7 +76,7 @@ package onyx.content {
 		 * 	@private
 		 * 	Stores the matrix for the content
 		 */
-		private var _renderMatrix:Matrix;
+		onyx_ns var _renderMatrix:Matrix;
 		
 		/**
 		 * 	The concatenated matrix
@@ -86,7 +91,7 @@ package onyx.content {
 		/**
 		 * 	@private
 		 */
-		private var _colorTransform:ColorTransform				= new ColorTransform(); 
+		private var _colorTransform:ColorTransform				= new ColorTransform();
 		
 		/**
 		 * 
@@ -147,31 +152,33 @@ package onyx.content {
 		protected var _content:IBitmapDrawable;
 		
 		// stores controls
-		protected var __color:Control;
-		protected var __alpha:Control;
-		protected var __brightness:Control;
-		protected var __contrast:Control;
-		protected var __scaleX:Control;
-		protected var __scaleY:Control;
-		protected var __rotation:Control;
-		protected var __saturation:Control;
-		protected var __threshold:Control;
-		protected var __tint:Control;
-		protected var __x:Control;
-		protected var __y:Control;
-		protected var __framerate:Control;
+		private var __color:Control;
+		private var __alpha:Control;
+		private var __brightness:Control;
+		private var __contrast:Control;
+		private var __scaleX:Control;
+		private var __scaleY:Control;
+		private var __rotation:Control;
+		private var __saturation:Control;
+		private var __threshold:Control;
+		private var __tint:Control;
+		private var __x:Control;
+		private var __y:Control;
+		private var __framerate:Control;
+		private var __blendMode:Control;
 		protected var __loopStart:Control;
 		protected var __loopEnd:Control;
-		protected var __blendMode:Control;
 
 		/**
 		 * 	@constructor
 		 */		
-		public function Content(props:LayerProperties, content:IBitmapDrawable):void {
+		public function Content(layer:Layer, content:IBitmapDrawable, newTarget:IControlObject = null):void {
+			
+			var props:LayerProperties = layer.properties;
 
-			// set bitmap
-			super(new BitmapData(320, 240, true, 0x00000000));
-
+			// store layer
+			_layer = layer;
+			
 			// store controls
 			__color			= props.color;
 			__alpha 		= props.alpha;
@@ -191,7 +198,7 @@ package onyx.content {
 			__blendMode		= props.blendMode;
 			
 			// set targets
-			props.target	= this;
+			props.target	= newTarget || this;
 			
 			// store content
 			_content	= content;
@@ -214,21 +221,23 @@ package onyx.content {
 				stageContent.initialize(Onyx.root, this);
 			}
 			
-			addEventListener(Event.ENTER_FRAME, render);
+			// create the first frame
+			if (content) {
+				updateSource(null);
+			}
 		}
-		
 		
 		/**
 		 * 	Gets alpha
 		 */
-		override public function get alpha():Number {
+		public function get alpha():Number {
 			return _colorTransform.alphaMultiplier;
 		}
 
 		/**
 		 * 	Sets alpha
 		 */
-		override public function set alpha(value:Number):void {
+		public function set alpha(value:Number):void {
 			_colorTransform.alphaMultiplier = __alpha.setValue(value);
 		}
 		
@@ -282,7 +291,7 @@ package onyx.content {
 		/**
 		 * 	Sets x
 		 */
-		override public function set x(value:Number):void {
+		public function set x(value:Number):void {
 			_x				= __x.setValue(value);
 			_renderMatrix	= null;
 		}
@@ -290,34 +299,34 @@ package onyx.content {
 		/**
 		 * 	Sets y
 		 */
-		override public function set y(value:Number):void {
+		public function set y(value:Number):void {
 			_y				= __y.setValue(value);
 			_renderMatrix	= null;
 		}
 
-		override public function set scaleX(value:Number):void {
+		public function set scaleX(value:Number):void {
 			_scaleX			= __scaleX.setValue(value);
 			_renderMatrix	= null;
 		}
 
-		override public function set scaleY(value:Number):void {
+		public function set scaleY(value:Number):void {
 			_scaleY			= __scaleY.setValue(value);
 			_renderMatrix	= null;
 		}
 		
-		override public function get scaleX():Number {
+		public function get scaleX():Number {
 			return _scaleX;
 		}
 
-		override public function get scaleY():Number {
+		public function get scaleY():Number {
 			return _scaleY;
 		}
 
-		override public function get x():Number {
+		public function get x():Number {
 			return _x;
 		}
 
-		override public function get y():Number {
+		public function get y():Number {
 			return _y;
 		}
 		
@@ -380,7 +389,7 @@ package onyx.content {
 		/**
 		 *	Returns rotation
 		 */
-		override public function get rotation():Number {
+		public function get rotation():Number {
 			return _rotation;
 		}
 
@@ -388,8 +397,9 @@ package onyx.content {
 		 *	@private
 		 * 	Sets rotation
 		 */
-		override public function set rotation(value:Number):void {
+		public function set rotation(value:Number):void {
 			_rotation = value;
+			_renderMatrix = null;
 		}
 
 		/**
@@ -397,6 +407,7 @@ package onyx.content {
 		 */
 		public function addFilter(filter:Filter):void {
 			
+			// check for unique filters
 			if (filter._unique) {
 				
 				var plugin:Plugin = Filter.getDefinition(filter.name);
@@ -451,7 +462,7 @@ package onyx.content {
 		 * 	@private
 		 * 	Clears all the filters
 		 */
-		private function clearFilters():void {
+		internal function clearFilters():void {
 			
 			for (var count:int = _filters.length - 1; count >= 0; count--) {
 				removeFilter(_filters[0] as Filter);
@@ -461,28 +472,14 @@ package onyx.content {
 		/**
 		 * 
 		 */
-		override public function set filters(value:Array):void {
-			throw new Error('set filters overridden');
+		public function set filters(value:Array):void {
+			throw new Error('set filters overridden, use addFilter, removeFilter');
 		}
 		/**
 		 * 	Returns filters
 		 */
-		override public function get filters():Array {
+		public function get filters():Array {
 			return _filters;
-		}
-		
-		/**
-		 * 	@private
-		 * 	Applies filters to bitmap
-		 */
-		private function _applyFilters(bitmapData:BitmapData):void {
-			
-			// loop through and apply filters			
-			for each (var filter:Filter in _filters) {
-				if (filter is IBitmapFilter) {
-					(filter as IBitmapFilter).applyFilter(bitmapData, bitmapData.rect);
-				}
-			}
 		}
 		
 		/**
@@ -530,73 +527,91 @@ package onyx.content {
 		}
 		
 		/**
+		 * 	Gets the transform
+		 */
+		public function getTransform():RenderTransform {
+			var transform:RenderTransform = new RenderTransform();
+
+			// test our stored matrix
+			if (!_renderMatrix) {
+				_renderMatrix = new Matrix();
+				_renderMatrix.scale(_scaleX, _scaleY);
+				_renderMatrix.rotate(_rotation);
+				_renderMatrix.translate(_x, _y);
+			}
+
+			// if we have a matrix set, append it			
+			var matrix:Matrix = _renderMatrix.clone();
+			if (_matrix) {
+				matrix.concat(_matrix);
+			}
+
+			// if rotation is 0, send a clipRect, otherwise, don't clip
+			var rect:Rectangle = (_rotation === 0) ? new Rectangle(0, 0, Math.max(320 / _scaleX, 320), Math.max(240 / _scaleY, 240)) : null;
+
+			transform.matrix			= matrix;
+			transform.rect				= rect;
+			transform.colorTransform	= _colorTransform;
+
+			return transform;
+		}
+		
+		/**
+		 * 	Called by the parent layer every frame to render
+		 */
+		public function render(source:BitmapData, transform:RenderTransform = null):void {
+
+			// updates source			
+			updateSource(transform);
+
+			// apply filters the rendered bitmap
+			applyFilters();
+			
+			// copy the pixels back to the layer
+			if (source) {
+				source.copyPixels(_rendered, _rendered.rect, POINT);
+			}
+		}
+		
+		/**
 		 * 
 		 */
-		protected function renderContent():void {
+		onyx_ns function updateSource(transform:RenderTransform):void {
+			
+			var transform:RenderTransform		= transform || getTransform();
+			var rect:Rectangle					= transform.rect;
+			var matrix:Matrix					= transform.matrix;
+			var colorTransform:ColorTransform	= transform.colorTransform;
+			
+			// fill our source with nothing
+			_source.fillRect(source.rect, 0x00000000);
+			
+			// draw our content
+			_source.draw(_content, matrix, colorTransform, null, rect);
+
+			// apply the color filter to the source
+			_source.applyFilter(_source, _source.rect, POINT, _filter.filter);
+			
 		}
 		
 		/**
 		 * 	@private
-		 * 	Renders the content
+		 * 	Applies filters to bitmap
 		 */
-		protected function render(event:Event = null, update:Boolean = true):void {
+		onyx_ns function applyFilters():void {
+
+			// copy pixels to our "rendered" buffer
+			_rendered.copyPixels(_source, _source.rect, POINT);
 			
-			// lock the bitmaps
-			_source.lock();
-			super.bitmapData.lock();
-
-			if (update) {
-
-				// store a temporary rendered			
-				// _rendered.copyPixels(bitmapData, bitmapData.rect, POINT);
-				
-				if (!_renderMatrix) {
-					_renderMatrix = new Matrix();
-					_renderMatrix.scale(_scaleX, _scaleY);
-					_renderMatrix.rotate(_rotation);
-					_renderMatrix.translate(_x, _y);
-				}
-				
-				var matrix:Matrix = _renderMatrix.clone();
-				if (_matrix) {
-					matrix.concat(_matrix);
-				}
-				
-				// if rotation is 0, send a clipRect, otherwise, don't clip
-				var rect:Rectangle = (_rotation === 0) ? new Rectangle(0, 0, Math.max(320 / _scaleX, 320), Math.max(240 / _scaleY, 240)) : null;
-
-				// if it's a contentobject, we're gonna let it render itself
-				if (_content is IContentObject) {
-					(_content as IContentObject).render(_source, matrix, _colorTransform, rect);
-				} else {
-					_drawContent(matrix, rect);
+			// loop through and apply filters			
+			for each (var filter:Filter in _filters) {
+				if (filter is IBitmapFilter) {
+					(filter as IBitmapFilter).applyFilter(_rendered, _rendered.rect);
 				}
 			}
-		
-			// apply the color filter to the source
-			_source.applyFilter(_source, _source.rect, POINT, _filter.filter);
+		}
 
-			// copy pixels
-			super.bitmapData.copyPixels(_source, _source.rect, POINT);
-		
-			// apply filters to bitmap
-			_applyFilters(super.bitmapData);
-		
-			// unlock them
-			_source.unlock();
-			super.bitmapData.unlock();
-		}
-		
-		/**
-		 * 
-		 */
-		private function _drawContent(matrix:Matrix, clipRect:Rectangle):void {
-			
-			// fill the source with nothing
-			_source.fillRect(_source.rect, 0x00000000);
-			_source.draw(_content, matrix, _colorTransform, null, clipRect);
-			
-		}
+				
 				
 		/**
 		 * 	Gets the framerate
@@ -609,6 +624,7 @@ package onyx.content {
 		 * 	Sets framerate
 		 */
 		public function set framerate(value:Number):void {
+			__framerate.setValue(value);
 		}
 		
 		/**
@@ -645,73 +661,10 @@ package onyx.content {
 		}
 		
 		/**
-		 * 	Destroys the content
-		 */
-		public function dispose():void {
-			
-			// don't render anymore
-			removeEventListener(Event.ENTER_FRAME, render);
-			
-			Tween.stopTweens(this);
-			
-			// if it takes events, pass em on
-			if (_content is IEventDispatcher) {
-				removeEventListener(MouseEvent.MOUSE_DOWN,	_forwardEvents);
-				removeEventListener(MouseEvent.MOUSE_UP,	_forwardEvents);
-				removeEventListener(MouseEvent.MOUSE_MOVE,	_forwardEvents);
-			}
-			
-			// check to see if it's disposable
-			if (_content is IDisposable) {
-				(_content as IDisposable).dispose();
-			}
-			
-			// remove it?
-			if (parent) {
-				parent.removeChild(this);
-			}
-			
-			// store controls
-			__color			= null;
-			__alpha 		= null;
-			__brightness	= null;
-			__contrast		= null;
-			__scaleX		= null;
-			__scaleY		= null;
-			__rotation		= null;
-			__saturation	= null;
-			__threshold		= null;
-			__tint			= null;
-			__x				= null;
-			__y				= null;
-			__framerate		= null;
-			__loopStart		= null;
-			__loopEnd		= null;
-			__blendMode		= null;
-			
-			// kill all filters
-			clearFilters();
-
-			// dispose
-			_source.dispose();
-			_rendered.dispose();
-
-			// dispose
-			bitmapData.dispose();
-			
-			// clear references
-			
-			_content = null;
-			_filter = null;
-			_filters = null;
-			_controls = null;
-		}
-		
-		/**
 		 * 	Sets blendmode
 		 */
-		override public function set blendMode(value:String):void {
-			super.blendMode = __blendMode.setValue(value);
+		public function set blendMode(value:String):void {
+			_layer.blendMode = value;
 		}
 		
 		/**
@@ -745,6 +698,76 @@ package onyx.content {
 		 */
 		public function set matrix(value:Matrix):void {
 			_matrix = value;
+		}
+		
+		/**
+		 * 	Destroys the content
+		 */
+		public function dispose():void {
+						
+			// stop all tweens related to this content
+			Tween.stopTweens(this);
+			
+			// if it takes events, pass em on
+			if (_content is IEventDispatcher) {
+				removeEventListener(MouseEvent.MOUSE_DOWN,	_forwardEvents);
+				removeEventListener(MouseEvent.MOUSE_UP,	_forwardEvents);
+				removeEventListener(MouseEvent.MOUSE_MOVE,	_forwardEvents);
+			}
+			
+			// check to see if it's disposable
+			if (_content is IDisposable) {
+				(_content as IDisposable).dispose();
+			}
+			
+			// store controls
+			__color			= null;
+			__alpha 		= null;
+			__brightness	= null;
+			__contrast		= null;
+			__scaleX		= null;
+			__scaleY		= null;
+			__rotation		= null;
+			__saturation	= null;
+			__threshold		= null;
+			__tint			= null;
+			__x				= null;
+			__y				= null;
+			__framerate		= null;
+			__loopStart		= null;
+			__loopEnd		= null;
+			__blendMode		= null;
+			
+			// kill all filters
+			clearFilters();
+
+			// dispose
+			_source.dispose();
+			_rendered.dispose();
+			
+			// clear references
+
+			_source = null;
+			_rendered = null;
+			_content = null;
+			_filter = null;
+			_filters = null;
+			_controls = null;
+			_layer = null;
+		}
+		
+		/**
+		 * 
+		 */
+		public function get rendered():BitmapData {
+			return _rendered;
+		}
+		
+		/**
+		 * 
+		 */
+		public function get blendMode():String {
+			return null;
 		}
 	}
 }

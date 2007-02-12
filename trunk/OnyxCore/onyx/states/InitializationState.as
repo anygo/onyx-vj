@@ -48,7 +48,6 @@ package onyx.states {
 	import onyx.core.*;
 	import onyx.events.ApplicationEvent;
 	import onyx.events.FilterEvent;
-	import onyx.events.PluginEvent;
 	import onyx.events.TransitionEvent;
 	import onyx.plugin.IPluginLoader;
 	import onyx.plugin.Plugin;

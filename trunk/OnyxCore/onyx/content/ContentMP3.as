@@ -28,126 +28,112 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
- 
 package onyx.content {
-	
+
 	import flash.display.BitmapData;
+	import flash.display.Shape;
+	import flash.display.Sprite;
 	import flash.events.Event;
-	import flash.media.Video;
+	import flash.events.EventDispatcher;
+	import flash.geom.ColorTransform;
+	import flash.geom.Matrix;
+	import flash.geom.Point;
+	import flash.geom.Rectangle;
+	import flash.geom.Transform;
+	import flash.media.Sound;
+	import flash.media.SoundChannel;
+	import flash.utils.getTimer;
 	
-	import onyx.controls.Controls;
+	import onyx.constants.BOOLEAN;
+	import onyx.controls.*;
+	import onyx.core.IDisposable;
 	import onyx.core.RenderTransform;
-	import onyx.layer.LayerProperties;
-	import onyx.layer.LayerSettings;
-	import onyx.net.Connection;
-	import onyx.net.Stream;
+	import onyx.core.onyx_ns;
+	import onyx.events.FilterEvent;
+	import onyx.filter.*;
+	import onyx.layer.IColorObject;
 	import onyx.layer.Layer;
-
-	[ExcludeClass]
-	public class ContentFLV extends Content {
-		
-		private var _stream:Stream;
-		private var _totalTime:Number;
-		private var _loopStart:Number;
-		private var _loopEnd:Number;
-		private var _video:Video;
+	import onyx.layer.LayerProperties;
+//	import onyx.sound.SpectrumAnalyzer;
 	
-		/**
-		 * 	@constructor
-		 */
-		public function ContentFLV(layer:Layer, stream:Stream, props:LayerProperties):void {
-			
-			_stream = stream;
-			
-			_totalTime = stream.metadata.duration;
-			
-			_video = new Video(320,240);
+	public final class ContentMP3 extends Content {
+	
+		private var _length:int;
+		private var _loopStart:int;
+		private var _loopEnd:int;	
+		private var _sound:Sound;
+		private var _channel:SoundChannel;
 
-			_video.attachNetStream(stream);
-
-			super(layer, _video);
+//		private var _analyzer:SpectrumAnalyzer	= new SpectrumAnalyzer();
+		
+		public function ContentMP3(layer:Layer, sound:Sound):void {
+			
+			_sound = sound;
+			_length = Math.max(Math.floor(sound.length / 100) * 100, 0);
+			
+			_loopStart	= 0;
+			_loopEnd	= _length;
+			
+			super(layer, null);
 		}
 		
 		/**
-		 * 	@private
 		 * 	Updates the bimap source
 		 */
 		override public function render(layer:BitmapData, transform:RenderTransform = null):void {
+			var position:Number = Math.ceil(_channel.position);
 			
-			// test loop points
-			if (_stream.time >= _loopEnd || _stream.time < _loopStart) {
-				_stream.seek(_loopStart);
+			if (position >= _loopEnd || position < _loopStart || position >= _length) {
+				_channel.stop();
+				_channel = _sound.play(_loopStart);
 			}
 			
-			super.render(layer, transform);
-		}
+			// do not render
+			
+//			_analyzer.render();
 
-		/**
-		 * 
-		 */
+//			if (_analyzer) {
+//				super.enterFrame(event);
+//				
+			
+//			super.render(event, update);
+		}
+		
 		override public function get time():Number {
-			return _stream.time / _totalTime;
+			return (_channel) ? _channel.position / _sound.length : 0;
 		}
 		
-		/**
-		 * 	@private
-		 * 	Goes to particular time
-		 */		
 		override public function set time(value:Number):void {
-			_stream.seek(value * _totalTime);
-		}
-		
-		/**
-		 * 
-		 */
-		override public function get loopStart():Number {
-			return _loopStart / _totalTime;
-		}
-		
-		/**
-		 * 	@private
-		 * 	Sets Loop Start
-		 */		
-		override public function set loopStart(value:Number):void {
-			_loopStart = __loopStart.setValue(_totalTime * value);
-		}
-
-		/**
-		 * 
-		 */
-		override public function get loopEnd():Number {
-			return _loopEnd / _totalTime;
-		}
-		
-		/**
-		 * 	@private
-		 * 	Sets Loop Start
-		 */		
-		override public function set loopEnd(value:Number):void {
-			_loopEnd = __loopStart.setValue(_totalTime * value);
-		}
-		
-		/**
-		 * 
-		 */
-		override public function pause(value:Boolean = false):void {
-			if (value) {
-				_stream.pause();
-			} else {
-				_stream.resume();
+			
+			if (_channel) {
+				_channel.stop();
 			}
+			
+			_channel = _sound.play(value * _length);
+			
 		}
-
-		/**
-		 * 
-		 */
-		override public function dispose():void {
 		
-			_video.attachNetStream(null);
-			_stream.close();
-
-			_video		= null;
-			_stream		= null;
+		override public function set loopStart(value:Number):void {
+			_loopStart = __loopStart.setValue(value) * _length;
+		}
+		
+		override public function get loopStart():Number {
+			return _loopStart / _length;
+		}
+		
+		override public function set loopEnd(value:Number):void {
+			_loopEnd = __loopEnd.setValue(value) * _length;
+		}
+		
+		override public function get loopEnd():Number {
+			return _loopEnd / _length;
+		}
+		
+		override public function dispose():void {
+//			_analyzer = null;			
+			_channel.stop();
+			_channel = null;
+			_sound = null;
 			
 			super.dispose();
 		}

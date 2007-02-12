@@ -30,8 +30,8 @@
  */
 package onyx.layer {
 	
-	import onyx.controls.*;
-	import onyx.constants.*;;
+	import onyx.constants.*;
+	import onyx.controls.*;;
 	/**
 	 * 	Stores property names for layers
 	 */

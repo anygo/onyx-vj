@@ -92,18 +92,27 @@ package onyx.filter {
 			return _filters.concat();
 		}
 
-		// stores the layer
+		/**
+		 * 	Stores the layer
+		 */
 		protected var content:IContent;
 		
-		// stores the stage object we're gonna pass in:
-		// this is so that the filter can listen for onEnterFrame events
+		/**
+		 * 	Stores the stage object we're gonna pass in:
+		 * 	this is so that the filter can listen for onEnterFrame events
+		 */
 		protected var stage:Stage;
 		
-		// stores whether the filter is unique and should not be allowed to be duplicated
+		/**
+		 * 	@private
+		 * 	Stores whether the filter is unique or not
+		 */
 		onyx_ns var _unique:Boolean;
 		
-		// create controls
-		protected var _controls:Controls;
+		/**
+		 * 
+		 */
+		private var _controls:Controls;
 		
 		/**
 		 * 	@contructor

@@ -1,3 +1,33 @@
+/** 
+ * Copyright (c) 2003-2006, www.onyx-vj.com
+ * All rights reserved.	
+ * 
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ * 
+ * -  Redistributions of source code must retain the above copyright notice, this 
+ *    list of conditions and the following disclaimer.
+ * 
+ * -  Redistributions in binary form must reproduce the above copyright notice, 
+ *    this list of conditions and the following disclaimer in the documentation 
+ *    and/or other materials provided with the distribution.
+ * 
+ * -  Neither the name of the www.onyx-vj.com nor the names of its contributors 
+ *    may be used to endorse or promote products derived from this software without 
+ *    specific prior written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+ * IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+ * POSSIBILITY OF SUCH DAMAGE.
+ * 
+ */
 package onyx.tween {
 	
 	import flash.events.EventDispatcher;
@@ -13,8 +43,15 @@ package onyx.tween {
 	 */
 	public final class Tween {
 		
-		protected static var _definition:Dictionary	= new Dictionary(true);
+		/**
+		 * 	@private
+		 * 	Stores definitions for tweens
+		 */
+		private static var _definition:Dictionary	= new Dictionary(true);
 		
+		/**
+		 * 	Stops tween for a particular object
+		 */
 		public static function stopTweens(target:Object):void {
 			var existing:Dictionary = _definition[target];
 			
@@ -27,13 +64,34 @@ package onyx.tween {
 			}
 		}
 		
+		/**
+		 * 	@private
+		 * 	Target object the tween should be applied to
+		 */
 		private var _target:Object;
+
+		/**
+		 * 	@private
+		 * 	Target object the tween should be applied to
+		 */
 		private var _timer:Timer;
+
+		/**
+		 * 	@private
+		 * 	Target object the tween should be applied to
+		 */
 		private var _props:Array;
 
-		private var _start:Number;
-		private var _end:Number;
+		/**
+		 * 	@private
+		 * 	Target object the tween should be applied to
+		 */
 		private var _startTime:int;
+
+		/**
+		 * 	@private
+		 * 	Target object the tween should be applied to
+		 */
 		private var _ms:int;
 		
 		public function Tween(target:Object, ms:int, ... args:Array):void {
@@ -52,16 +110,20 @@ package onyx.tween {
 			_ms = ms;
 			_props = args;
 			
-			_timer = new Timer(40);
+			_timer = new Timer(20);
 			_timer.addEventListener(TimerEvent.TIMER, _onTimer);
 			_timer.start();
 			_startTime = getTimer();
 		}
 		
+		/**
+		 * 	@private
+		 */
 		private function _onTimer(event:TimerEvent):void {
 			
 			var curTime:int = getTimer() - _startTime;
 			
+			// apply values
 			for each (var prop:TweenProperty in _props) {
 				var args:Array		= [Math.min(curTime, _ms), 0, prop.end - prop.start, _ms];
 				var fn:Function		= prop.easing || Linear.easeIn;
@@ -75,6 +137,9 @@ package onyx.tween {
 			}
 		}
 		
+		/**
+		 * 	Stops the tween
+		 */
 		public function stop():void {
 			var existing:Dictionary = _definition[_target];
 			

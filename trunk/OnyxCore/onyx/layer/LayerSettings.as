@@ -33,15 +33,9 @@ package onyx.layer {
 	import flash.events.EventDispatcher;
 	import flash.net.URLRequest;
 	
-	import onyx.content.IContent;
-	import onyx.controls.Control;
-	import onyx.controls.ControlProxy;
-	import onyx.controls.ControlValue;
-	import onyx.controls.Controls;
-	import onyx.controls.IControlObject;
-	import onyx.core.Console;
-	import onyx.core.Onyx;
-	import onyx.core.onyx_ns;
+	import onyx.content.Content;
+	import onyx.controls.*;
+	import onyx.core.*;
 	import onyx.filter.Filter;
 	import onyx.plugin.Plugin;
 	
@@ -83,8 +77,11 @@ package onyx.layer {
 		public function LayerSettings():void {
 		}
 		
+		/**
+		 * 	Gets variables from a layer
+		 */
 		public function load(layer:Layer):void {
-			var content:IContent = layer._content;
+			var content:Content = layer._content;
 			
 			x			= content.x;
 			y			= content.y;
@@ -179,6 +176,7 @@ package onyx.layer {
 		
 		/**
 		 * 	@private
+
 		 */
 		private function _xmlToTarget(xml:XML, controls:Controls):void {
 
@@ -210,6 +208,7 @@ package onyx.layer {
 		}
 		
 		/**
+		 * 	@private
 		 * 	Converts String 'false' to Boolean 
 		 */
 		private function _parseBoolean(value:*):* {
@@ -229,7 +228,7 @@ package onyx.layer {
 		/**
 		 * 	Applies values to a layer
 		 */
-		public function apply(content:IContent):void {
+		public function apply(content:Content):void {
 			
 			content.x = x;
 			content.y = y;
@@ -270,6 +269,9 @@ package onyx.layer {
 			}
 		}
 		
+		/**
+		 * 	Gets xml
+		 */
 		public function toXML():XML {
 
 			var xml:XML =
@@ -324,7 +326,7 @@ package onyx.layer {
 		}
 		
 		/**
-		 * 
+		 * 	@private
 		 */
 		private function _controlsToXML(xml:XML, ... controls:Array):XML {
 			
