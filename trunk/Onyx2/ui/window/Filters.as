@@ -48,8 +48,14 @@ package ui.window {
 		private static const ITEMS_PER_ROW:int	= 16;
 		private static const ITEM_LENGTH:int	= 85;
 		
+		/**
+		 * 	@private
+		 */
 		private var _library:Array = [];
 		
+		/**
+		 * 	@constructor
+		 */
 		public function Filters():void {
 			
 			title = 'FILTERS';
@@ -64,6 +70,9 @@ package ui.window {
 
 		}
 		
+		/**
+		 * 	@private
+		 */
 		private function _createControl():void {
 			
 			var filters:Array = Filter.filters;

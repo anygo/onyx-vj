@@ -59,6 +59,8 @@ package ui.layer {
 	import ui.text.Style;
 	import ui.text.TextField;
 	import ui.window.TransitionWindow;
+	import ui.UIManager;
+
 
 	/**
 	 * 	Controls layers
@@ -377,7 +379,13 @@ package ui.layer {
 		 * 	Loads a layer
 		 */
 		public function load(path:String, settings:LayerSettings = null):void {
-			_layer.load(new URLRequest(path), settings);
+			
+			// see if we're passing a transition
+			if (UIManager.transition) {
+				var transition:Transition = UIManager.transition.clone();
+			}
+			
+			_layer.load(new URLRequest(path), settings, transition);
 			
 		}
 		

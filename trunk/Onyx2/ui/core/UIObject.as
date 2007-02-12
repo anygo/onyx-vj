@@ -33,6 +33,7 @@ package ui.core {
 	import flash.display.DisplayObject;
 	import flash.display.Shape;
 	import flash.display.Sprite;
+	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.events.MouseEvent;
 	import flash.geom.ColorTransform;
@@ -41,16 +42,13 @@ package ui.core {
 	import onyx.core.IDisposable;
 	
 	import ui.text.TextField;
+	import flash.utils.Timer;
+	import flash.events.TimerEvent;
 
 	/**
 	 * 	Base UIObject Class
 	 */
 	public class UIObject extends Sprite {
-
-		/**
-		 * 	Stores the background shape
-		 */		
-		protected var background:Shape;
 		
 		/**
 		 * 	@private
@@ -87,6 +85,11 @@ package ui.core {
 		 */
 		private static var _doubleTime:int;
 		
+		/**
+		 * 	Stores the background shape
+		 */		
+		protected var background:Shape;
+
 		/**
 		 * 	@constructor
 		 */
@@ -193,7 +196,6 @@ package ui.core {
 			clearChildren();
 			
 			removeEventListener(MouseEvent.MOUSE_DOWN, moveToTop, true);
-
 		}
 
 		

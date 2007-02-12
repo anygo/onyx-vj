@@ -48,6 +48,7 @@ package ui.text {
 			this.selectable = selectable;
 
 			var inheritStyle:TextFormat = PixelFont.DEFAULT;
+			
 			var format:TextFormat = new TextFormat(inheritStyle.font, inheritStyle.size, inheritStyle.color);
 			format.align = align;
 			format.letterSpacing = inheritStyle.letterSpacing;

@@ -41,7 +41,9 @@ package ui {
 	import onyx.events.DisplayEvent;
 	import onyx.events.LayerEvent;
 	import onyx.layer.Layer;
+	import onyx.plugin.Plugin;
 	import onyx.states.StateManager;
+	import onyx.transition.Transition;
 	
 	import ui.assets.*;
 	import ui.layer.UILayer;
@@ -52,11 +54,13 @@ package ui {
 	 * 	Class that handles top-level management of all ui objects
 	 */
 	public class UIManager {
+		
+		public static var transition:Transition;
 
 		/**
 		 * 	@private
 		 */
-		private static var _root:Stage;
+		public static var root:Stage;
 		
 		/**
 		 * 	initialize
@@ -64,7 +68,7 @@ package ui {
 		public static function initialize(root:Stage):void {
 			
 			// store the root
-			_root = root;
+			UIManager.root = root;
 			
 			// low quality
 			root.stage.quality = StageQuality.LOW;
@@ -92,7 +96,7 @@ package ui {
 			
 			Onyx.createLocalDisplay(5);
 			
-			StateManager.loadState(new KeyListenerState(), _root);
+			StateManager.loadState(new KeyListenerState(), root);
 		}
 		
 		/**
@@ -101,7 +105,7 @@ package ui {
 		private static function _loadWindows(... windowsToLoad:Array):void {
 
 			for each (var window:Class in windowsToLoad) {
-				_root.addChild(new window());
+				root.addChild(new window());
 			}
 
 		}
@@ -111,7 +115,7 @@ package ui {
 		 */
 		private static function _onDisplayCreate(event:DisplayEvent):void {
 			var display:SettingsWindow = new SettingsWindow(event.display);
-			_root.addChild(display);
+			root.addChild(display);
 		}
 		
 		/**
@@ -122,7 +126,7 @@ package ui {
 			var uilayer:UILayer = new UILayer(event.layer);
 			uilayer.reOrderLayer();
 
-			_root.addChildAt(uilayer, 0);
+			root.addChildAt(uilayer, 0);
 		}
 	}
 }

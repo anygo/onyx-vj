@@ -35,6 +35,7 @@ package ui.window {
 	import flash.media.Camera;
 	import flash.net.URLRequest;
 	
+	import onyx.layer.LayerSettings;
 	import onyx.settings.Settings;
 	
 	import ui.assets.AssetCamera;
@@ -48,7 +49,6 @@ package ui.window {
 	import ui.layer.UILayer;
 	import ui.text.Style;
 	import ui.text.TextField;
-	import onyx.layer.LayerSettings;
 
 	/**
 	 * 	File Explorer

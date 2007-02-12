@@ -36,6 +36,7 @@ package ui.controls.filter {
 	import ui.assets.AssetLayerFilterInactive;
 	import ui.controls.ButtonClear;
 	import ui.controls.UIControl;
+	import ui.core.ToolTipManager;
 	import ui.text.Style;
 	import ui.text.TextField;
 	
@@ -53,6 +54,8 @@ package ui.controls.filter {
 			_plugin = plugin;
 			_draw();
 			
+			ToolTipManager.registerToolTip(this, plugin.description);
+
 		}
 		
 		private function _draw():void {

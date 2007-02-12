@@ -40,17 +40,32 @@ package ui.window {
 	import onyx.plugin.Plugin;
 	import onyx.transition.Transition;
 	
+	import ui.UIManager;
 	import ui.controls.DropDown;
 	import ui.controls.SliderV;
 	import ui.controls.UIOptions;
 	
 	public final class TransitionWindow extends Window implements IControlObject {
 		
+		/**
+		 * 	@private
+		 */
 		private var dropdown:DropDown;
-		
+
+		/**
+		 * 	Stores current transition plugin to use
+		 */		
 		public var plugin:Plugin;
-		public var duration:int	= 2000;
 		
+		/**
+		 * 	default duration
+		 */
+		public var duration:int	= 2;
+		
+		/**
+		 * 	@private
+		 * 	returns controls
+		 */
 		private var _controls:Controls;
 		
 		/**
@@ -99,8 +114,16 @@ package ui.window {
 		 * 
 		 */
 		public function set transition(value:Plugin):void {
+			
 			plugin = value;
-			trace(value);
+
+			// valid
+			if (value)  {
+				var transition:Transition = value.getDefinition() as Transition;
+				transition.duration = duration * 1000;
+	
+				UIManager.transition = transition;
+			}
 		}
 		
 		/**
