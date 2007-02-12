@@ -1,3 +1,33 @@
+/** 
+ * Copyright (c) 2003-2006, www.onyx-vj.com
+ * All rights reserved.	
+ * 
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ * 
+ * -  Redistributions of source code must retain the above copyright notice, this 
+ *    list of conditions and the following disclaimer.
+ * 
+ * -  Redistributions in binary form must reproduce the above copyright notice, 
+ *    this list of conditions and the following disclaimer in the documentation 
+ *    and/or other materials provided with the distribution.
+ * 
+ * -  Neither the name of the www.onyx-vj.com nor the names of its contributors 
+ *    may be used to endorse or promote products derived from this software without 
+ *    specific prior written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+ * IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+ * POSSIBILITY OF SUCH DAMAGE.
+ * 
+ */
 package ui.core {
 
 	import flash.display.DisplayObject;
@@ -14,22 +44,26 @@ package ui.core {
 	public final class ToolTipManager {
 		
 		/**
-		 * 
+		 * 	@private
+		 * 	Stores tool tip definitions
 		 */
 		private static var _dict:Dictionary = new Dictionary(true);
 
 		/**
-		 * 
+		 * 	@private
+		 * 	The on timer
 		 */
 		private static var timer:Timer		= new Timer(650);
 		
 		/**
-		 * 
+		 * 	@private
+		 * 	The off timer
 		 */
 		private static var offTimer:Timer	= new Timer(100);
 		
 		/**
-		 * 
+		 * 	@private
+		 * 	The last object that displayed a tooltip
 		 */
 		private static var _lastObject:DisplayObject;
 		
@@ -40,7 +74,7 @@ package ui.core {
 		private static var toolTip:ToolTip;
 
 		/**
-		 * 
+		 * 	Registers a Display Object with a tooptip
 		 */
 		public static function registerToolTip(obj:DisplayObject, tip:String):void {
 			_dict[obj] = tip;
@@ -75,11 +109,15 @@ package ui.core {
 		 * 	@private
 		 */
 		private static function _onToolOut(event:MouseEvent):void {
-			timer.stop();
 			
-			if (toolTip) {
+			var obj:DisplayObject = event.currentTarget as DisplayObject;
+			obj.removeEventListener(MouseEvent.ROLL_OUT, _onToolOut);
+
+			timer.stop();
+
+			if (toolTip) 
 				offTimer.start();
-			}
+			
 		}
 		
 		/**
@@ -107,8 +145,8 @@ package ui.core {
 		 */
 		private static function _offTimer(event:TimerEvent):void {
 			toolTip.parent.removeChild(toolTip);
-			offTimer.removeEventListener(TimerEvent.TIMER, _offTimer);
 			offTimer.stop();
+			toolTip = null;
 		}
 		
 		/**

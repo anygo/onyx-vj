@@ -81,6 +81,7 @@ package ui.controls {
 			var value:* = control.value;
 			
 			_index		= _data.indexOf(value);
+			
 			setText(control.value);
 			
 			// cache

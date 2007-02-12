@@ -112,8 +112,6 @@ package ui.layer {
 			uilayer.highlight(0x3186d6,.13);
 			
 			selectedLayer = uilayer;
-			
-			uilayer.moveToTop();
 		}
 		
 		/**

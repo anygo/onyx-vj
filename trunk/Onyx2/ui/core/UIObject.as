@@ -36,14 +36,14 @@ package ui.core {
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.events.MouseEvent;
+	import flash.events.TimerEvent;
 	import flash.geom.ColorTransform;
+	import flash.utils.Timer;
 	import flash.utils.getTimer;
 	
 	import onyx.core.IDisposable;
 	
 	import ui.text.TextField;
-	import flash.utils.Timer;
-	import flash.events.TimerEvent;
 
 	/**
 	 * 	Base UIObject Class
@@ -156,9 +156,8 @@ package ui.core {
 		 */
 		public function moveToTop(event:MouseEvent = null):void {
 			
-			if (parent) {
-				parent.setChildIndex(this, parent.numChildren - 1);
-			}
+			parent.setChildIndex(this, parent.numChildren - 1);
+			
 		}	
 		
 		/**
