@@ -45,5 +45,9 @@ package onyx.events {
 			this.content = content;
 			super(type);
 		}
+		
+		override public function clone():Event {
+			return new TransitionEvent(super.type, content);
+		}
 	}
 }

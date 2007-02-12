@@ -53,6 +53,7 @@ package onyx.layer {
 	import onyx.net.Connection;
 	import onyx.net.Stream;
 	import onyx.transition.Transition;
+	import onyx.plugin.IContentObject;
 
 	[Event(name='complete',			type='flash.events.Event')]
 	[Event(name='security_error',	type='flash.events.SecurityErrorEvent')]
@@ -176,7 +177,7 @@ package onyx.layer {
 			if (!(event is ErrorEvent)) {
 				
 				var loader:Loader	= info.loader;
-				var type:Class = (loader.content is MovieClip) ? ContentMC : ContentSprite;
+				var type:Class = (loader.content is MovieClip) ? ContentMC : (loader.content is IContentObject) ? ContentCustom : ContentSprite;
 
 			}
 

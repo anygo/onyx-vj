@@ -31,6 +31,7 @@
 package onyx.events
 {
 	import flash.events.Event;
+	import onyx.core.Console;
 
 	public class ConsoleEvent extends Event {
 
@@ -44,6 +45,13 @@ package onyx.events
 			
 			super(OUTPUT);
 			
+		}
+		
+		override public function clone():Event {
+			var event:ConsoleEvent = new ConsoleEvent(super.type);
+			event.message = message;
+			
+			return event;
 		}
 	}
 }

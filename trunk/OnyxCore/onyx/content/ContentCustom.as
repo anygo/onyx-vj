@@ -49,14 +49,14 @@ package onyx.content {
 	[Event(name="filter_moved",		type="onyx.events.FilterEvent")]
 	
 	[ExcludeClass]
-	public class ContentSprite extends Content {
+	public class ContentCustom extends Content {
 		
 		/**
 		 * 	@private
 		 * 	Stores the loader object where the content was loaded into
 		 */
 		private var _loader:Loader;
-		
+				
 		/**
 		 * 	@private
 		 * 	The ratio to store the content
@@ -72,7 +72,7 @@ package onyx.content {
 		/**
 		 * 	@constructor
 		 */		
-		public function ContentSprite(layer:Layer, loader:Loader):void {
+		public function ContentCustom(layer:Layer, loader:Loader):void {
 			
 			_loader		= loader;
 
@@ -88,13 +88,24 @@ package onyx.content {
 		}
 		
 		/**
+		 * 	Render
+		 */
+		override public function render(source:BitmapData, transform:RenderTransform = null):void {
+
+			(_content as IRenderable).render(source, super.getTransform());
+			
+			// copy pixels back to the rendered
+			_rendered.copyPixels(source, source.rect, POINT);
+
+		}
+		
+		/**
 		 * 	Destroys the content
 		 */
 		override public function dispose():void {
 			
 			// destroy content
 			_loader.unload();
-
 			_loader	= null;
 			
 			super.dispose();

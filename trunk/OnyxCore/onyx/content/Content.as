@@ -720,7 +720,7 @@ package onyx.content {
 				(_content as IDisposable).dispose();
 			}
 			
-			// store controls
+			// remove references
 			__color			= null;
 			__alpha 		= null;
 			__brightness	= null;
@@ -767,7 +767,7 @@ package onyx.content {
 		 * 
 		 */
 		public function get blendMode():String {
-			return null;
+			return _layer.blendMode;
 		}
 	}
 }

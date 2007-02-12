@@ -144,10 +144,10 @@ package onyx.content {
 			} else {
 				
 				// render old content				
-				_oldContent.render(source, null);
+				_oldContent.render(source);
 
 				// render the new content, but don't have it draw to our bitmap (with null)
-				_newContent.render(null, null);
+				_newContent.render(null);
 				
 				// draw the new bitmap onto this bitmap
 				source.draw(_newContent.rendered);
@@ -463,7 +463,7 @@ package onyx.content {
 		override public function dispose():void {
 			
 			_newContent.removeEventListener(FilterEvent.FILTER_APPLIED,		_forwardEvents);
-			_newContent.removeEventListener(FilterEvent.FILTER_MOVED,			_forwardEvents);
+			_newContent.removeEventListener(FilterEvent.FILTER_MOVED,		_forwardEvents);
 			_newContent.removeEventListener(FilterEvent.FILTER_REMOVED,		_forwardEvents);
 
 			super.dispose();

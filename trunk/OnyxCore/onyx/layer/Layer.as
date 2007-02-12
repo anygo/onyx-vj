@@ -105,7 +105,7 @@ package onyx.layer {
 			if (extension === 'mix' || extension === 'xml') {
 				
 				if (parent is Display) {
-					(parent as Display).load(request, this);
+					(parent as Display).load(request, this, transition);
 				}
 				
 			} else {
@@ -234,6 +234,9 @@ package onyx.layer {
 			
 			// create the content
 			_createContent(event.content, null);
+			
+			// forward the event
+			super.dispatchEvent(event);
 		}
 		
 		/**
@@ -244,7 +247,7 @@ package onyx.layer {
 			
 			super.bitmapData.lock();
 			
-			_content.render(super.bitmapData, null);
+			_content.render(super.bitmapData);
 			
 			super.bitmapData.unlock();
 			

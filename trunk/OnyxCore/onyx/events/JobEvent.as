@@ -41,5 +41,11 @@ package onyx.events {
 		public function JobEvent(type:String):void {
 			super(type);
 		}
+		
+		override public function clone():Event {
+			var event:JobEvent = new JobEvent(super.type);
+			event.value = value;
+			return event;
+		}
 	}
 }

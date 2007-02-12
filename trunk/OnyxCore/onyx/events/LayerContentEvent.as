@@ -48,5 +48,15 @@ package onyx.events {
 			super(type);
 		}
 		
+		override public function clone():Event {
+			var event:LayerContentEvent = new LayerContentEvent(super.type);
+			event.contentType = contentType;
+			event.reference = reference;
+			event.settings = settings;
+			event.transition = transition;
+			
+			return event;
+		}
+		
 	}
 }

@@ -44,5 +44,13 @@ package onyx.events {
 			super(CHANGE);
 		}
 		
+		
+		override public function clone():Event {
+			var event:ControlEvent = new ControlEvent(super.type);
+			event.value = value;
+			return event;
+		}
+
+		
 	}
 }

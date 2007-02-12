@@ -246,9 +246,9 @@ package onyx.display {
 		/**
 		 * 	Loads a mix file into the layers
 		 */
-		public function load(request:URLRequest, origin:Layer):void {
+		public function load(request:URLRequest, origin:Layer, transition:Transition):void {
 			
-			var job:LoadONXJob = new LoadONXJob(request, origin);
+			var job:LoadONXJob = new LoadONXJob(request, origin, transition);
 			
 		}
 		

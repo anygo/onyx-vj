@@ -38,11 +38,12 @@ package onyx.plugin {
 	import flash.geom.Rectangle;
 	
 	import onyx.content.Content;
+	import onyx.content.IContent;
 	import onyx.core.IDisposable;
 	
 	public interface IContentObject extends IRenderable, IDisposable {
 		
-		function initialize(stage:Stage, content:Content):void;
+		function initialize(stage:Stage, content:IContent):void;
 		
 	}
 }
