@@ -55,15 +55,21 @@ package filters {
 		private var _timer:Timer;
 		private var _blurX:int							= 4;
 		private var _blurY:int							= 4;
+		
+		private var __blurX:Control;
+		private var __blurY:Control;
 		private var _filter:BlurFilter					= new BlurFilter(_blurX, _blurY)
 		
 		public function Blur():void {
 
+			__blurX = new ControlInt('blurX', 'blurX', 0, 42, 4);
+			__blurY = new ControlInt('blurY', 'blurY', 0, 42, 4);
+			
 			super(
 				false,
 				new ControlProxy('blur', 'blur',
-					new ControlInt('blurX', 'blurX', 0, 42, 4),
-					new ControlInt('blurY', 'blurY', 0, 42, 4),
+					__blurX,
+					__blurY,
 					{ factor: 5, invert: true }
 				),
 				new ControlNumber('mindelay',	'Min Delay', .1, 50, .1),
@@ -81,7 +87,7 @@ package filters {
 		}
 		
 		public function set blurX(x:int):void {
-			_filter.blurX = _blurX = _controls.getControl('blurX').setValue(x);
+			_filter.blurX = _blurX = __blurX.setValue(x);
 		}
 		
 		public function get blurX():int {
@@ -89,7 +95,7 @@ package filters {
 		}
 		
 		public function set blurY(y:int):void {
-			_filter.blurY = _blurY = _controls.getControl('blurY').setValue(y);
+			_filter.blurY = _blurY = __blurY.setValue(y);
 		}
 		
 		public function get blurY():int {

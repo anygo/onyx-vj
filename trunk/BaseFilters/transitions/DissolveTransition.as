@@ -38,16 +38,21 @@ package transitions {
 
 	public final class DissolveTransition extends Transition {
 		
-		public function DissolveTransition(duration:int = 2000):void {
-			super('Dissolve', duration);
+		public function DissolveTransition():void {
+			super();
 		}
 		
-		override public function applyTransition(current:BitmapData, newContent:BitmapData, time:Number):void {
+		/**
+		 * 	Renders
+		 */
+		override public function apply(ratio:Number):void {
 			
-			var transform:ColorTransform = new ColorTransform();
-			transform.alphaMultiplier = time;
-			current.draw(newContent, null, transform);
+			// fade out
+			currentContent.alpha	= 1 - ratio;
 			
+			// fade in
+			loadedContent.alpha		= ratio;
+
 		}
 
 	}

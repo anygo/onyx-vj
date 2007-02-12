@@ -33,7 +33,7 @@ package filters {
 	import flash.events.Event;
 	import flash.utils.Timer;
 	
-	import onyx.content.IContent;
+	import onyx.content.Content;
 	import onyx.controls.*;
 	import onyx.filter.Filter;
 

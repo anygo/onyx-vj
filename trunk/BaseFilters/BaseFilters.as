@@ -38,24 +38,36 @@ package {
 	import onyx.filter.Filter;
 	import onyx.plugin.*;
 	
+	import spectrum.*;
+	
 	import transitions.*;
 	
 	public class BaseFilters extends Sprite implements IPluginLoader {
 
 		public function get plugins():Array {
 			return [
-				new Plugin('Echo Filter', 		EchoFilter, 'Threshold Transition'),
-				new Plugin('Blur Filter', 		Blur, 'Threshold Transition'),
-				new Plugin('Noise Filter',		NoiseFilter, 'Threshold Transition'),
-				new Plugin('Repeater Filter',	Repeater, 'Threshold Transition'),
+				new Plugin(
+						'Echo Filter',
+						EchoFilter,
+						'Echo Filter\nSimple Feedback Echo Filter\n' +
+						'Echo Alpha: Alpha of the feedback\n' +
+						'Echo Blend: BlendMode of the feedback\n' +
+						'Mix Alpha:  Alpha or original mix\n' +
+						'Mix Blend: BlendMode of original mix\n' +
+						'Scroll: Scrolls the bitmap\n' +
+						'Frame Delay: # of frames to skip'
+					),
+				new Plugin('Blur Filter', 		Blur,			'Blur Filter'),
+				new Plugin('Noise Filter',		NoiseFilter,	'Noise Filter'),
+				new Plugin('Repeater Filter',	Repeater,		'Repeater Filter'),
 //				new Plugin('FeedBack Filter',	FeedbackFilter, 'Feedback Filter'),
-				new Plugin('Blink Effect', 		Blink, 'Blinks the layer'),
-				new Plugin('Frame Random', 		FrameRND, 'Threshold Transition'),
-				new Plugin('MoveScale Effect', 	MoverScaler, 'Moves and Scales Object'),
-				new Plugin('Matrix Effect',		MatrixEffect, ''),
-				new Plugin('Bleed Filter',		PasteFilter, ''),
-				new Plugin('Blur Transition',	BlurTransition, 'Blurs the loaded layer')
-//				new Plugin('Dissolve Transition', DissolveTransition, 'Dissolves the loaded layer'),
+				new Plugin('Blink Effect', 		Blink,			'Blinks the layer'),
+				new Plugin('Frame Random', 		FrameRND,		'Randomizes Frame Rates'),
+				new Plugin('MoveScale Effect', 	MoverScaler,	'Moves and Scales Object'),
+				new Plugin('Matrix Effect',		MatrixEffect,	''),
+				new Plugin('Bleed Filter',		PasteFilter,	''),
+				new Plugin('Blur Transition',	BlurTransition, 'Blurs the loaded layer'),
+				new Plugin('Dissolve Transition', DissolveTransition, 'Dissolves the loaded layer'),
 //				new Plugin('Threshold Transition', ThresholdTransition, 'Threshold Transition'),
 			];
 		}

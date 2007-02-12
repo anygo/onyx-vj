@@ -36,26 +36,30 @@ package transitions {
 	import flash.geom.Point;
 	import flash.geom.Transform;
 	
-	import onyx.transition.Transition;
+	import onyx.constants.POINT;
+	import onyx.core.RenderTransform;
+	import onyx.transition.*;
 	
-	public final class BlurTransition extends Transition {
+	public final class BlurTransition extends Transition implements IBitmapTransition {
 		
-		public function BlurTransition(duration:int = 2000):void {
-			super('Blur', duration);
+		public function BlurTransition():void {
+			super();
 		}
 		
-		override public function applyTransition(current:BitmapData, newContent:BitmapData, time:Number):void {
+		public function render(source:BitmapData, ratio:Number):void {
 			
-			var amount:Number = (time > .5) ? 1 - time : time;
-			var filter:BlurFilter = new BlurFilter(Math.floor(amount * 40) * 2, Math.floor(amount * 40) * 2);
-
-			if (time > .5) {
-				current.copyPixels(newContent, current.rect, new Point(0,0));
+			// 0 - .5: Blur Current 0-1
+			// .5 - 1: Blur Loaded 1-0
+			if (ratio < .5) {
+				currentContent.render(source);
+				var blur:Number = Math.floor(ratio / .5 * 40) * 2;
+			} else {
+				loadedContent.render(source);
+				blur = Math.floor(((1 - ratio) / .5) * 40) * 2;
 			}
-			
-			current.applyFilter(current, current.rect, new Point(0,0), filter);
-		
-		}
 
+			source.applyFilter(source, source.rect, POINT, new BlurFilter(blur, blur));
+
+		}
 	}
 }
