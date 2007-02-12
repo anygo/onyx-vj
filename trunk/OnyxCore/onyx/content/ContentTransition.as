@@ -45,8 +45,8 @@ package onyx.content {
 	import onyx.filter.Filter;
 	import onyx.layer.Layer;
 	import onyx.layer.LayerProperties;
-	import onyx.transition.Transition;
 	import onyx.transition.IBitmapTransition;
+	import onyx.transition.Transition;
 	
 	use namespace onyx_ns;
 	
@@ -79,7 +79,7 @@ package onyx.content {
 		/**
 		 * 	@constructor
 		 */
-		public function ContentTransition(layer:Layer, transition:Transition, current:Content, loaded:Content):void {
+		public function ContentTransition(layer:Layer, transition:Transition, current:IContent, loaded:IContent):void {
 			
 			_transition = transition;
 			_oldContent	= current as Content;

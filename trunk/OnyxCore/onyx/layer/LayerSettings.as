@@ -38,6 +38,7 @@ package onyx.layer {
 	import onyx.core.*;
 	import onyx.filter.Filter;
 	import onyx.plugin.Plugin;
+	import onyx.content.IContent;
 	
 	use namespace onyx_ns;
 
@@ -81,7 +82,7 @@ package onyx.layer {
 		 * 	Gets variables from a layer
 		 */
 		public function load(layer:Layer):void {
-			var content:Content = layer._content;
+			var content:IContent = layer._content;
 			
 			x			= content.x;
 			y			= content.y;

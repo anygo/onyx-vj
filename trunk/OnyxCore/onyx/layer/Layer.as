@@ -64,7 +64,7 @@ package onyx.layer {
 		 * 	@private
 		 * 	Stores the content
 		 */
-		onyx_ns var			_content:Content;
+		onyx_ns var			_content:IContent				= new ContentNull();
 
 		/**
 		 * 	@private
@@ -84,7 +84,6 @@ package onyx.layer {
 		public function Layer():void {
 
 			_properties = new LayerProperties(this);
-//			_content	= new ContentNull(_properties);
 			
 			super(null);
 			
@@ -154,7 +153,7 @@ package onyx.layer {
 				var loadedContent:Content = new contentEvent.contentType(this, contentEvent.reference);
 
 				// if a transition was loaded, load the transition with the layer
-				if (_content && contentEvent.transition) {
+				if (!(_content is ContentNull) && contentEvent.transition) {
 					
 					if (_content is ContentTransition) {
 						
@@ -187,7 +186,7 @@ package onyx.layer {
 			}
 	
 			// only destroy previous content if it's not a transition		
-			if (_content && !(content is ContentTransition)) {
+			if (!(_content is ContentNull) && !(content is ContentTransition)) {
 				_destroyContent();
 			}
 			
@@ -314,7 +313,7 @@ package onyx.layer {
 		 * 	Gets the framerate of the movie adjusted to it's own time rate
 		 */
 		public function get framerate():Number {
-			return (_content) ? _content.framerate : 1;
+			return _content.framerate;
 		}
 
 		/**
@@ -328,7 +327,7 @@ package onyx.layer {
 		 * 	Gets the start loop point
 		 */
 		public function get loopStart():Number {
-			return (_content) ? _content.loopStart : 0;
+			return _content.loopStart;
 		}
 
 		/**
@@ -342,7 +341,7 @@ package onyx.layer {
 		 * 	Gets the start marker
 		 */
 		public function get loopEnd():Number {
-			return (_content) ? _content.loopEnd : 1;
+			return _content.loopEnd;
 		}
 
 		/**
@@ -382,7 +381,7 @@ package onyx.layer {
 		 * 	Returns the threshold
 		 */
 		public function get threshold():int {
-			return (_content) ? _content.threshold : 0;
+			return _content.threshold;
 		}
 
 		/**
@@ -396,7 +395,7 @@ package onyx.layer {
 		 * 	Returns contrast
 		 */
 		public function get contrast():Number {
-			return (_content) ? _content.contrast : 0;
+			return _content.contrast;
 		}
 		
 		/**
@@ -410,7 +409,7 @@ package onyx.layer {
 		 * 	Gets brightness
 		 */
 		public function get brightness():Number {
-			return (_content) ? _content.brightness : 1;
+			return _content.brightness;
 		}
 		
 		/**
@@ -424,7 +423,7 @@ package onyx.layer {
 		 * 	Sets saturation
 		 */
 		public function get saturation():Number {
-			return (_content) ? _content.saturation : 1;
+			return _content.saturation;
 		}
 
 		/**
@@ -438,7 +437,7 @@ package onyx.layer {
 		 * 	Returns tint
 		 */
 		public function get tint():Number {
-			return (_content) ? _content.tint : 1;
+			return _content.tint;
 		}
 		
 		/**
@@ -459,7 +458,7 @@ package onyx.layer {
 		 * 	Gets color of current content
 		 */
 		public function get color():uint {
-			return (_content) ? _content.color : 1;
+			return _content.color;
 		}
 		
 		/**
@@ -473,7 +472,7 @@ package onyx.layer {
 		 * 	Gets alpha of current content
 		 */
 		override public function get alpha():Number {
-			return (_content) ? _content.alpha : 1;
+			return _content.alpha;
 		}
 		
 		/**
@@ -515,35 +514,35 @@ package onyx.layer {
 		 * 	Gets scaleX for current content
 		 */
 		override public function get scaleX():Number {
-			return (_content) ? _content.scaleX : 1;
+			return _content.scaleX;
 		}
 
 		/**
 		 * 	Gets scaleY for current content
 		 */
 		override public function get scaleY():Number {
-			return (_content) ? _content.scaleY : 1;
+			return _content.scaleY;
 		}
 
 		/**
 		 * 	Gets x for current content
 		 */
 		override public function get x():Number {
-			return (_content) ? _content.x : 0;
+			return _content.x;
 		}
 
 		/**
 		 * 	Gets y for current content
 		 */
 		override public function get y():Number {
-			return (_content) ? _content.y : 0;
+			return _content.y;
 		}
 		
 		/**
 		 * 	Gets content rotation
 		 */
 		override public function get rotation():Number {
-			return (_content) ? _content.rotation / RADIANS : 0;
+			return _content.rotation / RADIANS;
 		}
 
 		/**
@@ -625,14 +624,11 @@ package onyx.layer {
 				// stop rendering
 				removeEventListener(Event.ENTER_FRAME, _renderContent);
 
-				// store the current content				
-				var content:Content = _content;
-
 				// destroy the content
 				_destroyContent();
 
 				// set content to nothing					
-				_content			= null;
+				_content			= new ContentNull();
 				
 				// change the property target to this layer
 				_properties.target	= this;

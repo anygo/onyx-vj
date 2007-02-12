@@ -169,7 +169,7 @@ package onyx.transition {
 		/**
 		 * 	Internal function that sets the old and new content variables
 		 */
-		onyx_ns final function setContent(current:Content, loaded:Content):void {
+		onyx_ns final function setContent(current:IContent, loaded:IContent):void {
 			currentContent	= current;
 			loadedContent	=  loaded;
 		}
