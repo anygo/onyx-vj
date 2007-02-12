@@ -60,7 +60,6 @@ package {
 				new Plugin('Blur Filter', 		Blur,			'Blur Filter'),
 				new Plugin('Noise Filter',		NoiseFilter,	'Noise Filter'),
 				new Plugin('Repeater Filter',	Repeater,		'Repeater Filter'),
-//				new Plugin('FeedBack Filter',	FeedbackFilter, 'Feedback Filter'),
 				new Plugin('Blink Effect', 		Blink,			'Blinks the layer'),
 				new Plugin('Frame Random', 		FrameRND,		'Randomizes Frame Rates'),
 				new Plugin('MoveScale Effect', 	MoverScaler,	'Moves and Scales Object'),
@@ -68,7 +67,6 @@ package {
 				new Plugin('Bleed Filter',		PasteFilter,	''),
 				new Plugin('Blur Transition',	BlurTransition, 'Blurs the loaded layer'),
 				new Plugin('Dissolve Transition', DissolveTransition, 'Dissolves the loaded layer'),
-//				new Plugin('Threshold Transition', ThresholdTransition, 'Threshold Transition'),
 			];
 		}
 	}
