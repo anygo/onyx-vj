@@ -245,5 +245,9 @@ package onyx.content
 			return false;
 		}
 		
+		public function get path():String {
+			return null;
+		}
+		
 	}
 }

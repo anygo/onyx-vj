@@ -45,6 +45,7 @@ package onyx.layer {
 	import onyx.filter.*;
 	import onyx.net.Stream;
 	import onyx.transition.Transition;
+	import onyx.utils.GCTester;
 	
 	use namespace onyx_ns;
 	
@@ -65,12 +66,6 @@ package onyx.layer {
 		 * 	Stores the content
 		 */
 		onyx_ns var			_content:IContent				= new ContentNull();
-
-		/**
-		 * 	@private
-		 * 	The url request for the layer path
-		 */
-		private var			_request:URLRequest;
 
 		/**
 		 * 	@private
@@ -110,9 +105,6 @@ package onyx.layer {
 				
 			} else {
 				
-				// store the request
-				_request = request;
-				
 				// load content
 				var loader:ContentLoader = new ContentLoader();
 				loader.addEventListener(Event.COMPLETE,						_onContentStatus);
@@ -150,7 +142,7 @@ package onyx.layer {
 				var contentEvent:LayerContentEvent = event as LayerContentEvent;
 
 				// create the new content object based on the type				
-				var loadedContent:Content = new contentEvent.contentType(this, contentEvent.reference);
+				var loadedContent:Content = new contentEvent.contentType(this, contentEvent.request.url, contentEvent.reference);
 
 				// if a transition was loaded, load the transition with the layer
 				if (!(_content is ContentNull) && contentEvent.transition) {
@@ -161,11 +153,13 @@ package onyx.layer {
 						(_content as ContentTransition).endTransition();
 						
 						// create a new transition
-						loadedContent = new ContentTransition(this, contentEvent.transition, _content, loadedContent);
+						loadedContent = new ContentTransition(this, contentEvent.request.url, contentEvent.transition, _content, loadedContent);
+						
 					} else {
-						loadedContent = new ContentTransition(this, contentEvent.transition, _content, loadedContent);
+
+						loadedContent = new ContentTransition(this, contentEvent.request.url, contentEvent.transition, _content, loadedContent);
+
 					}
-					
 				}
 
 				// pass the content on
@@ -259,6 +253,8 @@ package onyx.layer {
 		 */
 		private function _destroyContent():void {
 			
+			new GCTester(_content);
+			
 			// destroys the earlier content
 			_content.dispose();
 
@@ -274,6 +270,9 @@ package onyx.layer {
 		 * 	Listens for events and forwards them
 		 */
 		private function _forwardEvents(event:Event):void {
+			if (!(event is ProgressEvent)) {
+				trace(event)
+			}
 			super.dispatchEvent(event);
 		}
 		
@@ -302,7 +301,7 @@ package onyx.layer {
 		 * 	Returns the path of the file loaded
 		 */
 		public function get path():String {
-			return (_request) ? _request.url : null;
+			return _content.path;
 		}
 		
 		/**

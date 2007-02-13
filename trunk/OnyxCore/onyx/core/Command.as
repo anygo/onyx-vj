@@ -64,7 +64,7 @@ package onyx.core {
 					text =	_createHeader('stat') + 'tests framerate and layer rendering times.<br><br>usage: stat [numSeconds:int]<br>';
 					break;
 				default:
-					text =	_createHeader('<b>onyx 3.0b</b>', 21) + 
+					text =	_createHeader('<b>onyx 3.0.15</b>', 21) + 
 							'copyright 2003-2006: www.onyx-vj.com.' +
 							'<br>enter command "help commands" for more information about commands.';
 					break;

@@ -57,13 +57,13 @@ package onyx.content {
 		 * 	@private
 		 * 	Stores old content
 		 */
-		private var _oldContent:Content;
+		onyx_ns var oldContent:Content;
 
 		/**
 		 * 	@private
 		 * 	Stores new content
 		 */
-		private var _newContent:Content;
+		onyx_ns var newContent:Content;
 
 		/**
 		 * 	@private
@@ -80,17 +80,30 @@ package onyx.content {
 		/**
 		 * 	@constructor
 		 */
-		public function ContentTransition(layer:Layer, transition:Transition, current:IContent, loaded:IContent):void {
-			
+		public function ContentTransition(layer:Layer, path:String, transition:Transition, current:IContent, loaded:IContent):void {
+
+			// super!
+			super(layer, path, null);
+
+			// initialize transition			
 			_transition = transition;
-			_oldContent	= current as Content;
-			_newContent = loaded as Content;
 			
-			_newContent.addEventListener(FilterEvent.FILTER_APPLIED,		_forwardEvents);
-			_newContent.addEventListener(FilterEvent.FILTER_MOVED,			_forwardEvents);
-			_newContent.addEventListener(FilterEvent.FILTER_REMOVED,		_forwardEvents);
+			// store content
+			oldContent	= current as Content;
+			newContent = loaded as Content;
 			
-			super(layer, null, loaded);
+			// loop through old content filters
+			for each (var filter:Filter in current.filters) {
+				// dispatch a filter removed event
+				var event:FilterEvent = new FilterEvent(FilterEvent.FILTER_REMOVED, filter)
+				dispatchEvent(event);
+			}
+			
+			newContent.addEventListener(FilterEvent.FILTER_APPLIED,		_forwardEvents);
+			newContent.addEventListener(FilterEvent.FILTER_MOVED,		_forwardEvents);
+			newContent.addEventListener(FilterEvent.FILTER_REMOVED,		_forwardEvents);
+			
+			layer.properties.target = newContent;
 
 			// initialize the transition
 			_transition.setContent(current, loaded);
@@ -115,7 +128,7 @@ package onyx.content {
 		 * 	Ends a transition
 		 */
 		public function endTransition():void {
-			dispatchEvent(new TransitionEvent(TransitionEvent.TRANSITION_END, _newContent));
+			dispatchEvent(new TransitionEvent(TransitionEvent.TRANSITION_END, newContent));
 		}
 		
 		/**
@@ -145,13 +158,13 @@ package onyx.content {
 			} else {
 				
 				// render old content				
-				_oldContent.render(source);
+				oldContent.render(source);
 
 				// render the new content, but don't have it draw to our bitmap (with null)
-				_newContent.render(null);
+				newContent.render(null);
 				
 				// draw the new bitmap onto this bitmap
-				source.draw(_newContent.rendered);
+				source.draw(newContent.rendered);
 
 			}
 
@@ -164,150 +177,150 @@ package onyx.content {
 		 * 	Return loaded content
 		 */
 		public function get loadedContent():Content {
-			return _newContent;
+			return newContent;
 		}
 		
 		/**
 		 * 	Gets alpha
 		 */
 		override public function get alpha():Number {
-			return _newContent.alpha;
+			return newContent.alpha;
 		}
 
 		/**
 		 * 	Sets alpha
 		 */
 		override public function set alpha(value:Number):void {
-			_newContent.alpha = value;
+			newContent.alpha = value;
 		}
 		
 		/**
 		 * 	Tint
 		 */
 		override public function set tint(value:Number):void {
-			_newContent.tint = value;
+			newContent.tint = value;
 		}
 		
 		/**
 		 * 	Sets color
 		 */
 		override public function set color(value:uint):void {
-			_newContent.color = value;
+			newContent.color = value;
 		}
 
 		/**
 		 * 	Gets color
 		 */
 		override public function get color():uint {
-			return _newContent.color;
+			return newContent.color;
 		}
 
 		/**
 		 * 	Gets tint
 		 */
 		override public function get tint():Number {
-			return _newContent.tint;
+			return newContent.tint;
 		}
 		
 		/**
 		 * 	Sets x
 		 */
 		override public function set x(value:Number):void {
-			_newContent.x = value;
+			newContent.x = value;
 		}
 
 		/**
 		 * 	Sets y
 		 */
 		override public function set y(value:Number):void {
-			_newContent.y = value;
+			newContent.y = value;
 		}
 
 		override public function set scaleX(value:Number):void {
-			_newContent.scaleX = value;
+			newContent.scaleX = value;
 		}
 
 		override public function set scaleY(value:Number):void {
-			_newContent.scaleY = value;
+			newContent.scaleY = value;
 		}
 		
 		override public function get scaleX():Number {
-			return _newContent.scaleX;
+			return newContent.scaleX;
 		}
 
 		override public function get scaleY():Number {
-			return _newContent.scaleY;
+			return newContent.scaleY;
 		}
 
 		override public function get x():Number {
-			return _newContent.x;
+			return newContent.x;
 		}
 
 		override public function get y():Number {
-			return _newContent.y;
+			return newContent.y;
 		}
 		
 		/**
 		 * 	Gets saturation
 		 */
 		override public function get saturation():Number {
-			return _newContent.saturation;
+			return newContent.saturation;
 		}
 		
 		/**
 		 * 	Sets saturation
 		 */
 		override public function set saturation(value:Number):void {
-			_newContent.saturation = value;
+			newContent.saturation = value;
 		}
 
 		/**
 		 * 	Gets contrast
 		 */
 		override public function get contrast():Number {
-			return _newContent.contrast;
+			return newContent.contrast;
 		}
 
 		/**
 		 * 	Sets contrast
 		 */
 		override public function set contrast(value:Number):void {
-			_newContent.contrast = value
+			newContent.contrast = value
 		}
 
 		/**
 		 * 	Gets brightness
 		 */
 		override public function get brightness():Number {
-			return _newContent.brightness;
+			return newContent.brightness;
 		}
 		
 		/**
 		 * 	Sets brightness
 		 */
 		override public function set brightness(value:Number):void {
-			_newContent.brightness = value;
+			newContent.brightness = value;
 		}
 
 		/**
 		 * 	Gets threshold
 		 */
 		override public function get threshold():int {
-			return _newContent.threshold;
+			return newContent.threshold;
 		}
 		
 		/**
 		 * 	Sets threshold
 		 */
 		override public function set threshold(value:int):void {
-			_newContent.threshold = value;
+			newContent.threshold = value;
 		}
 		
 		/**
 		 *	Returns rotation
 		 */
 		override public function get rotation():Number {
-			return _newContent.rotation;
+			return newContent.rotation;
 		}
 
 		/**
@@ -315,21 +328,21 @@ package onyx.content {
 		 * 	Sets rotation
 		 */
 		override public function set rotation(value:Number):void {
-			_newContent.rotation = value;
+			newContent.rotation = value;
 		}
 
 		/**
 		 * 	Adds a filter
 		 */
 		override public function addFilter(filter:Filter):void {
-			_newContent.addFilter(filter);
+			newContent.addFilter(filter);
 		}
 
 		/**
 		 * 	Removes a filter
 		 */		
 		override public function removeFilter(filter:Filter):void {
-			_newContent.removeFilter(filter);
+			newContent.removeFilter(filter);
 		}
 
 		/**
@@ -343,119 +356,119 @@ package onyx.content {
 		 * 	Returns filters
 		 */
 		override public function get filters():Array {
-			return _newContent.filters;
+			return newContent.filters;
 		}
 		
 		/**
 		 * 	Gets a filter's index
 		 */
 		override public function getFilterIndex(filter:Filter):int {
-			return _newContent.getFilterIndex(filter);
+			return newContent.getFilterIndex(filter);
 		}
 		
 		/**
 		 * 	Moves a filter to an index
 		 */
 		override public function moveFilter(filter:Filter, index:int):void {
-			_newContent.moveFilter(filter, index);
+			newContent.moveFilter(filter, index);
 		}
 				
 		/**
 		 * 	Sets the time
 		 */
 		override public function set time(value:Number):void {
-			_newContent.time = value;
+			newContent.time = value;
 		}
 		
 		/**
 		 * 	Gets the time
 		 */
 		override public function get time():Number {
-			return _newContent.time;
+			return newContent.time;
 		}
 		
 		/**
 		 * 	Gets the total time
 		 */
 		override public function get totalTime():int {
-			return _newContent.totalTime;
+			return newContent.totalTime;
 		}
 		
 		/**
 		 * 	Pauses content
 		 */
 		override public function pause(value:Boolean = true):void {
-			_newContent.pause(value);
+			newContent.pause(value);
 		}
 				
 		/**
 		 * 	Gets the framerate
 		 */
 		override public function get framerate():Number {
-			return _newContent.framerate;
+			return newContent.framerate;
 		}
 
 		/**
 		 * 	Sets framerate
 		 */
 		override public function set framerate(value:Number):void {
-			_newContent.framerate = value;
+			newContent.framerate = value;
 		}
 		
 		/**
 		 * 	Gets the beginning loop point
 		 */
 		override public function get loopStart():Number {
-			return _newContent.loopStart;
+			return newContent.loopStart;
 		}
 		
 		/**
 		 * 	Sets the beginning loop point (percentage)
 		 */		
 		override public function set loopStart(value:Number):void {
-			_newContent.loopStart = value;
+			newContent.loopStart = value;
 		}
 		
 		/**
 		 * 	Gets the beginning loop point
 		 */
 		override public function get loopEnd():Number {
-			return _newContent.loopEnd;
+			return newContent.loopEnd;
 		}
 
 		/**
 		 * 	Sets the end loop point
 		 */
 		override public function set loopEnd(value:Number):void {
-			_newContent.loopEnd = value;
+			newContent.loopEnd = value;
 		}
 
 		/**
 		 * 	Returns the bitmap source
 		 */
 		override public function get source():BitmapData {
-			return _newContent.source;
+			return newContent.source;
 		}
 		
 		/**
 		 * 	Sets blendmode
 		 */
 		override public function set blendMode(value:String):void {
-			_newContent.blendMode = value;
+			newContent.blendMode = value;
 		}
 		
 		/**
 		 * 	Returns content controls
 		 */
 		override public function get controls():Controls {
-			return _newContent.controls;
+			return newContent.controls;
 		}
 		
 		/**
 		 * 
 		 */
 		override public function set matrix(value:Matrix):void {
-			_newContent.matrix = value;
+			newContent.matrix = value;
 		}
 		
 		/**
@@ -463,15 +476,15 @@ package onyx.content {
 		 */
 		override public function dispose():void {
 			
-			_newContent.removeEventListener(FilterEvent.FILTER_APPLIED,		_forwardEvents);
-			_newContent.removeEventListener(FilterEvent.FILTER_MOVED,		_forwardEvents);
-			_newContent.removeEventListener(FilterEvent.FILTER_REMOVED,		_forwardEvents);
+			newContent.removeEventListener(FilterEvent.FILTER_APPLIED,		_forwardEvents);
+			newContent.removeEventListener(FilterEvent.FILTER_MOVED,		_forwardEvents);
+			newContent.removeEventListener(FilterEvent.FILTER_REMOVED,		_forwardEvents);
 
 			super.dispose();
-			_oldContent.dispose();
+			oldContent.dispose();
 
-			_oldContent = null;
-			_newContent = null;
+			oldContent = null;
+			newContent = null;
 		}
 		
 		override public function get rendered():BitmapData {

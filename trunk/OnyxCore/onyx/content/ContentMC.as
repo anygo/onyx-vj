@@ -114,7 +114,7 @@ package onyx.content {
 		/**
 		 * 	@constructor
 		 */		
-		public function ContentMC(layer:Layer, loader:Loader):void {
+		public function ContentMC(layer:Layer, path:String, loader:Loader):void {
 			
 			_loader			= loader;
 			_mc				= loader.content as MovieClip;
@@ -133,7 +133,7 @@ package onyx.content {
 				_ratioY = 240 / loader.contentLoaderInfo.height;
 			}
 			
-			super(layer, _mc);
+			super(layer, path, _mc);
 		}
 
 		/**

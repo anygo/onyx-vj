@@ -77,11 +77,18 @@ package onyx.layer {
 		private var _transition:Transition;
 		
 		/**
+		 * 	@private
+		 */
+		private var _request:URLRequest;
+		
+		/**
 		 * 	Loads a file
 		 */
 		public function load(request:URLRequest, extension:String, settings:LayerSettings, transition:Transition):void {
 			
 			var path:String = request.url;
+			
+			_request = request;
 			
 			_settings = settings || new LayerSettings();
 			_transition = transition;
@@ -194,16 +201,18 @@ package onyx.layer {
 				dispatchEvent(event);
 			} else {
 				var dispatch:LayerContentEvent = new LayerContentEvent(Event.COMPLETE);
-				dispatch.contentType = contentType;
-				dispatch.reference = reference;
-				dispatch.settings = _settings;
-				dispatch.transition = _transition;
+				dispatch.contentType	= contentType;
+				dispatch.reference		= reference;
+				dispatch.settings		= _settings;
+				dispatch.transition 	= _transition;
+				dispatch.request		= _request;
 				dispatchEvent(dispatch);
 			}
 
 			// dispose
 			_settings = null;
 			_transition = null;
+			_request = null;
 			
 		}
 	}

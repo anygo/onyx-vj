@@ -158,6 +158,11 @@ package onyx.content {
 		 */
 		protected var _content:IBitmapDrawable;
 		
+		/**
+		 * 	@private
+		 */
+		protected var _path:String;
+		
 		// stores controls
 		private var __color:Control;
 		private var __alpha:Control;
@@ -179,12 +184,13 @@ package onyx.content {
 		/**
 		 * 	@constructor
 		 */		
-		public function Content(layer:Layer, content:IBitmapDrawable, newTarget:IControlObject = null):void {
+		public function Content(layer:Layer, path:String, content:IBitmapDrawable, newTarget:IControlObject = null):void {
 			
 			var props:LayerProperties = layer.properties;
 
 			// store layer
 			_layer = layer;
+			_path  = path;
 			
 			// store controls
 			__color			= props.color;
@@ -775,6 +781,13 @@ package onyx.content {
 		 */
 		public function get blendMode():String {
 			return _layer.blendMode;
+		}
+		
+		/**
+		 * 
+		 */
+		public function get path():String {
+			return _path;
 		}
 	}
 }

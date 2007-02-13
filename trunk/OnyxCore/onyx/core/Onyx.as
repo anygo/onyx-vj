@@ -99,9 +99,6 @@ package onyx.core {
 			
 			Onyx.root = root;
 			
-			// root.addEventListener(Event.RESIZE, _onResize);
-			// instance._controls.getControl('framerate').value = root.frameRate;
-			
 			// create a timer so that objects can listen for events
 			var timer:Timer = new Timer(0);
 			timer.addEventListener(TimerEvent.TIMER, _onInitialize);

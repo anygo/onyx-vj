@@ -44,7 +44,7 @@ package onyx.content {
 		
 		private var _video:Video;
 		
-		public function ContentCamera(layer:Layer, camera:Camera, props:LayerProperties):void {
+		public function ContentCamera(layer:Layer, path:String, camera:Camera, props:LayerProperties):void {
 			
 			_video	= new Video(320, 240);
 			
@@ -52,7 +52,7 @@ package onyx.content {
 			
 			_video.attachCamera(camera);
 			
-			super(layer, _video);
+			super(layer, path, _video);
 		}
 		
 		/**

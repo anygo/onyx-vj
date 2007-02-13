@@ -55,7 +55,7 @@ package onyx.content {
 		/**
 		 * 	@constructor
 		 */
-		public function ContentFLV(layer:Layer, stream:Stream, props:LayerProperties):void {
+		public function ContentFLV(layer:Layer, path:String, stream:Stream, props:LayerProperties):void {
 			
 			_stream = stream;
 			
@@ -65,7 +65,7 @@ package onyx.content {
 
 			_video.attachNetStream(stream);
 
-			super(layer, _video);
+			super(layer, path, _video);
 		}
 		
 		/**

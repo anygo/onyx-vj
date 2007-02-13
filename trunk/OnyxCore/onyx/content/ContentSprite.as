@@ -72,7 +72,7 @@ package onyx.content {
 		/**
 		 * 	@constructor
 		 */		
-		public function ContentSprite(layer:Layer, loader:Loader):void {
+		public function ContentSprite(layer:Layer, path:String, loader:Loader):void {
 			
 			_loader		= loader;
 
@@ -83,7 +83,7 @@ package onyx.content {
 			}
 			
 			// pass controls
-			super(layer, loader.content);
+			super(layer, path, loader.content);
 			
 		}
 		

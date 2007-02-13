@@ -52,6 +52,7 @@ package onyx.content {
 		function get source():BitmapData;
 		function get rendered():BitmapData;
 		function set matrix(value:Matrix):void;
+		function get path():String;
 		
 	}
 }
