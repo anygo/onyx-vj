@@ -55,6 +55,7 @@ package {
 			stage.quality = StageQuality.LOW;
 
 			UIManager.initialize(stage);
+
 		}
 	}
 }

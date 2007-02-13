@@ -58,11 +58,6 @@ package ui.window {
 		public var plugin:Plugin;
 		
 		/**
-		 * 	default duration
-		 */
-		public var duration:int	= 2;
-		
-		/**
 		 * 	@private
 		 * 	returns controls
 		 */
@@ -80,7 +75,7 @@ package ui.window {
 			// init controls
 			_controls = new Controls(this,
 				new ControlRange('transition', 'Layer Transition', data, 0, 'name'),
-				new ControlInt('duration', 'Duration', 1, 5, 3, { factor: 10 })
+				new ControlInt('duration', 'Duration', 1, 20, 3, { factor: 10 })
 			);
 			
 			var options:UIOptions	= new UIOptions();
@@ -94,8 +89,8 @@ package ui.window {
 			
 			addChild(slider);
 			
-			slider.x	= 100;
-			slider.y = 20;
+			slider.x				= 100;
+			slider.y				= 20;
 
 			addChild(dropdown);
 			
@@ -106,8 +101,26 @@ package ui.window {
 			height = 34;
 		}
 		
+		/**
+		 * 	Gets controls
+		 */
 		public function get controls():Controls {
 			return _controls;
+		}
+		
+		/**
+		 * 
+		 */
+		public function get duration():int {
+			return (UIManager.transition) ? UIManager.transition.duration / 1000 : 0;
+		}
+		
+		
+		/**
+		 * 
+		 */
+		public function set duration(value:int):void {
+			(UIManager.transition) ? UIManager.transition.duration = value * 1000 : null;
 		}
 		
 		/**
