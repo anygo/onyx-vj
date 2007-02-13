@@ -30,10 +30,33 @@
  */
 package onyx.layer {
 	
+	import flash.display.BitmapData;
+	import flash.events.IEventDispatcher;
+	import flash.net.URLRequest;
+	
+	import onyx.content.IContent;
 	import onyx.controls.Controls;
 	import onyx.controls.IControlObject;
+	import onyx.filter.IFilterObject;
+	import onyx.transition.Transition;
+	
+	[Event(name="filter_applied",	type="onyx.events.FilterEvent")]
+	[Event(name="filter_removed",	type="onyx.events.FilterEvent")]
+	[Event(name="filter_moved",		type="onyx.events.FilterEvent")]
+	[Event(name="layer_loaded",		type="onyx.events.LayerEvent")]
+	[Event(name="layer_moved",		type="onyx.events.LayerEvent")]
+	[Event(name="progress",			type="flash.events.Event")]
 
-	public interface ILayer extends IColorObject, IControlObject {
+	public interface ILayer extends IFilterObject, IColorObject, IControlObject {
+
 		function get properties():LayerProperties;
+		function moveLayer(index:int):void;
+		function copyLayer():void;
+		function unload():void;
+		function draw(bmp:BitmapData):void;
+		function load(request:URLRequest, settings:LayerSettings = null, transition:Transition = null):void;
+		function get path():String;
+		function get index():int;
+
 	}
 }

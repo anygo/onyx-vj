@@ -31,11 +31,12 @@
 package onyx.layer {
 	
 	import onyx.filter.Filter;
+	import flash.events.IEventDispatcher;
 	
 	/**
 	 * 	Base interface for DisplayObject interface as well as tint, saturation etc
 	 */
-	public interface IColorObject {
+	public interface IColorObject extends IEventDispatcher {
 		
 		function set color(value:uint):void;
 		function get color():uint;
@@ -75,6 +76,22 @@ package onyx.layer {
 		
 		function get blendMode():String;
 		function set blendMode(value:String):void;
+
+		function get time():Number;
+		function set time(value:Number):void;
+
+		function get totalTime():int;
+
+		function get framerate():Number;
+		function set framerate(value:Number):void;
+		
+		function get loopStart():Number;
+		function set loopStart(value:Number):void;
+
+		function get loopEnd():Number;
+		function set loopEnd(value:Number):void;
+		
+		function pause(b:Boolean = true):void;
 		
 	}
 }

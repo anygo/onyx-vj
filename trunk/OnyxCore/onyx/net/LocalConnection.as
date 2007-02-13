@@ -28,12 +28,23 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package onyx.errors {
+ 
+// this is just here for easier testing
+package onyx.net {
 	
-	[ExcludeClass]
-	final public class ErrorDescription {
+	import flash.events.EventDispatcher;
+	import flash.net.LocalConnection;
+
+	public final class LocalConnection extends EventDispatcher implements IConnection {
 		
-		public static const INVALID_CLASS_CREATION:Error	= new Error('You cannot create an instance of this class directly.');
+		private var lc:flash.net.LocalConnection	= new flash.net.LocalConnection();
+		
+		public function LocalConnection():void {
+		}
+		
+		public function connect(name:String):void {
+			lc.connect(name);
+		}
 		
 	}
 }

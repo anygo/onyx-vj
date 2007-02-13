@@ -59,18 +59,23 @@ package onyx.plugin {
 		/**
 		 * 
 		 */
-		public var type:Class;
+		public var relatedObject:PluginBase;
 		
 		/**
 		 * 	@constructor
 		 */
 		public function Plugin(name:String, definition:Class, description:String):void {
+
 			this.name = name;
-			_definition = definition;
 			this.description = description;
+			_definition = definition;
+
 		}
 		
-		public function getDefinition():Object {
+		/**
+		 * 	Returns a new object based on the plugin definition
+		 */
+		public function getDefinition():PluginBase {
 			var obj:PluginBase = new _definition() as PluginBase;
 			obj._name = name;
 			

@@ -39,9 +39,19 @@ package onyx.controls {
 
 	dynamic public class Controls extends Array {
 		
+		/**
+		 * 	@private
+		 */
 		private var _definitions:Dictionary = new Dictionary(true);
+		
+		/**
+		 * 	@private
+		 */
 		private var _target:IControlObject;
 		
+		/**
+		 * 	@constructor
+		 */
 		public function Controls(target:IControlObject, ... controls:Array):void {
 			
 			_target = target;
@@ -49,6 +59,9 @@ package onyx.controls {
 			addControl.apply(this, controls);
 		}
 		
+		/**
+		 * 	Adds controls
+		 */
 		public function addControl(... controls:Array):void {
 			
 			for each (var control:Control in controls) {
@@ -75,12 +88,11 @@ package onyx.controls {
 		}
 		
 		/**
-		 * 
+		 * 	@private
 		 */
 		onyx_ns function set target(value:IControlObject):void {
 			for each (var control:Control in this) {
 				control.target = value;
-				// control.update();
 			}
 		}
 		

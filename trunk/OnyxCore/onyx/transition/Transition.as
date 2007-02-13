@@ -173,13 +173,6 @@ package onyx.transition {
 			currentContent	= current;
 			loadedContent	=  loaded;
 		}
-		
-		/**
-		 * 	Controls for the transition
-		 */
-		final public function get controls():Controls {
-			return _controls;
-		}
 
 		/**
 		 * 	Clones a transition
@@ -203,10 +196,11 @@ package onyx.transition {
 		/**
 		 * 	Destroys
 		 */
-		public function dispose():void {
+		override public function dispose():void {
 			
 			currentContent	= null;
 			loadedContent	= null;
+			super.dispose();
 		}
 	}
 }

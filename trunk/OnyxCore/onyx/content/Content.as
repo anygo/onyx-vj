@@ -54,7 +54,14 @@ package onyx.content {
 		
 	use namespace onyx_ns;
 	
+	[ExcludeClass]
 	public class Content extends EventDispatcher implements IContent {
+		
+		/**
+		 * 	Stores global rendering functions
+		 */
+		onyx_ns function draw(content:IBitmapDrawable, source:BitmapData, transform:RenderTransform):void {
+		}
 		
 		/**
 		 * 	@private
@@ -70,7 +77,7 @@ package onyx.content {
 		/**
 		 * 	@private
 		 */
-		private var _filter:ColorFilter							= new ColorFilter();
+		protected var _filter:ColorFilter							= new ColorFilter();
 		
 		/**
 		 * 	@private
@@ -576,7 +583,7 @@ package onyx.content {
 		/**
 		 * 
 		 */
-		onyx_ns function updateSource(transform:RenderTransform):void {
+		onyx_ns function updateSource(transform:RenderTransform = null):void {
 			
 			var transform:RenderTransform		= transform || getTransform();
 			var rect:Rectangle					= transform.rect;

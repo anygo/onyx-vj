@@ -34,6 +34,7 @@ package onyx.core {
 	import onyx.filter.Filter;
 	import onyx.jobs.StatJob;
 	import onyx.layer.Layer;
+	import onyx.layer.ILayer;
 	
 	use namespace onyx_ns;
 
@@ -86,6 +87,23 @@ package onyx.core {
 			var time:int = args[0] || 2;
 			
 			var job:StatJob = new StatJob(time);
+		}
+		
+		/**
+		 * 
+		 */
+		public static function layer(... args:Array):void {
+			
+			try {
+				
+				var display:Display = Onyx.displays[0];
+				var layer:ILayer	= display.layers[args[0]];
+				
+				layer[args[1]] = args[2];
+			} catch (e:Error) {
+				Console.output(e.message);
+			}
+			
 		}
 	}
 }

@@ -45,6 +45,7 @@ package onyx.content {
 	import flash.utils.getTimer;
 	
 	import onyx.constants.BOOLEAN;
+	import onyx.constants.POINT;
 	import onyx.controls.*;
 	import onyx.core.IDisposable;
 	import onyx.core.RenderTransform;
@@ -54,8 +55,14 @@ package onyx.content {
 	import onyx.layer.IColorObject;
 	import onyx.layer.Layer;
 	import onyx.layer.LayerProperties;
+	import onyx.plugin.Plugin;
+	import onyx.sound.SpectrumAnalyzer;
+	import onyx.sound.Visualizer;
 //	import onyx.sound.SpectrumAnalyzer;
+
+	use namespace onyx_ns;
 	
+	[ExcludeClass]
 	public final class ContentMP3 extends Content {
 	
 		private var _length:int;
@@ -63,8 +70,8 @@ package onyx.content {
 		private var _loopEnd:int;	
 		private var _sound:Sound;
 		private var _channel:SoundChannel;
-
-//		private var _analyzer:SpectrumAnalyzer	= new SpectrumAnalyzer();
+		
+		private var _plugin:Plugin;
 		
 		public function ContentMP3(layer:Layer, sound:Sound):void {
 			
@@ -75,12 +82,38 @@ package onyx.content {
 			_loopEnd	= _length;
 			
 			super(layer, null);
+
+			// add a control for the visualizer
+			_controls = new Controls(this, 
+				new ControlRange('visualizer', 'Visualizer', Visualizer.visualizers, 0, 'name')
+			);
+		}
+		
+		/**
+		 * 	Gets the visualizer
+		 */
+		public function get visualizer():Plugin {
+			return _plugin;
+		}
+
+		/**
+		 * 	Sets the visualizer
+		 */
+		public function set visualizer(plugin:Plugin):void {
+			
+			if (_plugin) {
+				_plugin.relatedObject.dispose();
+				_plugin.relatedObject = null;
+			}
+			
+			_plugin = plugin;
+			_plugin.relatedObject = plugin.getDefinition();
 		}
 		
 		/**
 		 * 	Updates the bimap source
 		 */
-		override public function render(layer:BitmapData, transform:RenderTransform = null):void {
+		override public function render(source:BitmapData, transform:RenderTransform = null):void {
 			var position:Number = Math.ceil(_channel.position);
 			
 			if (position >= _loopEnd || position < _loopStart || position >= _length) {
@@ -88,21 +121,42 @@ package onyx.content {
 				_channel = _sound.play(_loopStart);
 			}
 			
-			// do not render
-			
-//			_analyzer.render();
+			if (_plugin && SpectrumAnalyzer.spectrum) {
+				
+				// empty
+				_source.fillRect(source.rect, 0x00000000);
 
-//			if (_analyzer) {
-//				super.enterFrame(event);
-//				
-			
-//			super.render(event, update);
+				// get the transform and pass it on
+				var transform:RenderTransform = getTransform();
+				
+				// add the analysis
+				transform.spectrum = SpectrumAnalyzer.spectrum;
+
+				// render
+				(_plugin.relatedObject as Visualizer).render(_source, transform);
+
+				// apply the color filter to the source
+				_source.applyFilter(_source, _source.rect, POINT, _filter.filter);
+				
+				// apply filters
+				applyFilters();
+				
+				// copy the pixels back to the layer
+				source.copyPixels(_rendered, _rendered.rect, POINT);
+
+			}
 		}
 		
+		/**
+		 * 	
+		 */
 		override public function get time():Number {
 			return (_channel) ? _channel.position / _sound.length : 0;
 		}
 		
+		/**
+		 * 	
+		 */
 		override public function set time(value:Number):void {
 			
 			if (_channel) {
@@ -113,24 +167,39 @@ package onyx.content {
 			
 		}
 		
+		/**
+		 * 	
+		 */
 		override public function set loopStart(value:Number):void {
 			_loopStart = __loopStart.setValue(value) * _length;
 		}
 		
+		/**
+		 * 	
+		 */
 		override public function get loopStart():Number {
 			return _loopStart / _length;
 		}
 		
+		/**
+		 * 	
+		 */
 		override public function set loopEnd(value:Number):void {
 			_loopEnd = __loopEnd.setValue(value) * _length;
 		}
 		
+		/**
+		 * 	
+		 */
 		override public function get loopEnd():Number {
 			return _loopEnd / _length;
 		}
 		
+		/**
+		 * 	Dispose
+		 */
 		override public function dispose():void {
-//			_analyzer = null;			
+	
 			_channel.stop();
 			_channel = null;
 			_sound = null;

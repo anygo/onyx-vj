@@ -8,8 +8,9 @@ package onyx.content
 	import onyx.core.RenderTransform;
 	import onyx.filter.Filter;
 
-	public final class ContentNull implements IContent
-	{
+	[ExcludeClass]
+	public final class ContentNull implements IContent {
+		
 		public function get source():BitmapData
 		{
 			return null;
@@ -67,7 +68,7 @@ package onyx.content
 		
 		public function getFilterIndex(filter:Filter):int
 		{
-			return 0;
+			return -1;
 		}
 		
 		public function set framerate(value:Number):void

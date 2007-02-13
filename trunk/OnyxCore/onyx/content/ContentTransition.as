@@ -50,6 +50,7 @@ package onyx.content {
 	
 	use namespace onyx_ns;
 	
+	[ExcludeClass]
 	public final class ContentTransition extends Content {
 		
 		/**

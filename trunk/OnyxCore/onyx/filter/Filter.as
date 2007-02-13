@@ -110,19 +110,13 @@ package onyx.filter {
 		onyx_ns var _unique:Boolean;
 		
 		/**
-		 * 
-		 */
-		private var _controls:Controls;
-		
-		/**
 		 * 	@contructor
 		 */
 		final public function Filter(unique:Boolean, ... controls:Array):void {
 			
 			_unique = unique;
 			
-			_controls = new Controls(this);
-			_controls.addControl.apply(null, controls);
+			super.controls.addControl.apply(null, controls);
 			
 		}
 		
@@ -154,19 +148,11 @@ package onyx.filter {
 		 */
 		onyx_ns final function cleanContent():void {
 			content	= null;
-			stage		= null;
+			stage	= null;
 			
-			if (_controls) {
-				_controls.dispose();
+			if (super.controls) {
+				super.dispose();
 			}
-			_controls = null;
-		}
-		
-		/**
-		 * 	Returns the controls related toe the filter
-		 */
-		final public function get controls():Controls {
-			return _controls;
 		}
 		
 		/**
@@ -182,7 +168,7 @@ package onyx.filter {
 			var plugin:Plugin = Filter.getDefinition(_name);
 			var filter:Filter = plugin.getDefinition() as Filter;
 			
-			for each (var control:Control in _controls) {
+			for each (var control:Control in controls) {
 				var newControl:Control = filter.controls.getControl(control.name);
 				newControl.value = control.value;
 			}
@@ -196,11 +182,6 @@ package onyx.filter {
 		final public function moveFilter(index:int):void {
 			content.moveFilter(this, index);
 		}
-		
-		/**
-		 * 	Destroys the filter
-		 */
-		public function dispose():void {
-		}
+
 	}
 }

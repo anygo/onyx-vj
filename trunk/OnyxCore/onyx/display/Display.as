@@ -120,7 +120,7 @@ package onyx.display {
 		/**
 		 * 	Creates a specified number of layers
 		 */
-		public function createLayers(numLayers:uint):void {
+		public function createLayers(numLayers:uint, local:Boolean = true):void {
 			
 			while (numLayers-- ) {
 				

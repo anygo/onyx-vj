@@ -81,9 +81,7 @@ package onyx.layer {
 		/**
 		 * 	Gets variables from a layer
 		 */
-		public function load(layer:Layer):void {
-			var content:IContent = layer._content;
-			
+		public function load(content:ILayer):void {
 			x			= content.x;
 			y			= content.y;
 			scaleX		= content.scaleX;
@@ -105,11 +103,11 @@ package onyx.layer {
 			loopStart	= content.loopStart;
 			loopEnd		= content.loopEnd;
 			
-			path		= layer.path;
+			path		= content.path;
 			filters		= content.filters.concat();
 			
-			if (layer.controls) {
-				controls = layer.controls;
+			if (content.controls) {
+				controls = content.controls;
 			}
 		}
 		
@@ -316,7 +314,26 @@ package onyx.layer {
 				var controlXML:XML = <controls/>;
 				
 				for each (var control:Control in controls) {
-					controlXML.appendChild(<{control.name}>{control.value}</{control.name}>);
+					
+					var value:Object = control.value;
+					
+					if (value is Plugin) {
+						var plugin:PluginBase = (value as Plugin).relatedObject;
+						
+						if (plugin) {
+							var pluginParent:XML = <{control.name}/>;
+							var pluginXML:XML	 = <plugin id={plugin._name}/>;
+
+							for each (control in plugin.controls) {
+								pluginXML.appendChild(<{control.name}>{control.value}</{control.name}>);
+							}
+							
+							pluginParent.appendChild(pluginXML);
+							controlXML.appendChild(pluginParent);
+						}
+					} else {
+						controlXML.appendChild(<{control.name}>{control.value}</{control.name}>);
+					}
 				}
 				
 				xml.appendChild(controlXML);

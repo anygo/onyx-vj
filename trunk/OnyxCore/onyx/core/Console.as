@@ -33,20 +33,28 @@ package onyx.core {
 	import flash.events.EventDispatcher;
 	
 	import onyx.display.Display;
-	import onyx.errors.ErrorDescription;
 	import onyx.events.ConsoleEvent;
 
 	public final class Console extends EventDispatcher {
 		
-		public static const MESSAGE_NONE:int	= 0;
-		public static const MESSAGE_SYSTEM:int	= 1;
+//		public static const MESSAGE_NONE:int	= 0;
+//		public static const MESSAGE_SYSTEM:int	= 1;
 		
+		/**
+		 * 	@private
+		 */
 		private static const dispatcher:EventDispatcher	= new EventDispatcher();
 		
+		/**
+		 * 	Returns the console instance
+		 */
 		public static function getInstance():EventDispatcher {
 			return dispatcher;
 		}
 		
+		/**
+		 * 	Outputs an event to the console
+		 */
 		public static function output(... args:Array):void {
 			
 			dispatcher.dispatchEvent(
@@ -54,6 +62,9 @@ package onyx.core {
 			);
 		}
 		
+		/**
+		 * 	Executes a command
+		 */
 		public static function executeCommand(command:String):void {
 			
 			var command:String = command.toLowerCase();
@@ -73,10 +84,6 @@ package onyx.core {
 					}
 				}
 			}
-		}
-		
-		public function Console():void {
-			throw ErrorDescription.INVALID_CLASS_CREATION;
 		}
 
 	}

@@ -58,7 +58,7 @@ package onyx.layer {
 	/**
 	 * 	Layer is the base media for all video objects
 	 */
-	public class Layer extends Bitmap implements ILayer {
+	public class LayerRemote extends Bitmap implements ILayer {
 		
 		/**
 		 * 	@private

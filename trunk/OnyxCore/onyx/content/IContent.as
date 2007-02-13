@@ -42,51 +42,16 @@ package onyx.content {
 	import onyx.controls.IControlObject;
 	import onyx.core.IDisposable;
 	import onyx.filter.Filter;
+	import onyx.filter.IFilterObject;
 	import onyx.layer.IColorObject;
 	import onyx.layer.Layer;
 	import onyx.plugin.IRenderable;
 	
-	public interface IContent extends IControlObject, IColorObject, IRenderable, IEventDispatcher {
-		
-		/**
-		 * 	Returns the time of the content in percent
-		 */
-		function get time():Number;
-		
-		/**
-		 * 	@private
-		 */
-		function set time(value:Number):void;
+	public interface IContent extends IFilterObject, IControlObject, IColorObject, IRenderable, IEventDispatcher {
 
-		/**
-		 * 	Returns total time
-		 */
-		function get totalTime():int;
-
-		/**
-		 * 	Sets the framerate
-		 */
-		function get framerate():Number;
-		function set framerate(value:Number):void;
-		
-		function get loopStart():Number;
-		function set loopStart(value:Number):void;
-
-		function get loopEnd():Number;
-		function set loopEnd(value:Number):void;
-		
-		function get filters():Array;
-		
 		function get source():BitmapData;
 		function get rendered():BitmapData;
-		
-		function addFilter(filter:Filter):void;
-		function removeFilter(filter:Filter):void;
-		function getFilterIndex(filter:Filter):int;
-		function moveFilter(filter:Filter, index:int):void;
-		
-		function pause(b:Boolean = true):void;
-		
 		function set matrix(value:Matrix):void;
+		
 	}
 }

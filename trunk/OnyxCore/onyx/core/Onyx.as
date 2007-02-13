@@ -33,9 +33,7 @@ package onyx.core {
 	import flash.display.Stage;
 	import flash.events.*;
 	import flash.net.*;
-	import flash.utils.Dictionary;
-	import flash.utils.Timer;
-	import flash.utils.getQualifiedClassName;
+	import flash.utils.*;
 	
 	import onyx.controls.*;
 	import onyx.display.Display;
@@ -43,8 +41,10 @@ package onyx.core {
 	import onyx.filter.*;
 	import onyx.layer.*;
 	import onyx.plugin.Plugin;
+	import onyx.sound.SpectrumAnalyzer;
 	import onyx.states.*;
 	import onyx.transition.*;
+	import onyx.sound.Visualizer;
 	
 	use namespace onyx_ns;
 	
@@ -72,12 +72,6 @@ package onyx.core {
 		onyx_ns static var _displays:Array	= [];
 		
 		/**
-		 * 	@private
-		 * 	Stores definitions for all the transitions
-		onyx_ns static var _transitions:Array		= [];
-		 */
-
-		/**
 		 * 	Gets the framerate
 		 */
 		public static function get framerate():int {
@@ -101,7 +95,7 @@ package onyx.core {
 		/**
 		 * 	Initializes the Onyx engine
 		 */
-		public static function initialize(root:Stage):EventDispatcher {
+		public static function initialize(root:Stage, connection:String = null):EventDispatcher {
 			
 			Onyx.root = root;
 			
@@ -131,6 +125,7 @@ package onyx.core {
 		}
 		
 		/**
+		 * 	@private
 		 * 	When resized change the display location
 		 */		
 		private static function _onResize(event:Event):void {
@@ -146,6 +141,9 @@ package onyx.core {
 		public static function registerPlugin(plugin:Plugin):void {
 			
 			if (plugin._definition) {
+				
+				// make sure it's uppercase
+				plugin.name = plugin.name.toUpperCase();
 
 				var object:IDisposable = plugin.getDefinition() as IDisposable;
 				
@@ -158,20 +156,15 @@ package onyx.core {
 					
 					Transition.registerPlugin(plugin);
 
+				} else if (object is Visualizer) {
+					
+					Visualizer.registerPlugin(plugin);
 				}
 				
 				object.dispose();
 			}
 		}
 
-		/**
-		 * 	Returns an array of Plugins that contain transition definitions
-		 * 	@see onyx.plugin.Plugin
-		public static function get transitions():Array {
-			return _transitions.concat();
-		}
-		 */
-		
 		/**
 		 * 	Returns all the displays
 		 */
@@ -184,18 +177,17 @@ package onyx.core {
 		 * 	@param		The number of layers to create in the display
 		 * 	@returns	Display
 		 */
-		public static function createLocalDisplay(numLayers:int):Display {
+		public static function createLocalDisplay(numLayers:int, x:int = 0, y:int = 0, scaleX:Number = 1, scaleY:Number = 1):Display {
 			
 			var display:Display = new Display();
 			_displays.push(display);
 
 			display.createLayers(numLayers);
+			display.x = x;
+			display.y = y;
+			display.scaleX = scaleX;
+			display.scaleY = scaleY;
 			
-			display.scaleX = 1;
-			display.scaleY = 1;
-			display.x = root.stageWidth - display.width;
-			display.y = 525;
-
 			root.addChild(display);
 
 			var event:DisplayEvent = new DisplayEvent(DisplayEvent.DISPLAY_CREATED);

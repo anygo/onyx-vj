@@ -29,22 +29,29 @@
  * 
  */
 package onyx.events {
+	
 	import flash.events.Event;
 
 	public final class ControlEvent extends Event {
 		
-		public static const CHANGE:String = 'c_ch';
+		public static const CHANGE:String = 'ce_ch';
+		public static const UPDATE:String = 'ce_up';
 		
 		public var value:*;
 		
-		public function ControlEvent(v:*):void {
+		/**
+		 * 	Dispatched when a control has changed
+		 */
+		public function ControlEvent(v:*, type:String = null):void {
 			
 			value = v;
 			
-			super(CHANGE);
+			super(type || CHANGE);
 		}
 		
-		
+		/**
+		 * 	Control Event
+		 */
 		override public function clone():Event {
 			var event:ControlEvent = new ControlEvent(super.type);
 			event.value = value;

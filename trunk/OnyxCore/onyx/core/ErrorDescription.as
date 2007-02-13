@@ -28,14 +28,12 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-
-// this is a placeholder for a filter that responds to audio events
-
-package onyx.filter {
+package onyx.core {
 	
-	public interface ISpectrumFilter {
+	[ExcludeClass]
+	final public class ErrorDescription {
 		
-		function applyFilter():void;
+		public static const INVALID_CLASS_CREATION:Error	= new Error('You cannot create an instance of this class directly.');
 		
 	}
 }
