@@ -38,8 +38,6 @@ package {
 	import onyx.filter.Filter;
 	import onyx.plugin.*;
 	
-	import spectrum.*;
-	
 	import transitions.*;
 	
 	import visualizer.*;
