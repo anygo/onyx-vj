@@ -33,14 +33,15 @@ package ui.window {
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	
-	import onyx.events.SpectrumEvent;
+/*	import onyx.events.SpectrumEvent;
 	import onyx.sound.SpectrumAnalyzer;
 	import onyx.sound.SpectrumTrigger;
+*/
 	
 	public class SoundEqualizer extends Window {
 		
-		private var analyzer:SpectrumAnalyzer = SpectrumAnalyzer.getGlobal();
-		private var overlay:Sprite = new Sprite();
+//		private var analyzer:SpectrumAnalyzer = SpectrumAnalyzer.getGlobal();
+//		private var overlay:Sprite = new Sprite();
 		
 		public function SoundEqualizer():void {
 
@@ -51,9 +52,10 @@ package ui.window {
 			x = 822;
 			y = 2;
 			
+/*			
 			overlay.x = 2;
 			overlay.y = 13;
-			
+
 			addChild(overlay);
 			
 			analyzer.addEventListener(SpectrumEvent.SPECTRUM_ANALYZED, _analyzed);
@@ -61,8 +63,10 @@ package ui.window {
 			analyzer.addTrigger(new SpectrumTrigger(192, 255))
 			
 			addEventListener(MouseEvent.MOUSE_DOWN, _onMouseDown);
+*/
 		}
-		
+
+/*		
 		private function _onMouseDown(event:MouseEvent):void {
 		}
 
@@ -88,5 +92,6 @@ package ui.window {
 		private function _triggered(event:SpectrumEvent):void {
 			// trace(event);
 		}
+*/
 	}
 }

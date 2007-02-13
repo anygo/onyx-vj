@@ -79,14 +79,14 @@ package ui.window {
 			
 			// init controls
 			_controls = new Controls(this,
-				new ControlRange('transition', 'Layer Transition', data, 0),
+				new ControlRange('transition', 'Layer Transition', data, 0, 'name'),
 				new ControlInt('duration', 'Duration', 1, 5, 3, { factor: 10 })
 			);
 			
 			var options:UIOptions	= new UIOptions();
 			options.width			= 100;
 			
- 			dropdown				= new DropDown(options, _controls.getControl('transition'), 'left', 'name');
+ 			dropdown				= new DropDown(options, _controls.getControl('transition'), 'left');
 			dropdown.x = 2;
 			dropdown.y = 20;
 			

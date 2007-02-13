@@ -71,10 +71,10 @@ package ui.window {
 			_controlColor	= new ColorPicker(options, controls.getControl('backgroundColor'));
 			_controlXML		= new TextButton(options, 'save layers');
 			
-			var control:Control = new ControlRange('size', 'size', DisplaySize.SIZES);
+			var control:Control = new ControlRange('size', 'size', DisplaySize.SIZES, 0, 'name');
 			control.target		= display;
 
-			_controlSize	= new DropDown(options, control, 'left', 'name');
+			_controlSize	= new DropDown(options, control, 'left');
 			
 			_controlXY.y	= 24;
 			_controlColor.y = 70;

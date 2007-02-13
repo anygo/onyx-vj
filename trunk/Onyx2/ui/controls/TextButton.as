@@ -10,7 +10,7 @@ package ui.controls {
 			var height:int	= options.height;
 			
 			displayBackground(width, height);
-			addLabel(name, 'center', width, height, 1);
+			addLabel(name.toUpperCase(), 'center', width, height, 1);
 
 			addChild(new ButtonClear(width, height));
 		}

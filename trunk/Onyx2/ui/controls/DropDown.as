@@ -53,15 +53,13 @@ package ui.controls {
 		private var _data:Array;
 		private var _items:Array;
 		private var _selectedIndex:Option;
-		private var _bind:String;
 		
-		public function DropDown(options:UIOptions, range:Control, align:String = 'left', bind:String = null):void {
+		public function DropDown(options:UIOptions, range:Control, align:String = 'left'):void {
 
 			var control:ControlRange = range as ControlRange;
 			
 			super(options, true, control.display);
 			
-			_bind = bind;
 			_width = options.width;
 			
 			_control = control;
@@ -138,7 +136,7 @@ package ui.controls {
 			for (var count:int = 0; count < len; count++) {
 				
 				var item:Option	= new Option(
-					(_bind) ? (_data[count] ? _data[count][_bind] : 'None') : _data[count], count, _width, _label.align, _bind)
+					(_control.binding) ? (_data[count] ? _data[count][_control.binding] : 'None') : _data[count], count, _width, _label.align, _control.binding)
 				;
 				
 				item.addEventListener(MouseEvent.MOUSE_OVER, _onRollOver);
@@ -188,7 +186,7 @@ package ui.controls {
 		
 		public function setText(value:*):void {
 
-			_label.text = (_bind && value) ? value[_bind] || 'None' : value || 'None';
+			_label.text = (_control.binding && value) ? value[_control.binding] || 'None' : value || 'None';
 
 		}
 		

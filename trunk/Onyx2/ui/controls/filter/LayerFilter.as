@@ -47,19 +47,20 @@ package ui.controls.filter {
 	import ui.layer.UILayer;
 	import ui.text.Style;
 	import ui.text.TextField;
+	import onyx.layer.ILayer;
 	
 	use namespace onyx_ns;
 
 	public final class LayerFilter extends UIObject {
 		
 		public var filter:Filter;
-		private var _layer:Layer;
+		private var _layer:ILayer;
 
 		private var _label:TextField			= new TextField(72,10);
 		private var _btnDelete:ButtonClear		= new ButtonClear(9,9);
 		private var _bg:AssetLayerFilter		= new AssetLayerFilter();
 		
-		public function LayerFilter(filter:Filter, layer:Layer):void {
+		public function LayerFilter(filter:Filter, layer:ILayer):void {
 			
 			this.filter = filter;
 			_layer = layer;

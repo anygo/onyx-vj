@@ -42,6 +42,7 @@ package ui.layer {
 	import onyx.core.Onyx;
 	import onyx.events.*;
 	import onyx.filter.Filter;
+	import onyx.layer.ILayer;
 	import onyx.layer.Layer;
 	import onyx.layer.LayerProperties;
 	import onyx.layer.LayerSettings;
@@ -49,6 +50,7 @@ package ui.layer {
 	import onyx.states.StateManager;
 	import onyx.transition.Transition;
 	
+	import ui.UIManager;
 	import ui.assets.*;
 	import ui.controls.*;
 	import ui.controls.filter.LayerFilter;
@@ -59,7 +61,6 @@ package ui.layer {
 	import ui.text.Style;
 	import ui.text.TextField;
 	import ui.window.TransitionWindow;
-	import ui.UIManager;
 
 
 	/**
@@ -109,8 +110,10 @@ package ui.layer {
 			// make the delay faster
 			uilayer._timer.delay = 750;
 			
+			// highlight
 			uilayer.highlight(0x3186d6,.13);
 			
+			// select layer
 			selectedLayer = uilayer;
 		}
 		
@@ -126,7 +129,7 @@ package ui.layer {
 		 **********************************************************/
 
 		/** @private **/
-		private var _layer:Layer;
+		private var _layer:ILayer;
 
 		/** @private **/
 		private var _monitor:Boolean						= false;
@@ -791,7 +794,7 @@ package ui.layer {
 		/**
 		 * 	Returns layer
 		 */
-		public function get layer():Layer {
+		public function get layer():ILayer {
 			return _layer;
 		}
 		

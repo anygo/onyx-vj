@@ -55,6 +55,9 @@ package ui {
 	 */
 	public class UIManager {
 		
+		/**
+		 * 	Stores our transition we'll pass in with files
+		 */
 		public static var transition:Transition;
 
 		/**
@@ -70,9 +73,6 @@ package ui {
 			// store the root
 			UIManager.root = root;
 			
-			// low quality
-			root.stage.quality = StageQuality.LOW;
-			
 			// initializes onyx
 			var engine:EventDispatcher = Onyx.initialize(root);
 			
@@ -87,14 +87,14 @@ package ui {
 			
 			var engine:EventDispatcher = event.currentTarget as EventDispatcher;
 
-			_loadWindows(Console, PerfMonitor, Browser, Filters, TransitionWindow);
+			_loadWindows(Console, PerfMonitor, Browser, Filters, TransitionWindow, HostWindow);
 
 			// listen for windows created
 			engine.removeEventListener(ApplicationEvent.ONYX_STARTUP_END, _onInitialize);
 			engine.addEventListener(LayerEvent.LAYER_CREATED, _onLayerCreate);
 			engine.addEventListener(DisplayEvent.DISPLAY_CREATED, _onDisplayCreate);
 			
-			Onyx.createLocalDisplay(5);
+			Onyx.createLocalDisplay(5, root.stageWidth - 320, 525);
 			
 			StateManager.loadState(new KeyListenerState(), root);
 		}

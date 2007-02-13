@@ -28,33 +28,56 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package {
+package ui.window {
 	
-	import flash.display.*;
-	import flash.events.Event;
-	import flash.system.Security;
-	
-	import onyx.utils.ArrayUtil;
+	import onyx.net.Host;
 	
 	import ui.UIManager;
-	import ui.core.UIObject;
+	import ui.controls.DropDown;
+	import ui.controls.SliderV;
+	import ui.controls.TextButton;
+	import ui.controls.UIOptions;
+	import flash.events.MouseEvent;
 	
-	[ExcludeClass]
-
-	[SWF(width="1024", height="768", backgroundColor="#141515", frameRate='24')]
-	public class Onyx2 extends UIObject {
+	public final class HostWindow extends Window {
+		
+		private var _host:Host	= new Host();
 		
 		/**
-		 * 	@constructor
+		 * 	@Constructor
 		 */
-		public function Onyx2():void {
+		public function HostWindow():void {
 			
-			// no scale please thanks
-			stage.align = StageAlign.TOP_LEFT;
-			stage.scaleMode = StageScaleMode.NO_SCALE;
-			stage.quality = StageQuality.LOW;
-
-			UIManager.initialize(stage);
+			var options:UIOptions = new UIOptions();
+			options.width = 100;
+			
+			var button:TextButton = new TextButton(options, 'Listen');
+			button.x = 4;
+			button.y = 12;
+			button.addEventListener(MouseEvent.MOUSE_DOWN, _onConnectLocal);
+			
+			addChild(button);
+			
+			button = new TextButton(options, 'Connect Remote');
+			button.x = 4;
+			button.y = 24;
+			button.addEventListener(MouseEvent.MOUSE_DOWN, _onConnectRemote);
+			
+			addChild(button);
+			
+			title = 'HOST';
+			x = 406;
+			y = 542;
+			width = 190;
+			height = 50;
 		}
+		
+		private function _onConnectLocal(event:MouseEvent):void {
+			_host.connect(null, 0);
+		}
+		
+		private function _onConnectRemote(event:MouseEvent):void {
+		}
+
 	}
 }
