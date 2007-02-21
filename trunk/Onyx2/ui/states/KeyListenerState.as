@@ -10,6 +10,10 @@ package ui.states {
 
 	public final class KeyListenerState extends ApplicationState {
 		
+		public static var SELECT_PAGE_0:int	= 81;
+		public static var SELECT_PAGE_1:int	= 87;
+		public static var SELECT_PAGE_2:int	= 69;
+		
 		override public function initialize(... args:Array):void {
 			var root:Stage = args[0];
 			
@@ -51,11 +55,34 @@ package ui.states {
 				case 49:
 				case 50:
 				case 51:
+				case 52:
+				case 53:
+					UILayer.selectLayer(UILayer.layers[event.keyCode - 49]);
+					break;
+				case SELECT_PAGE_0:
+				
 					for each (layer in UILayer.layers) {
-						layer.selectPage(event.keyCode - 49);
+						layer.selectPage(0);
 					}
+					
+					break;
+				case SELECT_PAGE_1:
+				
+					for each (layer in UILayer.layers) {
+						layer.selectPage(1);
+					}
+					
+					break;
+				case SELECT_PAGE_2:
+				
+					for each (layer in UILayer.layers) {
+						layer.selectPage(2);
+					}
+					
 					break;
 				default:
+					trace(event.keyCode);
+					break;
 			}
 		}
 

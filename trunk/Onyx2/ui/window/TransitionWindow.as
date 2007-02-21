@@ -40,7 +40,7 @@ package ui.window {
 	import onyx.plugin.Plugin;
 	import onyx.transition.Transition;
 	
-	import ui.UIManager;
+	import ui.core.UIManager;
 	import ui.controls.DropDown;
 	import ui.controls.SliderV;
 	import ui.controls.UIOptions;
@@ -67,6 +67,15 @@ package ui.window {
 		 * 	@Constructor
 		 */
 		public function TransitionWindow():void {
+			
+			// add a default plugin
+			var plugin:Plugin = Transition.transitions[0];
+			
+			if (plugin) {
+				this.plugin = plugin;
+				UIManager.transition = plugin.getDefinition() as Transition;
+				UIManager.transition.duration = 2000;
+			}
 
 			// grab data, create a "none" object
 			var data:Array = Transition.transitions;
@@ -89,16 +98,12 @@ package ui.window {
 			
 			addChild(slider);
 			
-			slider.x				= 100;
+			slider.x				= 110;
 			slider.y				= 20;
 
 			addChild(dropdown);
 			
-			title = 'TRANSITIONS';
-			x = 6;
-			y = 542;
-			width = 190;
-			height = 34;
+			super('TRANSITIONS', 190, 34, 6, 522);
 		}
 		
 		/**

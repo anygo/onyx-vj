@@ -35,53 +35,59 @@ package ui.window {
 	import flash.media.Camera;
 	import flash.net.URLRequest;
 	
+	import onyx.core.*;
 	import onyx.layer.LayerSettings;
-	import onyx.settings.Settings;
 	
-	import ui.assets.AssetCamera;
-	import ui.assets.AssetFolder;
-	import ui.controls.ScrollPane;
+	import ui.assets.*;
+	import ui.controls.*;
 	import ui.controls.browser.*;
-	import ui.core.DragManager;
-	import ui.core.UIObject;
+	import ui.core.*;
 	import ui.events.DragEvent;
 	import ui.files.*;
 	import ui.layer.UILayer;
-	import ui.text.Style;
-	import ui.text.TextField;
+	import ui.text.*;
 
 	/**
 	 * 	File Explorer
 	 */
 	public final class Browser extends Window {
 
+		/**
+		 * 	@private
+		 */
 		private static const FILES_PER_ROW:int	= 6;
+		
+		/**
+		 * 	@private
+		 */
 		private static const FILE_WIDTH:int		= 49;
+		
+		/**
+		 * 	@private
+		 */
 		private static const FILE_HEIGHT:int	= 37;
+		
+		/**
+		 * 	@private
+		 */
 		private static const FOLDER_HEIGHT:int	= 10;
 		
 		/**
 		 * 	Holds the file objects
 		 */
-		private var _files:ScrollPane	= new ScrollPane(300, 204);
+		private var _files:ScrollPane	= new ScrollPane(300, 185);
 		
 		/**
 		 * 	Holds the folder objects
 		 */
-		private var _folders:ScrollPane	= new ScrollPane(90, 204);
+		private var _folders:ScrollPane	= new ScrollPane(90, 185);
 		
 		/**
 		 * 	@constructor
 		 */
 		public function Browser():void {
 			
-			title = 'loading ... ';
-			
-			width = 396;
-			height = 220;
-			
-			x = 6;
-			y = 318;
+			super('loading ... ', 396, 200, 6, 318);
 			
 			_files.x = 2;
 			_files.y = 14;

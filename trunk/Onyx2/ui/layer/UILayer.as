@@ -42,26 +42,21 @@ package ui.layer {
 	import onyx.core.Onyx;
 	import onyx.events.*;
 	import onyx.filter.Filter;
-	import onyx.layer.ILayer;
-	import onyx.layer.Layer;
-	import onyx.layer.LayerProperties;
-	import onyx.layer.LayerSettings;
+	import onyx.layer.*;
 	import onyx.plugin.Plugin;
 	import onyx.states.StateManager;
 	import onyx.transition.Transition;
+	import onyx.utils.*;
 	
-	import ui.UIManager;
+	import ui.core.UIManager;
 	import ui.assets.*;
 	import ui.controls.*;
-	import ui.controls.filter.LayerFilter;
+	import ui.controls.filter.*;
 	import ui.controls.layer.*;
 	import ui.core.UIObject;
-	import ui.states.FilterMoveState;
-	import ui.states.LayerMoveState;
-	import ui.text.Style;
-	import ui.text.TextField;
+	import ui.states.*;
+	import ui.text.*;
 	import ui.window.TransitionWindow;
-
 
 	/**
 	 * 	Controls layers
@@ -108,7 +103,7 @@ package ui.layer {
 			}
 			
 			// make the delay faster
-			uilayer._timer.delay = 750;
+			uilayer._timer.delay = 1000;
 			
 			// highlight
 			uilayer.highlight(0x3186d6,.13);
@@ -165,16 +160,13 @@ package ui.layer {
 		private var _timer:Timer							= new Timer(2000);
 
 		/** @private **/
-		public var preview:Bitmap							= new Bitmap(new BitmapData(192, 144, true, 0x00000000));
+		private var _preview:Bitmap							= new Bitmap(new BitmapData(192, 144, true, 0x00000000));
 
 		/** @private **/
 		private var _filename:TextField						= new TextField(162,16);
 
 		/** @private **/
-		private var _filterPane:Sprite						= new Sprite();
-		
-		/** @private **/
-		private var _filters:Array							= [];
+		private var _filterPane:FilterPane					= new FilterPane();
 		
 		/** @private **/
 		private var _controlPage:ControlPage				= new ControlPage();
@@ -188,26 +180,29 @@ package ui.layer {
 		/** @private **/
 		private var _selectedPage:int						= -1;
 				
-		/** @private **/
-		private var _selectedFilter:LayerFilter;
-		
 		/**
 		 * 	@constructor
 		 **/
-		public function UILayer(layer:Layer):void {
+		public function UILayer(layer:ILayer):void {
 			
+			// if there is no selected layer, select current layer
 			if (!selectedLayer) {
 				selectLayer(this);
 			}
 			
+			// store layer
 			_layer = layer;
 
+			// push
 			_layers.push(this);
 			
+			// draw
 			_draw();
-			
+
+			// add handlers			
 			_assignHandlers();
 			
+			// it moves to top
 			super(true);
 		}
 		
@@ -299,7 +294,7 @@ package ui.layer {
 					_layer.copyLayer();
 					break;
 				case _btnDelete:
-					_layer.unload();
+					_layer.dispose();
 					break;
 					
 			}
@@ -332,6 +327,7 @@ package ui.layer {
 
 			var page:LayerPage	= _pages[0];
 			
+			// create basic page
 			addPage('BASIC',
 				props.position,
 				props.alpha,
@@ -354,14 +350,14 @@ package ui.layer {
 			addChildren(
 			
 				_assetLayer,														0,			0,
-				preview,															1,			1,
+				_preview,															1,			1,
 				_filename,															3,			3,
 				_controlPage,														6,			193,
 
 				new DropDown(dropOptions, props.blendMode),							4,			153,
 				_assetScrub,										 		SCRUB_LEFT,			139,
 				_btnScrub,															1,			139,
-				_filterPane,														110,		182,
+				_filterPane,														111,		186,
 
 				_btnUp,																153,		154,
 				_btnDown,															162,		154,
@@ -393,10 +389,16 @@ package ui.layer {
 		/**
 		 * 
 		 */
-		public function selectPage(index:int):void {
+		public function selectPage(index:int, controls:Array = null):void {
+			
+			var page:LayerPage = _pages[index];
+			
+			if (controls) {
+				page.controls = controls;
+				_controlPage.addControls(page.controls);
+			}
 			
 			if (index !== _selectedPage) {
-				var page:LayerPage = _pages[index];
 				
 				_controlPage.addControls(page.controls);
 				_controlTabs.text	= page.name;
@@ -404,6 +406,13 @@ package ui.layer {
 				
 				_selectedPage = index;
 			}
+		}
+		
+		/**
+		 * 
+		 */
+		public function getPage(index:int):LayerPage {
+			return _pages[index];
 		}
 		
 		/**
@@ -428,15 +437,16 @@ package ui.layer {
 		 * 	@private
 		 */
 		private function _onPageSelect(event:MouseEvent):void {
+			
 			var target:LayerPageButton = event.currentTarget as LayerPageButton;
 			
 			if (target.index === 1) {
-				var filter:LayerFilter = _filters[0];
+				var filter:LayerFilter = _filterPane.getFilter(layer.filters[0]);
 				if (filter) {
-					selectFilter(filter);
+					_filterPane.selectFilter(filter);
 				}
 			} else {
-				selectFilter(null);
+				_filterPane.selectFilter(null);
 				selectPage(target.index);
 			}
 		}
@@ -445,14 +455,11 @@ package ui.layer {
 		 * 	@private
 		 * 	Handler that is evoked when a layer has finished loading a file
 		 */
-		private function _onLayerLoad(startInterval:Boolean):void {
+		private function _onLayerLoad(event:Event):void {
 			
 			// parse out the extension
 			var path:String = _layer.path;
 
-			var start:int = Math.max(path.lastIndexOf('\\')+1,path.lastIndexOf('/')+1);
-			var end:int = path.lastIndexOf('.');
-			
 			// check for custom controls
 			if (_layer.controls) {
 				var page:LayerPage = _pages[2];
@@ -466,7 +473,7 @@ package ui.layer {
 			}
 			
 			// set name
-			_filename.text = path.substr(start, end - start);
+			_filename.text = StringUtil.removeExtension(path);
 			
 			// add the preview interval
 			_timer.addEventListener(TimerEvent.TIMER, _onUpdateTimer);
@@ -500,7 +507,7 @@ package ui.layer {
 			_assetScrub.x = SCRUB_LEFT;
 			
 			removeEventListener(Event.ENTER_FRAME, _updatePlayheadHandler);
-			preview.bitmapData.fillRect(preview.bitmapData.rect, 0x000000);
+			_preview.bitmapData.fillRect(_preview.bitmapData.rect, 0x000000);
 		}
 		
 		/**
@@ -510,12 +517,15 @@ package ui.layer {
 		private function _onUpdateTimer(event:TimerEvent):void {
 			
 			// updates the bitmap
-			var bmp:BitmapData = preview.bitmapData;
-			bmp.fillRect(bmp.rect, 0x00000000);
-
-			// draw			
-			_layer.draw(bmp);
+			var bmp:BitmapData		= _preview.bitmapData;
+			var rendered:BitmapData	= _layer.rendered;
 			
+			var matrix:Matrix		= new Matrix();
+			matrix.scale(bmp.width / rendered.width, bmp.height / rendered.height);
+			
+			bmp.fillRect(bmp.rect, 0x00000000);
+			bmp.draw(rendered, matrix);
+						
 		}
 		
 		
@@ -598,10 +608,10 @@ package ui.layer {
 			} else if (mouseY > 182) {
 			
 				// else check to see if the mouse is within the empty area
-				if (_selectedFilter) {
+				if (_filterPane.selectedFilter) {
 					if (mouseX > 105) {
 						if (!(event.target is LayerFilter)) {
-							selectFilter(null);
+							_filterPane.selectFilter(null);
 						}
 					}
 				}
@@ -613,8 +623,8 @@ package ui.layer {
 		 * 	Forwards mouse events to the layer based on clicking the preview
 		 */
 		private function _forwardMouse(event:MouseEvent):void {
-			event.localX = preview.mouseX / .6 / _layer.scaleX;
-			event.localY = preview.mouseY / .6 / _layer.scaleY;
+			event.localX = _preview.mouseX / .6 / _layer.scaleX;
+			event.localY = _preview.mouseY / .6 / _layer.scaleY;
 			
 			_layer.dispatchEvent(event);
 		}
@@ -641,7 +651,7 @@ package ui.layer {
 		 * 	Removes a filter
 		 */
 		public function removeFilter(filter:Filter):void {
-			_layer.removeFilter(filter);
+			filter.removeFilter();
 		}
 		
 		/**
@@ -650,23 +660,7 @@ package ui.layer {
 		 */
 		private function _onFilterApplied(event:FilterEvent):void {
 			
-			// make a new filter
-			var filter:LayerFilter = new LayerFilter(event.filter, _layer);
-			
-			// push filter
-			_filters.push(filter)
-
-			// add the event handler
-			filter.addEventListener(MouseEvent.MOUSE_DOWN, _filterMouseHandler);
-
-			// add to the scrollpane			
-			_filterPane.addChildAt(filter, event.filter.index);
-			
-			// reorder filters
-			reorderFilters();
-			
-			// select it
-			selectFilter(filter);
+			_filterPane.register(event.filter);
 		}
 		
 		/**
@@ -675,30 +669,8 @@ package ui.layer {
 		 */
 		private function _onFilterRemoved(event:FilterEvent):void {
 			
-			var len:int = _filters.length;
+			_filterPane.unregister(event.filter);
 			
-			for (var count:int = 0; count < len; count++) {
-				var filter:LayerFilter = _filters[count];
-				if (filter.filter === event.filter) {
-					_filters.splice(count, 1);
-					break;
-				}
-			}
-			
-			if (filter === _selectedFilter) {
-				selectFilter(null);
-			}
-			
-			// remove the layer reference
-			_filterPane.removeChild(filter);
-
-			// remove
-			filter.removeEventListener(MouseEvent.MOUSE_DOWN, _filterMouseHandler);
-			filter.dispose();
-
-			// change orders
-			reorderFilters();
-
 		}
 
 		/**
@@ -706,108 +678,44 @@ package ui.layer {
 		 * 	When a filter is moved
 		 */		
 		private function _onFilterMove(event:FilterEvent):void {
-			reorderFilters();
-		}
-		
-		/**
-		 * 	@private
-		 */
-		private function _filterMouseHandler(event:MouseEvent):void {
-			
-			selectFilter(event.currentTarget as LayerFilter);
-			
-			var state:FilterMoveState = new FilterMoveState();
-			StateManager.loadState(state, event.currentTarget, _filters);
-		}
-
-		/**
-		 * 	Re-orders filters
-		 */		
-		public function reorderFilters():void {
-			
-			var filters:Array = _layer.filters;
-			
-			// clears filters: this needs to be here?  bug with setChildIndex?
-			while (_filterPane.numChildren) {
-				_filterPane.removeChildAt(0);
-			}
-			
-			for each (var control:LayerFilter in _filters) {
-				var index:int = control.filter.index;
-				control.y = index * 14;
-				
-				_filterPane.addChild(control);
-			}
-
-		}
-		
-		/**
-		 * 	Selects a filter, de-selects if already selected
-		 */
-		public function selectFilter(control:LayerFilter):void {
-			
-			if (_selectedFilter) {
-				_selectedFilter.highlight(0,0);
-				
-				if (control === _selectedFilter) {
-					control = null;
-				}
-			}
-			
-			_selectedFilter = control;
-			
-			if (control) {
-				
-				control.highlight(0xFFFFFF, .4);
-
-				if (_selectedPage != 1) {
-					var page:LayerPage = _pages[1];
-					page.controls = control.filter.controls;
-	
-					selectPage(1);
-				} else {
-					_controlPage.addControls(control.filter.controls);
-				}
-
-			} else {
-				
-				selectPage(0);
-				
-			}
+			_filterPane.reorder();
 		}
 
 		/**
 		 * 	Moves layer
 		 */
 		public function reOrderLayer(event:LayerEvent = null):void {
-			x = _layer.index * 200 + LAYER_X;
+			x = _layer.index * 203 + LAYER_X;
 			y = LAYER_Y;
 		}
 		
 		/**
-		 * 	Returns the index
+		 * 	Returns the index of the current layer
 		 */
 		public function get index():int {
 			return _layer.index;
 		}
 
 		/**
-		 * 	Returns layer
+		 * 	Returns layer associated to this control
 		 */
 		public function get layer():ILayer {
 			return _layer;
 		}
 		
 		/**
-		 * 
+		 * 	Selects a filter above or below currently selected filter
 		 */
 		public function selectFilterUp(up:Boolean):void {
+			
+			/*
 			if (_selectedFilter) {
 				var index:int = _selectedFilter.filter.index + (up ? -1 : 1);
 				selectFilter(_filters[index]);
 			} else {
 				selectFilter(_filters[int((up) ? _filters.length - 1 : 0)]);
 			}
+			*/
 		}
 
 	}

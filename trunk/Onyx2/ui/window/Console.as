@@ -43,12 +43,29 @@ package ui.window {
 	
 	use namespace onyx_ns;
 	
+	/**
+	 * 	Console window
+	 */
 	public final class Console extends Window {
 		
+		/**
+		 * 	@private
+		 */
 		private var _text:TextField;
+		
+		/**
+		 * 	@private
+		 */
 		private var _input:TextInput;
+		
+		/**
+		 * 	@private
+		 */
 		private var _commandStack:Array;
 		
+		/**
+		 * 	@constructor
+		 */
 		public function Console():void {
 			
 			onyx.core.Console.getInstance().addEventListener(ConsoleEvent.OUTPUT, _onConsole);
@@ -57,23 +74,23 @@ package ui.window {
 			
 			_input.addEventListener(KeyboardEvent.KEY_DOWN, _onKeyDown);
 			_input.addEventListener(MouseEvent.CLICK, _onClick);
+			
+			super('console', 190, 180, 6, 560);
 
 		}
 		
+		/**
+		 * 	@private
+		 */
 		private function _onConsole(event:ConsoleEvent):void {
 			_text.htmlText += event.message + '<br><br>';
 			_text.scrollV = _text.maxScrollV;
 		}
 		
+		/**
+		 * 	@private
+		 */
 		private function _draw():void {
-
-			title = 'console';
-
-			width = 190;
-			height = 180;
-			
-			x = 6;
-			y = 580;
 
 			_text						= new TextField(187, 160);
 			_text.multiline				= true;

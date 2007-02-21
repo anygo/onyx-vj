@@ -28,65 +28,23 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package ui.window {
+package ui.assets {
 	
-	import onyx.net.Host;
+	import flash.text.Font;
+	import flash.text.TextFormat;
 	
-	import ui.core.UIManager;
-	import ui.controls.DropDown;
-	import ui.controls.SliderV;
-	import ui.controls.TextButton;
-	import ui.controls.UIOptions;
-	import flash.events.MouseEvent;
-	
-	
-	/**
-	 * 	Host Window
-	 */
-	public final class HostWindow extends Window {
+	[Embed(
+			source='/assets/Pixel.ttf',
+			fontName='PixelFont',
+			mimeType='application/x-font',
+			unicodeRange='U+0020-U+0040,U+0041-U+005A,U+005B-U+0060,U+0061-U+007A,U+007B-U+007F')
+	]
+	[ExcludeClass]
+	public final class PixelFont extends Font {
 		
-		/**
-		 * 	@private
-		 */
-		private var _host:Host	= new Host();
-		
-		/**
-		 * 	@Constructor
-		 */
-		public function HostWindow():void {
-			
-			var options:UIOptions = new UIOptions();
-			options.width = 100;
-			
-			var button:TextButton = new TextButton(options, 'Listen');
-			button.x = 4;
-			button.y = 12;
-			button.addEventListener(MouseEvent.MOUSE_DOWN, _onConnectLocal);
-			
-			addChild(button);
-			
-			button = new TextButton(options, 'Connect Remote');
-			button.x = 4;
-			button.y = 24;
-			button.addEventListener(MouseEvent.MOUSE_DOWN, _onConnectRemote);
-			
-			addChild(button);
-			
-			super('HOST', 190, 50, 406, 522);
-		}
-		
-		/**
-		 * 	@private
-		 */
-		private function _onConnectLocal(event:MouseEvent):void {
-			_host.connect(null, 0);
-		}
-		
-		/**
-		 * 	@private
-		 */
-		private function _onConnectRemote(event:MouseEvent):void {
-		}
+		public static const DEFAULT:TextFormat			= new TextFormat('PixelFont', 7, 0xe4eaef);
 
+		DEFAULT.letterSpacing	= .05;
+		DEFAULT.leading			= 3;
 	}
 }

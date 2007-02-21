@@ -37,43 +37,58 @@ package ui.window {
 	import onyx.filter.Filter;
 	import onyx.plugin.Plugin;
 	
+	import ui.controls.ScrollPane;
 	import ui.controls.filter.LibraryFilter;
-	import ui.core.DragManager;
-	import ui.core.UIObject;
+	import ui.core.*;
 	import ui.events.DragEvent;
 	import ui.layer.UILayer;
+	import ui.policy.*;
 	
+	/**
+	 * 	Filters Window
+	 */
 	public final class Filters extends Window {
 		
-		private static const ITEMS_PER_ROW:int	= 16;
-		private static const ITEM_LENGTH:int	= 85;
+		/**
+		 * 
+		 */
+		private var _normalPane:ScrollPane		= new ScrollPane(92, 185);
 		
 		/**
-		 * 	@private
+		 * 
 		 */
-		private var _library:Array = [];
+		private var _bitmapPane:ScrollPane		= new ScrollPane(92, 185);
 		
 		/**
 		 * 	@constructor
 		 */
 		public function Filters():void {
 			
-			title = 'FILTERS';
+			// set title, etc
+			super('FILTERS', 196, 200, 412, 318);
 			
-			x = 408;
-			y = 318;
+			// add panes
+			addChild(_normalPane);
+			addChild(_bitmapPane);
 			
-			width = 194;
-			height = 220;
+			// add vertical ordering policy
+			Policy.addPolicy(_normalPane, new VOrderPolicy());
+			Policy.addPolicy(_bitmapPane, new VOrderPolicy());
+			
+			_normalPane.x = 100;
+			_normalPane.y = 15;
+			_bitmapPane.x = 4;
+			_bitmapPane.y = 15;
 
-			_createControl();
+			// create filter controls
+			_createControls();
 
 		}
 		
 		/**
 		 * 	@private
 		 */
-		private function _createControl():void {
+		private function _createControls():void {
 			
 			var filters:Array = Filter.filters;
 			var len:int = filters.length;
@@ -84,18 +99,18 @@ package ui.window {
 				
 				// create library ui item
 				var lib:LibraryFilter = new LibraryFilter(plugin);
-				lib.x = 3 + (Math.floor(index / ITEMS_PER_ROW) * ITEM_LENGTH);
-				lib.y = (index % ITEMS_PER_ROW) * 15 + 13;
 				
-				// add to the array
-				_library.push(lib);
+				if (plugin.getData('bitmapFilter')) {
+					_bitmapPane.addChild(lib);
+				} else {
+					_normalPane.addChild(lib);
+				}
 				
 				// handle events
 				lib.addEventListener(MouseEvent.MOUSE_DOWN, _onMouseDown);
 				lib.addEventListener(MouseEvent.DOUBLE_CLICK, _onDoubleClick);
 				lib.doubleClickEnabled = true;
 				
-				addChild(lib);
 			}
 			
 		}

@@ -6,11 +6,12 @@ package ui.states {
 	import onyx.states.StateManager;
 	
 	import ui.controls.filter.LayerFilter;
+	import flash.utils.Dictionary;
 
 	public final class FilterMoveState extends ApplicationState {
 		
 		private var _origin:LayerFilter;
-		private var _filters:Array;
+		private var _filters:Dictionary;
 		
 		override public function initialize(... args:Array):void {
 
@@ -42,6 +43,9 @@ package ui.states {
 			StateManager.removeState(this);
 		}
 		
+		/**
+		 * 	Terminate
+		 */
 		override public function terminate():void {
 			_origin.stage.removeEventListener(MouseEvent.MOUSE_UP, _onMouseUp);
 

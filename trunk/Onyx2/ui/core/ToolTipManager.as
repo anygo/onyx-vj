@@ -168,8 +168,11 @@ package ui.core {
 
 import flash.text.*;
 import flash.text.TextField;
-import onyx.assets.PixelFont;
+import ui.assets.PixelFont;
 
+/**
+ * 	Tooltip Display Class
+ */
 class ToolTip extends TextField {
 
 	public function ToolTip():void {

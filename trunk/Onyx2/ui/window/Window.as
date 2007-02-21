@@ -42,21 +42,41 @@ package ui.window {
 	
 	public class Window extends UIObject {
 		
+		/**
+		 * 	@private
+		 */
 		private static var _windows:Array		= [];
 		
+		/**
+		 * 	@private
+		 */
 		private var _title:TextField			= new TextField(80, 16);
+		
+		/**
+		 * 	@private
+		 */
 		private var _background:WindowAsset		= new WindowAsset();
 		
-		public function Window():void {
+		/**
+		 * 	@constructor
+		 */
+		public function Window(text:String, width:int, height:int, x:int, y:int):void {
 			
 			_windows.push(this);
-
-			_title.autoSize		= TextFieldAutoSize.LEFT;
+			
+			_title.autoSize			= TextFieldAutoSize.LEFT;
 			_title.x				= 2;
 			_title.y				= 1;
+			_title.text				= text;
 			
 			addChild(_background);
 			addChild(_title);
+			
+			_background.width	= width;
+			_background.height	= height;
+			
+			this.x = x;
+			this.y = y;
 		
 			super(true);	
 		}
@@ -67,14 +87,6 @@ package ui.window {
 
 		public function get title():String {
 			return _title.text;
-		}
-		
-		public override function set width(w:Number):void {
-			_background.width = w;
-		}
-
-		public override function set height(h:Number):void {
-			_background.height = h;
 		}
 		
 		/**

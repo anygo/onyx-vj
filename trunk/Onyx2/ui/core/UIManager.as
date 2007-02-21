@@ -28,25 +28,22 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package ui {
+package ui.core {
 	
-	import flash.display.Bitmap;
-	import flash.display.Stage;
-	import flash.display.StageQuality;
+	import flash.display.*;
 	import flash.events.EventDispatcher;
 	
 	import onyx.core.Onyx;
 	import onyx.display.Display;
-	import onyx.events.ApplicationEvent;
-	import onyx.events.DisplayEvent;
-	import onyx.events.LayerEvent;
-	import onyx.layer.Layer;
+	import onyx.events.*;
+	import onyx.layer.*;
 	import onyx.plugin.Plugin;
 	import onyx.states.StateManager;
 	import onyx.transition.Transition;
 	
 	import ui.assets.*;
 	import ui.layer.UILayer;
+	import ui.states.DisplayStartState;
 	import ui.states.KeyListenerState;
 	import ui.window.*;
 
@@ -66,6 +63,11 @@ package ui {
 		public static var root:Stage;
 		
 		/**
+		 * 
+		 */
+		private static var displayState:DisplayStartState;
+		
+		/**
 		 * 	initialize
 		 */
 		public static function initialize(root:Stage):void {
@@ -76,25 +78,43 @@ package ui {
 			// initializes onyx
 			var engine:EventDispatcher = Onyx.initialize(root);
 			
+			// show startup image
+			engine.addEventListener(ApplicationEvent.ONYX_STARTUP_START, _onInitializeStart);
+			
 			// wait til we're done initializing
-			engine.addEventListener(ApplicationEvent.ONYX_STARTUP_END, _onInitialize);
+			engine.addEventListener(ApplicationEvent.ONYX_STARTUP_END, _onInitializeEnd);
+		}
+		
+		/**
+		 * 
+		 */
+		private static function _onInitializeStart(event:ApplicationEvent):void {
+			StateManager.loadState(displayState = new DisplayStartState());
 		}
 		
 		/**
 		 * 	@private
 		 */
-		private static function _onInitialize(event:ApplicationEvent):void {
+		private static function _onInitializeEnd(event:ApplicationEvent):void {
+			
+			StateManager.removeState(displayState);
 			
 			var engine:EventDispatcher = event.currentTarget as EventDispatcher;
 
+			// listen for windows created
+			engine.removeEventListener(ApplicationEvent.ONYX_STARTUP_START, _onInitializeStart);
+			engine.removeEventListener(ApplicationEvent.ONYX_STARTUP_END, _onInitializeEnd);
+		
 			_loadWindows(Console, PerfMonitor, Browser, Filters, TransitionWindow, HostWindow);
 
-			// listen for windows created
-			engine.removeEventListener(ApplicationEvent.ONYX_STARTUP_END, _onInitialize);
-			engine.addEventListener(LayerEvent.LAYER_CREATED, _onLayerCreate);
-			engine.addEventListener(DisplayEvent.DISPLAY_CREATED, _onDisplayCreate);
+			var display:Display = Onyx.createDisplay(root.stageWidth - 320, 525);
+			display.addEventListener(DisplayEvent.LAYER_CREATED,		_onLayerCreate);
+			display.createLayers(5);
 			
-			Onyx.createLocalDisplay(5, root.stageWidth - 320, 525);
+			root.addChild(display);
+			
+			var settings:SettingsWindow = new SettingsWindow(display);
+			root.addChild(settings);
 			
 			StateManager.loadState(new KeyListenerState(), root);
 		}
@@ -113,15 +133,7 @@ package ui {
 		/**
 		 * 	@private
 		 */
-		private static function _onDisplayCreate(event:DisplayEvent):void {
-			var display:SettingsWindow = new SettingsWindow(event.display);
-			root.addChild(display);
-		}
-		
-		/**
-		 * 	@private
-		 */
-		private static function _onLayerCreate(event:LayerEvent):void {
+		private static function _onLayerCreate(event:DisplayEvent):void {
 			
 			var uilayer:UILayer = new UILayer(event.layer);
 			uilayer.reOrderLayer();

@@ -33,7 +33,7 @@ package ui.text {
 	import flash.text.TextField;
 	import flash.text.TextFormat;
 	
-	import onyx.assets.PixelFont;
+	import ui.assets.PixelFont;
 	
 	/**
 	 * 	Default TextField

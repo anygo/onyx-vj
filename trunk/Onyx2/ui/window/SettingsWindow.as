@@ -33,33 +33,46 @@ package ui.window {
 	import flash.events.MouseEvent;
 	import flash.system.System;
 	
-	import onyx.controls.Control;
-	import onyx.controls.ControlColor;
-	import onyx.controls.ControlRange;
-	import onyx.controls.Controls;
+	import onyx.controls.*;
 	import onyx.core.Onyx;
-	import onyx.display.Display;
-	import onyx.display.DisplaySize;
+	import onyx.display.*;
 	
-	import ui.controls.ColorPicker;
-	import ui.controls.DropDown;
-	import ui.controls.SliderV2;
-	import ui.controls.TextButton;
-	import ui.controls.TextControlPopUp;
-	import ui.controls.UIOptions;
+	import ui.controls.*;
 	import ui.core.UIObject;
 
 	public final class SettingsWindow extends Window {
 		
+		/**
+		 * 	@private
+		 */
 		private var _controlXY:SliderV2;
+
+		/**
+		 * 	@private
+		 */
 		private var _controlScale:SliderV2;
+
+		/**
+		 * 	@private
+		 */
 		private var _controlColor:ColorPicker;
+
+		/**
+		 * 	@private
+		 */
 		private var _controlXML:TextButton;
+
+		/**
+		 * 	@private
+		 */
 		private var _controlSize:DropDown;
 		
-		public function SettingsWindow(display:Display):void {
+		/**
+		 * 	@constructor
+		 */
+		public function SettingsWindow(display:IDisplay):void {
 			
-			title = 'SETTINGS WINDOW';
+			super('SETTINGS WINDOW', 202, 100, 200, 522);
 			
 			var options:UIOptions	= new UIOptions();
 			options.width			= 50;
@@ -90,14 +103,12 @@ package ui.window {
 			addChild(_controlXML);
 			addChild(_controlSize);
 			
-			width = 190;
-			
-			x = 200;
-			y = 542;
-			
 			_controlXML.addEventListener(MouseEvent.MOUSE_DOWN, _onMouseDown)
 		}
 		
+		/**
+		 * 	@private
+		 */
 		private function _onMouseDown(event:MouseEvent):void {
 			var display:Display = Onyx.displays[0];
 			var text:String		= display.toXML().normalize();

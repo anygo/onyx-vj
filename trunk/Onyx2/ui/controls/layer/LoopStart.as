@@ -37,7 +37,7 @@ package ui.controls.layer {
 	import onyx.controls.Control;
 	import onyx.events.ControlEvent;
 	
-	import ui.UIManager;
+	import ui.core.UIManager;
 	import ui.assets.AssetLeftArrow;
 	import ui.controls.UIControl;
 	import ui.layer.UILayer;

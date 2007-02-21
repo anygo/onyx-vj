@@ -36,12 +36,12 @@ package {
 	
 	import onyx.utils.ArrayUtil;
 	
-	import ui.UIManager;
+	import ui.core.UIManager;
 	import ui.core.UIObject;
 	
 	[ExcludeClass]
 
-	[SWF(width="1024", height="768", backgroundColor="#141515", frameRate='24')]
+	[SWF(width="1024", height="768", backgroundColor="#141515", frameRate='25')]
 	public class Onyx2 extends UIObject {
 		
 		/**

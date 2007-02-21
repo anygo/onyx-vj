@@ -49,7 +49,7 @@ package ui.window
 		
 		public function PerfMonitor():void {
 			
-			super();
+			super('PERFORMANCE', 60, 30, 760, 384);
 			
 			_draw();
 			
@@ -59,14 +59,6 @@ package ui.window
 		}
 		
 		private function _draw():void {
-			
-			title = 'PERFORMANCE';
-			
-			x = 760;
-			y = 384;
-			
-			width = 60;
-			height = 30;
 
 			addChildren(
 				_target,	2, 12,

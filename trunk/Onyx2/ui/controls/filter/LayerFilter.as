@@ -37,6 +37,7 @@ package ui.controls.filter {
 	import onyx.core.Onyx;
 	import onyx.core.onyx_ns;
 	import onyx.filter.Filter;
+	import onyx.layer.ILayer;
 	import onyx.layer.Layer;
 	import onyx.plugin.Plugin;
 	
@@ -47,23 +48,20 @@ package ui.controls.filter {
 	import ui.layer.UILayer;
 	import ui.text.Style;
 	import ui.text.TextField;
-	import onyx.layer.ILayer;
 	
 	use namespace onyx_ns;
 
 	public final class LayerFilter extends UIObject {
 		
-		public var filter:Filter;
-		private var _layer:ILayer;
+		public var filter:Filter;;
 
-		private var _label:TextField			= new TextField(72,10);
+		private var _label:TextField			= new TextField(70,10);
 		private var _btnDelete:ButtonClear		= new ButtonClear(9,9);
 		private var _bg:AssetLayerFilter		= new AssetLayerFilter();
 		
-		public function LayerFilter(filter:Filter, layer:ILayer):void {
+		public function LayerFilter(filter:Filter):void {
 			
 			this.filter = filter;
-			_layer = layer;
 			_draw();
 			
 			doubleClickEnabled = true;
@@ -77,6 +75,7 @@ package ui.controls.filter {
 		 */
 		private function _onDeleteDown(event:MouseEvent):void {
 			
+			/*
 			if (event.ctrlKey) {
 				
 				var plugin:Plugin		= Filter.getDefinition(filter.name);
@@ -90,18 +89,18 @@ package ui.controls.filter {
 						
 						for each (var filter:Filter in filters) {
 							if (filter is filterClass) {
-								layer.layer.removeFilter(filter);
+								filter.removeFilter();
 								break;
 							}
 						}
 					}
 				}
 			
+			} else {
 			}
-
-			_layer.removeFilter(this.filter);
+			*/
 			
-			// event.stopPropagation();
+			this.filter.removeFilter();
 		}
 		
 		/**
@@ -113,7 +112,7 @@ package ui.controls.filter {
 			_label.y			= 2;
 			_label.x			= 2;
 			
-			_btnDelete.x 		= 71;
+			_btnDelete.x 		= 69;
 			_btnDelete.y 		= 2;
 			
 			addChild(_bg);
@@ -127,12 +126,16 @@ package ui.controls.filter {
 		override public function dispose():void {
 			
 			_btnDelete.removeEventListener(MouseEvent.MOUSE_DOWN,		_onDeleteDown);
-			
 			filter = null;
-			_layer = null;
 			
 			super.dispose();
 		}
 		
+		/**
+		 * 
+		 */
+		override public function toString():String {
+			return '[LayerFilter: ' + filter.toString() + ']';
+		}
 	}
 }

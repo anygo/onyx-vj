@@ -26,7 +26,7 @@ package ui.window {
 		public function register(layer:UILayer):void {
 						
 			var bmp:Bitmap		= new Bitmap(layer.preview.bitmapData);
-			trace(bmp);
+//			trace(bmp);
 /*			var control:Control	= layer.layer.controls.getControl('blendMode')
 			control.addEventListener(ControlEvent.CHANGE, _onBlendChange);
 
@@ -39,7 +39,7 @@ package ui.window {
 		}
 		
 		private function _onBlendChange(event:Event):void {
-			trace(event);
+			// trace(event);
 		}
 	}
 }

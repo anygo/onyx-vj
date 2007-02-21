@@ -62,7 +62,7 @@ package ui.controls {
 			
 			addEventListener(MouseEvent.MOUSE_OVER, _onMouseOver);
 			
-			scrollRect = new Rectangle(0,0, width, height);
+			scrollRect = new Rectangle(0, 0, width, height);
 		}
 		
 		/**
@@ -81,6 +81,13 @@ package ui.controls {
 			var child:DisplayObject = _holder.addChildAt(child, index);
 			_calculateAdd();
 			return child;
+		}
+		
+		/**
+		 * 	Gets the child at index
+		 */
+		override public function getChildAt(index:int):DisplayObject {
+			return _holder.getChildAt(index);		
 		}
 		
 		/**

@@ -30,20 +30,37 @@
  */
 package ui.files {
 	
+	import onyx.constants.ContentType;
+	
 	/**
 	 * 	Core File Class
 	 */
 	public final class File {
 		
+		/**
+		 * 	Saves the path
+		 */
 		public var path:String;
+		
+		/**
+		 * 	Saves thumbnail
+		 */
 		public var thumbnail:Object;
 		
-		public function File(path:String, thumbnail:Object):void {
+		/**
+		 * 	Stores type
+		 */
+		public var type:String;
+		
+		/**
+		 * 
+		 */
+		public function File(path:String, thumbnail:Object, type:String):void {
 			
 			this.path = path;
 			this.thumbnail = thumbnail;
+			this.type = ContentType[type];
 
 		}
-		
 	}
 }

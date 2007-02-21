@@ -31,15 +31,11 @@
 package ui.files {
 	
 	import flash.display.Loader;
-	import flash.events.Event;
-	import flash.events.EventDispatcher;
-	import flash.events.IOErrorEvent;
+	import flash.events.*;
 	import flash.media.Camera;
-	import flash.net.URLLoader;
-	import flash.net.URLRequest;
+	import flash.net.*;
 	
-	import onyx.core.Console;
-	import onyx.settings.Settings;
+	import onyx.core.*;
 	
 	import ui.assets.AssetCamera;
 	
@@ -141,7 +137,7 @@ package ui.files {
 					
 					var thumb:String = node.@thumb;
 					list.files.push(
-						new File(rootpath + node.@name, (thumb) ? rootpath + thumb : '')
+						new File(rootpath + node.@name, (thumb) ? rootpath + thumb : '', node.@type)
 					);
 					
 				}
@@ -167,7 +163,7 @@ package ui.files {
 			list.folders.push(folder);
 			
 			for each (var name:String in cameras) {
-				var file:File = new File(name + '.cam', new AssetCamera());
+				var file:File = new File(name + '.cam', new AssetCamera(), 'CAMERA');
 				list.files.push(file);
 			}
 
