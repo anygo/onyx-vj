@@ -32,24 +32,16 @@ package onyx.content {
 	
 	import flash.display.*;
 	import flash.events.*;
-	import flash.geom.ColorTransform;
-	import flash.geom.Matrix;
-	import flash.geom.Rectangle;
-	import flash.geom.Transform;
+	import flash.geom.*;
 	import flash.utils.getTimer;
 	
-	import onyx.constants.POINT;
+	import onyx.constants.*;
 	import onyx.controls.*;
 	import onyx.core.*;
-	import onyx.events.FilterEvent;
+	import onyx.events.*;
 	import onyx.filter.*;
 	import onyx.layer.*;
-	import onyx.settings.Settings;
-
-	[Event(name="filter_applied",	type="onyx.events.FilterEvent")]
-	[Event(name="filter_removed",	type="onyx.events.FilterEvent")]
-	[Event(name="filter_moved",		type="onyx.events.FilterEvent")]
-		
+			
 	use namespace onyx_ns;
 	
 	[ExcludeClass]
@@ -83,7 +75,7 @@ package onyx.content {
 		 * 	@private
 		 * 	The amount of frames to move per frame
 		 */
-		private var _framerate:Number;
+		private var _framerate:Number						= 1;
 		
 		/**
 		 * 
@@ -115,7 +107,7 @@ package onyx.content {
 		 * 	@constructor
 		 */		
 		public function ContentMC(layer:Layer, path:String, loader:Loader):void {
-			
+
 			_loader			= loader;
 			_mc				= loader.content as MovieClip;
 			
@@ -125,7 +117,7 @@ package onyx.content {
 			_frame			= 0;
 
 			// sets the last time we executed
-			_lastTime = getTimer();
+			_lastTime		= getTimer() - Onyx.framerate;
 
 			// resize?
 			if (Settings.LAYER_AUTOSIZE) {
@@ -162,45 +154,32 @@ package onyx.content {
 		/**
 		 * 	Updates the bimap source
 		 */
-		override public function render(layer:BitmapData, transform:RenderTransform = null):void {
+		override public function render(stack:RenderStack):RenderTransform {
 			
 			if (!_paused) {
 				
-				// TBD: sometimes get infinity, need to figure out why
+				// get framerate
 				var time:int = 1000 / ((getTimer() - _lastTime)) || Onyx.framerate;
 				
 				// add the framerate based off the last time
 				var frame:Number = _frame + ((Onyx.framerate / time) * _framerate);
 				
+				// constrain the frame
 				frame = (frame < _loopStart) ? _loopEnd : Math.max(frame % _loopEnd, _loopStart);
-	
+
+				// save the frame				
 				_frame = frame;
 				
 			}
 
+			// store last time
 			_lastTime = getTimer();
 
-			// if the frame is different, update the source bitmap
-			if (_frame !== _mc.currentFrame) {
-				
-				// change frames
-				_mc.gotoAndStop(Math.floor(_frame));
-				
-				// full render
-				super.render(layer, transform);
-				
-			} else {
-				
-				// copy pixels to our "rendered" buffer
-				_rendered.copyPixels(_source, _source.rect, POINT);
-				
-				// apply filters the rendered bitmap
-				applyFilters();
-	
-				// copy the pixels back to the layer
-				layer.copyPixels(_rendered, _rendered.rect, POINT);
-				
-			}
+			// go to the right frame
+			_mc.gotoAndStop(Math.floor(_frame));
+
+			// render me baby					
+			return super.render(stack);
 		}
 		
 		/**
@@ -267,12 +246,11 @@ package onyx.content {
 		 */
 		override public function dispose():void {
 
-			// destroy content
-			_loader.unload();
-
+			// remove reference
 			_loader = null;
 			_mc		= null;
 			
+			// dispose
 			super.dispose();
 		}
 		

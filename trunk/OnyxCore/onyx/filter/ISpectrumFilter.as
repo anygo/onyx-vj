@@ -29,13 +29,11 @@
  * 
  */
 
-// this is a placeholder for a filter that responds to audio events
-
 package onyx.filter {
 	
 	public interface ISpectrumFilter {
 		
-		function applyFilter():void;
+		// nothing here, just checks to see if it needs spectrum data
 		
 	}
 }

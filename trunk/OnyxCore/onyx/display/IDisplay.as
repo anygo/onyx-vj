@@ -28,31 +28,20 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package onyx.controls {
+package onyx.display {
 	
-	import onyx.core.onyx_ns;
+	import onyx.content.IContent;
+	import onyx.layer.ILayer;
 	
-	use namespace onyx_ns;
-	
-	public final class ControlExecute extends Control {
-		
-		public function ControlExecute(name:String, display:String):void {
-			
-			super(name, display);
-			
-		}
-		
-		override public function get value():* {
-			return null;
-		}
-		
-		override public function setValue(i:*):* {
-			if (super._target[name] is Function && i is Array) {
-				var fn:Function = super._target[name];
-				return fn.apply(super._target, i);
-			}
-			return null;
-		}
-			
+	public interface IDisplay extends IContent {
+
+		function get layers():Array;
+
+		function set displayX(value:int):void;
+		function get displayX():int;
+
+		function set displayY(value:int):void;
+		function get displayY():int;
+
 	}
 }

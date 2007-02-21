@@ -33,8 +33,9 @@ package onyx.core {
 	import onyx.display.Display;
 	import onyx.filter.Filter;
 	import onyx.jobs.StatJob;
-	import onyx.layer.Layer;
 	import onyx.layer.ILayer;
+	import onyx.sound.Visualizer;
+	import onyx.transition.Transition;
 	
 	use namespace onyx_ns;
 
@@ -48,25 +49,26 @@ package onyx.core {
 				case 'command':
 				case 'commands':
 				
-					text =	_createHeader('commands') + 'plugins: shows # of plugins<br>' +
-							'clear: clears the text<br>' +
-							'stat [time:int]:	tests all layers for average rendering time';
+					text =	_createHeader('commands') + 'PLUGINS: SHOWS # OF PLUGINS<br>' +
+							'CLEAR: CLEARS THE TEXT<br>' +
+							'STAT [TIME:INT]:	TESTS ALL LAYERS FOR AVERAGE RENDERING TIME';
 				
 					break;
 				case 'contributors':
-					text =	'contributors<br>-------------<br>Daniel Hai: http://www.danielhai.com'
+					text =	'CONTRIBUTORS<br>-------------<br>DANIEL HAI: HTTP://WWW.DANIELHAI.COM'
 					break;
 				case 'plugins':
-					text =	Filter.filters.length + ' filters loaded.<br>';
-//							Onyx.transitions.length + ' transitions loaded.';
+					text =	Filter.filters.length + ' FILTERS, ' +
+							Transition.transitions.length + ' TRANSITIONS, ' +
+							Visualizer.visualizers.length + ' VISUALIZERS LOADED.';
 					break;
 				case 'stat':
-					text =	_createHeader('stat') + 'tests framerate and layer rendering times.<br><br>usage: stat [numSeconds:int]<br>';
+					text =	_createHeader('stat') + 'TESTS FRAMERATE AND LAYER RENDERING TIMES.<br><br>USAGE: STAT [NUM_SECONDS:INT]<br>';
 					break;
 				default:
-					text =	_createHeader('<b>onyx 3.0.15</b>', 21) + 
-							'copyright 2003-2006: www.onyx-vj.com.' +
-							'<br>enter command "help commands" for more information about commands.';
+					text =	_createHeader('<b>ONYX 3.0.15</b>', 21) + 
+							'COPYRIGHT 2003-2006: WWW.ONYX-VJ.COM' +
+							'<br>TYPE "HELP" OR "HELP COMMANDS" FOR MORE COMMANDS.';
 					break;
 			}
 			// dispatch the start-up motd
@@ -86,7 +88,8 @@ package onyx.core {
 			// does a stat job for a specified amount of time
 			var time:int = args[0] || 2;
 			
-			var job:StatJob = new StatJob(time);
+			var job:StatJob = new StatJob();
+			job.initialize(time);
 		}
 		
 		/**

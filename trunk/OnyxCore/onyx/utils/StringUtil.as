@@ -28,31 +28,27 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package onyx.controls {
+package onyx.utils {
 	
-	import onyx.core.onyx_ns;
-	
-	use namespace onyx_ns;
-	
-	public final class ControlExecute extends Control {
+	/**
+	 * 	String utilities
+	 */	
+	public final class StringUtil {
 		
-		public function ControlExecute(name:String, display:String):void {
-			
-			super(name, display);
-			
+		/**
+		 * 	Gets a file extension based on a file path
+		 */
+		public static function getExtension(path:String):String {
+			return path.substr(path.lastIndexOf('.')+1, path.length).toLowerCase();
 		}
-		
-		override public function get value():* {
-			return null;
+
+		/**
+		 * 	Returns a filename without it's extension
+		 */
+		public static function removeExtension(path:String):String {
+			var start:int = Math.max(path.lastIndexOf('\\')+1,path.lastIndexOf('/')+1);
+			var end:int = path.lastIndexOf('.');
+			return path.substr(start, end - start);
 		}
-		
-		override public function setValue(i:*):* {
-			if (super._target[name] is Function && i is Array) {
-				var fn:Function = super._target[name];
-				return fn.apply(super._target, i);
-			}
-			return null;
-		}
-			
 	}
 }

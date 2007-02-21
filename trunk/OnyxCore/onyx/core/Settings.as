@@ -28,22 +28,22 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package onyx.settings {
+package onyx.core {
 	
 	public final class Settings {
 		
 //		public static var PATH_SETTINGS_FILE:String			= 'settings.xml';
-		public static var INITIAL_DISPLAYS_TO_LOAD:uint		= 5;
-		public static var MUTE_AUDIO:Boolean				= true;
-		public static var COPY_LAYER_FILTERS:Boolean		= false;
-		public static var LAYER_AUTOSIZE:Boolean			= true;
-		public static var LAYER_AUTOSIZE_CONSTRAIN:Boolean	= true;
+		public static var INITIAL_DISPLAYS_TO_LOAD:uint			= 5;
+		public static var MUTE_AUDIO:Boolean					= true;
+		public static var COPY_LAYER_FILTERS:Boolean			= false;
+		public static var LAYER_AUTOSIZE:Boolean				= true;
+		public static var LAYER_AUTOSIZE_CONSTRAIN:Boolean		= true;
 		
-		public static const INITIAL_APP_DIRECTORY:String	= 'video/';
-		public static const PLUGINS_DIRECTORY:String		= 'plugins/';
-		public static const PLUGINS_XML:String				= 'filter.xml';
+		public static const INITIAL_APP_DIRECTORY:String		= 'video/';
+		public static const PLUGINS_DIRECTORY:String			= 'plugins/';
+		public static const PLUGINS_XML:String					= 'filter.xml';
 	
-		public static const SLOW_RENDER_SKIPS_FRAMES:Boolean= true;
+		public static const SLOW_RENDER_SKIPS_FRAMES:Boolean	= true;
 
 	}
 }

@@ -145,7 +145,7 @@ final public class Elastic
 		if (t == 0)
 			return b;
 			
-		if ((t /= d / 2) == 2)
+		if ((t /= d >> 1) == 2)
 			return b + c;
 			
 		if (!p)

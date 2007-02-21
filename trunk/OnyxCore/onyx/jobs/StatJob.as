@@ -33,26 +33,43 @@ package onyx.jobs {
 	import flash.events.Event;
 	import flash.utils.getTimer;
 	
-	import onyx.core.Onyx;
 	import onyx.core.Console;
+	import onyx.core.Onyx;
 	import onyx.core.onyx_ns;
 	
 	use namespace onyx_ns;
 	
+	/**
+	 * 	Performs a test on the framerate
+	 */
 	public final class StatJob extends TimerJob {
 		
+		/**
+		 * 	@private
+		 */
 		private var _start:uint = 0;
+		
+		/**
+		 * 	@private
+		 */
 		private var _frames:uint = 0;
 		
-		public function StatJob(time:Number):void {
-
-			start(time * 1000);
+		/**
+		 * 
+		 */
+		override public function initialize(...args):void {
 			
-			Console.output('starting stat job for ' + (time).toFixed(2) + ' seconds');
+			var time:Number = args[0];
 			
+			Console.output('STARTING STAT JOB FOR ' + (time).toFixed(2) + ' SECONDS');
 			Onyx.root.addEventListener(Event.ENTER_FRAME, _onEnterFrame);
+			
+			super.initialize((time * 1000) >> 0);
 		}
 		
+		/**
+		 * 	@private
+		 */
 		private function _onEnterFrame(event:Event):void {
 			if (!_start) {
 				_start = getTimer();
@@ -61,13 +78,19 @@ package onyx.jobs {
 			}
 		}
 		
-		override public function finished():void {
+
+		/**
+		 * 
+		 */
+		override public function terminate():void {
 			
 			Onyx.root.removeEventListener(Event.ENTER_FRAME, _onEnterFrame);
 			Console.output(
-				'end of stat job:<br>' + 
-				'average fps: ' + ((1000 / ((getTimer() - _start) / _frames) as Number).toFixed(2))
+				'END OF STAT JOB: ' + 
+				'AVERAGE FPS: ' + ((1000 / ((getTimer() - _start) / _frames) as Number).toFixed(2))
 			);
+			
+			super.terminate();
 		}
 		
 	}

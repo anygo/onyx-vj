@@ -182,6 +182,12 @@ package onyx.filter {
 		final public function moveFilter(index:int):void {
 			content.moveFilter(this, index);
 		}
-
+		
+		/**
+		 * 
+		 */
+		final public function removeFilter():void {
+			content.removeFilter(this);
+		}
 	}
 }

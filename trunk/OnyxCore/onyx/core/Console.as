@@ -35,20 +35,19 @@ package onyx.core {
 	import onyx.display.Display;
 	import onyx.events.ConsoleEvent;
 
+	[Event(name="output",	type="onyx.events.ConsoleEvent")]
+	
 	public final class Console extends EventDispatcher {
-		
-//		public static const MESSAGE_NONE:int	= 0;
-//		public static const MESSAGE_SYSTEM:int	= 1;
 		
 		/**
 		 * 	@private
 		 */
-		private static const dispatcher:EventDispatcher	= new EventDispatcher();
+		private static const dispatcher:Console	= new Console();
 		
 		/**
 		 * 	Returns the console instance
 		 */
-		public static function getInstance():EventDispatcher {
+		public static function getInstance():Console {
 			return dispatcher;
 		}
 		
@@ -60,6 +59,7 @@ package onyx.core {
 			dispatcher.dispatchEvent(
 				new ConsoleEvent(args.join(' '))
 			);
+			
 		}
 		
 		/**

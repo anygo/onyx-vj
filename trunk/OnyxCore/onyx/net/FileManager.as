@@ -28,31 +28,24 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package onyx.controls {
+package onyx.net {
 	
-	import onyx.core.onyx_ns;
-	
-	use namespace onyx_ns;
-	
-	public final class ControlExecute extends Control {
+	/**
+	 * 	Stores the type of content that files are, so that when loading we can
+	 * 	determine if they should share rendering space
+	 */
+	public final class FileManager {
 		
-		public function ControlExecute(name:String, display:String):void {
-			
-			super(name, display);
-			
+		/**
+		 * 	@private
+		 */
+		private static var _reg:Object = {};
+		
+		/**
+		 * 	Registers a type
+		 */
+		public static function register(path:String, type:String):void {
 		}
 		
-		override public function get value():* {
-			return null;
-		}
-		
-		override public function setValue(i:*):* {
-			if (super._target[name] is Function && i is Array) {
-				var fn:Function = super._target[name];
-				return fn.apply(super._target, i);
-			}
-			return null;
-		}
-			
 	}
 }

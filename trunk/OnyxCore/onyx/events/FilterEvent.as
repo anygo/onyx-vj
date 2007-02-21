@@ -31,36 +31,39 @@
 package onyx.events {
 	
 	import flash.events.Event;
-	import onyx.filter.Filter;
+	
 	import onyx.core.onyx_ns;
+	import onyx.filter.Filter;
 	
 	use namespace onyx_ns;
 
 	public final class FilterEvent extends Event {
 		
-		onyx_ns static const FILTER_MOVE_UP:String	= 'fmoveup';
+		onyx_ns static const FILTER_MOVE_UP:String		= 'fmoveup';
 		onyx_ns static const FILTER_MOVE_DOWN:String	= 'fmovedown';
 		
-		public static const FILTER_APPLIED:String	= 'fapply';
-		public static const FILTER_REMOVED:String	= 'fremove';
-		public static const FILTER_MOVED:String		= 'fmove';
+		public static const FILTER_APPLIED:String		= 'fapply';
+		public static const FILTER_REMOVED:String		= 'fremove';
+		public static const FILTER_MOVED:String			= 'fmove';
 		
-		public var definition:Class;
+		/**
+		 * 	The filter
+		 */
 		public var filter:Filter;
-		public var index:int;
 		
+		/**
+		 * 	@constructor
+		 */
 		public function FilterEvent(type:String, filter:Filter):void {
-			this.filter = filter;
 			super(type);
+			this.filter = filter;
 		}
 		
+		/**
+		 * 	Clone
+		 */
 		override public function clone():Event {
-			
-			var event:FilterEvent = new FilterEvent(super.type, filter);
-			event.index = index;
-			event.definition = definition;
-			
-			return event;
+			return new FilterEvent(super.type, filter);
 		}
 	}
 }

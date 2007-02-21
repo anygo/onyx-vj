@@ -29,88 +29,75 @@
  * 
  */
 package onyx.content {
-	
-	import flash.display.*;
+
+	import flash.display.Loader;
 	import flash.events.Event;
-	import flash.events.EventDispatcher;
-	import flash.filters.BitmapFilter;
 	
-	import onyx.constants.POINT;
-	import onyx.controls.Controls;
-	import onyx.core.*;
-	import onyx.layer.*;	
-	
-	[Event(name="filter_applied",	type="onyx.events.FilterEvent")]
-	[Event(name="filter_removed",	type="onyx.events.FilterEvent")]
-	[Event(name="filter_moved",		type="onyx.events.FilterEvent")]
-	
-	[ExcludeClass]
-	public class ContentSprite extends Content {
+	/**
+	 * 	This is a performance class that tries to re-use MovieClips
+	 * 	when it is called by more than 1 layer.  This improved rendering performance
+	 * 	between shared movieclips (since the first time a frame is loaded, it takes
+	 * 	quite a while to render the frame).  Other content types are also stored
+	 * 	through this interface, but only stored temporarily to check to see if they
+	 * 	are movieclips or not
+	 */
+	public final class ContentManager {
 		
 		/**
 		 * 	@private
-		 * 	Stores the loader object where the content was loaded into
 		 */
-		private var _loader:Loader;
+		private static var _registration:Object = {};
 		
 		/**
-		 * 	@private
-		 * 	The ratio to store the content
+		 * 	Registers a content object with a SWF
 		 */
-		private var _ratioX:Number							= 1;
-		
-		/**
-		 * 	@private
-		 * 	The ratio to store the content
-		 */
-		private var _ratioY:Number							= 1;
-
-		/**
-		 * 	@constructor
-		 */		
-		public function ContentSprite(layer:Layer, path:String, loader:Loader):void {
+		public static function register(path:String, loader:Loader):void {
 			
-			_loader		= loader;
-
-			// resize?
-			if (Settings.LAYER_AUTOSIZE) {
-				_ratioX = 320 / loader.contentLoaderInfo.width;
-				_ratioY = 240 / loader.contentLoaderInfo.height;
+			if (!_registration[path]) {
+				var reg:Registration = new Registration();
+				reg.refCount	= 0;
+				reg.loader		= loader;
+				
+				_registration[path] = reg;
+			} else {
+				reg = _registration[path];
 			}
 			
-			// pass controls
-			super(layer, path, loader.content);
-			
+			reg.refCount++;
 		}
 		
 		/**
-		 * 	Destroys the content
+		 * 	Unregisters an object with a SWF
 		 */
-		override public function dispose():void {
+		public static function unregister(path:String):void {
 			
-			// destroy content
-			_loader.unload();
-
-			_loader	= null;
+			var reg:Registration = _registration[path];
+			reg.refCount--;
 			
-			super.dispose();
+			// destroy
+			if (!reg.refCount) {
+				reg.loader.unload();
+				reg.loader = null;
+				delete _registration[path];
+			}
 		}
 		
-
-		override public function get scaleX():Number {
-			return super.scaleX / _ratioX;
+		/**
+		 * 	Returns whether a movieclip is currently loaded, and can be re-used
+		 */
+		public static function hasDefinition(path:String):Loader {
+			var reg:Registration = _registration[path];
+			return (reg) ? reg.loader : null;
 		}
 		
-		override public function set scaleX(value:Number):void {
-			super.scaleX = value * _ratioX;
-		}
-		
-		override public function get scaleY():Number {
-			return super.scaleY / _ratioY;
-		}
-		
-		override public function set scaleY(value:Number):void {
-			super.scaleY = value * _ratioY;
-		}
 	}
+}
+
+import flash.display.Loader;
+
+class Registration {
+	
+	public var refCount:int;
+	public var loader:Loader;
+	
 }

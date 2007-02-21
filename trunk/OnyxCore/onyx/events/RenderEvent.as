@@ -28,15 +28,14 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-
-package onyx.states {
+package onyx.events {
 	
-	import flash.display.Bitmap;
-	
-	[ExcludeClass]
+	import flash.events.Event;
 
-	[Embed(source='/assets/onyx.jpg')]
-	public final class OnyxStartUpImage extends Bitmap {
+	public final class RenderEvent extends Event {
+		
+		public function RenderEvent(type:String):void {
+			super(type);
+		}
 	}
-	
 }

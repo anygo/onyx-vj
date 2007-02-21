@@ -41,11 +41,12 @@ package onyx.layer {
 	import onyx.controls.*;
 	import onyx.core.*;
 	import onyx.display.Display;
+	import onyx.display.IDisplay;
 	import onyx.events.*;
 	import onyx.filter.*;
 	import onyx.net.Stream;
 	import onyx.transition.Transition;
-	import onyx.utils.GCTester;
+	import onyx.utils.*;
 	
 	use namespace onyx_ns;
 	
@@ -59,19 +60,37 @@ package onyx.layer {
 	/**
 	 * 	Layer is the base media for all video objects
 	 */
-	public class Layer extends Bitmap implements ILayer {
+	public class Layer extends EventDispatcher implements ILayer {
+		
+		/**
+		 * 	@private
+		 * 	Holder for null content
+		 * 	(this is here so that there is not a layer of checking between changing properties)
+		 */
+		private static const NULL_LAYER:ContentNull			= new ContentNull();
+		
+		/**
+		 * 
+		 */
+		onyx_ns var			_display:Display;
 		
 		/**
 		 * 	@private
 		 * 	Stores the content
 		 */
-		onyx_ns var			_content:IContent				= new ContentNull();
+		onyx_ns var			_content:IContent				= NULL_LAYER;
 
 		/**
 		 * 	@private
 		 * 	Controls
 		 */
 		private var			_properties:LayerProperties;
+			
+		/**
+		 * 	@private
+		 * 	Stores the layer bitmap information
+		 */	
+		private var			bitmapData:BitmapData			= getBaseBitmap();
 		
 		/**
 		 * 	@constructor
@@ -79,8 +98,6 @@ package onyx.layer {
 		public function Layer():void {
 
 			_properties = new LayerProperties(this);
-			
-			super(null);
 			
 		}
 		
@@ -94,27 +111,28 @@ package onyx.layer {
 			var path:String = request.url;
 	
 			// get extension
-			var extension:String = path.substr(path.lastIndexOf('.')+1, path.length).toLowerCase();
+			var extension:String = StringUtil.getExtension(path);
 			
-			// if it's an onx file, pass it over to the display
+			// if it's an onx file, pass it over to the display to load
 			if (extension === 'mix' || extension === 'xml') {
 				
-				if (parent is Display) {
-					(parent as Display).load(request, this, transition);
-				}
-				
+				_display.load(request, this, transition);
+			
+			// individual content, load it here
 			} else {
 				
 				// load content
-				var loader:ContentLoader = new ContentLoader();
+				//  ContentManager.register(path);
+				
+				var loader:ContentLoader = new ContentLoader(request);
+				
 				loader.addEventListener(Event.COMPLETE,						_onContentStatus);
 				loader.addEventListener(IOErrorEvent.IO_ERROR,				_onContentStatus);
 				loader.addEventListener(SecurityErrorEvent.SECURITY_ERROR,	_onContentStatus);
 				loader.addEventListener(ProgressEvent.PROGRESS,				_forwardEvents);
 				
 				// load
-				loader.load(request, extension, settings, transition);
-				
+				loader.load(settings, transition);
 			}
 		}
 		
@@ -145,21 +163,23 @@ package onyx.layer {
 				var loadedContent:Content = new contentEvent.contentType(this, contentEvent.request.url, contentEvent.reference);
 
 				// if a transition was loaded, load the transition with the layer
-				if (!(_content is ContentNull) && contentEvent.transition) {
+				if (contentEvent.transition && !(_content === NULL_LAYER)) {
 					
+					// if current content is already a transition, destroy it, then load
 					if (_content is ContentTransition) {
 						
-						// end the transition
 						(_content as ContentTransition).endTransition();
-						
-						// create a new transition
-						loadedContent = new ContentTransition(this, contentEvent.request.url, contentEvent.transition, _content, loadedContent);
-						
-					} else {
-
-						loadedContent = new ContentTransition(this, contentEvent.request.url, contentEvent.transition, _content, loadedContent);
 
 					}
+						
+					// create a new transition
+					loadedContent = new ContentTransition(this, contentEvent.transition, _content, loadedContent);
+
+					// here we need to dispatch that our old filters went away
+					for each (var filter:Filter in _content.filters) {
+						super.dispatchEvent(new FilterEvent(FilterEvent.FILTER_REMOVED, filter));
+					}
+
 				}
 
 				// pass the content on
@@ -173,17 +193,12 @@ package onyx.layer {
 		 * 	Initializes Content
 		 */
 		private function _createContent(content:Content, settings:LayerSettings):void {
-			
-			// create a new bitmap?
-			if (!super.bitmapData) {
-				super.bitmapData = getBaseBitmap();
-			}
-	
-			// only destroy previous content if it's not a transition		
-			if (!(_content is ContentNull) && !(content is ContentTransition)) {
+
+			// get rid of earlier content
+			if (!(content is ContentTransition)) {
 				_destroyContent();
 			}
-			
+
 			// store content
 			_content = content;
 			
@@ -191,30 +206,49 @@ package onyx.layer {
 			_content.addEventListener(FilterEvent.FILTER_APPLIED,		_forwardEvents);
 			_content.addEventListener(FilterEvent.FILTER_MOVED,			_forwardEvents);
 			_content.addEventListener(FilterEvent.FILTER_REMOVED,		_forwardEvents);
+			_content.addEventListener(TransitionEvent.TRANSITION_END,	_endTransition);
 			
-			// listen every frame
-			if (_content is Content) {
-				addEventListener(Event.ENTER_FRAME, _renderContent);
+			if (settings) {
+				settings.apply(content);
 			}
 
-			// test transition
-			if (content is ContentTransition) {
-
-				_content.addEventListener(TransitionEvent.TRANSITION_END,	_endTransition);
-				settings.apply((content as ContentTransition).loadedContent);
-
-			} else {
-				
-				if (settings) {
-					settings.apply(content);
-				}
+			// render first frame
+			content.render(null);
+			
+			// dispatch a "i'm loaded" event if it's not a transition
+			if (!(content is ContentTransition)) {
+			
+				// dispatch a load event
+				var dispatch:LayerEvent = new LayerEvent(LayerEvent.LAYER_LOADED);
+				super.dispatchEvent(dispatch);
 				
 			}
-
-			// dispatch a load event
-			var dispatch:LayerEvent = new LayerEvent(LayerEvent.LAYER_LOADED, this);
-			dispatch.layer = this;
-			super.dispatchEvent(dispatch);
+		}
+		
+		
+		/**
+		 * 	@private
+		 * 	Destroys the current content state
+		 */
+		private function _destroyContent():void {
+			
+			if (_content !== NULL_LAYER) {
+				
+				// destroys the earlier content
+				_content.removeEventListener(TransitionEvent.TRANSITION_END, _endTransition);
+	
+				// blow it up
+				_content.dispose();
+	
+				// removes listener forwarding
+				_content.removeEventListener(FilterEvent.FILTER_APPLIED,	_forwardEvents);
+				_content.removeEventListener(FilterEvent.FILTER_MOVED,		_forwardEvents);
+				_content.removeEventListener(FilterEvent.FILTER_REMOVED,	_forwardEvents);
+				
+				// dispatch an unload event
+				super.dispatchEvent(new LayerEvent(LayerEvent.LAYER_UNLOADED));
+				
+			}
 		}
 		
 		/**
@@ -224,55 +258,18 @@ package onyx.layer {
 		private function _endTransition(event:TransitionEvent):void {
 			
 			var transition:ContentTransition = event.currentTarget as ContentTransition;
-			transition.removeEventListener(TransitionEvent.TRANSITION_END, _endTransition);
 			
 			// create the content
 			_createContent(event.content, null);
-			
-			// forward the event
-			super.dispatchEvent(event);
-		}
-		
-		/**
-		 * 	@private
-		 * 	Renders the content onto this bitmap
-		 */
-		private function _renderContent(event:Event):void {
-			
-			super.bitmapData.lock();
-			
-			_content.render(super.bitmapData);
-			
-			super.bitmapData.unlock();
-			
-		}
-		
-		/**
-		 * 	@private
-		 * 	Destroys the current content state
-		 */
-		private function _destroyContent():void {
-			
-			new GCTester(_content);
-			
-			// destroys the earlier content
-			_content.dispose();
 
-			// removes listener forwarding
-			_content.removeEventListener(FilterEvent.FILTER_APPLIED,	_forwardEvents);
-			_content.removeEventListener(FilterEvent.FILTER_MOVED,		_forwardEvents);
-			_content.removeEventListener(FilterEvent.FILTER_REMOVED,	_forwardEvents);
-			
 		}
+		
 		
 		/**
 		 * 	@private
 		 * 	Listens for events and forwards them
 		 */
 		private function _forwardEvents(event:Event):void {
-			if (!(event is ProgressEvent)) {
-				trace(event)
-			}
 			super.dispatchEvent(event);
 		}
 		
@@ -362,21 +359,17 @@ package onyx.layer {
 		}
 		
 		/**
-		 * 	Copys the layer down
+		 * 	Moves the layer
 		 */
 		public function moveLayer(index:int):void {
-			
-			if (parent is Display) {
-				var display:Display = parent as Display;
-				display.moveLayer(this, index);
-			}
+			_display.moveLayer(this, index);
 		}
 		
 		/**
 		 * 	Copys the layer down
 		 */
 		public function copyLayer():void {
-			super.dispatchEvent(new LayerEvent(LayerEvent.LAYER_COPY_LAYER, this));
+			_display.copyLayer(this, index + 1);
 		}
 
 		/**
@@ -466,91 +459,91 @@ package onyx.layer {
 		/**
 		 * 	Sets alpha of current content
 		 */
-		override public function set alpha(value:Number):void {
+		public function set alpha(value:Number):void {
 			_content.alpha = value;
 		}
 
 		/**
 		 * 	Gets alpha of current content
 		 */
-		override public function get alpha():Number {
+		public function get alpha():Number {
 			return _content.alpha;
 		}
 		
 		/**
 		 * 	Sets alpha of current content
 		 */
-		override public function set blendMode(value:String):void {
-			super.blendMode = _properties.blendMode.setValue(value);
+		public function set blendMode(value:String):void {
+			_content.blendMode = value;
 		}
 
 		/**
 		 * 	Sets the x of current content
 		 */
-		override public function set x(value:Number):void {
+		public function set x(value:Number):void {
 			_content.x = value;
 		}
 
 		/**
 		 * 	Sets the y of current content
 		 */
-		override public function set y(value:Number):void {
+		public function set y(value:Number):void {
 			_content.y = value;
 		}
 
 		/**
 		 * 	Sets scaleX for current content
 		 */
-		override public function set scaleX(value:Number):void {
+		public function set scaleX(value:Number):void {
 			_content.scaleX = value;
 		}
 
 		/**
 		 * 	Sets scaleY for current content
 		 */
-		override public function set scaleY(value:Number):void {
+		public function set scaleY(value:Number):void {
 			_content.scaleY = value;
 		}
 		
 		/**
 		 * 	Gets scaleX for current content
 		 */
-		override public function get scaleX():Number {
+		public function get scaleX():Number {
 			return _content.scaleX;
 		}
 
 		/**
 		 * 	Gets scaleY for current content
 		 */
-		override public function get scaleY():Number {
+		public function get scaleY():Number {
 			return _content.scaleY;
 		}
 
 		/**
 		 * 	Gets x for current content
 		 */
-		override public function get x():Number {
+		public function get x():Number {
 			return _content.x;
 		}
 
 		/**
 		 * 	Gets y for current content
 		 */
-		override public function get y():Number {
+		public function get y():Number {
 			return _content.y;
 		}
 		
 		/**
 		 * 	Gets content rotation
 		 */
-		override public function get rotation():Number {
+		public function get rotation():Number {
 			return _content.rotation / RADIANS;
 		}
 
 		/**
 		 * 	Sets content rotation
 		 */
-		override public function set rotation(value:Number):void {
+		public function set rotation(value:Number):void {
 			_content.rotation = value * RADIANS;
 		}
 		
@@ -569,73 +562,19 @@ package onyx.layer {
 		public function removeFilter(filter:Filter):void {
 			_content.removeFilter(filter);
 		}
-
-		/**
-		 * 	Overrides filters
-		 */		
-		override public function set filters(value:Array):void {
-			throw new Error('Use addFilter() or removeFilter() instead');
-		}
 		
 		/**
 		 * 	Returns the filters
 		 */
-		override public function get filters():Array {
+		public function get filters():Array {
 			return _content.filters.concat();
-		}
-		
-		/**
-		 * 	Draws bitmap from a source bitmap
-		 */
-		public function draw(bmp:BitmapData):void {
-			
-			var scaleX:Number = bmp.width / _content.source.width;
-			var scaleY:Number = bmp.height / _content.source.height;
-			
-			var matrix:Matrix = new Matrix();
-			matrix.scale(scaleX, scaleY);
-			
-			bmp.draw(_content.rendered, matrix);
-			
 		}
 		
 		/**
 		 * 	Returns the index of the layer within the display
 		 **/
 		public function get index():int {
-			return (parent is Display) ? (parent as Display).indexOf(this) : -1;
-		}
-		
-
-		/**
-		 * 	Unloads the layer
-		 **/
-		public function unload():void {
-			
-			if (super.bitmapData) {
-				super.bitmapData.dispose();
-				super.bitmapData = null;
-			}
-
-			// disposes content
-			if (_content) {
-
-				// dispatch an unload event
-				super.dispatchEvent(new LayerEvent(LayerEvent.LAYER_UNLOADED, this));
-
-				// stop rendering
-				removeEventListener(Event.ENTER_FRAME, _renderContent);
-
-				// destroy the content
-				_destroyContent();
-
-				// set content to nothing					
-				_content			= new ContentNull();
-				
-				// change the property target to this layer
-				_properties.target	= this;
-
-			}
+			return _display.indexOf(this);
 		}
 		
 		/**
@@ -679,8 +618,72 @@ package onyx.layer {
 		 * 	Disposes the layer
 		 */
 		public function dispose():void {
-			unload();
+			
+			bitmapData.fillRect(bitmapData.rect, 0x00000000);
+			
+			// disposes content
+			if (_content) {
+
+				// change the property target to this layer
+				_properties.target	= this;
+
+				// destroy the content
+				_destroyContent();
+
+				// set content to nothing					
+				_content			= NULL_LAYER;
+
+			}
+			
 		}
 		
+		/**
+		 * 
+		 */
+		public function get blendMode():String {
+			return _content.blendMode;
+		}
+		
+		/**
+		 * 
+		 */
+		public function render(stack:RenderStack):RenderTransform {
+			return _content.render(stack);
+		}
+		
+		/**
+		 *
+		 */
+		public function get rendered():BitmapData {
+			return _content.rendered;
+		}
+
+		/**
+		 *
+		 */
+		public function get source():BitmapData {
+			return _content.source;
+		}
+		
+		/**
+		 * 
+		 */
+		public function get matrix():Matrix {
+			return _content.matrix;
+		}
+		
+		/**
+		 * 
+		 */
+		public function set matrix(value:Matrix):void {
+			_content.matrix = value;
+		}
+		
+		/**
+		 * 
+		 */
+		public function get display():IDisplay {
+			return _display;
+		}
 	}
 }

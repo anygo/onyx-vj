@@ -295,7 +295,7 @@ package onyx.layer {
 						<loopEnd>{loopEnd.toFixed(3)}</loopEnd>
 					</properties>
 				</layer>
-				
+
 			if (filters.length) {
 				var filterXML:XML = <filters/>
 			
@@ -313,12 +313,16 @@ package onyx.layer {
 				
 				var controlXML:XML = <controls/>;
 				
+				/*
 				for each (var control:Control in controls) {
 					
 					var value:Object = control.value;
 					
 					if (value is Plugin) {
-						var plugin:PluginBase = (value as Plugin).relatedObject;
+						// var plugin:PluginBase = (value as Plugin).relatedObject;
+						
+						
+						trace(value);
 						
 						if (plugin) {
 							var pluginParent:XML = <{control.name}/>;
@@ -335,6 +339,7 @@ package onyx.layer {
 						controlXML.appendChild(<{control.name}>{control.value}</{control.name}>);
 					}
 				}
+				*/
 				
 				xml.appendChild(controlXML);
 			}

@@ -30,28 +30,15 @@
  */
 package onyx.states {
 
-	import flash.display.DisplayObject;
-	import flash.display.Loader;
-	import flash.display.LoaderInfo;
-	import flash.display.Stage;
-	import flash.events.ErrorEvent;
-	import flash.events.Event;
-	import flash.events.IOErrorEvent;
-	import flash.events.MouseEvent;
-	import flash.events.TimerEvent;
-	import flash.net.URLLoader;
-	import flash.net.URLRequest;
+	import flash.display.*;
+	import flash.events.*;
+	import flash.net.*;
 	import flash.text.TextField;
 	import flash.utils.Timer;
 	
-	import onyx.assets.PixelFont;
 	import onyx.core.*;
-	import onyx.events.ApplicationEvent;
-	import onyx.events.FilterEvent;
-	import onyx.events.TransitionEvent;
-	import onyx.plugin.IPluginLoader;
-	import onyx.plugin.Plugin;
-	import onyx.settings.Settings;
+	import onyx.events.*;
+	import onyx.plugin.*;
 	
 	use namespace onyx_ns;
 
@@ -68,16 +55,6 @@ package onyx.states {
 		/**
 		 * 	@private
 		 */
-		private var _image:DisplayObject;
-
-		/**
-		 * 	@private
-		 */
-		private var _label:TextField		= new TextField();
-
-		/**
-		 * 	@private
-		 */
 		private var _timer:Timer;
 
 		/**
@@ -90,21 +67,6 @@ package onyx.states {
 			// dispatch a start event
 			Onyx.instance.dispatchEvent(new ApplicationEvent(ApplicationEvent.ONYX_STARTUP_START));
 			
-			// create the image and a label
-			_image = new OnyxStartUpImage();
-			Onyx.root.addChild(_image);
-			Onyx.root.addChild(_label);
-			
-			Onyx.root.addEventListener(MouseEvent.MOUSE_DOWN, _captureEvents, true, -1);
-			Onyx.root.addEventListener(MouseEvent.MOUSE_UP, _captureEvents, true, -1);
-			
-			_label.selectable = false;
-			_label.defaultTextFormat = PixelFont.DEFAULT;
-			_label.embedFonts = true;
-			_label.x = 683;
-			_label.y = 487;
-			_label.height = 60;
-			
 			// load external plugs
 			_loadExternalPlugins();
 		}
@@ -116,11 +78,11 @@ package onyx.states {
 		private function _loadExternalPlugins():void {
 			var loader:URLLoader = new URLLoader();
 			
-			loader.addEventListener(Event.COMPLETE, _onFiltersLoaded);
-			loader.addEventListener(IOErrorEvent.IO_ERROR, _onFiltersLoaded);
-			loader.load(new URLRequest(Settings.PLUGINS_DIRECTORY + 'filters.xml'))
+			loader.addEventListener(Event.COMPLETE,			_onFiltersLoaded);
+			loader.addEventListener(IOErrorEvent.IO_ERROR,	_onFiltersLoaded);
+			loader.load(new URLRequest(Settings.PLUGINS_DIRECTORY + 'filters.xml'));
 			
-			_label.text = 'LOADING PLUG-INS ... \n';
+			Console.output('LOADING PLUG-INS ... \n');
 		}
 		
 		/**
@@ -145,13 +107,11 @@ package onyx.states {
 					
 					_filtersToLoad.push(swfloader);
 					
-					_label.appendText('LOADING ' + String(i.@name).toUpperCase() + '\n');
-					_label.scrollV = _label.maxScrollV;
+					Console.output('LOADING ' + String(i.@name).toUpperCase());
 				}
 			} else {
 				
-				_label.appendText('error loading filters:\n' + (event as IOErrorEvent).text);
-				_label.scrollV = _label.maxScrollV;
+				Console.output('error loading filters:\n' + (event as IOErrorEvent).text);
 				
 				_initialize(2000);
 			}
@@ -178,9 +138,8 @@ package onyx.states {
 					for each (var plugin:Plugin in plugins) {
 						
 						Onyx.registerPlugin(plugin);
+						Console.output('REGISTERING ' + plugin.name.toUpperCase());
 						
-						_label.appendText('REGISTERING ' + plugin.name.toUpperCase() + '\n');
-						_label.scrollV = _label.maxScrollV;
 					}
 				}
 			}
@@ -195,10 +154,9 @@ package onyx.states {
 		 * 	@private
 		 * 	Begin initialization timer
 		 */
-		private function _initialize(delay:int = 300):void {
-			Onyx.root.removeEventListener(Event.ADDED, _onItemAdded);
-			_label.appendText('INITIALIZING ...\n');
-			_label.scrollV = _label.maxScrollV;
+		private function _initialize(delay:int = 1000):void {
+			
+			Console.output('INITIALIZING ...');
 
 			_timer = new Timer(delay);
 			_timer.start();
@@ -220,41 +178,10 @@ package onyx.states {
 		}
 		
 		/**
-		 * 	@private
-		 * 	When an item is added, make sure it is below the startup image
-		 */
-		private function _onItemAdded(event:Event):void {
-			
-			var stage:Stage = Onyx.root;
-			stage.setChildIndex(_image, stage.numChildren - 1);
-			stage.setChildIndex(_label, stage.numChildren);
-			
-		}
-		
-		/**
-		 * 	@private
-		 * 	Traps all mouse events
-		 */
-		private function _captureEvents(event:MouseEvent):void {
-			event.stopPropagation();
-		}
-		
-		/**
 		 * 	Terminates the state
 		 */
 		override public function terminate():void {
 
-			// remove listeners
-			Onyx.root.removeEventListener(MouseEvent.MOUSE_DOWN, _captureEvents, true);
-			Onyx.root.removeEventListener(MouseEvent.MOUSE_UP, _captureEvents, true);
-			
-			// remove items
-			Onyx.root.removeChild(_image);
-			Onyx.root.removeChild(_label);
-			
-			// clear references
-			_image = null;
-			_label = null;
 			_filtersToLoad = null;
 
 			// we're done initializing

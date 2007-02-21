@@ -38,8 +38,7 @@ package onyx.content {
 	
 	import onyx.constants.POINT;
 	import onyx.controls.*;
-	import onyx.core.RenderTransform;
-	import onyx.core.onyx_ns;
+	import onyx.core.*;
 	import onyx.events.FilterEvent;
 	import onyx.events.TransitionEvent;
 	import onyx.filter.Filter;
@@ -80,10 +79,10 @@ package onyx.content {
 		/**
 		 * 	@constructor
 		 */
-		public function ContentTransition(layer:Layer, path:String, transition:Transition, current:IContent, loaded:IContent):void {
+		public function ContentTransition(layer:Layer, transition:Transition, current:IContent, loaded:IContent):void {
 
 			// super!
-			super(layer, path, null);
+			super(layer, null, null);
 
 			// initialize transition			
 			_transition = transition;
@@ -92,17 +91,15 @@ package onyx.content {
 			oldContent	= current as Content;
 			newContent = loaded as Content;
 			
-			// loop through old content filters
-			for each (var filter:Filter in current.filters) {
-				// dispatch a filter removed event
-				var event:FilterEvent = new FilterEvent(FilterEvent.FILTER_REMOVED, filter)
-				dispatchEvent(event);
-			}
-			
+			// add listeners for filter events
 			newContent.addEventListener(FilterEvent.FILTER_APPLIED,		_forwardEvents);
 			newContent.addEventListener(FilterEvent.FILTER_MOVED,		_forwardEvents);
 			newContent.addEventListener(FilterEvent.FILTER_REMOVED,		_forwardEvents);
+			oldContent.addEventListener(FilterEvent.FILTER_APPLIED,		_forwardEvents);
+			oldContent.addEventListener(FilterEvent.FILTER_MOVED,		_forwardEvents);
+			oldContent.addEventListener(FilterEvent.FILTER_REMOVED,		_forwardEvents);
 			
+			// change the target properties to the new content
 			layer.properties.target = newContent;
 
 			// initialize the transition
@@ -121,29 +118,23 @@ package onyx.content {
 		 * 	Forward events from the new content
 		 */
 		private function _forwardEvents(event:Event):void {
-			dispatchEvent(event);
-		}
-		
-		/**
-		 * 	Ends a transition
-		 */
-		public function endTransition():void {
-			dispatchEvent(new TransitionEvent(TransitionEvent.TRANSITION_END, newContent));
+			super.dispatchEvent(event);
 		}
 		
 		/**
 		 * 	Renders the bitmap
 		 */
-		override public function render(source:BitmapData, transform:RenderTransform = null):void {
+		override public function render(stack:RenderStack):RenderTransform {
 			
 			// get the time of the transition
 			var ratio:Number = (getTimer() - _startTime) / _transition.onyx_ns::_duration;
 			
 			// get out!
 			if (ratio > 1) {
-				
+
 				endTransition();
-				return;
+								
+				return null;
 				
 			}
 
@@ -152,32 +143,14 @@ package onyx.content {
 			// check bitmap transition			
 			if (_transition is IBitmapTransition) {
 				
-				(_transition as IBitmapTransition).render(source, ratio);
+				(_transition as IBitmapTransition).render(_source, stack, ratio);
 				
 			// otherwise just normal render
 			} else {
-				
-				// render old content				
-				oldContent.render(source);
-
-				// render the new content, but don't have it draw to our bitmap (with null)
-				newContent.render(null);
-				
-				// draw the new bitmap onto this bitmap
-				source.draw(newContent.rendered);
 
 			}
-
-			// copy pixels to our source
-			_source.copyPixels(source, source.rect, POINT);
-
-		}
-		
-		/**
-		 * 	Return loaded content
-		 */
-		public function get loadedContent():Content {
-			return newContent;
+			
+			return null;
 		}
 		
 		/**
@@ -472,23 +445,52 @@ package onyx.content {
 		}
 		
 		/**
-		 * 
+		 * 	Dispose
 		 */
 		override public function dispose():void {
-			
+		
 			newContent.removeEventListener(FilterEvent.FILTER_APPLIED,		_forwardEvents);
 			newContent.removeEventListener(FilterEvent.FILTER_MOVED,		_forwardEvents);
 			newContent.removeEventListener(FilterEvent.FILTER_REMOVED,		_forwardEvents);
+			oldContent.removeEventListener(FilterEvent.FILTER_APPLIED,		_forwardEvents);
+			oldContent.removeEventListener(FilterEvent.FILTER_MOVED,		_forwardEvents);
+			oldContent.removeEventListener(FilterEvent.FILTER_REMOVED,		_forwardEvents);
 
-			super.dispose();
+			// destroy the old content
 			oldContent.dispose();
 
 			oldContent = null;
 			newContent = null;
+			
+			super.dispose();
 		}
 		
+		/**
+		 * 	Get the rendered
+		 */
 		override public function get rendered():BitmapData {
 			return _source;
+		}
+		
+		/**
+		 * 	Dispatches an event over to the new content
+		 */
+		override public function dispatchEvent(event:Event):Boolean {
+			return newContent.dispatchEvent(event);
+		}
+		
+		/**
+		 * 
+		 */
+		override public function get path():String {
+			return newContent.path;
+		}
+		
+		/**
+		 * 
+		 */
+		public function endTransition():void {
+			super.dispatchEvent(new TransitionEvent(TransitionEvent.TRANSITION_END, newContent));
 		}
 
  	}

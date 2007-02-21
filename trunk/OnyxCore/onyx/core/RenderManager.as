@@ -28,89 +28,71 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package onyx.content {
-	
+package onyx.core {
+
 	import flash.display.*;
-	import flash.events.Event;
-	import flash.events.EventDispatcher;
-	import flash.filters.BitmapFilter;
+	import flash.geom.*;
+	import flash.utils.*;
 	
-	import onyx.constants.POINT;
-	import onyx.controls.Controls;
-	import onyx.core.*;
-	import onyx.layer.*;	
+	import onyx.constants.*;
+	import onyx.content.ColorFilter;
+	import onyx.filter.FilterArray;
 	
-	[Event(name="filter_applied",	type="onyx.events.FilterEvent")]
-	[Event(name="filter_removed",	type="onyx.events.FilterEvent")]
-	[Event(name="filter_moved",		type="onyx.events.FilterEvent")]
-	
-	[ExcludeClass]
-	public class ContentSprite extends Content {
+	/**
+	 * 	This class stores the last rendering time for a given target
+	 */
+	public final class RenderManager {
 		
 		/**
 		 * 	@private
-		 * 	Stores the loader object where the content was loaded into
 		 */
-		private var _loader:Loader;
+		private static var _dict:Dictionary = new Dictionary(true);
 		
 		/**
-		 * 	@private
-		 * 	The ratio to store the content
+		 * 
 		 */
-		private var _ratioX:Number							= 1;
-		
-		/**
-		 * 	@private
-		 * 	The ratio to store the content
-		 */
-		private var _ratioY:Number							= 1;
-
-		/**
-		 * 	@constructor
-		 */		
-		public function ContentSprite(layer:Layer, path:String, loader:Loader):void {
+		public static function getTime(target:Object):int {
 			
-			_loader		= loader;
-
-			// resize?
-			if (Settings.LAYER_AUTOSIZE) {
-				_ratioX = 320 / loader.contentLoaderInfo.width;
-				_ratioY = 240 / loader.contentLoaderInfo.height;
-			}
+			var time:int	= _dict[target];
+			var now:int		= getTimer();
+			_dict[target]	= now;
 			
-			// pass controls
-			super(layer, path, loader.content);
-			
+			return (now - time) / Onyx.framerate;
 		}
 		
 		/**
-		 * 	Destroys the content
+		 * 	
 		 */
-		override public function dispose():void {
+		public static function renderContent(source:BitmapData, content:IBitmapDrawable, transform:RenderTransform, filter:ColorFilter):void {
 			
-			// destroy content
-			_loader.unload();
-
-			_loader	= null;
+			var matrix:Matrix = transform.matrix;
+			var rect:Rectangle = transform.rect;
 			
-			super.dispose();
-		}
-		
+			// fill our source with nothing
+			source.fillRect(source.rect, 0x00000000);
+			
+			// draw our content
+			source.draw(content, matrix, filter, null, rect);
 
-		override public function get scaleX():Number {
-			return super.scaleX / _ratioX;
+			// apply the color filter to the source
+			source.applyFilter(source, source.rect, POINT, filter.filter);
+			
 		}
 		
-		override public function set scaleX(value:Number):void {
-			super.scaleX = value * _ratioX;
-		}
-		
-		override public function get scaleY():Number {
-			return super.scaleY / _ratioY;
-		}
-		
-		override public function set scaleY(value:Number):void {
-			super.scaleY = value * _ratioY;
+		/**
+		 * 
+		 */
+		public static function renderFilters(stack:RenderStack, source:BitmapData, rendered:BitmapData, filters:FilterArray):void {
+			
+			// copy to the rendered bitmap
+			rendered.copyPixels(source, source.rect, POINT);
+			
+			// render filters
+			filters.render(source, stack);
+			
+			// copy pixels to the rendered bitmap
+			rendered.copyPixels(source, source.rect, POINT);
+
 		}
 	}
 }

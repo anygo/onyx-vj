@@ -37,6 +37,8 @@ package onyx.layer {
 	import onyx.content.IContent;
 	import onyx.controls.Controls;
 	import onyx.controls.IControlObject;
+	import onyx.core.IRenderObject;
+	import onyx.display.IDisplay;
 	import onyx.filter.IFilterObject;
 	import onyx.transition.Transition;
 	
@@ -47,16 +49,13 @@ package onyx.layer {
 	[Event(name="layer_moved",		type="onyx.events.LayerEvent")]
 	[Event(name="progress",			type="flash.events.Event")]
 
-	public interface ILayer extends IFilterObject, IColorObject, IControlObject {
+	public interface ILayer extends IContent {
 
+		function get display():IDisplay;
 		function get properties():LayerProperties;
 		function moveLayer(index:int):void;
 		function copyLayer():void;
-		function unload():void;
-		function draw(bmp:BitmapData):void;
-		function load(request:URLRequest, settings:LayerSettings = null, transition:Transition = null):void;
-		function get path():String;
 		function get index():int;
-
+		function load(request:URLRequest, settings:LayerSettings = null, transition:Transition = null):void;
 	}
 }

@@ -40,8 +40,9 @@ package onyx.plugin {
 	import onyx.content.Content;
 	import onyx.content.IContent;
 	import onyx.core.IDisposable;
+	import onyx.core.IRenderObject;
 	
-	public interface IContentObject extends IRenderable, IDisposable {
+	public interface IContentObject extends IRenderObject, IDisposable {
 		
 		function initialize(stage:Stage, content:IContent):void;
 		

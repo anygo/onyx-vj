@@ -30,50 +30,85 @@
  */
 package onyx.display {
 	
-	import flash.display.Bitmap;
-	import flash.display.BitmapData;
-	import flash.display.DisplayObject;
-	import flash.display.Sprite;
-	import flash.events.Event;
-	import flash.events.EventDispatcher;
-	import flash.events.MouseEvent;
-	import flash.geom.Rectangle;
+	import flash.display.*;
+	import flash.events.*;
+	import flash.geom.*;
 	import flash.net.URLRequest;
 	import flash.ui.Mouse;
+	import flash.utils.*;
 	
+	import onyx.content.*;
 	import onyx.controls.*;
 	import onyx.core.*;
-	import onyx.events.ApplicationEvent;
-	import onyx.events.LayerEvent;
-	import onyx.jobs.LoadONXJob;
-	import onyx.layer.Layer;
-	import onyx.layer.LayerProperties;
-	import onyx.layer.LayerSettings;
+	import onyx.events.*;
+	import onyx.filter.*;
+	import onyx.jobs.*;
+	import onyx.layer.*;
+	import onyx.plugin.*;
 	import onyx.transition.*;
+	import onyx.utils.ArrayUtil;
 	
 	use namespace onyx_ns;
 	
 	/**
 	 * 	
 	 */
-	public class Display extends Sprite implements IControlObject {
+	public class Display extends Bitmap implements IDisplay {
+
+		/**
+		 * 	@private
+		 */
+		private var _filter:ColorFilter			= new ColorFilter();
+
+		/**
+		 * 	@private
+		 * 	Stores the filters for this content
+		 */
+		private var _filters:FilterArray		= new FilterArray();
 		
-		/** @private **/
+		/**
+		 * 	@private
+		 */
 		private var _backgroundColor:uint		= 0x000000;
 
-		/** @private **/
+		/**
+		 * 	@private
+		 */
 		private var _background:BitmapData		= new BitmapData(320, 240, false, _backgroundColor);
 		
-		/** @private **/
-		private var __x:Control					= new ControlInt('x', 'x', 0, 2000, 640);
-		private var __y:Control					= new ControlInt('y', 'y', 0, 2000, 480);
+		/**
+		 * 	@private
+		 */
+		private var __x:Control					= new ControlInt('displayX', 'x', 0, 2000, 640);
+		
+		/**
+		 * 	@private
+		 */
+		private var __y:Control					= new ControlInt('displayY', 'y', 0, 2000, 480)
+
+		/**
+		 * 	@private
+		 */
 		private var	_size:DisplaySize			= DisplaySize.SIZES[0];
 		
-		// add the controls that we can bind to
+		/**
+		 * 	@private
+		 */
 		private var _controls:Controls;
 		
+		/**
+		 * 	@private
+		 */
 		private var _layers:Array		= [];
 		
+		/**
+		 * 
+		 */
+		private var _valid:Array		= [];
+		
+		/**
+		 * 	@constructor
+		 */
 		public function Display():void {
 			
 			_controls = new Controls(this,
@@ -91,9 +126,9 @@ package onyx.display {
 			addEventListener(MouseEvent.MOUSE_OVER, _onMouseOver);
 			addEventListener(MouseEvent.MOUSE_OUT, _onMouseOut);
 			
-			mouseChildren = false;
-			addChild(new Bitmap(_background));
+			addEventListener(Event.ENTER_FRAME, _renderContent);
 
+			super(new BitmapData(320, 240, false, _backgroundColor));			
 		}
 		
 		/**
@@ -126,31 +161,57 @@ package onyx.display {
 				
 				// create a new layer and set it's index
 				var layer:Layer = new Layer();
+				layer._display = this;
+				
+				// add to the index
 				_layers.push(layer);
 				
-				// listen for move events, etc
-				layer.addEventListener(LayerEvent.LAYER_COPY_LAYER,	_onLayerCopy);
-				
-				// add the layer to this display object
-				addChildAt(layer, 1);
+				// listen for load and unload (to push to the valid array);
+				layer.addEventListener(LayerEvent.LAYER_LOADED,		_onLayerLoad);
+				layer.addEventListener(LayerEvent.LAYER_UNLOADED,	_onLayerUnLoad);
 				
 				// dispatch
-				var event:LayerEvent = new LayerEvent(LayerEvent.LAYER_CREATED, layer);
-				
-				// dispatch a layer create
-				var dispatcher:EventDispatcher = Onyx.getInstance();
-				dispatcher.dispatchEvent(event);
+				dispatchEvent(
+					new DisplayEvent(DisplayEvent.LAYER_CREATED, layer)
+				);
 			}
 		}
 		
 		/**
 		 * 	@private
-		 * 	Copies a layer
+		 * 	Called when a layer is loaded
 		 */
-		private function _onLayerCopy(event:LayerEvent):void {
-			copyLayer(event.layer, event.layer.index + 1);
+		private function _onLayerLoad(event:LayerEvent):void {
+			var currentLayer:ILayer	= event.currentTarget as ILayer;
+			var currentIndex:int	= currentLayer.index;
+			
+			// only add it to the valid list if it's not already in the valid
+			if (_valid.indexOf(currentLayer) < 0) {
+					
+				for (var index:int = 0; index < _valid.length; index++) {
+					var layer:Layer = _valid[index];
+					if (currentLayer.index < layer.index) {
+						break;
+					}
+				}
+				
+				_valid.splice(index, 0, currentLayer);
+			} else {
+				throw new Error('rendering error, duplicate layers');
+			}
 		}
 		
+		/**
+		 * 	@private
+		 * 	Called when a layer is unloaded
+		 */
+		private function _onLayerUnLoad(event:LayerEvent):void {
+			var layer:Layer = event.currentTarget as Layer;
+			var index:int = _valid.indexOf(layer);
+			
+			_valid.splice(index, 1);
+		}
+
 		/**
 		 * 	Returns the layers
 		 */
@@ -161,29 +222,33 @@ package onyx.display {
 		/**
 		 * 	Moves a layer to a specified index
 		 */
-		public function moveLayer(layer:Layer, index:int):void {
+		public function moveLayer(... args:Array):void {
 			
-			var fromIndex:int = layer.index;
-			var toLayer:Layer = _layers[index];
+			var layer:Layer		= args[0];
+			var index:int		= args[1];
+			
+			var fromIndex:int	= layer.index;
+			var toLayer:Layer	= _layers[index];
 			
 			if (toLayer) {
 				
 				var numLayers:int = _layers.length;
 				
-				var fromChildIndex:int = getChildIndex(layer);
-				var toChildIndex:int = getChildIndex(toLayer);
+				var fromChildIndex:int = _layers.indexOf(layer);
 				
-				setChildIndex(layer, toChildIndex);
-				setChildIndex(toLayer, fromChildIndex);
+				ArrayUtil.swap(_layers, layer, index);
+
+				// dispatch events to the layers				
+				layer.dispatch(new LayerEvent(LayerEvent.LAYER_MOVE));
+				toLayer.dispatch(new LayerEvent(LayerEvent.LAYER_MOVE));
 				
-				_layers[fromIndex] = toLayer;
-				_layers[index] = layer;
+				// now we need to check if they're both valid layers, and move them
+				var toLayerValid:int = _valid.indexOf(toLayer);
 				
-				setChildIndex(layer, toChildIndex);
-				setChildIndex(toLayer, fromChildIndex);
-				
-				layer.dispatch(new LayerEvent(LayerEvent.LAYER_MOVE, layer));
-				toLayer.dispatch(new LayerEvent(LayerEvent.LAYER_MOVE, toLayer));
+				// swap
+				if (toLayerValid >= 0) {
+					ArrayUtil.swap(_valid, layer, toLayerValid);
+				}
 				
 			}
 		}
@@ -207,13 +272,14 @@ package onyx.display {
 		 */
 		public function copyLayer(layer:Layer, index:int):void {
 			
-			var layerindex:int = layer.index;
-			var copylayer:Layer = _layers[index];
+			var layerindex:int	= layer.index;
+			var copylayer:Layer	= _layers[index];
 			
 			if (copylayer) {
 				
 				var settings:LayerSettings = new LayerSettings();
 				settings.load(layer);
+				
 				copylayer.load(new URLRequest(layer.path), settings);
 				
 			}
@@ -245,11 +311,18 @@ package onyx.display {
 		
 		/**
 		 * 	Loads a mix file into the layers
+		 * 	@param	request:URLRequest
+		 * 	@param	origin:ILayer
+		 * 	@param	transition:Transition
 		 */
-		public function load(request:URLRequest, origin:Layer, transition:Transition):void {
+		public function load(... args:Array):void {
 			
-			var job:LoadONXJob = new LoadONXJob(request, origin, transition);
+			var request:URLRequest		= args[0];
+			var origin:ILayer			= args[1];
+			var transition:Transition	= args[2];
 			
+			var job:LoadONXJob = new LoadONXJob(origin, transition);
+			JobManager.register(this, job, request);
 		}
 		
 		/**
@@ -258,20 +331,6 @@ package onyx.display {
 		public function set backgroundColor(value:uint):void {
 			_backgroundColor = value;
 			_background.fillRect(_background.rect, _backgroundColor);
-		}
-		
-		/**
-		 * 
-		 */
-		override public function set x(value:Number):void {
-			super.x = __x.setValue(value);
-		}
-		
-		/**
-		 * 
-		 */
-		override public function set y(value:Number):void {
-			super.y = __y.setValue(value);
 		}
 		
 		/**
@@ -300,7 +359,341 @@ package onyx.display {
 		/**
 		 * 
 		 */
+		private function _renderContent(event:Event):void {
+			
+			// var time:int = getTimer();
+			
+			// lock the bitmap
+			super.bitmapData.lock();
+			
+			// fill the display
+			super.bitmapData.fillRect(super.bitmapData.rect, _backgroundColor);
+			
+
+			// loop and render
+			// TBD: raise the framerate of the root movie, and do calculation to render different content on different frames
+			var length:int = _valid.length - 1;
+			
+			for (var count:int = length; count >= 0; count--) {
+				
+				var layer:ILayer = _valid[count];
+
+				layer.render(new RenderStack());
+
+				if (layer.rendered) {
+					super.bitmapData.draw(layer.rendered, null, null, layer.blendMode);
+				}
+			}
+
+			// unlock the bitmap
+			super.bitmapData.unlock();
+			
+			// trace(getTimer() - time);
+		}
+
+		/**
+		 * 	Adds a filter
+		 */
+		public function addFilter(filter:Filter):void {
+			_filters.addFilter(filter, this);
+		}
+
+		/**
+		 * 	Removes a filter
+		 */		
+		public function removeFilter(filter:Filter):void {
+			_filters.removeFilter(filter, this);
+		}
+		
+		/**
+		 * 	Tint
+		 */
+		public function set tint(value:Number):void {	
+			_filter.tint = value;
+		}
+		
+		/**
+		 * 	Sets color
+		 */
+		public function set color(value:uint):void {
+			_filter.color = value;
+		}
+
+		
+		/**
+		 * 	Gets color
+		 */
+		public function get color():uint {
+			return _filter._color;
+		}
+
+		/**
+		 * 	Gets tint
+		 */
+		public function get tint():Number {
+			return _filter._tint;
+		}
+
+		/**
+		 * 	Gets saturation
+		 */
+		public function get saturation():Number {
+			return _filter._saturation;
+		}
+		
+		/**
+		 * 	Sets saturation
+		 */
+		public function set saturation(value:Number):void {
+			_filter.saturation = value;
+		}
+
+		/**
+		 * 	Gets contrast
+		 */
+		public function get contrast():Number {
+			return _filter._contrast;
+		}
+
+		/**
+		 * 	Sets contrast
+		 */
+		public function set contrast(value:Number):void {
+			_filter.contrast = value;
+		}
+
+		/**
+		 * 	Gets brightness
+		 */
+		public function get brightness():Number {
+			return _filter._brightness;
+		}
+		
+		/**
+		 * 	Sets brightness
+		 */
+		public function set brightness(value:Number):void {
+			_filter.brightness = value;
+		}
+
+		/**
+		 * 	Gets threshold
+		 */
+		public function get threshold():int {
+			return _filter._threshold;
+		}
+		
+		/**
+		 * 	Sets threshold
+		 */
+		public function set threshold(value:int):void {
+			_filter.threshold = value;
+		}
+		
+		/**
+		 * 	Gets a filter's index
+		 */
+		public function getFilterIndex(filter:Filter):int {
+			return _filters.indexOf(filter);
+		}
+		
+		/**
+		 * 
+		 */
+		public function set framerate(value:Number):void {
+			for each (var layer:Layer in _valid) {
+				layer.framerate = value;
+			}
+		}
+		
+		/**
+		 * 	Sets the default matrix for all layers
+		 */
+		public function set matrix(value:Matrix):void {
+			for each (var layer:Layer in _valid) {
+				layer.matrix = value;
+			}
+		}
+		
+		/**
+		 * 
+		 */
+		public function get matrix():Matrix {
+			return null;
+		}
+
+		/**
+		 * 
+		 */
+		public function get loopStart():Number {
+			return 0;
+		}
+		
+		/**
+		 * 
+		 */
+		public function set loopStart(value:Number):void {
+			for each (var layer:Layer in _valid) {
+				layer.loopStart = value;
+			}
+		}
+
+		/**
+		 * 
+		 */
+		public function pause(value:Boolean = true):void {
+			for each (var layer:Layer in _valid) {
+				layer.pause(value);
+			}
+		}
+				
+		/**
+		 * 
+		 */
+		public function set time(value:Number):void {
+			for each (var layer:Layer in _valid) {
+				layer.time = value;
+			}
+		}
+		
+		/**
+		 * 
+		 */
+		public function set loopEnd(value:Number):void {
+			for each (var layer:Layer in _valid) {
+				layer.loopEnd = value;
+			}
+		}
+		
+		/**
+		 * 
+		 */
+		public function get loopEnd():Number {
+			return 1;
+		}
+		
+		/**
+		 * 
+		 */
+		public function get framerate():Number {
+			return 1;
+		}
+		
+		/**
+		 * 
+		 */
+		public function get source():BitmapData {
+			return super.bitmapData;
+		}
+
+		/**
+		 * 
+		 */
+		public function get rendered():BitmapData {
+			return super.bitmapData;
+		}
+		
+		/**
+		 * 
+		 */
+		public function get totalTime():int {
+			return 1;
+		}
+		
+		/**
+		 * 	Moves a filter to an index
+		 */
+		public function moveFilter(filter:Filter, index:int):void {
+			
+			if (ArrayUtil.swap(_filters, filter, index)) {
+				super.dispatchEvent(new FilterEvent(FilterEvent.FILTER_MOVED, filter));
+			}
+		}
+		
+		/**
+		 * 
+		 */
+		public function get path():String {
+			return null;
+		}
+		
+		/**
+		 * 
+		 */
+		public function get time():Number {
+			return 0;
+		}
+		
+		/**
+		 * 
+		 */
+		public function render(stack:RenderStack):RenderTransform {
+			return null;
+		}
+
+		/**
+		 * 	Sets the display location
+		 */
+		public function set displayX(value:int):void {
+			super.x = __x.setValue(value);
+		}
+		
+		/**
+		 * 	Sets the display location
+		 */
+		public function get displayX():int {
+			return super.x;
+		}
+		
+		/**
+		 * 	Sets the display location
+		 */
+		public function set displayY(value:int):void {
+			super.y = __y.setValue(value);
+		}
+		
+		/**
+		 * 	Sets the display location
+		 */
+		public function get displayY():int {
+			return super.y;
+		}
+
+
+		/**
+		 * 	@private
+		 */
+		override public function set x(value:Number):void {
+			// do nothing
+		}
+		
+		/**
+		 * 	@private
+		 */
+		override public function set y(value:Number):void {
+			// do nothing
+		}
+		
+		/**
+		 * 	@private
+		 */
+		override public function get x():Number {
+			return 0;
+		}
+		
+		/**
+		 * 	@private
+		 */
+		override public function get y():Number {
+			return 0;
+		}
+		
+		
+		/**
+		 * 
+		 */
 		public function dispose():void {
 		}
+
 	}
 }

@@ -34,15 +34,14 @@ package onyx.content {
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.filters.BitmapFilter;
+	import flash.geom.*;
 	
 	import onyx.constants.POINT;
 	import onyx.controls.Controls;
-	import onyx.core.RenderTransform;
+	import onyx.core.*;
 	import onyx.layer.Layer;
 	import onyx.layer.LayerProperties;
 	import onyx.layer.LayerSettings;
-	import onyx.plugin.IRenderable;
-	import onyx.settings.Settings;
 	
 	[Event(name="filter_applied",	type="onyx.events.FilterEvent")]
 	[Event(name="filter_removed",	type="onyx.events.FilterEvent")]
@@ -90,13 +89,25 @@ package onyx.content {
 		/**
 		 * 	Render
 		 */
-		override public function render(source:BitmapData, transform:RenderTransform = null):void {
-
-			(_content as IRenderable).render(source, super.getTransform());
+		override public function render(stack:RenderStack):RenderTransform {
 			
-			// copy pixels back to the rendered
-			_rendered.copyPixels(source, source.rect, POINT);
-
+			trace('rendering custom');
+			
+			var content:IRenderObject			= _content as IRenderObject;
+			var transform:RenderTransform		= content.render(stack);
+			
+			// get transform
+			transform = (transform) ? transform.concat(getTransform()) : getTransform();
+			
+			// render content
+			RenderManager.renderContent(_source, transform.content || _content, transform, _filter);
+			
+			// render filters
+			RenderManager.renderFilters(stack, _source, _rendered, _filters);
+						
+			// return transformation
+			return transform;
+			
 		}
 		
 		/**

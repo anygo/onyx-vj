@@ -32,10 +32,11 @@ package onyx.filter {
 	
 	import flash.display.BitmapData;
 	import flash.geom.Rectangle;
+	import onyx.core.RenderStack;
 	
 	public interface IBitmapFilter {
 		
-		function applyFilter(bitmapData:BitmapData, bounds:Rectangle):void;
+		function applyFilter(bitmapData:BitmapData, stack:RenderStack):void;
 		
 	}
 }

@@ -34,29 +34,22 @@ package onyx.events {
 	
 	import onyx.core.onyx_ns;
 	import onyx.layer.Layer;
+	import onyx.layer.ILayer;
 	
 	use namespace onyx_ns;
 
 	public final class LayerEvent extends Event {
 		
-		onyx_ns static const LAYER_COPY_LAYER:String	= 'layercopy';
+		public static const LAYER_LOADED:String			= 'layerload';
+		public static const LAYER_UNLOADED:String		= 'layerunload';
+		public static const LAYER_MOVE:String			= 'layermove';
 
-		public static const LAYER_LOADED:String				= 'layerload';
-		public static const LAYER_UNLOADED:String			= 'layerunload';
-		public static const LAYER_CREATED:String			= 'layercreate';
-		public static const LAYER_MOVE:String				= 'layermove';
-
-		public var layer:Layer;
-		public var index:int;
-		
-		public function LayerEvent(type:String, layer:Layer):void {
-			this.layer = layer;
-			super(type); 
+		public function LayerEvent(type:String):void {
+			super(type);
 		}
 		
 		override public function clone():Event {
-			return new LayerEvent(super.type, layer);
+			return new LayerEvent(super.type);
 		}
-		
 	}
 }

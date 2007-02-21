@@ -28,32 +28,21 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package onyx.layer {
+package onyx.content {
 	
-	import flash.display.Loader;
-	import flash.display.LoaderInfo;
-	import flash.display.MovieClip;
-	import flash.events.ErrorEvent;
-	import flash.events.Event;
-	import flash.events.EventDispatcher;
-	import flash.events.IOErrorEvent;
-	import flash.events.ProgressEvent;
-	import flash.events.SecurityErrorEvent;
-	import flash.media.Camera;
-	import flash.media.Sound;
-	import flash.net.URLLoader;
-	import flash.net.URLRequest;
+	import flash.display.*;
+	import flash.events.*;
+	import flash.media.*;
+	import flash.net.*;
 	
-	import onyx.content.*;
-	import onyx.controls.Controls;
-	import onyx.core.Console;
-	import onyx.core.IDisposable;
+	import onyx.core.*;
 	import onyx.display.Display;
 	import onyx.events.LayerContentEvent;
-	import onyx.net.Connection;
-	import onyx.net.Stream;
-	import onyx.transition.Transition;
+	import onyx.layer.LayerSettings;
+	import onyx.net.*;
 	import onyx.plugin.IContentObject;
+	import onyx.transition.Transition;
+	import onyx.utils.StringUtil;
 
 	[Event(name='complete',			type='flash.events.Event')]
 	[Event(name='security_error',	type='flash.events.SecurityErrorEvent')]
@@ -63,7 +52,7 @@ package onyx.layer {
 	/**
 	 * 	Loads different content based on the file url
 	 */
-	internal final class ContentLoader extends EventDispatcher {
+	public final class ContentLoader extends EventDispatcher {
 		
 		/**
 		 * 	@private
@@ -82,19 +71,36 @@ package onyx.layer {
 		private var _request:URLRequest;
 		
 		/**
+		 * 	@private
+		 */
+		private var _loaded:Boolean;
+		
+		/**
+		 * 	@private
+		 */
+		private var _path:String;
+		
+		/**
+		 * 
+		 */
+		public function ContentLoader(request:URLRequest):void {
+			_request = request;
+		}
+		
+		/**
 		 * 	Loads a file
 		 */
-		public function load(request:URLRequest, extension:String, settings:LayerSettings, transition:Transition):void {
-			
-			var path:String = request.url;
-			
-			_request = request;
+		public function load(settings:LayerSettings, transition:Transition):void {
 			
 			_settings = settings || new LayerSettings();
 			_transition = transition;
+			
+			var path:String			= _request.url;
+			var extension:String	= StringUtil.getExtension(path);
 		
 			// do different stuff based on the extension
 			switch (extension) {
+				
 				case 'flv':
 					var stream:Stream = new Stream(path);
 					stream.addEventListener(Event.COMPLETE, _onStreamComplete);
@@ -115,7 +121,7 @@ package onyx.layer {
 					sound.addEventListener(Event.COMPLETE, _onSoundHandler);
 					sound.addEventListener(IOErrorEvent.IO_ERROR, _onSoundHandler);
 					sound.addEventListener(ProgressEvent.PROGRESS, _onLoadProgress);
-					sound.load(request);
+					sound.load(_request);
 					break;
 
 				// load a loader if we're any other type of file
@@ -123,12 +129,20 @@ package onyx.layer {
 				case 'jpeg':
 				case 'png':
 				case 'swf':
-					var loader:Loader  = new Loader();
+				
+					var def:Loader = ContentManager.hasDefinition(_request.url);
+				
+					var loader:Loader  = def || new Loader();
 					loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, _onLoadHandler);
 					loader.contentLoaderInfo.addEventListener(Event.COMPLETE, _onLoadHandler);
 					loader.contentLoaderInfo.addEventListener(ProgressEvent.PROGRESS, _onLoadProgress);
 					loader.contentLoaderInfo.addEventListener(SecurityErrorEvent.SECURITY_ERROR, _onLoadHandler);
-					loader.load(request);
+					
+					if (def) {
+						_createLoaderContent(loader.contentLoaderInfo);
+					} else {
+						loader.load(_request);
+					}
 					
 					break;
 			}
@@ -176,6 +190,7 @@ package onyx.layer {
 		private function _onLoadHandler(event:Event):void {
 			
 			var info:LoaderInfo = event.currentTarget as LoaderInfo;
+			
 			info.removeEventListener(IOErrorEvent.IO_ERROR, _onLoadHandler);
 			info.removeEventListener(Event.COMPLETE, _onLoadHandler);
 			info.removeEventListener(ProgressEvent.PROGRESS, _onLoadProgress);
@@ -183,13 +198,20 @@ package onyx.layer {
 			
 			if (!(event is ErrorEvent)) {
 				
-				var loader:Loader	= info.loader;
-				var type:Class = (loader.content is MovieClip) ? ContentMC : (loader.content is IContentObject) ? ContentCustom : ContentSprite;
-
+				_createLoaderContent(info, event);
+				
 			}
-
-			_dispatchContent(type, loader, event);
 			
+		}
+		
+		/**
+		 * 	@private
+		 */
+		private function _createLoaderContent(info:LoaderInfo, event:Event = null):void {
+			var loader:Loader	= info.loader;
+			var type:Class = (loader.content is MovieClip) ? ContentMC : (loader.content is IContentObject) ? ContentCustom : ContentSprite;
+
+			_dispatchContent(type, loader, event || new Event(Event.COMPLETE));
 		}
 		
 		/**
@@ -208,12 +230,43 @@ package onyx.layer {
 				dispatch.request		= _request;
 				dispatchEvent(dispatch);
 			}
+		}
+		
+		/**
+		 * 	Dispose
+		 */
+		public function dispose():void {
 
 			// dispose
 			_settings = null;
 			_transition = null;
 			_request = null;
-			
+
 		}
 	}
+}
+
+import flash.display.Loader;
+import onyx.content.ContentLoader;
+
+/**
+ * 	Content registration
+ */
+class Registration {
+	
+	public var refCount:int;
+	public var loader:ContentLoader;
+	public var type:Class;
+	public var content:Object;
+	
+	public function get loaded():Boolean {
+		return (type !== null);
+	}
+	
+	public function dispose():void {
+		loader	= null;
+		type	= null;
+		content = null;
+	}
+	
 }

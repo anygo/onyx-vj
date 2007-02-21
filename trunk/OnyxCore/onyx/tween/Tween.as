@@ -30,13 +30,13 @@
  */
 package onyx.tween {
 	
-	import flash.events.EventDispatcher;
-	import flash.events.TimerEvent;
-	import flash.utils.Dictionary;
-	import flash.utils.Timer;
-	import flash.utils.getTimer;
+	import flash.events.*;
+	import flash.utils.*;
 	
+	import onyx.core.*;
 	import onyx.tween.easing.*;
+	
+	use namespace onyx_ns;
 
 	/**
 	 * 		Custom Tween Class
@@ -74,12 +74,6 @@ package onyx.tween {
 		 * 	@private
 		 * 	Target object the tween should be applied to
 		 */
-		private var _timer:Timer;
-
-		/**
-		 * 	@private
-		 * 	Target object the tween should be applied to
-		 */
 		private var _props:Array;
 
 		/**
@@ -94,10 +88,14 @@ package onyx.tween {
 		 */
 		private var _ms:int;
 		
+		/**
+		 * 	@constructor
+		 */
 		public function Tween(target:Object, ms:int, ... args:Array):void {
 			
 			// register the tween to the _definitions array
 			var existing:Dictionary = _definition[target];
+			
 			if (existing) {
 				existing[this]		= this;
 			} else {
@@ -110,16 +108,16 @@ package onyx.tween {
 			_ms = ms;
 			_props = args;
 			
-			_timer = new Timer(20);
-			_timer.addEventListener(TimerEvent.TIMER, _onTimer);
-			_timer.start();
+			// listen every frame
+			Onyx.root.addEventListener(Event.ENTER_FRAME, _onTimer, false, 1000);
+			
 			_startTime = getTimer();
 		}
 		
 		/**
 		 * 	@private
 		 */
-		private function _onTimer(event:TimerEvent):void {
+		private function _onTimer(event:Event):void {
 			
 			var curTime:int = getTimer() - _startTime;
 			
@@ -141,21 +139,22 @@ package onyx.tween {
 		 * 	Stops the tween
 		 */
 		public function stop():void {
+			dispose();
+		}
+
+		/**
+		 * 	@private
+		 * 	Disposes the tween
+		 */		
+		private function dispose():void {
+			
 			var existing:Dictionary = _definition[_target];
 			
 			if (existing) {
 				delete existing[this];
 			}
 			
-			dispose();
-		}
-		
-		private function dispose():void {
-			if (_timer) {
-				_timer.stop();
-				_timer.removeEventListener(TimerEvent.TIMER, _onTimer);
-				_timer = null;
-			}
+			Onyx.root.removeEventListener(Event.ENTER_FRAME, _onTimer);
 
 			_props = null;			
 			_target = null;

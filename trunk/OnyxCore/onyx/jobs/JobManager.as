@@ -28,23 +28,38 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package onyx.assets {
+package onyx.jobs {
 	
-	import flash.text.Font;
-	import flash.text.TextFormat;
+	import flash.utils.Dictionary;
 	
-	[Embed(
-			source='/assets/Pixel.ttf',
-			fontName='PixelFont',
-			mimeType='application/x-font',
-			unicodeRange='U+0020-U+0040,U+0041-U+005A,U+005B-U+0060,U+0061-U+007A,U+007B-U+007F')
-	]
-	[ExcludeClass]
-	public final class PixelFont extends Font {
+	/**
+	 * 	Manages jobs on targets
+	 */
+	public final class JobManager {
 		
-		public static const DEFAULT:TextFormat			= new TextFormat('PixelFont', 7, 0xe4eaef);
-
-		DEFAULT.letterSpacing	= .05;
-		DEFAULT.leading			= 3;
+		/**
+		 * 	@private
+		 */
+		private static var _registration:Dictionary = new Dictionary(true);;
+		
+		/**
+		 * 	Registers a job with an object
+		 */
+		public static function register(target:Object, job:Job, ... args:Array):void {
+			
+			// destroy current job
+			var currentJob:Job = _registration[target];
+			if (currentJob) {
+				currentJob.terminate();
+			}
+			
+			// register current job
+			_registration[target] = job;
+			
+			// initialize job
+			job.initialize.apply(job, args);
+			
+		}
+		
 	}
 }

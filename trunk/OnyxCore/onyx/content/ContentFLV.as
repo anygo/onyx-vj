@@ -36,12 +36,12 @@ package onyx.content {
 	import flash.media.Video;
 	
 	import onyx.controls.Controls;
-	import onyx.core.RenderTransform;
+	import onyx.core.*;
+	import onyx.layer.Layer;
 	import onyx.layer.LayerProperties;
 	import onyx.layer.LayerSettings;
 	import onyx.net.Connection;
 	import onyx.net.Stream;
-	import onyx.layer.Layer;
 
 	[ExcludeClass]
 	public class ContentFLV extends Content {
@@ -72,14 +72,14 @@ package onyx.content {
 		 * 	@private
 		 * 	Updates the bimap source
 		 */
-		override public function render(layer:BitmapData, transform:RenderTransform = null):void {
-			
+		override public function render(stack:RenderStack):RenderTransform {
+
 			// test loop points
 			if (_stream.time >= _loopEnd || _stream.time < _loopStart) {
 				_stream.seek(_loopStart);
 			}
 			
-			super.render(layer, transform);
+			return super.render(stack);
 		}
 
 		/**

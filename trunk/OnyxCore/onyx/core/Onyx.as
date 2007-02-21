@@ -40,11 +40,10 @@ package onyx.core {
 	import onyx.events.*;
 	import onyx.filter.*;
 	import onyx.layer.*;
-	import onyx.plugin.Plugin;
-	import onyx.sound.SpectrumAnalyzer;
+	import onyx.plugin.*;
+	import onyx.sound.*;
 	import onyx.states.*;
 	import onyx.transition.*;
-	import onyx.sound.Visualizer;
 	
 	use namespace onyx_ns;
 	
@@ -109,6 +108,7 @@ package onyx.core {
 		
 		/**
 		 * 	@private
+		 * 	When initialized
 		 */
 		private static function _onInitialize(event:TimerEvent):void {
 			
@@ -127,8 +127,8 @@ package onyx.core {
 		 */		
 		private static function _onResize(event:Event):void {
 			for each (var display:Display in _displays) {
-				display.y = 0;
-				display.x = root.stageWidth - display.width;
+				display.displayY = 0;
+				display.displayX = root.stageWidth - display.width;
 			}
 		}
 		
@@ -148,6 +148,7 @@ package onyx.core {
 				if (object is Filter) {
 					
 					Filter.registerPlugin(plugin);
+					plugin.registerData('bitmapFilter', object is IBitmapFilter);
 					
 				} else if (object is Transition) {
 					
@@ -174,22 +175,16 @@ package onyx.core {
 		 * 	@param		The number of layers to create in the display
 		 * 	@returns	Display
 		 */
-		public static function createLocalDisplay(numLayers:int, x:int = 0, y:int = 0, scaleX:Number = 1, scaleY:Number = 1):Display {
+		public static function createDisplay(x:int = 0, y:int = 0, scaleX:Number = 1, scaleY:Number = 1):Display {
 			
 			var display:Display = new Display();
 			_displays.push(display);
-
-			display.createLayers(numLayers);
-			display.x = x;
-			display.y = y;
+			display.displayX = x;
+			display.displayY = y;
 			display.scaleX = scaleX;
 			display.scaleY = scaleY;
 			
 			root.addChild(display);
-
-			var event:DisplayEvent = new DisplayEvent(DisplayEvent.DISPLAY_CREATED);
-			event.display = display;
-			instance.dispatchEvent(event);
 			
 			return display;
 		}

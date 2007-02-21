@@ -48,7 +48,7 @@ package onyx.transition {
 	import onyx.core.getBaseBitmap;
 	import onyx.core.onyx_ns;
 	import onyx.events.TransitionEvent;
-	import onyx.plugin.IRenderable;
+	import onyx.core.IRenderObject;
 	import onyx.plugin.Plugin;
 	import onyx.tween.easing.Linear;
 	

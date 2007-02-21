@@ -30,49 +30,64 @@
  */
 package onyx.content {
 
-	import flash.display.BitmapData;
-	import flash.display.Shape;
-	import flash.display.Sprite;
-	import flash.events.Event;
-	import flash.events.EventDispatcher;
-	import flash.geom.ColorTransform;
-	import flash.geom.Matrix;
-	import flash.geom.Point;
-	import flash.geom.Rectangle;
-	import flash.geom.Transform;
-	import flash.media.Sound;
-	import flash.media.SoundChannel;
+	import flash.display.*;
+	import flash.events.*;
+	import flash.geom.*;
+	import flash.media.*;
 	import flash.utils.getTimer;
 	
-	import onyx.constants.BOOLEAN;
-	import onyx.constants.POINT;
+	import onyx.constants.*;
 	import onyx.controls.*;
-	import onyx.core.IDisposable;
-	import onyx.core.RenderTransform;
-	import onyx.core.onyx_ns;
-	import onyx.events.FilterEvent;
+	import onyx.core.*;
+	import onyx.events.*;
 	import onyx.filter.*;
-	import onyx.layer.IColorObject;
-	import onyx.layer.Layer;
-	import onyx.layer.LayerProperties;
+	import onyx.layer.*;
 	import onyx.plugin.Plugin;
-	import onyx.sound.SpectrumAnalyzer;
-	import onyx.sound.Visualizer;
-//	import onyx.sound.SpectrumAnalyzer;
+	import onyx.sound.*;
 
 	use namespace onyx_ns;
 	
 	[ExcludeClass]
 	public final class ContentMP3 extends Content {
 	
+		/**
+		 * 	@private
+		 */
 		private var _length:int;
+
+		/**
+		 * 	@private
+		 */
 		private var _loopStart:int;
+
+		/**
+		 * 	@private
+		 */
 		private var _loopEnd:int;	
+
+		/**
+		 * 	@private
+		 */
 		private var _sound:Sound;
+
+		/**
+		 * 	@private
+		 */
 		private var _channel:SoundChannel;
-		
+
+		/**
+		 * 	@private
+		 */
 		private var _plugin:Plugin;
-		
+
+		/**
+		 * 	@private
+		 */
+		private var _visualizer:Visualizer;
+
+		/**
+		 * 	@constructor
+		 */
 		public function ContentMP3(layer:Layer, path:String, sound:Sound):void {
 			
 			_sound = sound;
@@ -88,7 +103,7 @@ package onyx.content {
 				new ControlRange('visualizer', 'Visualizer', Visualizer.visualizers, 0, 'name')
 			);
 		}
-		
+
 		/**
 		 * 	Gets the visualizer
 		 */
@@ -100,51 +115,55 @@ package onyx.content {
 		 * 	Sets the visualizer
 		 */
 		public function set visualizer(plugin:Plugin):void {
-			
-			if (_plugin) {
-				_plugin.relatedObject.dispose();
-				_plugin.relatedObject = null;
-			}
-			
-			_plugin = plugin;
-			_plugin.relatedObject = plugin.getDefinition();
+			_plugin		= plugin;
+			_visualizer = (plugin) ? plugin.getDefinition() as Visualizer : null;
 		}
 		
 		/**
 		 * 	Updates the bimap source
 		 */
-		override public function render(source:BitmapData, transform:RenderTransform = null):void {
+		override public function render(stack:RenderStack):RenderTransform {
+			
 			var position:Number = Math.ceil(_channel.position);
 			
 			if (position >= _loopEnd || position < _loopStart || position >= _length) {
 				_channel.stop();
 				_channel = _sound.play(_loopStart);
 			}
-			
-			if (_plugin && SpectrumAnalyzer.spectrum) {
+
+			// draw ourselves			
+			if (_visualizer && SpectrumAnalyzer.spectrum) {
 				
-				// empty
+				stack.spectrum = SpectrumAnalyzer.spectrum;
+				
+				var transform:RenderTransform		= _visualizer.render(stack);
+				
+				transform = (transform) ? transform.concat(getTransform()) : getTransform();
+							
+				// get local references
+				var rect:Rectangle					= transform.rect;
+				var matrix:Matrix					= transform.matrix;
+				
+				// fill our source with nothing
 				_source.fillRect(source.rect, 0x00000000);
-
-				// get the transform and pass it on
-				var transform:RenderTransform = getTransform();
 				
-				// add the analysis
-				transform.spectrum = SpectrumAnalyzer.spectrum;
-
-				// render
-				(_plugin.relatedObject as Visualizer).render(_source, transform);
-
+				// draw our content
+				_source.draw(transform.content || _content, matrix, _filter, null, rect);
+	
 				// apply the color filter to the source
 				_source.applyFilter(_source, _source.rect, POINT, _filter.filter);
 				
-				// apply filters
-				applyFilters();
+				// apply the filters
+				_filters.render(_source, stack);
 				
-				// copy the pixels back to the layer
-				source.copyPixels(_rendered, _rendered.rect, POINT);
-
+				// copy the pixels to the rendered
+				_rendered.copyPixels(_source, _source.rect, POINT);
+	
+				// return transformation
+				return transform;
 			}
+			
+			return super.render(stack);
 		}
 		
 		/**

@@ -32,21 +32,22 @@ package onyx.events {
 	
 	import flash.events.Event;
 	import onyx.display.Display;
+	import onyx.layer.Layer;
+	import onyx.layer.ILayer;
 
 	public final class DisplayEvent extends Event {
 		
-		public static const DISPLAY_CREATED:String	= 'display_create';
+		public static const LAYER_CREATED:String	= 'layer_create';
 		
-		public var display:Display;
+		public var layer:ILayer;
 		
-		public function DisplayEvent(type:String):void {
+		public function DisplayEvent(type:String, layer:ILayer = null):void {
+			this.layer = layer;
 			super(type);
 		}
 		
 		override public function clone():Event {
-			var event:DisplayEvent = new DisplayEvent(type);
-			event.display = display;
-			return event;
+			return new DisplayEvent(type, layer);
 		}
 		
 	}

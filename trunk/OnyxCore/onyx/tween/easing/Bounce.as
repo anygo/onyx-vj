@@ -95,9 +95,9 @@ final public class Bounce
 									 c:Number, d:Number):Number
 	{
 		if (t < d/2)
-			return easeIn(t * 2, 0, c, d) * 0.5 + b;
+			return easeIn(t << 1, 0, c, d) * 0.5 + b;
 		else
-			return easeOut(t * 2 - d, 0, c, d) * 0.5 + c * 0.5 + b;
+			return easeOut(t << 1 - d, 0, c, d) * 0.5 + c * 0.5 + b;
 	}
 }
 

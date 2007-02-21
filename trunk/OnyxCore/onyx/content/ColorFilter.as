@@ -31,14 +31,17 @@
 package onyx.content {
 	
 	import flash.filters.ColorMatrixFilter;
+	import flash.geom.ColorTransform;
 	import flash.geom.Matrix;
 	
 	import onyx.core.onyx_ns;
 	
 	use namespace onyx_ns;
-	
-	internal final class ColorFilter {
 
+	/**
+	 * 	Color transformation and saturation matrix
+	 */	
+	public final class ColorFilter extends ColorTransform {
 
 		/**
 		 * 	@private
@@ -51,27 +54,27 @@ package onyx.content {
 		/**
 		 * 	@private
 		 */
-		private static const LUMINANCE_R:Number			= 0.212671;
+		private static const LUMINANCE_R:Number		= 0.212671;
 
 		/**
 		 * 	@private
 		 */
-		private static const LUMINANCE_G:Number			= 0.715160;
+		private static const LUMINANCE_G:Number		= 0.715160;
 
 		/**
 		 * 	@private
 		 */
-		private static const LUMINANCE_B:Number			= 0.072169;
+		private static const LUMINANCE_B:Number		= 0.072169;
 		
 		/**
 		 * 	@private
 		 */
-		onyx_ns var _threshold:int				= 0;
+		onyx_ns var _threshold:int					= 0;
 
 		/**
 		 * 	@private
 		 */
-		onyx_ns var _brightness:Number			= 0;
+		onyx_ns var _brightness:Number				= 0;
 
 		/**
 		 * 	@private
@@ -81,22 +84,22 @@ package onyx.content {
 		/**
 		 * 	@private
 		 */
-		onyx_ns var _saturation:Number			= 1;
+		onyx_ns var _saturation:Number				= 1;
 		
 		/**
 		 * 	@private
 		 */
-		private var _matrix:Array						= MATRIX_DEFAULT.concat();
+		private var _matrix:Array					= MATRIX_DEFAULT.concat();
 
 		/**
 		 * 	Filter
 		 */
-		public var filter:ColorMatrixFilter				= new ColorMatrixFilter(MATRIX_DEFAULT);
+		public var filter:ColorMatrixFilter			= new ColorMatrixFilter(MATRIX_DEFAULT);
 		
 		/**
 		 * 	@private
 		 */
-		onyx_ns var _color:uint					= 0;
+		onyx_ns var _color:uint						= 0;
 		
 		/**
 		 * 	@private
@@ -122,6 +125,7 @@ package onyx.content {
 				
 				_threshold = value;
 				applyMatrix();
+				
 			}
 		}
 
@@ -189,6 +193,60 @@ package onyx.content {
 				_saturation = s;
 				applyMatrix();
 			}
+		}
+
+		/**
+		 * 	Tint
+		 */
+		public function set tint(value:Number):void {		
+			
+			_tint = value;
+			
+			var r:Number = ((_color & 0xFF0000) >> 16) * value;
+			var g:Number = ((_color & 0x00FF00) >> 8) * value;
+			var b:Number = (_color & 0x0000FF) * value;
+
+			var amount:Number = 1 - value;
+			
+			super.alphaMultiplier = super.redMultiplier = super.greenMultiplier = amount;
+			super.redOffset		= r;
+			super.greenOffset	= g;
+			super.blueOffset	= b;
+			
+		}
+
+		/**
+		 * 
+		 */
+		public function get tint():Number {
+			return _tint;
+		}
+		
+		/**
+		 * 	Sets color
+		 */
+		override public function set color(value:uint):void {
+			
+			_color = value;
+			
+			var r:Number = ((_color & 0xFF0000) >> 16) * _tint;
+			var g:Number = ((_color & 0x00FF00) >> 8) * _tint;
+			var b:Number = (_color & 0x0000FF) * _tint;
+
+			var amount:Number = 1 - _tint;
+
+			super.alphaMultiplier = super.redMultiplier = super.greenMultiplier = amount;
+			super.redOffset		= r;
+			super.greenOffset	= g;
+			super.blueOffset	= b;
+
+		}
+		
+		/**
+		 * 	Gets color
+		 */
+		override public function get color():uint {
+			return _color;
 		}
 
 		/**
@@ -271,19 +329,6 @@ package onyx.content {
 			}
 			
 			return temp;
-		}
-		
-		/**
-		 * 
-		 */
-		private function _calcMatrix():void {
-		}
-		
-		/**
-		 * 
-		 */
-		public function changed():Boolean {
-			return true;
 		}
 
 	}
