@@ -56,7 +56,12 @@ package {
 						'Mix Blend: BlendMode of original mix\n' +
 						'Scroll: Scrolls the bitmap\n' +
 						'Frame Delay: # of frames to skip'
-					),
+				),
+				new Plugin(
+						'Mirror Filter',
+						MirrorFilter,
+						'Mirror Filter'
+				),
 				new Plugin('Blur Filter', 			Blur,			'Blur Filter'),
 				new Plugin('Noise Filter',			NoiseFilter,	'Noise Filter'),
 				new Plugin('Repeater Filter',		Repeater,		'Repeater Filter'),

@@ -2,16 +2,15 @@ package filters {
 	
 	import flash.display.BitmapData;
 	import flash.filters.BlurFilter;
+	import flash.filters.DisplacementMapFilter;
 	import flash.geom.ColorTransform;
 	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	
 	import onyx.constants.POINT;
-	import onyx.core.getBaseBitmap;
-	import onyx.filter.Filter;
-	import onyx.filter.IBitmapFilter;
-	import flash.filters.DisplacementMapFilter;
+	import onyx.core.*;
+	import onyx.filter.*;
 
 	public final class PasteFilter extends Filter implements IBitmapFilter {
 		
@@ -31,7 +30,7 @@ package filters {
 			_transform	= new ColorTransform();
 		}
 		
-		public function applyFilter(bitmapData:BitmapData, bounds:Rectangle):void {
+		public function applyFilter(bitmapData:BitmapData, stack:RenderStack):void {
 			
 			// _source.fillRect(_source.rect, 0x00000000);
 			_source.applyFilter(_source, _source.rect, new Point(0,0), new BlurFilter(4,4));

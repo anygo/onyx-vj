@@ -42,7 +42,7 @@ package filters {
 		 * 	@private
 		 */
 		private function _onTimer(event:TimerEvent):void {
-
+			
 			var delay:int = (((maxdelay - mindelay) * Math.random()) + mindelay) * 1000; 
 			_timer.delay = delay;
 			
@@ -65,6 +65,8 @@ package filters {
 		 * 	Dispose
 		 */
 		override public function dispose():void {
+			
+			// stop the timer
 			if (_timer) {
 				_timer.stop();
 				_timer.removeEventListener(TimerEvent.TIMER, _onTimer);

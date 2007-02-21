@@ -39,9 +39,8 @@ package filters {
 	
 	import onyx.constants.*;
 	import onyx.controls.*;
-	import onyx.core.onyx_ns;
-	import onyx.filter.Filter;
-	import onyx.filter.IBitmapFilter;
+	import onyx.core.*;
+	import onyx.filter.*;
 	import onyx.tween.*;
 	
 	use namespace onyx_ns;
@@ -78,7 +77,7 @@ package filters {
 			);
 		}
 		
-		public function applyFilter(bitmapData:BitmapData, bounds:Rectangle):void {
+		public function applyFilter(bitmapData:BitmapData, stack:RenderStack):void {
 			bitmapData.applyFilter(bitmapData, bitmapData.rect, new Point(0,0), _filter);
 		}
 		

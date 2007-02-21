@@ -37,9 +37,9 @@ package filters {
 	import flash.geom.Rectangle;
 	
 	import onyx.controls.*;
-	import onyx.filter.Filter;
-	import onyx.filter.IBitmapFilter;
-	
+	import onyx.core.*;
+	import onyx.filter.*;
+
 	public final class NoiseFilter extends Filter implements IBitmapFilter {
 		
 		private var _amount:Number		= .25;
@@ -55,7 +55,7 @@ package filters {
 			);
 		}
 		
-		public function applyFilter(bmp:BitmapData, bounds:Rectangle):void {
+		public function applyFilter(bmp:BitmapData, stack:RenderStack):void {
 			
 			_noise.noise(Math.random() * 100, 0, _amount * 255, 7, _greyscale);
 			

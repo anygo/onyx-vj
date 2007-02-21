@@ -36,16 +36,11 @@ package filters {
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	
-	import onyx.constants.BLEND_MODES;
-	import onyx.controls.ControlInt;
-	import onyx.controls.ControlNumber;
-	import onyx.controls.ControlProxy;
-	import onyx.controls.ControlRange;
-	import onyx.controls.Controls;
-	import onyx.core.getBaseBitmap;
-	import onyx.filter.Filter;
-	import onyx.filter.IBitmapFilter;
-	
+	import onyx.constants.*;
+	import onyx.controls.*;
+	import onyx.core.*;
+	import onyx.filter.*;
+
 	public final class EchoFilter extends Filter implements IBitmapFilter {
 		
 		private var _source:BitmapData;
@@ -97,7 +92,7 @@ package filters {
 			return _mixAlpha.alphaMultiplier;
 		}
 		
-		public function applyFilter(bitmapData:BitmapData, bounds:Rectangle):void {
+		public function applyFilter(bitmapData:BitmapData, stack:RenderStack):void {
 			
 			_count = (_count + 1) % delay;
 			
@@ -122,7 +117,7 @@ package filters {
 			}		
 	
 			// copy the pixels back to the original bitmap
-			bitmapData.copyPixels(_source, bitmapData.rect, new Point(bounds.x,bounds.y));
+			bitmapData.copyPixels(_source, bitmapData.rect, POINT);
 		}
 		
 		override public function dispose():void {
