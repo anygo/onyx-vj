@@ -73,7 +73,7 @@ package ui.states {
 		 */
 		private function _onItemAdded(event:Event):void {
 			
-			var stage:Stage = UIManager.root;
+			var stage:Stage = ROOT;
 			stage.setChildIndex(_image, stage.numChildren - 1);
 			stage.setChildIndex(_label, stage.numChildren);
 			

@@ -59,11 +59,6 @@ package ui.core {
 		public static var transition:Transition;
 
 		/**
-		 * 	@private
-		 */
-		public static var root:Stage;
-		
-		/**
 		 * 
 		 */
 		private static var displayState:DisplayStartState;
@@ -72,9 +67,6 @@ package ui.core {
 		 * 	initialize
 		 */
 		public static function initialize(root:Stage):void {
-			
-			// store the root
-			UIManager.root = root;
 			
 			// initializes onyx
 			var engine:EventDispatcher = Onyx.initialize(root);
