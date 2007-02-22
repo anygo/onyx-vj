@@ -41,28 +41,61 @@ package ui.controls {
 	
 	import ui.core.UIObject;
 
+	/**
+	 * 	ScrollPane class
+	 */
 	public class ScrollPane extends UIObject {
-		
+
+		/**
+		 * 	@private
+		 */		
 		private var _holder:Sprite;
+
+		/**
+		 * 	@private
+		 */		
 		private var _clickY:int;
+
+		/**
+		 * 	@private
+		 */		
 		private var _width:int;
+
+		/**
+		 * 	@private
+		 */		
 		private var _height:int;
+
+		/**
+		 * 	@private
+		 */		
 		private var _scrollY:ScrollBar;
 		
 		/**
 		 * 	@constructor
 		 */
-		public function ScrollPane(width:int, height:int):void {
+		public function ScrollPane(width:int, height:int, label:String = null):void {
 			
+			// create holder
 			_holder = new Sprite();
+			
+			// add holder
 			super.addChild(_holder);
 			
+			// set width / height
 			_width = width;
 			_height = height;
 			
+			// listen for mouse over
 			addEventListener(MouseEvent.MOUSE_OVER, _onMouseOver);
 			
+			// set the scroll 
 			scrollRect = new Rectangle(0, 0, width, height);
+			
+			// check for label
+			if (label) {
+				super.addLabel(label, 'left', width, 10, -10);
+			}
 		}
 		
 		/**

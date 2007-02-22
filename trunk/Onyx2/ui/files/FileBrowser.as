@@ -137,7 +137,7 @@ package ui.files {
 					
 					var thumb:String = node.@thumb;
 					list.files.push(
-						new File(rootpath + node.@name, (thumb) ? rootpath + thumb : '', node.@type)
+						new File(rootpath + node.@name, (thumb) ? rootpath + thumb : '')
 					);
 					
 				}
@@ -163,7 +163,7 @@ package ui.files {
 			list.folders.push(folder);
 			
 			for each (var name:String in cameras) {
-				var file:File = new File(name + '.cam', new AssetCamera(), 'CAMERA');
+				var file:File = new File(name + '.cam', new AssetCamera());
 				list.files.push(file);
 			}
 

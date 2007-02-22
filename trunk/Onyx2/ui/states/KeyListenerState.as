@@ -4,8 +4,10 @@ package ui.states {
 	import flash.events.KeyboardEvent;
 	import flash.ui.Keyboard;
 	
+	import onyx.constants.ROOT;
 	import onyx.states.ApplicationState;
 	
+	import ui.core.UIManager;
 	import ui.layer.UILayer;
 
 	public final class KeyListenerState extends ApplicationState {
@@ -15,13 +17,18 @@ package ui.states {
 		public static var SELECT_PAGE_2:int	= 69;
 		
 		override public function initialize(... args:Array):void {
-			var root:Stage = args[0];
 			
 			// listen for keys
-			root.addEventListener(KeyboardEvent.KEY_DOWN, _onKeyPress);
+			ROOT.addEventListener(KeyboardEvent.KEY_DOWN, _onKeyPress);
 		}
 		
+		/**
+		 * 	Terminates the keylistener
+		 */
 		override public function terminate():void {
+			
+			ROOT.removeEventListener(KeyboardEvent.KEY_DOWN, _onKeyPress);
+
 		}
 		
 		/**

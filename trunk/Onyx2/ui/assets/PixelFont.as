@@ -34,17 +34,19 @@ package ui.assets {
 	import flash.text.TextFormat;
 	
 	[Embed(
-			source='/assets/Pixel.ttf',
-			fontName='PixelFont',
+			source='/ui/assets/img/Pixel.ttf',
+			fontName='Pixel',
 			mimeType='application/x-font',
 			unicodeRange='U+0020-U+0040,U+0041-U+005A,U+005B-U+0060,U+0061-U+007A,U+007B-U+007F')
 	]
 	[ExcludeClass]
 	public final class PixelFont extends Font {
 		
-		public static const DEFAULT:TextFormat			= new TextFormat('PixelFont', 7, 0xe4eaef);
-
-		DEFAULT.letterSpacing	= .05;
-		DEFAULT.leading			= 3;
+		public static function get DEFAULT():TextFormat	{
+			var format:TextFormat	= new TextFormat('Pixel', 7, 0xe4eaef);
+			format.letterSpacing	= .05;
+			format.leading			= 3;
+			return format;
+		}
 	}
 }

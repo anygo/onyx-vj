@@ -69,7 +69,7 @@ package ui.window {
 			_title.y				= 1;
 			_title.text				= text;
 			
-			addChild(_background);
+			addChildAt(_background, 0);
 			addChild(_title);
 			
 			_background.width	= width;
@@ -77,7 +77,7 @@ package ui.window {
 			
 			this.x = x;
 			this.y = y;
-		
+			
 			super(true);	
 		}
 		
@@ -110,7 +110,7 @@ package ui.window {
 		private function _dragMouseUp(event:MouseEvent):void {
 			stopDrag();
 			removeEventListener(MouseEvent.MOUSE_UP, _dragMouseUp);
-			removeEventListener(MouseEvent.MOUSE_DOWN, _dragMouseDown);
+			addEventListener(MouseEvent.MOUSE_DOWN, _dragMouseDown);
 		}
 
 	}
@@ -124,12 +124,11 @@ package ui.window {
 
 import flash.display.Sprite;
 import flash.geom.Rectangle;
+import flash.display.Shape;
 
-class WindowAsset extends Sprite {
+class WindowAsset extends Shape {
 	
 	public function WindowAsset():void {
-		
-		mouseEnabled = false;
 		
 		graphics.lineStyle(0,0x5c7181, 1, true);
 

@@ -39,17 +39,49 @@ package ui.controls {
 	import ui.text.Style;
 	import ui.text.TextField;
 	
+	/**
+	 * 	Slider
+	 */
 	public class SliderV extends UIControl {
 		
+		/**
+		 * 	@private
+		 */
 		protected var _controlY:ControlNumber;
+		
+		/**
+		 * 	@private
+		 */
 		protected var _multiplier:Number;
+		
+		/**
+		 * 	@private
+		 */
 		protected var _factor:Number;
+		
+		/**
+		 * 	@private
+		 */
 		protected var _tempY:Number;
 
+		/**
+		 * 	@private
+		 */
 		protected var _button:ButtonClear;
+		
+		/**
+		 * 	@private
+		 */
 		protected var _value:TextField;
+		
+		/**
+		 * 	@private
+		 */
 		protected var _mouseY:int;
 		
+		/**
+		 * 	@constructor
+		 */
 		public function SliderV(options:UIOptions, controlY:Control):void {
 
 			super(options, true, controlY.display);

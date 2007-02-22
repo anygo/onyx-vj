@@ -30,8 +30,6 @@
  */
 package ui.files {
 	
-	import onyx.constants.ContentType;
-	
 	/**
 	 * 	Core File Class
 	 */
@@ -48,18 +46,12 @@ package ui.files {
 		public var thumbnail:Object;
 		
 		/**
-		 * 	Stores type
-		 */
-		public var type:String;
-		
-		/**
 		 * 
 		 */
-		public function File(path:String, thumbnail:Object, type:String):void {
+		public function File(path:String, thumbnail:Object):void {
 			
 			this.path = path;
 			this.thumbnail = thumbnail;
-			this.type = ContentType[type];
 
 		}
 	}

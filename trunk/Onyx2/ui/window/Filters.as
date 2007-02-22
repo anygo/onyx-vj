@@ -52,12 +52,12 @@ package ui.window {
 		/**
 		 * 
 		 */
-		private var _normalPane:ScrollPane		= new ScrollPane(92, 185);
+		private var _normalPane:ScrollPane		= new ScrollPane(92, 185, 'EFFECT FILTERS');
 		
 		/**
 		 * 
 		 */
-		private var _bitmapPane:ScrollPane		= new ScrollPane(92, 185);
+		private var _bitmapPane:ScrollPane		= new ScrollPane(92, 185, 'BITMAP FILTERS');
 		
 		/**
 		 * 	@constructor

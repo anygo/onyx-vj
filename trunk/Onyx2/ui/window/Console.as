@@ -83,6 +83,7 @@ package ui.window {
 		 * 	@private
 		 */
 		private function _onConsole(event:ConsoleEvent):void {
+			
 			_text.htmlText += event.message + '<br><br>';
 			_text.scrollV = _text.maxScrollV;
 		}

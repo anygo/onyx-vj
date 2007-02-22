@@ -45,20 +45,15 @@ package ui.text {
 		 */
 		public function TextField(width:int, height:int, align:String = 'left', selectable:Boolean = false, mouseEnabled:Boolean = false):void {
 			
-			this.selectable = selectable;
+			super.selectable = selectable;
 
-			var inheritStyle:TextFormat = PixelFont.DEFAULT;
-			
-			var format:TextFormat = new TextFormat(inheritStyle.font, inheritStyle.size, inheritStyle.color);
+			var format:TextFormat = PixelFont.DEFAULT;
 			format.align = align;
-			format.letterSpacing = inheritStyle.letterSpacing;
-			format.leading = inheritStyle.leading;
 
 			defaultTextFormat = format;
 			
 			this.width = width;
 			this.height = height;
-			
 			this.mouseEnabled = mouseEnabled;
 			
 			embedFonts = true;

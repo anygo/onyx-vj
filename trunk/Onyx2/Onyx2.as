@@ -34,14 +34,14 @@ package {
 	import flash.events.Event;
 	import flash.system.Security;
 	
-	import onyx.utils.ArrayUtil;
+	import onyx.utils.array.*;
 	
 	import ui.core.UIManager;
 	import ui.core.UIObject;
 	
 	[ExcludeClass]
 
-	[SWF(width="1024", height="768", backgroundColor="#141515", frameRate='25')]
+	[SWF(width="1024", height="768", backgroundColor="#141515", frameRate='24')]
 	public class Onyx2 extends UIObject {
 		
 		/**
@@ -54,6 +54,7 @@ package {
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 			stage.quality = StageQuality.LOW;
 
+			// init
 			UIManager.initialize(stage);
 
 		}

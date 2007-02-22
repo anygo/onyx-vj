@@ -33,6 +33,7 @@ package ui.core {
 	import flash.display.*;
 	import flash.events.EventDispatcher;
 	
+	import onyx.constants.*;
 	import onyx.core.Onyx;
 	import onyx.display.Display;
 	import onyx.events.*;
@@ -97,6 +98,7 @@ package ui.core {
 		 */
 		private static function _onInitializeEnd(event:ApplicationEvent):void {
 			
+			// remove the startup image
 			StateManager.removeState(displayState);
 			
 			var engine:EventDispatcher = event.currentTarget as EventDispatcher;
@@ -107,16 +109,19 @@ package ui.core {
 		
 			_loadWindows(Console, PerfMonitor, Browser, Filters, TransitionWindow, HostWindow);
 
-			var display:Display = Onyx.createDisplay(root.stageWidth - 320, 525);
+			// add a display
+			var display:Display = Onyx.createDisplay(ROOT.stageWidth - 320, 525);
 			display.addEventListener(DisplayEvent.LAYER_CREATED,		_onLayerCreate);
 			display.createLayers(5);
 			
-			root.addChild(display);
+			ROOT.addChild(display);
 			
+			// add settings window
 			var settings:SettingsWindow = new SettingsWindow(display);
-			root.addChild(settings);
+			ROOT.addChild(settings);
 			
-			StateManager.loadState(new KeyListenerState(), root);
+			// listen for keys
+			StateManager.loadState(new KeyListenerState());
 		}
 		
 		/**
@@ -125,7 +130,7 @@ package ui.core {
 		private static function _loadWindows(... windowsToLoad:Array):void {
 
 			for each (var window:Class in windowsToLoad) {
-				root.addChild(new window());
+				ROOT.addChild(new window());
 			}
 
 		}
@@ -138,7 +143,7 @@ package ui.core {
 			var uilayer:UILayer = new UILayer(event.layer);
 			uilayer.reOrderLayer();
 
-			root.addChildAt(uilayer, 0);
+			ROOT.addChildAt(uilayer, 0);
 		}
 	}
 }

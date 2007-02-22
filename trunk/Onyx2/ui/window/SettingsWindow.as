@@ -30,17 +30,31 @@
  */
 package ui.window {
 
-	import flash.events.MouseEvent;
+	import flash.display.Shape;
+	import flash.events.*;
+	import flash.geom.*;
 	import flash.system.System;
+	import flash.utils.*;
 	
 	import onyx.controls.*;
-	import onyx.core.Onyx;
+	import onyx.core.*;
 	import onyx.display.*;
+	import onyx.events.TempoEvent;
 	
 	import ui.controls.*;
 	import ui.core.UIObject;
 
 	public final class SettingsWindow extends Window {
+		
+		/**
+		 * 	@private
+		 */
+		private static const TRANSFORM_NORMAL:ColorTransform = new ColorTransform(1,1,1);
+
+		/**
+		 * 	@private
+		 */
+		private static const TRANSFORM_WHITE:ColorTransform = new ColorTransform(2,2,2);
 		
 		/**
 		 * 	@private
@@ -68,42 +82,127 @@ package ui.window {
 		private var _controlSize:DropDown;
 		
 		/**
+		 * 	@private
+		 */
+		private var _controlTempo:SliderV;
+		
+		/**
+		 * 	@private
+		 */
+		private var _tapTempo:TempoShape	= new TempoShape();
+		
+		/**
+		 * 	@private
+		 */
+		private var _releaseTimer:Timer		= new Timer(50);
+		
+		/**
+		 * 	@private
+		 */
+		private var _samples:Array			= [0];
+		
+		/**
+		 * 
+		 */
+		private var _tempo:Tempo			= Tempo.getInstance();
+		
+		/**
 		 * 	@constructor
 		 */
 		public function SettingsWindow(display:IDisplay):void {
 			
 			super('SETTINGS WINDOW', 202, 100, 200, 522);
 			
+			var control:Control, controls:Controls;
+
+			// create new ui options
 			var options:UIOptions	= new UIOptions();
 			options.width			= 50;
 			
-			var controls:Controls	= display.controls;
+			// get controls for the display
+			controls				= display.controls;
+			control					= new ControlRange('size', 'size', DisplaySize.SIZES, 0, 'name');
+			control.target			= display;
 
-			_controlXY		= new SliderV2(options, controls.getControl('position'));
+			// controls for display
+			_controlXY				= new SliderV2(options, controls.getControl('position'));
+			_controlColor			= new ColorPicker(options, controls.getControl('backgroundColor'));
+			_controlXML				= new TextButton(options, 'save layers');
+			_controlSize			= new DropDown(options, control, 'left');
+			
+			// tempo controls
+			_controlTempo			= new SliderV(options, _tempo.controls.getControl('tempo'));
+			
+			// add controls
+			addChildren(	
+				_controlXY,		2,	24,
+				_controlColor,	2,	70,
+				_controlXML,	2,	83,
+				_controlSize,	60,	24,
+				_controlTempo,	60,	70,
+				_tapTempo,		60,	83
+			);
 
-			_controlColor	= new ColorPicker(options, controls.getControl('backgroundColor'));
-			_controlXML		= new TextButton(options, 'save layers');
+			// start the timer
+			_tempo.addEventListener(TempoEvent.CLICK, _onTempo);
 			
-			var control:Control = new ControlRange('size', 'size', DisplaySize.SIZES, 0, 'name');
-			control.target		= display;
+			// tap tempo click
+			_tapTempo.addEventListener(MouseEvent.MOUSE_DOWN, _onTempoDown);
+			
+			// xml
+			_controlXML.addEventListener(MouseEvent.MOUSE_DOWN, _onMouseDown);
+			
+		}
 
-			_controlSize	= new DropDown(options, control, 'left');
+		/**
+		 * 	@private
+		 */
+		private function _onTempoDown(event:Event):void {
 			
-			_controlXY.y	= 24;
-			_controlColor.y = 70;
-			_controlXY.x	= 2;
-			_controlColor.x = 2;
-			_controlXML.x	= 2;
-			_controlXML.y	= 83;
-			_controlSize.x	= 60;
-			_controlSize.y	= 24;
+			var time:int = getTimer();
 			
-			addChild(_controlXY);
-			addChild(_controlColor);
-			addChild(_controlXML);
-			addChild(_controlSize);
+			if (time - _samples[_samples.length - 1] > 1000) {
+				_samples = [time];
+			} else {
+				_samples.push(time);
+			}
 			
-			_controlXML.addEventListener(MouseEvent.MOUSE_DOWN, _onMouseDown)
+			if (_samples.length > 2) {
+
+				var total:int	= 0;
+	
+				for (var count:int = 1; count < _samples.length; count++) {
+					total += _samples[count] - _samples[count - 1];
+				}
+
+				total /= (count - 1);
+				_tempo.tempo = total;
+			} else {
+				_tempo.start();
+			}
+			
+			if (_samples.length > 8) {
+				_samples.shift();
+			}
+
+		}
+		
+		/**
+		 * 	@private
+		 */
+		private function _onTempo(event:TempoEvent):void {
+			_tapTempo.transform.colorTransform = TRANSFORM_WHITE;
+			_releaseTimer.addEventListener(TimerEvent.TIMER, _onTempoOff);
+			_releaseTimer.start();
+		}
+		
+		/**
+		 * 	@private
+		 */
+		private function _onTempoOff(event:TimerEvent):void {
+			_tapTempo.transform.colorTransform = TRANSFORM_NORMAL;
+			_releaseTimer.removeEventListener(TimerEvent.TIMER, _onTempoOff);
+			_releaseTimer.stop();
 		}
 		
 		/**
@@ -123,5 +222,23 @@ package ui.window {
 			
 			event.stopPropagation();
 		}
+	}
+}
+
+import flash.display.Sprite;
+
+class TempoShape extends Sprite {
+	
+	/**
+	 * 	@constructor
+	 */
+	public function TempoShape():void {
+		
+		mouseChildren = false;
+		graphics.beginFill(0xAAAAAA);
+		graphics.drawRect(0,0,20,10);
+		graphics.endFill();
+		
+		cacheAsBitmap = true;
 	}
 }

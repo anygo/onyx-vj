@@ -35,7 +35,7 @@ package ui.assets {
 	
 	[ExcludeClass]
 
-	[Embed(source='/assets/onyx.jpg')]
+	[Embed(source='/ui/assets/img/onyx.jpg')]
 	public final class OnyxStartUpImage extends Bitmap {
 	}
 	
