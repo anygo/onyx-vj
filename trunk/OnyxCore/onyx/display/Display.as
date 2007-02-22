@@ -46,17 +46,18 @@ package onyx.display {
 	import onyx.layer.*;
 	import onyx.plugin.*;
 	import onyx.transition.*;
-	import onyx.utils.ArrayUtil;
+	import onyx.utils.array.*;
 	
 	use namespace onyx_ns;
 	
 	/**
-	 * 	
+	 * 	Base Display class
 	 */
 	public class Display extends Bitmap implements IDisplay {
 
 		/**
 		 * 	@private
+		 * 	Stores the saturation, tint, etc, as well as colortransform
 		 */
 		private var _filter:ColorFilter			= new ColorFilter();
 
@@ -133,6 +134,7 @@ package onyx.display {
 		
 		/**
 		 * 	@private
+		 * 	Make sure the mouse is gone when we roll over it
 		 */
 		private function _onMouseOver(event:MouseEvent):void {
 			Mouse.hide();
@@ -140,6 +142,7 @@ package onyx.display {
 		
 		/**
 		 * 	@private
+		 * 	Make sure the mouse comes back when we roll over it
 		 */
 		private function _onMouseOut(event:MouseEvent):void {
 			Mouse.show();
@@ -182,9 +185,10 @@ package onyx.display {
 		 * 	Called when a layer is loaded
 		 */
 		private function _onLayerLoad(event:LayerEvent):void {
+			
 			var currentLayer:ILayer	= event.currentTarget as ILayer;
 			var currentIndex:int	= currentLayer.index;
-			
+
 			// only add it to the valid list if it's not already in the valid
 			if (_valid.indexOf(currentLayer) < 0) {
 					
@@ -236,7 +240,7 @@ package onyx.display {
 				
 				var fromChildIndex:int = _layers.indexOf(layer);
 				
-				ArrayUtil.swap(_layers, layer, index);
+				swap(_layers, layer, index);
 
 				// dispatch events to the layers				
 				layer.dispatch(new LayerEvent(LayerEvent.LAYER_MOVE));
@@ -247,7 +251,7 @@ package onyx.display {
 				
 				// swap
 				if (toLayerValid >= 0) {
-					ArrayUtil.swap(_valid, layer, toLayerValid);
+					swap(_valid, layer, toLayerValid);
 				}
 				
 			}
@@ -378,7 +382,7 @@ package onyx.display {
 				
 				var layer:ILayer = _valid[count];
 
-				layer.render(new RenderStack());
+				layer.render();
 
 				if (layer.rendered) {
 					super.bitmapData.draw(layer.rendered, null, null, layer.blendMode);
@@ -605,7 +609,7 @@ package onyx.display {
 		 */
 		public function moveFilter(filter:Filter, index:int):void {
 			
-			if (ArrayUtil.swap(_filters, filter, index)) {
+			if (swap(_filters, filter, index)) {
 				super.dispatchEvent(new FilterEvent(FilterEvent.FILTER_MOVED, filter));
 			}
 		}
@@ -627,7 +631,7 @@ package onyx.display {
 		/**
 		 * 
 		 */
-		public function render(stack:RenderStack):RenderTransform {
+		public function render():RenderTransform {
 			return null;
 		}
 

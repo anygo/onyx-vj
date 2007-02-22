@@ -34,6 +34,7 @@ package onyx.tween {
 	import flash.utils.*;
 	
 	import onyx.core.*;
+	import onyx.constants.*;
 	import onyx.tween.easing.*;
 	
 	use namespace onyx_ns;
@@ -109,7 +110,7 @@ package onyx.tween {
 			_props = args;
 			
 			// listen every frame
-			Onyx.root.addEventListener(Event.ENTER_FRAME, _onTimer, false, 1000);
+			ROOT.addEventListener(Event.ENTER_FRAME, _onTimer, false, 1000);
 			
 			_startTime = getTimer();
 		}
@@ -154,7 +155,7 @@ package onyx.tween {
 				delete existing[this];
 			}
 			
-			Onyx.root.removeEventListener(Event.ENTER_FRAME, _onTimer);
+			ROOT.removeEventListener(Event.ENTER_FRAME, _onTimer);
 
 			_props = null;			
 			_target = null;

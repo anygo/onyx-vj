@@ -30,24 +30,14 @@
  */
 package onyx.filter {
 	
-	import flash.display.BitmapData;
-	import flash.display.Stage;
-	import flash.events.Event;
-	import flash.events.EventDispatcher;
+	import flash.display.*;
+	import flash.events.*;
 	import flash.net.FileFilter;
-	import flash.utils.Dictionary;
-	import flash.utils.getDefinitionByName;
-	import flash.utils.getQualifiedClassName;
+	import flash.utils.*;
 	
 	import onyx.content.IContent;
-	import onyx.controls.Control;
-	import onyx.controls.ControlProxy;
-	import onyx.controls.Controls;
-	import onyx.controls.IControlObject;
-	import onyx.core.IDisposable;
-	import onyx.core.Onyx;
-	import onyx.core.PluginBase;
-	import onyx.core.onyx_ns;
+	import onyx.controls.*;
+	import onyx.core.*;
 	import onyx.events.FilterEvent;
 	import onyx.layer.IColorObject;
 	import onyx.plugin.Plugin;
@@ -58,6 +48,21 @@ package onyx.filter {
 	 * 	The base Filter class
 	 */
 	public class Filter extends PluginBase implements IControlObject {
+		
+		/**
+		 * 	Pre-process tells the filter that it is to render before the content renders
+		 */
+		public static const PRE_PROCESS:int		= 0;
+		
+		/**
+		 * 	Normal process tells the filter that it is to render normally (after content renders)
+		 */
+		public static const NORMAL_PROCESS:int	= 1;
+		
+		/**
+		 * 	Post process tells the filter that it is to render after all content and filters have been rendered
+		 */
+		public static const POST_PROCESS:int	= 2;
 		
 		/**
 		 * 	@private
@@ -98,12 +103,6 @@ package onyx.filter {
 		protected var content:IContent;
 		
 		/**
-		 * 	Stores the stage object we're gonna pass in:
-		 * 	this is so that the filter can listen for onEnterFrame events
-		 */
-		protected var stage:Stage;
-		
-		/**
 		 * 	@private
 		 * 	Stores whether the filter is unique or not
 		 */
@@ -113,6 +112,8 @@ package onyx.filter {
 		 * 	@contructor
 		 */
 		final public function Filter(unique:Boolean, ... controls:Array):void {
+			
+			super();
 			
 			_unique = unique;
 			
@@ -138,21 +139,8 @@ package onyx.filter {
 		 * 	@private
 		 *	Called by layer when a filter is added to it
 		 */
-		onyx_ns final function setContent(content:IContent, stage:Stage):void {
+		onyx_ns final function setContent(content:IContent):void {
 			this.content	= content;
-			this.stage		= stage;
-		}
-		
-		/**
-		 * 	@private
-		 */
-		onyx_ns final function cleanContent():void {
-			content	= null;
-			stage	= null;
-			
-			if (super.controls) {
-				super.dispose();
-			}
 		}
 		
 		/**
@@ -188,6 +176,17 @@ package onyx.filter {
 		 */
 		final public function removeFilter():void {
 			content.removeFilter(this);
+		}
+		
+		/**
+		 * 	@private
+		 */
+		onyx_ns final function cleanContent():void {
+			content	= null;
+			
+			if (super.controls) {
+				super.dispose();
+			}
 		}
 	}
 }

@@ -28,12 +28,25 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-
-package onyx.filter {
+package onyx.events {
 	
-	public interface ISpectrumFilter {
+	import flash.events.Event;
+
+	/**
+	 * 	Dispatched when bpm meter is on a beat
+	 */
+	public final class TempoEvent extends Event {
 		
-		// nothing here, just checks to see if it needs spectrum data
+		/**
+		 * 	Click
+		 */
+		public static const CLICK:String = 'click';
 		
+		/**
+		 * 	@constructor
+		 */
+		public function TempoEvent():void {
+			super(CLICK);
+		}
 	}
 }

@@ -59,6 +59,9 @@ package onyx.content {
 		 * 	Disposes
 		 */
 		override public function dispose():void {
+			
+			super.dispose();
+
 			_video.attachCamera(null);
 			_video = null;
 		}

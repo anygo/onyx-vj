@@ -57,7 +57,7 @@ package onyx.core {
 			var now:int		= getTimer();
 			_dict[target]	= now;
 			
-			return (now - time) / Onyx.framerate;
+			return (now - time) / ROOT.frameRate;
 		}
 		
 		/**
@@ -82,13 +82,13 @@ package onyx.core {
 		/**
 		 * 
 		 */
-		public static function renderFilters(stack:RenderStack, source:BitmapData, rendered:BitmapData, filters:FilterArray):void {
+		public static function renderFilters(source:BitmapData, rendered:BitmapData, filters:FilterArray):void {
 			
 			// copy to the rendered bitmap
 			rendered.copyPixels(source, source.rect, POINT);
 			
 			// render filters
-			filters.render(source, stack);
+			filters.render(source);
 			
 			// copy pixels to the rendered bitmap
 			rendered.copyPixels(source, source.rect, POINT);

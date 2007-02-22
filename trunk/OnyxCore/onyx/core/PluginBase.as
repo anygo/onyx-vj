@@ -32,14 +32,18 @@ package onyx.core {
 
 	import flash.events.EventDispatcher;
 	
-	import onyx.controls.Control;
-	import onyx.controls.Controls;
-	import onyx.controls.IControlObject;
+	import onyx.controls.*;
 	
 	use namespace onyx_ns;
 
+	/**
+	 * 	Base class for all plug-ins
+	 */
 	public class PluginBase extends EventDispatcher implements IControlObject {
 		
+		/**
+		 * 	@private
+		 */
 		onyx_ns var _name:String;
 		
 		/**

@@ -247,7 +247,7 @@ package onyx.content {
 			return 0;
 		}
 		
-		public function render(stack:RenderStack):RenderTransform {
+		public function render():RenderTransform {
 			return null;
 		}
 		

@@ -63,6 +63,13 @@ package onyx.controls {
 		/**
 		 * 
 		 */
+		public function defaultValue():Number {
+			return _defaultValue;
+		}
+		
+		/**
+		 * 
+		 */
 		override public function setValue(v:*):* {
 
 			var value:Number = Math.min(Math.max(v, _min), _max);

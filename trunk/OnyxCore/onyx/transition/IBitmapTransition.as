@@ -36,7 +36,7 @@ package onyx.transition {
 	
 	public interface IBitmapTransition {
 		
-		function render(source:BitmapData, stack:RenderStack, ratio:Number):void;
+		function render(source:BitmapData, ratio:Number):void;
 		
 	}
 }

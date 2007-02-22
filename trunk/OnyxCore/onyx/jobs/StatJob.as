@@ -33,6 +33,7 @@ package onyx.jobs {
 	import flash.events.Event;
 	import flash.utils.getTimer;
 	
+	import onyx.constants.*;
 	import onyx.core.Console;
 	import onyx.core.Onyx;
 	import onyx.core.onyx_ns;
@@ -62,7 +63,7 @@ package onyx.jobs {
 			var time:Number = args[0];
 			
 			Console.output('STARTING STAT JOB FOR ' + (time).toFixed(2) + ' SECONDS');
-			Onyx.root.addEventListener(Event.ENTER_FRAME, _onEnterFrame);
+			ROOT.addEventListener(Event.ENTER_FRAME, _onEnterFrame);
 			
 			super.initialize((time * 1000) >> 0);
 		}
@@ -84,7 +85,8 @@ package onyx.jobs {
 		 */
 		override public function terminate():void {
 			
-			Onyx.root.removeEventListener(Event.ENTER_FRAME, _onEnterFrame);
+			ROOT.removeEventListener(Event.ENTER_FRAME, _onEnterFrame);
+			
 			Console.output(
 				'END OF STAT JOB: ' + 
 				'AVERAGE FPS: ' + ((1000 / ((getTimer() - _start) / _frames) as Number).toFixed(2))

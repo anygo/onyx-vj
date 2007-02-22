@@ -72,14 +72,14 @@ package onyx.content {
 		 * 	@private
 		 * 	Updates the bimap source
 		 */
-		override public function render(stack:RenderStack):RenderTransform {
+		override public function render():RenderTransform {
 
 			// test loop points
 			if (_stream.time >= _loopEnd || _stream.time < _loopStart) {
 				_stream.seek(_loopStart);
 			}
 			
-			return super.render(stack);
+			return super.render();
 		}
 
 		/**
@@ -143,13 +143,13 @@ package onyx.content {
 		 */
 		override public function dispose():void {
 		
+			super.dispose();
+			
 			_video.attachNetStream(null);
 			_stream.close();
 
 			_video		= null;
 			_stream		= null;
-			
-			super.dispose();
 		}
 	}
 }

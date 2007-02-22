@@ -35,7 +35,7 @@ package onyx.controls {
 	
 	use namespace onyx_ns;
 
-	public final class ControlRange extends Control {
+	public class ControlRange extends Control {
 		
 		/**
 		 * 	@private

@@ -35,6 +35,7 @@ package onyx.core {
 	import flash.net.*;
 	import flash.utils.*;
 	
+	import onyx.constants.*;
 	import onyx.controls.*;
 	import onyx.display.Display;
 	import onyx.events.*;
@@ -60,29 +61,9 @@ package onyx.core {
 		
 		/**
 		 * 	@private
-		 * 	Stores reference to root
-		 */
-		onyx_ns static var root:Stage;
-		
-		/**
-		 * 	@private
 		 * 	Stores references to all the displays
 		 */
 		onyx_ns static var _displays:Array	= [];
-		
-		/**
-		 * 	Gets the framerate
-		 */
-		public static function get framerate():int {
-			return root.frameRate;
-		}
-
-		/**
-		 * 	Sets the framerate
-		 */
-		public static function set framerate(value:int):void {
-			root.frameRate = value;
-		}
 		
 		/**
 		 * 	
@@ -96,7 +77,7 @@ package onyx.core {
 		 */
 		public static function initialize(root:Stage, connection:String = null):EventDispatcher {
 			
-			Onyx.root = root;
+			ROOT = root;
 			
 			// create a timer so that objects can listen for events
 			var timer:Timer = new Timer(0);
@@ -128,7 +109,7 @@ package onyx.core {
 		private static function _onResize(event:Event):void {
 			for each (var display:Display in _displays) {
 				display.displayY = 0;
-				display.displayX = root.stageWidth - display.width;
+				display.displayX = ROOT.stageWidth - display.width;
 			}
 		}
 		
@@ -184,7 +165,7 @@ package onyx.core {
 			display.scaleX = scaleX;
 			display.scaleY = scaleY;
 			
-			root.addChild(display);
+			ROOT.addChild(display);
 			
 			return display;
 		}

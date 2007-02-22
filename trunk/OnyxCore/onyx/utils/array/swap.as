@@ -28,14 +28,23 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package onyx.filter {
+package onyx.utils.array {
 	
-	import flash.display.BitmapData;
-	import flash.geom.Rectangle;
-	
-	public interface IBitmapFilter {
+	/**
+	 * 	Swaps array elements
+	 */
+	public function swap(array:Array, item:Object, itemIndex2:int):Boolean {
 		
-		function applyFilter(bitmapData:BitmapData):void;
+		var itemIndex:int	= array.indexOf(item);
+		var item2:Object	= array[itemIndex2];
 		
+		if (item2 && itemIndex >= 0 && itemIndex !== itemIndex2) {
+			array[itemIndex]	= item2;
+			array[itemIndex2]	= item;
+
+			return true;
+		}
+		
+		return false;
 	}
 }

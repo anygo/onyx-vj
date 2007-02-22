@@ -33,17 +33,33 @@ package onyx.events {
 	import flash.events.Event;
 	
 	import onyx.core.onyx_ns;
-	import onyx.layer.Layer;
-	import onyx.layer.ILayer;
+	import onyx.layer.*;
 	
 	use namespace onyx_ns;
 
+	/**
+	 * 
+	 */
 	public final class LayerEvent extends Event {
 		
+		/**
+		 * 	Dispatched when a layer loads
+		 */
 		public static const LAYER_LOADED:String			= 'layerload';
+
+		/**
+		 * 	Dispatched when a layer loads
+		 */
 		public static const LAYER_UNLOADED:String		= 'layerunload';
+
+		/**
+		 * 	Dispatched when a layer moves
+		 */
 		public static const LAYER_MOVE:String			= 'layermove';
 
+		/**
+		 * 	@constructor
+		 */
 		public function LayerEvent(type:String):void {
 			super(type);
 		}

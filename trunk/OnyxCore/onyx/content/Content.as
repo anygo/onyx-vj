@@ -42,9 +42,8 @@ package onyx.content {
 	import onyx.filter.*;
 	import onyx.layer.*;
 	import onyx.plugin.*;
-	import onyx.settings.*;
 	import onyx.tween.*;
-	import onyx.utils.*;
+	import onyx.utils.array.*;
 	
 	[Event(name="filter_applied",	type="onyx.events.FilterEvent")]
 	[Event(name="filter_removed",	type="onyx.events.FilterEvent")]
@@ -123,13 +122,13 @@ package onyx.content {
 		 * 	@private
 		 * 	The source
 		 */
-		protected var _source:BitmapData				= getBaseBitmap();
+		protected var _source:BitmapData				= BASE_BITMAP();
 		
 		/**
 		 * 	@private
 		 * 	Stores the rendered
 		 */
-		protected var _rendered:BitmapData				= getBaseBitmap();
+		protected var _rendered:BitmapData				= BASE_BITMAP();
 		
 		/**
 		 * 	@private
@@ -278,7 +277,7 @@ package onyx.content {
 			// if it wants the stage, pass it over
 			if (_content is IContentObject) {
 				var stageContent:IContentObject = _content as IContentObject;
-				stageContent.initialize(Onyx.root, this);
+				stageContent.initialize(ROOT, this);
 			}
 		}
 		
@@ -495,7 +494,7 @@ package onyx.content {
 		 */
 		public function moveFilter(filter:Filter, index:int):void {
 			
-			if (ArrayUtil.swap(_filters, filter, index)) {
+			if (swap(_filters, filter, index)) {
 				super.dispatchEvent(new FilterEvent(FilterEvent.FILTER_MOVED, filter));
 			}
 		}
@@ -546,7 +545,7 @@ package onyx.content {
 		/**
 		 * 	Called by the parent layer every frame to render
 		 */
-		public function render(stack:RenderStack):RenderTransform {
+		public function render():RenderTransform {
 			
 			if (_content) {
 	
@@ -557,7 +556,7 @@ package onyx.content {
 				RenderManager.renderContent(_source, _content, transform, _filter);
 				
 				// render filters
-				RenderManager.renderFilters(stack, _source, _rendered, _filters);
+				RenderManager.renderFilters(_source, _rendered, _filters);
 				
 			}
 

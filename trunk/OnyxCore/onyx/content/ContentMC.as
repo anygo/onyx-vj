@@ -117,7 +117,7 @@ package onyx.content {
 			_frame			= 0;
 
 			// sets the last time we executed
-			_lastTime		= getTimer() - Onyx.framerate;
+			_lastTime		= getTimer() - ROOT.frameRate;
 
 			// resize?
 			if (Settings.LAYER_AUTOSIZE) {
@@ -154,15 +154,15 @@ package onyx.content {
 		/**
 		 * 	Updates the bimap source
 		 */
-		override public function render(stack:RenderStack):RenderTransform {
+		override public function render():RenderTransform {
 			
 			if (!_paused) {
 				
 				// get framerate
-				var time:int = 1000 / ((getTimer() - _lastTime)) || Onyx.framerate;
+				var time:int = 1000 / ((getTimer() - _lastTime)) || ROOT.frameRate;
 				
 				// add the framerate based off the last time
-				var frame:Number = _frame + ((Onyx.framerate / time) * _framerate);
+				var frame:Number = _frame + ((ROOT.frameRate / time) * _framerate);
 				
 				// constrain the frame
 				frame = (frame < _loopStart) ? _loopEnd : Math.max(frame % _loopEnd, _loopStart);
@@ -179,7 +179,7 @@ package onyx.content {
 			_mc.gotoAndStop(Math.floor(_frame));
 
 			// render me baby					
-			return super.render(stack);
+			return super.render();
 		}
 		
 		/**
@@ -187,7 +187,7 @@ package onyx.content {
 		 */
 		override public function get framerate():Number {
 			// get the ratio of the original framerate and the actual framerate
-			var ratio:Number = _loader.contentLoaderInfo.frameRate / Onyx.framerate;
+			var ratio:Number = _loader.contentLoaderInfo.frameRate / ROOT.frameRate;
 			
 			return (_framerate / ratio);
 		}
@@ -196,7 +196,7 @@ package onyx.content {
 		 * 	Sets framerate
 		 */
 		override public function set framerate(value:Number):void {
-			var ratio:Number = _loader.contentLoaderInfo.frameRate / Onyx.framerate
+			var ratio:Number = _loader.contentLoaderInfo.frameRate / ROOT.frameRate;
 
 			_framerate = value * ratio;
 
@@ -245,13 +245,12 @@ package onyx.content {
 		 * 	Destroys the content
 		 */
 		override public function dispose():void {
+			// dispose
+			super.dispose();
 
 			// remove reference
 			_loader = null;
 			_mc		= null;
-			
-			// dispose
-			super.dispose();
 		}
 		
 		override public function get scaleX():Number {

@@ -40,8 +40,7 @@ package onyx.layer {
 	import onyx.content.*;
 	import onyx.controls.*;
 	import onyx.core.*;
-	import onyx.display.Display;
-	import onyx.display.IDisplay;
+	import onyx.display.*;
 	import onyx.events.*;
 	import onyx.filter.*;
 	import onyx.net.Stream;
@@ -90,7 +89,7 @@ package onyx.layer {
 		 * 	@private
 		 * 	Stores the layer bitmap information
 		 */	
-		private var			bitmapData:BitmapData			= getBaseBitmap();
+		private var			bitmapData:BitmapData			= BASE_BITMAP();
 		
 		/**
 		 * 	@constructor
@@ -213,7 +212,7 @@ package onyx.layer {
 			}
 
 			// render first frame
-			content.render(null);
+			content.render();
 			
 			// dispatch a "i'm loaded" event if it's not a transition
 			if (!(content is ContentTransition)) {
@@ -647,8 +646,8 @@ package onyx.layer {
 		/**
 		 * 
 		 */
-		public function render(stack:RenderStack):RenderTransform {
-			return _content.render(stack);
+		public function render():RenderTransform {
+			return _content.render();
 		}
 		
 		/**

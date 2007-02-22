@@ -35,17 +35,32 @@ package onyx.events {
 	import onyx.transition.Transition;
 	import onyx.content.Content;
 
+	/**
+	 * 	Dispatched from a ContentTransition when a transition has finished
+	 */
 	public final class TransitionEvent extends Event {
 		
+		/**
+		 * 	Dispatched from a ContentTransition when a transition has finished
+		 */
 		public static const TRANSITION_END:String		= 'tend';
 		
+		/**
+		 * 	The content to replace in the layer
+		 */
 		public var content:Content;
 		
+		/**
+		 * 	@constructor
+		 */
 		public function TransitionEvent(type:String, content:Content):void {
 			this.content = content;
 			super(type);
 		}
 		
+		/**
+		 * 	Clones the transition event
+		 */
 		override public function clone():Event {
 			return new TransitionEvent(super.type, content);
 		}

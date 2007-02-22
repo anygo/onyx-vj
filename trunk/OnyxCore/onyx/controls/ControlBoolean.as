@@ -28,12 +28,23 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package onyx.core {
+package onyx.controls {
+
+	import onyx.constants.*;
+	import onyx.core.onyx_ns;
+	import onyx.events.ControlEvent;
 	
-	import flash.display.Bitmap;
-	import flash.display.BitmapData;	
-	
-	public function getBaseBitmap():BitmapData {
-		return new BitmapData(320, 240, true, 0x00000000);
+	use namespace onyx_ns;
+
+	public final class ControlBoolean extends ControlRange {
+		
+		/**
+		 * 	@constructor
+		 */
+		public function ControlBoolean(name:String, display:String, defaultvalue:uint = 0, binding:String = null, options:Object = null):void {
+
+			super(name, display, BOOLEAN, defaultvalue, binding, options);
+			
+		}
 	}
 }

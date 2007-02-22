@@ -124,7 +124,7 @@ package onyx.content {
 		/**
 		 * 	Renders the bitmap
 		 */
-		override public function render(stack:RenderStack):RenderTransform {
+		override public function render():RenderTransform {
 			
 			// get the time of the transition
 			var ratio:Number = (getTimer() - _startTime) / _transition.onyx_ns::_duration;
@@ -143,7 +143,7 @@ package onyx.content {
 			// check bitmap transition			
 			if (_transition is IBitmapTransition) {
 				
-				(_transition as IBitmapTransition).render(_source, stack, ratio);
+				(_transition as IBitmapTransition).render(_source, ratio);
 				
 			// otherwise just normal render
 			} else {

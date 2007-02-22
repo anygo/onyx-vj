@@ -28,14 +28,12 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package onyx.core {
+package onyx.constants {
+
+	import flash.display.*;
 	
-	import onyx.sound.SpectrumAnalysis;
-	import flash.display.BitmapData;
-	
-	public final class RenderStack {
-		
-		public var spectrum:SpectrumAnalysis;
-		
+	public function BASE_BITMAP():BitmapData {
+		return new BitmapData(320, 240, true, 0x00000000);
 	}
+
 }

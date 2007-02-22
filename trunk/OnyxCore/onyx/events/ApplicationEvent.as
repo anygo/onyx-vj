@@ -37,9 +37,19 @@ package onyx.events {
 	 */
 	public final class ApplicationEvent extends Event {
 		
+		/**
+		 * 	Event dispatched when onyx starts initializing
+		 */
 		public static const ONYX_STARTUP_START:String	= 'onyxstartstart';
+
+		/**
+		 * 	Event dispatched when onyx ends initializing
+		 */
 		public static const ONYX_STARTUP_END:String		= 'onyxstartend';
 		
+		/**
+		 * 	@constructor
+		 */
 		public function ApplicationEvent(type:String):void {
 			super(type);
 		}

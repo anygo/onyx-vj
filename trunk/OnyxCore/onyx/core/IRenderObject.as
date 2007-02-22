@@ -4,7 +4,7 @@ package onyx.core {
 	
 	public interface IRenderObject {
 		
-		function render(stack:RenderStack):RenderTransform;
+		function render():RenderTransform;
 		
 	}
 }

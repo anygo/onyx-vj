@@ -28,25 +28,41 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package onyx.events
-{
+package onyx.events {
+	
 	import flash.events.Event;
+	
 	import onyx.core.Console;
 
+	/**
+	 * 	Events dispatched by the onyx console
+	 */
 	public class ConsoleEvent extends Event {
 
+		/**
+		 * 	@private
+		 * 	Output
+		 */
 		public static const OUTPUT:String = 'output';
 		
+		/**
+		 * 	The message dispatched
+		 */
 		public var message:String;
 		
+		/**
+		 * 	@constructor
+		 */
 		public function ConsoleEvent(message:String):void {
 			
 			this.message = message;
-			
 			super(OUTPUT);
 			
 		}
-		
+
+		/**
+		 * 	Clones the event
+		 */		
 		override public function clone():Event {
 			var event:ConsoleEvent = new ConsoleEvent(super.type);
 			event.message = message;

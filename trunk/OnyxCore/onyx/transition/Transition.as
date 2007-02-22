@@ -42,13 +42,9 @@ package onyx.transition {
 	import onyx.content.Content;
 	import onyx.content.IContent;
 	import onyx.controls.*;
-	import onyx.core.IDisposable;
-	import onyx.core.PluginBase;
-	import onyx.core.RenderTransform;
-	import onyx.core.getBaseBitmap;
-	import onyx.core.onyx_ns;
+	import onyx.core.*;
+	import onyx.constants.*;
 	import onyx.events.TransitionEvent;
-	import onyx.core.IRenderObject;
 	import onyx.plugin.Plugin;
 	import onyx.tween.easing.Linear;
 	

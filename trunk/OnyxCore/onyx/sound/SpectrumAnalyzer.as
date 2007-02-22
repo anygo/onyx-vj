@@ -32,15 +32,11 @@ package onyx.sound {
 	
 	import flash.events.Event;
 	import flash.media.SoundMixer;
-	import flash.utils.ByteArray;
-	import flash.utils.Dictionary;
+	import flash.utils.*;
 	
-	import onyx.controls.Controls;
-	import onyx.controls.IControlObject;
-	import onyx.core.IDisposable;
-	import onyx.core.Onyx;
-	import onyx.core.PluginBase;
-	import onyx.core.onyx_ns;
+	import onyx.constants.*;
+	import onyx.controls.*;
+	import onyx.core.*;
 	import onyx.plugin.Plugin;
 	
 	use namespace onyx_ns;
@@ -48,7 +44,7 @@ package onyx.sound {
 	/**
 	 * 	Plugin
 	 */
-	public class SpectrumAnalyzer extends PluginBase implements IControlObject {
+	public class SpectrumAnalyzer {
 		
 		/**
 		 * 	@private
@@ -74,70 +70,58 @@ package onyx.sound {
 		/**
 		 * 	@private
 		 */
-		private static var _bytes:ByteArray;
-		
+		private static var _spectrum:SpectrumAnalysis;
 		
 		/**
 		 * 	@private
 		 */
-		private static var _dict:Dictionary = new Dictionary(true);
+		private static var bytes:ByteArray				= new ByteArray();
 		
 		/**
-		 * 	Stores the spectrum analysis
+		 * 	Gets the spectrum analysis
 		 */
-		onyx_ns static var spectrum:SpectrumAnalysis;
+		public static function get spectrum():SpectrumAnalysis {
+			
+			if (!_spectrum) {
+				
+				var analysis:SpectrumAnalysis	= new SpectrumAnalysis();
+				analysis.fft = useFFT;
+				
+				SoundMixer.computeSpectrum(bytes, useFFT);
+				
+				var i:Number	= 128;
+				var array:Array = BASE_ANALYSIS.concat();
+				
+				while ( --i > -1 ) {
+					
+					// move the pointer
+					bytes.position = i * 8;
+					
+					// get amplitude value
+					array[i % 127] += (bytes.readFloat() / 2);
+					
+				}
+				
+				analysis.analysis = array;
+				_spectrum = analysis;
+	
+			}
+			
+			// clear next frame
+			ROOT.addEventListener(Event.ENTER_FRAME, _clearSpectrum, false, 10000);
+			
+			return _spectrum;
+		}
+		
+		/**
+		 * 	@private
+		 * 	Clears the spectrum
+		 */
+		private static function _clearSpectrum(event:Event):void {
 
-		/**
-		 * 	Registers an object to be analyzed
-		 */
-		public static function register(obj:Object):void {
-			Onyx.root.addEventListener(Event.ENTER_FRAME, _analyze, false, 10000);
-			_dict[obj] = obj;
+			ROOT.removeEventListener(Event.ENTER_FRAME, _clearSpectrum);
+			_spectrum = null;
 			
-			_bytes = new ByteArray();
 		}
-		
-		/**
-		 * 	@private
-		 * 	Does actual changing of bytearray to array
-		 */
-		private static function _analyze(event:Event):void {
-			
-			var analysis:SpectrumAnalysis = new SpectrumAnalysis();
-			analysis.fft = useFFT;
-			
-			SoundMixer.computeSpectrum(_bytes, useFFT);
-			
-			var i:Number	= 128;
-			var array:Array = BASE_ANALYSIS.concat();
-			
-			while ( --i > -1 ) {
-				
-				// move the pointer
-				_bytes.position = i * 8;
-				
-				// get amplitude value
-				array[i % 127] += (_bytes.readFloat() >> 1);
-				
-			}
-			
-			analysis.analysis = array;
-			spectrum = analysis;
-		}
-		
-		/**
-		 * 	Unregisters
-		 */
-		public static function unregister(obj:Object):void {
-			delete _dict[obj];
-			
-			for each (var i:Object in _dict) {
-				return;
-			}
-			
-			Onyx.root.removeEventListener(Event.ENTER_FRAME, _analyze);
-			spectrum = null;
-		}
-		
 	}
 }

@@ -83,20 +83,6 @@ package onyx.content {
 			
 		}
 		
-		/**
-		 * 	Destroys the content
-		 */
-		override public function dispose():void {
-			
-			// destroy content
-			_loader.unload();
-
-			_loader	= null;
-			
-			super.dispose();
-		}
-		
-
 		override public function get scaleX():Number {
 			return super.scaleX / _ratioX;
 		}
@@ -111,6 +97,18 @@ package onyx.content {
 		
 		override public function set scaleY(value:Number):void {
 			super.scaleY = value * _ratioY;
+		}
+		/**
+		 * 	Destroys the content
+		 */
+		override public function dispose():void {
+			
+			super.dispose();
+			
+			// destroy content
+			_loader.unload();
+			_loader	= null;
+			
 		}
 	}
 }

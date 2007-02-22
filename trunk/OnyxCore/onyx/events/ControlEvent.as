@@ -32,11 +32,25 @@ package onyx.events {
 	
 	import flash.events.Event;
 
+	/**
+	 * 	Event dispatched when a control has changed (so objects listening to the control
+	 * 	can change or update)
+	 */
 	public final class ControlEvent extends Event {
 		
+		/**
+		 * 	Changed
+		 */
 		public static const CHANGE:String = 'ce_ch';
+		
+		/**
+		 * 	When the controls have updated
+		 */
 		public static const UPDATE:String = 'ce_up';
 		
+		/**
+		 * 	The value changed to
+		 */
 		public var value:*;
 		
 		/**

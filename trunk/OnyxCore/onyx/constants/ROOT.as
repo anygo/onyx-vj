@@ -28,30 +28,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package onyx.utils {
+package onyx.constants {
 	
-	/**
-	 * 	Array utilities
-	 */
-	public final class ArrayUtil {
-		
-		/**
-		 * 	Swaps array elements
-		 */
-		public static function swap(array:Array, item:Object, itemIndex2:int):Boolean {
-			
-			var itemIndex:int	= array.indexOf(item);
-			var item2:Object	= array[itemIndex2];
-			
-			if (item2 && itemIndex >= 0 && itemIndex !== itemIndex2) {
-				array[itemIndex]	= item2;
-				array[itemIndex2]	= item;
+	import flash.display.Stage;
 
-				return true;
-			}
-			
-			return false;
-		}
-		
-	}
+	public var ROOT:Stage;
+
 }

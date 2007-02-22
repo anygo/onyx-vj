@@ -40,6 +40,9 @@ package onyx.jobs {
 	import onyx.layer.*;
 	import onyx.transition.Transition;
 	
+	/**
+	 * 	Staggers loading of a mix file
+	 */
 	public final class StaggerONXJob extends Job {
 		
 		/**
@@ -63,18 +66,26 @@ package onyx.jobs {
 		public function StaggerONXJob(transition:Transition, jobs:Array):void {
 			
 			_transition = transition;
-			_jobs = jobs;
+
+			var newJobs:Array = [];
 			
+			// load jobs immediately if they have no path
 			for each (var job:LayerLoadSettings in jobs) {
 				var layer:Layer = job.layer;
+				
 				if (!layer.path) {
 					layer.load(new URLRequest(job.settings.path), job.settings);
-					_jobs.splice(_jobs.indexOf(job), 1);
+				} else {
+					newJobs.push(job);
 				}
 			}
 			
-			_timer = new Timer(_transition.duration);
-			_timer.addEventListener(TimerEvent.TIMER, _loadJob);
+			_jobs = newJobs;
+			
+			if (_jobs.length > 1) {
+				_timer = new Timer(_transition.duration);
+				_timer.addEventListener(TimerEvent.TIMER, _loadJob);
+			}
 
 			_loadJob();
 		}

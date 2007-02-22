@@ -116,13 +116,17 @@ package onyx.content {
 		 */
 		public function set visualizer(plugin:Plugin):void {
 			_plugin		= plugin;
-			_visualizer = (plugin) ? plugin.getDefinition() as Visualizer : null;
+			if (plugin) {
+				_visualizer = plugin.getDefinition() as Visualizer;
+			} else {
+				_visualizer = null;
+			}
 		}
 		
 		/**
 		 * 	Updates the bimap source
 		 */
-		override public function render(stack:RenderStack):RenderTransform {
+		override public function render():RenderTransform {
 			
 			var position:Number = Math.ceil(_channel.position);
 			
@@ -132,11 +136,9 @@ package onyx.content {
 			}
 
 			// draw ourselves			
-			if (_visualizer && SpectrumAnalyzer.spectrum) {
+			if (_visualizer) {
 				
-				stack.spectrum = SpectrumAnalyzer.spectrum;
-				
-				var transform:RenderTransform		= _visualizer.render(stack);
+				var transform:RenderTransform		= _visualizer.render();
 				
 				transform = (transform) ? transform.concat(getTransform()) : getTransform();
 							
@@ -144,26 +146,15 @@ package onyx.content {
 				var rect:Rectangle					= transform.rect;
 				var matrix:Matrix					= transform.matrix;
 				
-				// fill our source with nothing
-				_source.fillRect(source.rect, 0x00000000);
+				RenderManager.renderContent(_source, transform.content, transform, _filter);
 				
-				// draw our content
-				_source.draw(transform.content || _content, matrix, _filter, null, rect);
-	
-				// apply the color filter to the source
-				_source.applyFilter(_source, _source.rect, POINT, _filter.filter);
-				
-				// apply the filters
-				_filters.render(_source, stack);
-				
-				// copy the pixels to the rendered
-				_rendered.copyPixels(_source, _source.rect, POINT);
+				RenderManager.renderFilters(_source, _rendered, _filters);
 	
 				// return transformation
 				return transform;
 			}
 			
-			return super.render(stack);
+			return null;
 		}
 		
 		/**
@@ -218,12 +209,12 @@ package onyx.content {
 		 * 	Dispose
 		 */
 		override public function dispose():void {
+
+			super.dispose();
 	
 			_channel.stop();
 			_channel = null;
 			_sound = null;
-			
-			super.dispose();
 		}
 	}
 }

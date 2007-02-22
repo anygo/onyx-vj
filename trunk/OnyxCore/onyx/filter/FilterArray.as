@@ -33,6 +33,7 @@ package onyx.filter {
 	import flash.display.BitmapData;
 	import flash.geom.Rectangle;
 	
+	import onyx.constants.*;
 	import onyx.content.IContent;
 	import onyx.core.*;
 	import onyx.events.*;
@@ -69,7 +70,7 @@ package onyx.filter {
 			}
 			
 			// it's alive!
-			filter.setContent(content, Onyx.root);
+			filter.setContent(content);
 			
 			// push the layer into the array
 			super.push(filter);
@@ -125,10 +126,10 @@ package onyx.filter {
 		/**
 		 * 	Renders all filters to the source bitmap
 		 */
-		public function render(source:BitmapData, stack:RenderStack):void {
+		public function render(source:BitmapData):void {
 			for each (var filter:Filter in this) {
 				if (filter is IBitmapFilter) {
-					(filter as IBitmapFilter).applyFilter(source, stack);
+					(filter as IBitmapFilter).applyFilter(source);
 				}
 			}
 		}

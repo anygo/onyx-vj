@@ -30,21 +30,16 @@
  */
 package onyx.jobs {
 
-	import flash.events.Event;
-	import flash.events.EventDispatcher;
-	import flash.events.IOErrorEvent;
-	import flash.events.SecurityErrorEvent;
-	import flash.net.URLLoader;
-	import flash.net.URLRequest;
-	import flash.utils.Dictionary;
+	import flash.events.*;
+	import flash.net.*;
 	
 	import onyx.core.Console;
 	import onyx.core.IDisposable;
 	import onyx.display.Display;
+	import onyx.display.IDisplay;
 	import onyx.jobs.onx.LayerLoadSettings;
 	import onyx.layer.*;
 	import onyx.transition.Transition;
-	import onyx.display.IDisplay;
 	
 	public final class LoadONXJob extends Job implements IDisposable {
 		
@@ -121,7 +116,6 @@ package onyx.jobs {
 							var job:LayerLoadSettings	= new LayerLoadSettings();
 							job.layer					= layer;
 							job.settings				= settings;
-							
 							jobs.push(job);
 							
 						// break out
@@ -164,6 +158,7 @@ package onyx.jobs {
 		 * 
 		 */
 		private function _loadStagger(jobs:Array):void {
+			
 			new StaggerONXJob(_transition, jobs);
 			dispose();
 		}

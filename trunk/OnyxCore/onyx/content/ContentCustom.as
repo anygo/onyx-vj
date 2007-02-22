@@ -89,12 +89,12 @@ package onyx.content {
 		/**
 		 * 	Render
 		 */
-		override public function render(stack:RenderStack):RenderTransform {
+		override public function render():RenderTransform {
 			
 			trace('rendering custom');
 			
 			var content:IRenderObject			= _content as IRenderObject;
-			var transform:RenderTransform		= content.render(stack);
+			var transform:RenderTransform		= content.render();
 			
 			// get transform
 			transform = (transform) ? transform.concat(getTransform()) : getTransform();
@@ -103,7 +103,7 @@ package onyx.content {
 			RenderManager.renderContent(_source, transform.content || _content, transform, _filter);
 			
 			// render filters
-			RenderManager.renderFilters(stack, _source, _rendered, _filters);
+			RenderManager.renderFilters(_source, _rendered, _filters);
 						
 			// return transformation
 			return transform;
@@ -114,12 +114,11 @@ package onyx.content {
 		 * 	Destroys the content
 		 */
 		override public function dispose():void {
-			
+			super.dispose();
+
 			// destroy content
 			_loader.unload();
 			_loader	= null;
-			
-			super.dispose();
 		}
 		
 
