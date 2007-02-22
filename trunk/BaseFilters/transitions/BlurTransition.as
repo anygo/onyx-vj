@@ -31,16 +31,15 @@
 package transitions {
 	
 	import flash.display.BitmapData;
+	import flash.display.IBitmapDrawable;
 	import flash.filters.BlurFilter;
 	import flash.geom.ColorTransform;
 	import flash.geom.Point;
 	import flash.geom.Transform;
 	
 	import onyx.constants.POINT;
-	import onyx.core.RenderStack;
 	import onyx.core.RenderTransform;
 	import onyx.transition.*;
-	import flash.display.IBitmapDrawable;
 	
 	public final class BlurTransition extends Transition implements IBitmapTransition {
 		
@@ -48,20 +47,20 @@ package transitions {
 			super();
 		}
 		
-		public function render(source:BitmapData, stack:RenderStack, ratio:Number):void {
+		public function render(source:BitmapData, ratio:Number):void {
 			
 			// 0 - .5: Blur Current 0-1
 			// .5 - 1: Blur Loaded 1-0
 			if (ratio < .5) {
 				
-				currentContent.render(stack);
+				currentContent.render();
 
 				var blur:int = (ratio / .5 * 26) << 0;
 				var bitmap:BitmapData = currentContent.rendered;
 				
 			} else {
 				
-				loadedContent.render(stack);
+				loadedContent.render();
 				blur = (((1 - ratio) / .5) * 26) << 0;
 				
 				bitmap = loadedContent.rendered;

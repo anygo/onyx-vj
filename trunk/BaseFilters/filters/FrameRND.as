@@ -35,18 +35,16 @@ package filters {
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
 	
-	import onyx.controls.Control;
-	import onyx.controls.ControlInt;
-	import onyx.controls.ControlNumber;
-	import onyx.controls.ControlRange;
-	import onyx.controls.Controls;
+	import onyx.constants.*;
+	import onyx.controls.*;
+	import onyx.core.Tempo;
+	import onyx.events.TempoEvent;
 	import onyx.filter.Filter;
 	import onyx.tween.*;
 	import onyx.tween.easing.*;
+	import onyx.filter.TempoFilter;
 
-	public final class FrameRND extends Filter {
-		
-		private var _timer:Timer;
+	public final class FrameRND extends TempoFilter {
 		
 		public var rndframe:Boolean = true;
 		
@@ -55,6 +53,8 @@ package filters {
 		public var minframe:Number	= .6;
 		public var maxframe:Number	= 4;
 		public var smooth:Boolean	= true;
+
+		private var _tempo:Boolean	= true;
 		
 		public function FrameRND():void {
 
@@ -67,23 +67,9 @@ package filters {
 				new ControlNumber('maxframe',	'max framerate', .2, 8, 4)
 			)
 		}
-
-		/**
-		 * 	initialize
-		 */		
-		override public function initialize():void {
-			_timer = new Timer(100);
-			_timer.start();
-			_timer.addEventListener(TimerEvent.TIMER, _onTimer);
-		}
 		
-		/**
-		 * 	@private
-		 */
-		private function _onTimer(event:Event):void {
-
+		override protected function onTrigger(event:Event):void {
 			var delay:int = (((maxdelay - mindelay) * Math.random()) + mindelay) * 1000;
-			_timer.delay = delay;
 			
 			if (rndframe) {
 				content.time = Math.random();
@@ -93,26 +79,13 @@ package filters {
 			
 			if (smooth) {
 				if (Math.random() > .5) {
-					new Tween(content, Math.min(delay, 200), new TweenProperty('framerate', 0, 1));
+					new Tween(content, 500, new TweenProperty('framerate', 0, 1));
 					return;
 				}
 			}
 			
 			content.framerate = framerate;
-			
 		}
-
-		/**
-		 * 	Dispose
-		 */
-		override public function dispose():void {
-			if (_timer) {
-				_timer.stop();
-				_timer.removeEventListener(TimerEvent.TIMER, _onTimer);
-				_timer = null;
-			}
-			super.dispose();
-		}
-
+		
 	}
 }

@@ -5,6 +5,7 @@ package visualizer {
 	
 	import onyx.core.*;
 	import onyx.sound.SpectrumAnalysis;
+	import onyx.sound.SpectrumAnalyzer;
 	import onyx.sound.Visualizer;
 	
 	public final class BasicVisualizer extends Visualizer {
@@ -14,7 +15,7 @@ package visualizer {
 		public function BasicVisualizer():void {
 		}
 		
-		override public function render(stack:RenderStack):RenderTransform {
+		override public function render():RenderTransform {
 			
 			var transform:RenderTransform = RenderTransform.getTransform(_shape);
 		
@@ -23,7 +24,7 @@ package visualizer {
 			_shape.graphics.clear();
 			_shape.graphics.lineStyle(0, 0xFFFFFF);
 			
-			var analysis:Array = stack.spectrum.analysis;
+			var analysis:Array = SpectrumAnalyzer.spectrum.analysis;
 			_shape.graphics.moveTo(0,100 + (analysis[0] * 200));
 
 			for (var count:int = 1; count < analysis.length; count++) {

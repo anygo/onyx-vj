@@ -5,13 +5,14 @@ package filters {
 	import flash.utils.Timer;
 	
 	import onyx.controls.*;
-	import onyx.filter.Filter;
+	import onyx.core.Tempo;
+	import onyx.events.TempoEvent;
+	import onyx.filter.TempoFilter;
 	import onyx.tween.*;
 	import onyx.tween.easing.*;
 
-	public final class MoverScaler extends Filter {
+	public final class MoverScaler extends TempoFilter {
 		
-		private var _timer:Timer;
 		public var mindelay:Number	= .4;
 		public var maxdelay:Number	= 1;
 		public var scaleMin:Number	= 1;
@@ -30,21 +31,15 @@ package filters {
 		}
 		
 		/**
-		 * 	initialize
-		 */		
-		override public function initialize():void {
-			_timer = new Timer(100);
-			_timer.start();
-			_timer.addEventListener(TimerEvent.TIMER, _onTimer);
-		}
-		
-		/**
-		 * 	@private
+		 * 
 		 */
-		private function _onTimer(event:TimerEvent):void {
+		override protected function onTrigger(event:Event):void {
 			
-			var delay:int = (((maxdelay - mindelay) * Math.random()) + mindelay) * 1000; 
-			_timer.delay = delay;
+			var delay:int = (((maxdelay - mindelay) * Math.random()) + mindelay) * 1000;
+
+			if (timer) {
+				timer.delay = delay;
+			}
 			
 			var scale:Number	= ((scaleMax - scaleMin) * Math.random()) + scaleMin;
 			var ratio:Number	= (scale - 1);
@@ -59,22 +54,14 @@ package filters {
 				new TweenProperty('scaleX', content.scaleX, scale),
 				new TweenProperty('scaleY', content.scaleY, scale)
 			);
+			
 		}
-
+		
 		/**
 		 * 	Dispose
 		 */
 		override public function dispose():void {
-			
-			// stop the timer
-			if (_timer) {
-				_timer.stop();
-				_timer.removeEventListener(TimerEvent.TIMER, _onTimer);
-				_timer = null;
-			}
 			super.dispose();
 		}
-		
 	}
-
 }

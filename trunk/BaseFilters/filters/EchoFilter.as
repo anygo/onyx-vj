@@ -92,7 +92,7 @@ package filters {
 			return _mixAlpha.alphaMultiplier;
 		}
 		
-		public function applyFilter(bitmapData:BitmapData, stack:RenderStack):void {
+		public function applyFilter(bitmapData:BitmapData):void {
 			
 			_count = (_count + 1) % delay;
 			

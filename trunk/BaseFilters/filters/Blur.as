@@ -73,11 +73,11 @@ package filters {
 				),
 				new ControlNumber('mindelay',	'Min Delay', .1, 50, .1),
 				new ControlNumber('maxdelay',	'Min Delay', .1, 50, 1),
-				new ControlRange('tween', 'tween', BOOLEAN)
+				new ControlBoolean('tween',	'tween')
 			);
 		}
 		
-		public function applyFilter(bitmapData:BitmapData, stack:RenderStack):void {
+		public function applyFilter(bitmapData:BitmapData):void {
 			bitmapData.applyFilter(bitmapData, bitmapData.rect, new Point(0,0), _filter);
 		}
 		

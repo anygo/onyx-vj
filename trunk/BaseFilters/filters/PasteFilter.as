@@ -8,7 +8,7 @@ package filters {
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	
-	import onyx.constants.POINT;
+	import onyx.constants.*;
 	import onyx.core.*;
 	import onyx.filter.*;
 
@@ -26,11 +26,11 @@ package filters {
 		}
 		
 		override public function initialize():void {
-			_source		= getBaseBitmap();
+			_source		= BASE_BITMAP();
 			_transform	= new ColorTransform();
 		}
 		
-		public function applyFilter(bitmapData:BitmapData, stack:RenderStack):void {
+		public function applyFilter(bitmapData:BitmapData):void {
 			
 			// _source.fillRect(_source.rect, 0x00000000);
 			_source.applyFilter(_source, _source.rect, new Point(0,0), new BlurFilter(4,4));

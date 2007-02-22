@@ -37,6 +37,7 @@ package filters {
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	
+	import onyx.constants.*;
 	import onyx.controls.*;
 	import onyx.core.*;
 	import onyx.filter.*;
@@ -47,7 +48,7 @@ package filters {
 	public final class Repeater extends Filter implements IBitmapFilter {
 		
 		public var amount:int			= 2;
-		private var _bmp:BitmapData		= getBaseBitmap();
+		private var _bmp:BitmapData		= BASE_BITMAP();
 		
 		public function Repeater():void {
 			
@@ -60,7 +61,7 @@ package filters {
 		/**
 		 * 	Applys a filter to the bitmap
 		 */
-		public function applyFilter(bitmapData:BitmapData, stack:RenderStack):void {
+		public function applyFilter(bitmapData:BitmapData):void {
 			
 			var amount:int = amount;
 			var square:int = amount * amount;

@@ -33,15 +33,14 @@ package filters {
 	import flash.events.Event;
 	import flash.utils.Timer;
 	
+	import onyx.constants.*;
 	import onyx.content.Content;
 	import onyx.controls.*;
 	import onyx.filter.Filter;
+	import onyx.filter.TempoFilter;
 
-	public final class Blink extends Filter {
+	public final class Blink extends TempoFilter {
 		
-		public var count:int		= 0;
-		
-		public var delay:int		= 2;
 		public var min:Number		= 0;
 		public var max:Number		= 1;
 		
@@ -49,39 +48,16 @@ package filters {
 
 			super(	
 				true,
-				new ControlInt('delay',		'delay',		1,	20,	1, { factor: 5 }),
 				new ControlNumber('min',	'min alpha',	0,	1,	1),
 				new ControlNumber('max',	'max alpha',	0,	1,	1)
 			)
 		}
 		
 		/**
-		 * 	Initialize
+		 * 
 		 */
-		override public function initialize():void {
-			stage.addEventListener(Event.ENTER_FRAME, _onEnterFrame);
+		override protected function onTrigger(event:Event):void {
+			content.alpha = ((max - min) * Math.random()) + min;
 		}
-		
-		/**
-		 * 	Per frame function
-		 */
-		private function _onEnterFrame(event:Event):void {
-			count = (count + 1) % delay;
-			if (count === 0) {
-				content.alpha = ((max - min) * Math.random()) + min;
-			}
-		}
-		
-		/**
-		 * 	Disposes
-		 */
-		override public function dispose():void {
-			if (stage) {
-				stage.removeEventListener(Event.ENTER_FRAME, _onEnterFrame);
-				stage = null;
-			}
-			super.dispose();
-		}
-
 	}
 }

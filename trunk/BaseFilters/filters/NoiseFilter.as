@@ -55,7 +55,7 @@ package filters {
 			);
 		}
 		
-		public function applyFilter(bmp:BitmapData, stack:RenderStack):void {
+		public function applyFilter(bmp:BitmapData):void {
 			
 			_noise.noise(Math.random() * 100, 0, _amount * 255, 7, _greyscale);
 			

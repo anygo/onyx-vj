@@ -18,7 +18,7 @@ package filters {
 			);
 		}
 		
-		public function applyFilter(bitmapData:BitmapData, stack:RenderStack):void {
+		public function applyFilter(bitmapData:BitmapData):void {
 			var rect:Rectangle = bitmapData.rect;
 			rect.width /= 2;
 
