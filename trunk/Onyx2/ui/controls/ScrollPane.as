@@ -30,9 +30,7 @@
  */
 package ui.controls {
 	
-	import flash.display.DisplayObject;
-	import flash.display.Shape;
-	import flash.display.Sprite;
+	import flash.display.*;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.geom.Rectangle;
@@ -40,6 +38,7 @@ package ui.controls {
 	import onyx.core.IDisposable;
 	
 	import ui.core.UIObject;
+	import ui.styles.*;
 
 	/**
 	 * 	ScrollPane class
@@ -293,7 +292,7 @@ package ui.controls {
 		public function set backgroundColor(value:uint):void {
 			graphics.clear();
 			graphics.beginFill(value);
-			graphics.lineStyle(0, 0x647789);
+			graphics.lineStyle(0, LINE_DEFAULT);
 			graphics.drawRect(-4,-4,_width+4,_height+4);
 			graphics.endFill();
 		}

@@ -7,7 +7,7 @@ package ui.layer {
 		
 		public function LayerPage(name:String,... args:Array):void {
 			this.name = name;
-			this.controls = args;
+			this.controls = args || [];
 		}
 	}
 }

@@ -169,6 +169,7 @@ package ui.core {
 import flash.text.*;
 import flash.text.TextField;
 import ui.assets.PixelFont;
+import ui.styles.TEXT_DEFAULT;
 
 /**
  * 	Tooltip Display Class
@@ -185,7 +186,7 @@ class ToolTip extends TextField {
 		super.background		= true;
 		super.backgroundColor	= 0xFFCC00;
 		
-		super.defaultTextFormat = PixelFont.DEFAULT;
+		super.defaultTextFormat = TEXT_DEFAULT;
 		super.embedFonts		= true;
 		super.textColor			= 0x000000;
 		

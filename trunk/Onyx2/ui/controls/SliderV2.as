@@ -37,7 +37,6 @@ package ui.controls {
 	import onyx.events.ControlEvent;
 	import onyx.net.Stream;
 	
-	import ui.text.Style;
 	import ui.text.TextField;
 	
 	final public class SliderV2 extends UIControl {

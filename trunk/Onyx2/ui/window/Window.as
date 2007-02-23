@@ -36,7 +36,6 @@ package ui.window {
 	import flash.text.TextFieldAutoSize;
 	
 	import ui.core.UIObject;
-	import ui.text.Style;
 	import ui.text.TextField;
 	import ui.text.TextInput;
 	
@@ -130,9 +129,9 @@ class WindowAsset extends Shape {
 	
 	public function WindowAsset():void {
 		
-		graphics.lineStyle(0,0x5c7181, 1, true);
+		graphics.lineStyle(0, 0x384754, 1, true);
 
-		graphics.beginFill(0x2b3842);
+		graphics.beginFill(0x252e34);
 		graphics.drawRoundRectComplex(0,10,100,90,0,0,2,2);
 		graphics.endFill();
 		

@@ -33,7 +33,9 @@ package {
 	import flash.display.*;
 	import flash.events.Event;
 	import flash.system.Security;
+	import flash.ui.*;
 	
+	import onyx.file.http.HTTPAdapter;
 	import onyx.utils.array.*;
 	
 	import ui.core.UIManager;
@@ -53,10 +55,14 @@ package {
 			stage.align = StageAlign.TOP_LEFT;
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 			stage.quality = StageQuality.LOW;
+			
+			// hide context menu
+			var menu:ContextMenu = new ContextMenu();
+			menu.hideBuiltInItems();
+			contextMenu = menu;
 
 			// init
-			UIManager.initialize(stage);
-
+			UIManager.initialize(stage, new HTTPAdapter());
 		}
 	}
 }

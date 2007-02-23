@@ -28,21 +28,11 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package ui.controls {
+package ui.styles {
 	
-	import ui.core.UIObject;
+	import flash.geom.ColorTransform;
 	
-	public final class TextButton extends UIObject {
-		
-		public function TextButton(options:UIOptions, name:String):void {
-			
-			var width:int	= options.width;
-			var height:int	= options.height;
-			
-			displayBackground(width, height);
-			addLabel(name.toUpperCase(), 'center', width, height, 1);
+	public const TEMPO_BEAT:ColorTransform = new ColorTransform(2,1,1,1);
 
-			addChild(new ButtonClear(width, height));
-		}
-	}
+	
 }

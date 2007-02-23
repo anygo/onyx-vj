@@ -37,7 +37,6 @@ package ui.window {
 	import onyx.core.onyx_ns;
 	import onyx.events.ConsoleEvent;
 	
-	import ui.text.Style;
 	import ui.text.TextField;
 	import ui.text.TextInput;
 	
@@ -105,7 +104,7 @@ package ui.window {
 			_input.y  					= 168;
 			_input.text					= 'enter command here';
 			_input.background			= true;
-			_input.backgroundColor		= 0x1f2a34;
+			_input.backgroundColor		= 0x000000;
 			_input.doubleClickEnabled	= true;
 
 			addChild(_text);

@@ -35,7 +35,6 @@ package ui.controls {
 	import onyx.controls.Control;
 	import onyx.events.ControlEvent;
 	
-	import ui.text.Style;
 	import ui.text.TextField;
 	
 	/**

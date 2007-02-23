@@ -40,24 +40,13 @@ package ui.controls {
 	import onyx.events.ControlEvent;
 	
 	import ui.core.UIObject;
-	import ui.text.Style;
 	import ui.text.TextField;
 
 	/**
 	 * 	Base UIControl class
 	 */
 	public class UIControl extends UIObject implements IDisposable {
-		
-		/**
-		 * 	Changed color transform
-		 */
-		public static const CHANGED:ColorTransform	= new ColorTransform(1,1,1,1,60,0,0,0);
-		
-		/**
-		 * 	Normal color transform
-		 */
-		public static const NONE:ColorTransform		= new ColorTransform(1,1,1,1);
-		
+
 		/**
 		 * 	@constructor
 		 */

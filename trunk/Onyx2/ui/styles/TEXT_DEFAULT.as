@@ -28,21 +28,17 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package ui.controls {
+package ui.styles {
 	
-	import ui.core.UIObject;
+	import flash.text.TextFormat;
 	
-	public final class TextButton extends UIObject {
-		
-		public function TextButton(options:UIOptions, name:String):void {
-			
-			var width:int	= options.width;
-			var height:int	= options.height;
-			
-			displayBackground(width, height);
-			addLabel(name.toUpperCase(), 'center', width, height, 1);
-
-			addChild(new ButtonClear(width, height));
-		}
-	}
+	import ui.assets.PixelFont;
+	
+	public const TEXT_DEFAULT:TextFormat = new TextFormat('Pixel', 7, 0xe4eaef);
+	
+	PixelFont;
+	
+	TEXT_DEFAULT.letterSpacing	= .05;
+	TEXT_DEFAULT.leading		= 3;
+	
 }

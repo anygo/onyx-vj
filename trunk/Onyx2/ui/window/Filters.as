@@ -43,6 +43,8 @@ package ui.window {
 	import ui.events.DragEvent;
 	import ui.layer.UILayer;
 	import ui.policy.*;
+	import ui.styles.*;
+	import flash.display.DisplayObject;
 	
 	/**
 	 * 	Filters Window
@@ -50,14 +52,27 @@ package ui.window {
 	public final class Filters extends Window {
 		
 		/**
-		 * 
+		 * 	@private
+		 * 	An array of targets you can drag filters to
 		 */
-		private var _normalPane:ScrollPane		= new ScrollPane(92, 185, 'EFFECT FILTERS');
+		private static const targets:Array		= [];
+
+		/**
+		 * 	
+		 */
+		public static function registerTarget(obj:UIObject):void {
+			targets.push(obj);
+		}
 		
 		/**
-		 * 
+		 * 	@private
 		 */
-		private var _bitmapPane:ScrollPane		= new ScrollPane(92, 185, 'BITMAP FILTERS');
+		private var _normalPane:ScrollPane		= new ScrollPane(90, 185, 'EFFECT FILTERS');
+		
+		/**
+		 * 	@private
+		 */
+		private var _bitmapPane:ScrollPane		= new ScrollPane(90, 185, 'BITMAP FILTERS');
 		
 		/**
 		 * 	@constructor
@@ -65,7 +80,7 @@ package ui.window {
 		public function Filters():void {
 			
 			// set title, etc
-			super('FILTERS', 196, 200, 412, 318);
+			super('FILTERS', 192, 200, 412, 318);
 			
 			// add panes
 			addChild(_normalPane);
@@ -75,7 +90,7 @@ package ui.window {
 			Policy.addPolicy(_normalPane, new VOrderPolicy());
 			Policy.addPolicy(_bitmapPane, new VOrderPolicy());
 			
-			_normalPane.x = 100;
+			_normalPane.x = 98;
 			_normalPane.y = 15;
 			_bitmapPane.x = 4;
 			_bitmapPane.y = 15;
@@ -109,6 +124,7 @@ package ui.window {
 				// handle events
 				lib.addEventListener(MouseEvent.MOUSE_DOWN, _onMouseDown);
 				lib.addEventListener(MouseEvent.DOUBLE_CLICK, _onDoubleClick);
+				
 				lib.doubleClickEnabled = true;
 				
 			}
@@ -137,7 +153,7 @@ package ui.window {
 		private function _onMouseDown(event:MouseEvent):void {
 			
 			var control:LibraryFilter = event.currentTarget as LibraryFilter;
-			DragManager.startDrag(control, UILayer.layers, _onDragOver, _onDragOut, _onDragDrop);
+			DragManager.startDrag(control, targets, _onDragOver, _onDragOut, _onDragDrop);
 			
 		}
 		
@@ -146,7 +162,7 @@ package ui.window {
 		 */
 		private function _onDragOver(event:DragEvent):void {
 			var obj:UIObject = event.currentTarget as UIObject;
-			obj.highlight(0x800800, .15);
+			obj.transform.colorTransform = DRAG_HIGHLIGHT;
 		}
 		
 		/**
@@ -154,19 +170,18 @@ package ui.window {
 		 */
 		private function _onDragOut(event:DragEvent):void {
 			var obj:UIObject = event.currentTarget as UIObject;
-			obj.highlight(0, 0);
+			obj.transform.colorTransform = DEFAULT;
 		}
 		
 		/**
 		 * 	@private
 		 */
 		private function _onDragDrop(event:DragEvent):void {
-			var uilayer:UILayer			= event.currentTarget as UILayer
+			var object:IFilterDrop		= event.currentTarget as IFilterDrop;
 			var origin:LibraryFilter	= event.origin as LibraryFilter;
 			var plugin:Plugin			= origin.filter;
-			uilayer.highlight(0, 0);
-
-			UILayer.selectLayer(uilayer);
+			
+			(object as DisplayObject).transform.colorTransform = DEFAULT;
 			
 			if (event.ctrlKey) {
 
@@ -174,13 +189,13 @@ package ui.window {
 
 			} else {
 				
-				UILayer.selectedLayer.addFilter(plugin.getDefinition() as Filter);
+				object.addFilter(plugin.getDefinition() as Filter);
 				
 			}
 		}
 		
 		/**
-		 * 
+		 * 	@private
 		 */
 		private function _applyToAll(plugin:Plugin):void {
 			var layers:Array = UILayer.layers;

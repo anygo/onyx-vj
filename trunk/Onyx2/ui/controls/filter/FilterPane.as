@@ -37,8 +37,9 @@ package ui.controls.filter {
 	import onyx.states.StateManager;
 	
 	import ui.controls.ScrollPane;
-	import ui.layer.UILayer;
 	import ui.states.FilterMoveState;
+	import ui.styles.*;
+	import ui.layer.UIFilterControl;
 
 	/**
 	 * 
@@ -131,18 +132,42 @@ package ui.controls.filter {
 			}
 		}
 
+		/**
+		 * 
+		 */
+		public function mute(filter:Filter):void {
+			var layerFilter:LayerFilter = _dict[filter];
+			
+			if (filter.muted && layerFilter == selectedFilter) {
+				selectFilter(null);
+			}
+			
+			layerFilter.muted = filter.muted;
+			
+		}
 
-		
 		/**
 		 * 	@private
 		 */
 		private function _filterMouseHandler(event:MouseEvent):void {
 
-			selectFilter(event.currentTarget as LayerFilter);
+			var filter:LayerFilter = event.currentTarget as LayerFilter;
 			
-			var state:FilterMoveState = new FilterMoveState();
-			StateManager.loadState(state, event.currentTarget, _dict);
-
+			if (event.altKey) {
+				
+				filter.filter.muted = !filter.filter.muted;
+				
+			} else {
+				
+				if (!filter.filter.muted) {
+	
+					selectFilter(filter);
+					
+					var state:FilterMoveState = new FilterMoveState();
+					StateManager.loadState(state, filter, _dict);
+				
+				}
+			}
 		}
 		
 		/**
@@ -150,10 +175,10 @@ package ui.controls.filter {
 		 */
 		public function selectFilter(control:LayerFilter):void {
 
-			var uilayer:UILayer = parent as UILayer;
+			var uilayer:UIFilterControl = parent as UIFilterControl;
 			
 			if (selectedFilter) {
-				selectedFilter.highlight(0,0);
+				selectedFilter.transform.colorTransform = DEFAULT;
 				
 				// unselect if it's selected
 				if (control === selectedFilter) {
@@ -165,7 +190,7 @@ package ui.controls.filter {
 			
 			if (control) {
 				
-				control.highlight(0xFFFFFF, .4);
+				control.transform.colorTransform = FILTER_HIGHLIGHT;
 				uilayer.selectPage(1, control.filter.controls);
 			
 			// select nothing

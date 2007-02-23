@@ -36,6 +36,7 @@ package ui.window {
 	import flash.net.URLRequest;
 	
 	import onyx.core.*;
+	import onyx.file.*;
 	import onyx.layer.LayerSettings;
 	
 	import ui.assets.*;
@@ -43,8 +44,8 @@ package ui.window {
 	import ui.controls.browser.*;
 	import ui.core.*;
 	import ui.events.DragEvent;
-	import ui.files.*;
 	import ui.layer.UILayer;
+	import ui.styles.*;
 	import ui.text.*;
 
 	/**
@@ -94,7 +95,7 @@ package ui.window {
 			
 			_folders.x = 304;
 			_folders.y = 14;
-			_folders.backgroundColor = 0x181a1b;
+			_folders.backgroundColor = 0x0d0d0d;
 			
 			addChild(_folders);
 			addChild(_files);
@@ -104,6 +105,7 @@ package ui.window {
 		
 		/**
 		 * 	@private
+		 * 	Clears children
 		 */
 		private function _clearChildren():void {
 			
@@ -214,7 +216,7 @@ package ui.window {
 		 */
 		private function _onDragOver(event:DragEvent):void {
 			var obj:UIObject = event.currentTarget as UIObject;
-			obj.highlight(0x800800, .15);
+			obj.transform.colorTransform = DRAG_HIGHLIGHT;
 		}
 		
 		/**
@@ -223,7 +225,7 @@ package ui.window {
 		 */
 		private function _onDragOut(event:DragEvent):void {
 			var obj:UIObject = event.currentTarget as UIObject;
-			obj.highlight(0, 0);
+			obj.transform.colorTransform = (obj == UILayer.selectedLayer) ? LAYER_HIGHLIGHT : DEFAULT;
 		}
 		
 		/**
@@ -234,7 +236,7 @@ package ui.window {
 			var uilayer:UILayer = event.currentTarget as UILayer
 			var origin:FileControl = event.origin as FileControl;
 			
-			uilayer.highlight(0, 0);
+			uilayer.transform.colorTransform = DEFAULT;
 
 			if (event.ctrlKey && uilayer.layer.path) {
 				var settings:LayerSettings = new LayerSettings();

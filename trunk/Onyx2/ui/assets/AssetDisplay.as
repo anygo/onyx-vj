@@ -28,21 +28,17 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package ui.controls {
+package ui.assets {
 	
-	import ui.core.UIObject;
-	
-	public final class TextButton extends UIObject {
-		
-		public function TextButton(options:UIOptions, name:String):void {
-			
-			var width:int	= options.width;
-			var height:int	= options.height;
-			
-			displayBackground(width, height);
-			addLabel(name.toUpperCase(), 'center', width, height, 1);
+	import flash.display.Bitmap;
+	import ui.styles.LAYER_HIGHLIGHT;
 
-			addChild(new ButtonClear(width, height));
+	[Embed(source="/ui/assets/img/display_background.png")]
+	public final class AssetDisplay extends Bitmap {
+		
+		public function AssetDisplay():void {
+			bitmapData.draw(bitmapData, null, LAYER_HIGHLIGHT);
 		}
+		
 	}
 }

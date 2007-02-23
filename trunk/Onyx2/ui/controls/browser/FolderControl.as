@@ -36,7 +36,7 @@ package ui.controls.browser {
 	import ui.assets.AssetFolderUp;
 	import ui.controls.ButtonClear;
 	import ui.controls.UIControl;
-	import ui.files.Folder;
+	import onyx.file.*;
 	import ui.text.TextField;
 
 	public final class FolderControl extends UIControl {

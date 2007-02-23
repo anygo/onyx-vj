@@ -1,13 +1,26 @@
-package ui.layer
-{
+package ui.controls.page {
+	
 	import flash.display.Sprite;
+	
 	import ui.assets.AssetLayerTab;
 	import ui.text.TextField;
 
 	public final class ControlPageSelected extends Sprite {
 		
+		/**
+		 * 	Store the tab
+		 */
 		public var background:AssetLayerTab = new AssetLayerTab();
+
+		/**
+		 * 	@private
+		 */
 		private var _label:TextField		= new TextField(36, 10, 'center');
+		
+		/**
+		 * 	offset the tabs
+		 */
+		public var offsetX:int;
 		
 		/**
 		 * 	@constructor

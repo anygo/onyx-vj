@@ -43,6 +43,7 @@ package ui.core {
 	
 	import onyx.core.IDisposable;
 	
+	import ui.styles.*;
 	import ui.text.TextField;
 
 	/**
@@ -130,28 +131,6 @@ package ui.core {
 		}
 		
 		/**
-		 * 	Highlights object with specified color
-		 */
-		public function highlight(color:uint, amount:Number):void {
-			
-			var transform:ColorTransform = new ColorTransform();
-			
-			var r:int = ((color & 0xFF0000) >> 16) * amount;
-			var g:int = ((color & 0x00FF00) >> 8) * amount;
-			var b:int = ((color & 0x0000FF)) * amount;
-			
-			var newcolor:int = r << 16 ^ g << 8 ^ b;
-			
-			transform.color = newcolor;
-			transform.redMultiplier = 1-amount;
-			transform.greenMultiplier = 1-amount;
-			transform.blueMultiplier = 1-amount;
-			
-			this.transform.colorTransform = transform;
-			
-		}
-		
-		/**
 		 * 	Moves to the top
 		 */
 		public function moveToTop(event:MouseEvent = null):void {
@@ -204,7 +183,7 @@ package ui.core {
 		protected function addLabel(name:String, align:String, width:int, height:int, offset:int = -8):void {
 			
 			var label:TextField = new TextField(width + 3, height);
-			label.textColor		= 0x96abbc;
+			label.textColor		= TEXT_LABEL;
 			label.align			= align || 'center';
 			label.text			= name.toUpperCase();
 			label.y				= offset;

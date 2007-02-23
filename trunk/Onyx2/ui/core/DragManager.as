@@ -30,27 +30,67 @@
  */
 package ui.core {
 
-	import flash.display.Bitmap;
-	import flash.display.BitmapData;
-	import flash.display.DisplayObject;
-	import flash.display.Sprite;
+	import flash.display.*;
 	import flash.events.MouseEvent;
 	import flash.geom.ColorTransform;
 	
 	import ui.events.DragEvent;
+	import ui.styles.*;
 	
+	/**
+	 * 	Drag Manager
+	 */
 	public class DragManager {
 		
+		/**
+		 * 	@private
+		 * 	Targets that I can drop onto
+		 */
 		private static var _targets:Array = [];
+		
+		/**
+		 * 	@private
+		 */
 		private static var _dragTarget:Bitmap;
+		
+		/**
+		 * 	@private
+		 */
 		private static var _currentTarget:DisplayObject;
+		
+		/**
+		 * 	@private
+		 */
 		private static var _offsetX:int;
+		
+		/**
+		 * 	@private
+		 */
 		private static var _offsetY:int;
+		
+		/**
+		 * 	@private
+		 */
 		private static var _origin:UIObject;
+		
+		/**
+		 * 	@private
+		 */
 		private static var _dragOver:Function;
+		
+		/**
+		 * 	@private
+		 */
 		private static var _dragOut:Function;
+		
+		/**
+		 * 	@private
+		 */
 		private static var _dragDrop:Function;
-			
+		
+		/**
+		 * 	Starts a drag
+		 */
 		public static function startDrag(origin:UIObject, targets:Array, dragOver:Function, dragOut:Function, dragDrop:Function):void {
 			
 			// save variables
@@ -71,14 +111,14 @@ package ui.core {
 			
 		}
 		
+		/**
+		 * 	@private
+		 */
 		private static function _onObjectFirstMove(event:MouseEvent):void {
-
-			var color:ColorTransform = new ColorTransform();
-			color.alphaMultiplier = .5;
 
 			// add a mirrored bitmap to the stage
 			var bmp:BitmapData = new BitmapData(_origin.width, _origin.height, true, 0x00000000);
-			bmp.draw(_origin, null, color);
+			bmp.draw(_origin, null, DRAG_DRAW);
 			_dragTarget = new Bitmap(bmp);
 			
 			// place it
@@ -157,7 +197,9 @@ package ui.core {
 			_dragOver = null;
 		}
 		
-		// rolled on a target
+		/**
+		 * 	@private
+		 */
 		private static function _onRollTarget(event:MouseEvent):void {
 			if (event.currentTarget !== _currentTarget) {
 				_currentTarget = event.currentTarget as DisplayObject;
@@ -170,7 +212,9 @@ package ui.core {
 			}
 		}
 
-		// rolled out of a target
+		/**
+		 * 	@private
+		 */
 		private static function _onRollOutTarget(event:MouseEvent):void {
 
 			var dragEvent:DragEvent = new DragEvent(DragEvent.DRAG_OUT);

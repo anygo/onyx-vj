@@ -28,7 +28,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package ui.layer {
+package ui.controls.page {
 	
 	import flash.utils.Dictionary;
 	
@@ -42,8 +42,16 @@ package ui.layer {
 	 * 	The pages
 	 */
 	public final class ControlPage extends UIObject {
+		
+		/**
+		 * 	@private
+		 */
+		private static const DEFAULT:UIOptions = new UIOptions();
+		DEFAULT.width = 48;
 
-		/** @private **/
+		/**	
+		 * 	@private
+		 */
 		private var _controls:Array		= [];
 		
 		/**
@@ -70,8 +78,8 @@ package ui.layer {
 		public function addControls(controls:Array):void {
 			
 			var uicontrol:UIControl, x:int = 0, y:int = 0;
-			var options:UIOptions	= UIOptions.DEFAULT;
-			var _width:int			= 60;
+			var options:UIOptions	= DEFAULT;
+			var width:int = 65;
 			
 			removeControls();
 
@@ -107,9 +115,9 @@ package ui.layer {
 				
 				_controls.push(uicontrol);
 				
-				x += options.width + 4;
+				x += options.width + 3;
 				
-				if (x > _width) {
+				if (x > width) {
 					x = 0;
 					y += options.height + 10;
 				}

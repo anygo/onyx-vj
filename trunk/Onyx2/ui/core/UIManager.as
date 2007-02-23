@@ -37,6 +37,7 @@ package ui.core {
 	import onyx.core.Onyx;
 	import onyx.display.Display;
 	import onyx.events.*;
+	import onyx.file.*;
 	import onyx.layer.*;
 	import onyx.plugin.Plugin;
 	import onyx.states.StateManager;
@@ -44,8 +45,7 @@ package ui.core {
 	
 	import ui.assets.*;
 	import ui.layer.UILayer;
-	import ui.states.DisplayStartState;
-	import ui.states.KeyListenerState;
+	import ui.states.*;
 	import ui.window.*;
 
 	/**
@@ -66,11 +66,11 @@ package ui.core {
 		/**
 		 * 	initialize
 		 */
-		public static function initialize(root:Stage):void {
+		public static function initialize(root:DisplayObjectContainer, adapter:FileAdapter):void {
 			
 			// initializes onyx
-			var engine:EventDispatcher = Onyx.initialize(root);
-			
+			var engine:EventDispatcher = Onyx.initialize(root, adapter);
+
 			// show startup image
 			engine.addEventListener(ApplicationEvent.ONYX_STARTUP_START, _onInitializeStart);
 			
@@ -99,10 +99,18 @@ package ui.core {
 			engine.removeEventListener(ApplicationEvent.ONYX_STARTUP_START, _onInitializeStart);
 			engine.removeEventListener(ApplicationEvent.ONYX_STARTUP_END, _onInitializeEnd);
 		
-			_loadWindows(Console, PerfMonitor, Browser, Filters, TransitionWindow, HostWindow);
+			// load windows
+			_loadWindows(
+				Console,
+				PerfMonitor,
+				Browser,
+				Filters,
+				TransitionWindow,
+				HostWindow
+			);
 
 			// add a display
-			var display:Display = Onyx.createDisplay(ROOT.stageWidth - 320, 525);
+			var display:Display = Onyx.createDisplay(STAGE.stageWidth - 320, 525);
 			display.addEventListener(DisplayEvent.LAYER_CREATED,		_onLayerCreate);
 			display.createLayers(5);
 			
@@ -111,6 +119,8 @@ package ui.core {
 			// add settings window
 			var settings:SettingsWindow = new SettingsWindow(display);
 			ROOT.addChild(settings);
+			
+			ROOT.addChild(new DisplayWindow(display));
 			
 			// listen for keys
 			StateManager.loadState(new KeyListenerState());

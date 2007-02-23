@@ -37,16 +37,34 @@ package ui.controls.filter {
 	import ui.controls.ButtonClear;
 	import ui.controls.UIControl;
 	import ui.core.ToolTipManager;
-	import ui.text.Style;
 	import ui.text.TextField;
 	
 	public final class LibraryFilter extends UIControl {
 		
+		/**
+		 * 	@private
+		 * 	Associated Plugin
+		 */
 		private var _plugin:Plugin;
+		
+		/**
+		 * 	@private
+		 */
 		private var _label:TextField = new TextField(70,12);
-		private var _btn:ButtonClear = new ButtonClear(91,12);
+
+		/**
+		 * 	@private
+		 */
+		private var _btn:ButtonClear = new ButtonClear(87,12);
+
+		/**
+		 * 	@private
+		 */
 		private var _bg:AssetLayerFilterInactive = new AssetLayerFilterInactive();
 		
+		/**
+		 * 	@constructor
+		 */
 		public function LibraryFilter(plugin:Plugin):void {
 			
 			super(null);
@@ -58,6 +76,9 @@ package ui.controls.filter {
 
 		}
 		
+		/**
+		 * 	@private
+		 */
 		private function _draw():void {
 			
 			_label.text			= _plugin.name;
@@ -69,6 +90,9 @@ package ui.controls.filter {
 			addChild(_btn);
 		}
 		
+		/**
+		 * 	Returns the plugin
+		 */
 		public function get filter():Plugin {
 			return _plugin;
 		}

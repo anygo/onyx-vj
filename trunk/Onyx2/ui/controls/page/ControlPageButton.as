@@ -1,13 +1,14 @@
-package ui.controls.layer
-{
-	import ui.controls.ButtonClear;
+package ui.controls.page {
+	
 	import flash.display.SimpleButton;
+	
+	import ui.controls.ButtonClear;
 
-	public final class LayerPageButton extends SimpleButton {
+	public final class ControlPageButton extends SimpleButton {
 		
 		public var index:int
 
-		final public function LayerPageButton(index:int):void {
+		final public function ControlPageButton(index:int):void {
 			
 			this.index = index;
 

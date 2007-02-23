@@ -30,46 +30,55 @@
  */
 package ui.controls {
 	
-	import flash.display.Shape;
-	import flash.display.SimpleButton;
+	import flash.display.*;
 	import flash.events.MouseEvent;
 	
 	import ui.core.UIObject;
 	
+	/**
+	 * 	Clear Button
+	 */
 	public final class ButtonClear extends SimpleButton {
 
+		/**
+		 * 	@constructor
+		 */
 		final public function ButtonClear(width:int, height:int, show:Boolean = true):void {
 
 			if (show) {
 				overState = new OverState(width, height);
 			}
 			hitTestState = new HitState(width, height);
-			
 		}
-		
 	}
 }
 
 import flash.display.Shape;
+import ui.styles.*;
 
+/**
+ * 	Hitstate
+ */
 final class HitState extends Shape {
 	
 	final public function HitState(width:int, height:int):void {
 
-		graphics.beginFill(1);
+		graphics.beginFill(0);
 		graphics.drawRect(0, 0, width, height);
 		graphics.endFill();
 		
 		cacheAsBitmap = true;
-
 	}
 }
 
+/**
+ * 	overstate
+ */
 final class OverState extends Shape {
 	
 	final public function OverState(width:int, height:int):void {
 
-		graphics.beginFill(0xFFFF00, .2);
+		graphics.beginFill(BUTTON_OVER, .2);
 		graphics.drawRect(0, 0, width, height);
 		graphics.endFill();
 		
@@ -78,11 +87,14 @@ final class OverState extends Shape {
 	}
 }
 
+/**
+ * 	Downstate
+ */
 final class DownState extends Shape {
 	
 	final public function DownState(width:int, height:int):void {
 
-		graphics.beginFill(0xCCCCCC, .2);
+		graphics.beginFill(BUTTON_DOWN, .2);
 		graphics.drawRect(0, 0, width, height);
 		graphics.endFill();
 		

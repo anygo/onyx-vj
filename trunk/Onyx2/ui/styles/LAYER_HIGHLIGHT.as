@@ -28,21 +28,11 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package ui.controls {
-	
-	import ui.core.UIObject;
-	
-	public final class TextButton extends UIObject {
-		
-		public function TextButton(options:UIOptions, name:String):void {
-			
-			var width:int	= options.width;
-			var height:int	= options.height;
-			
-			displayBackground(width, height);
-			addLabel(name.toUpperCase(), 'center', width, height, 1);
+package ui.styles {
 
-			addChild(new ButtonClear(width, height));
-		}
-	}
+	import flash.display.*;
+	import flash.geom.ColorTransform;
+	
+	public const LAYER_HIGHLIGHT:ColorTransform = new ColorTransform(1,1,1,1,6,17,27);
+
 }

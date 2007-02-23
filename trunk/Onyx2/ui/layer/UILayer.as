@@ -33,8 +33,7 @@ package ui.layer {
 	import flash.display.*;
 	import flash.events.*;
 	import flash.filters.DropShadowFilter;
-	import flash.geom.ColorTransform;
-	import flash.geom.Matrix;
+	import flash.geom.*;
 	import flash.net.URLRequest;
 	import flash.utils.Timer;
 	
@@ -48,30 +47,46 @@ package ui.layer {
 	import onyx.transition.Transition;
 	import onyx.utils.*;
 	
-	import ui.core.UIManager;
 	import ui.assets.*;
 	import ui.controls.*;
 	import ui.controls.filter.*;
 	import ui.controls.layer.*;
-	import ui.core.UIObject;
+	import ui.controls.page.*;
+	import ui.core.*;
 	import ui.states.*;
+	import ui.styles.*;
 	import ui.text.*;
-	import ui.window.TransitionWindow;
+	import ui.window.*;
 
 	/**
 	 * 	Controls layers
 	 */	
-	public class UILayer extends UIObject {
+	public class UILayer extends UIFilterControl implements IFilterDrop {
 		
 		/**
-		 * 	STATIC MEMBERS
-		 **/
+		 * 	@private
+		 */
+		private static const LAYER_X:int			= 6;
 
-		public static const LAYER_X:int				= 6;
-		public static const LAYER_Y:int				= 6;
-		public static const SCRUB_LEFT:int			= 3;
-		public static const SCRUB_RIGHT:int			= 173;
-		public static const LAYER_WIDTH:int			= SCRUB_RIGHT - SCRUB_LEFT;
+		/**
+		 * 	@private
+		 */
+		private static const LAYER_Y:int				= 6;
+
+		/**
+		 * 	@private
+		 */
+		private static const SCRUB_LEFT:int			= 3;
+
+		/**
+		 * 	@private
+		 */
+		private static const SCRUB_RIGHT:int			= 173;
+
+		/**
+		 * 	@private
+		 */
+		private static const LAYER_WIDTH:int			= SCRUB_RIGHT - SCRUB_LEFT;
 
 		/**
 		 * 	@private
@@ -99,14 +114,14 @@ package ui.layer {
 			
 			if (selectedLayer) {
 				selectedLayer._timer.delay = 3000;
-				selectedLayer.highlight(0,0);
+				selectedLayer.transform.colorTransform = DEFAULT;
 			}
 			
 			// make the delay faster
 			uilayer._timer.delay = 1000;
 			
 			// highlight
-			uilayer.highlight(0x3186d6,.13);
+			uilayer.transform.colorTransform = LAYER_HIGHLIGHT;
 			
 			// select layer
 			selectedLayer = uilayer;
@@ -160,75 +175,65 @@ package ui.layer {
 		private var _timer:Timer							= new Timer(2000);
 
 		/** @private **/
-		private var _preview:Bitmap							= new Bitmap(new BitmapData(192, 144, true, 0x00000000));
+		private var _preview:Bitmap							= new Bitmap();
 
 		/** @private **/
 		private var _filename:TextField						= new TextField(162,16);
-
-		/** @private **/
-		private var _filterPane:FilterPane					= new FilterPane();
-		
-		/** @private **/
-		private var _controlPage:ControlPage				= new ControlPage();
-		
-		/** @private **/
-		private var _controlTabs:ControlPageSelected		= new ControlPageSelected();
-		
-		/** @private **/
-		private var _pages:Array							= [];
-
-		/** @private **/
-		private var _selectedPage:int						= -1;
 				
 		/**
 		 * 	@constructor
 		 **/
 		public function UILayer(layer:ILayer):void {
 			
-			// if there is no selected layer, select current layer
-			if (!selectedLayer) {
-				selectLayer(this);
-			}
+			var props:LayerProperties = layer.properties;
+			
+			// register for filter drops
+			super(
+				layer, 
+				0,
+				new LayerPage('BASIC',	props.position,
+										props.alpha,
+										props.scale,
+										props.brightness,
+										props.rotation,
+										props.contrast,
+										props.tint,
+										props.saturation,
+										props.color,
+										props.threshold,
+										props.framerate
+				),
+				new LayerPage('FILTERS'),
+				new LayerPage('CUSTOM')
+			);
+			
+			// register this as a drop target for filters
+			Filters.registerTarget(this);
 			
 			// store layer
 			_layer = layer;
 
 			// push
 			_layers.push(this);
-			
+
 			// draw
 			_draw();
-
+			
 			// add handlers			
 			_assignHandlers();
-			
-			// it moves to top
-			super(true);
+
+			// if there is no selected layer, select current layer
+			if (!selectedLayer) {
+				selectLayer(this);
+			}
 		}
-		
+
 		/**
-		 * 	Highlights a layer with a particular color
-		 *	@param		The color to tint
-		 * 	@param		The amount to tint by
+		 * 	Overrides the layer colortransform
 		 */
-		override public function highlight(color:uint, amount:Number):void {
-			
-			var transform:ColorTransform = new ColorTransform();
-			
-			var r:int = ((color & 0xFF0000) >> 16) * amount;
-			var g:int = ((color & 0x00FF00) >> 8) * amount;
-			var b:int = ((color & 0x0000FF)) * amount;
-			
-			var newcolor:int = r << 16 ^ g << 8 ^ b;
-			
-			transform.color = newcolor;
-			transform.redMultiplier = 1-amount;
-			transform.greenMultiplier = 1-amount;
-			transform.blueMultiplier = 1-amount;
-			
-			_assetLayer.transform.colorTransform				= transform;
-			_controlTabs.background.transform.colorTransform	= transform;
-			
+		override public function get transform():Transform {
+			var mtransform:MultiTransform = new MultiTransform(this, _assetLayer, controlTabs);
+			return mtransform;
 		}
 		
 		/**
@@ -241,10 +246,6 @@ package ui.layer {
 			_layer.addEventListener(LayerEvent.LAYER_LOADED, _onLayerLoad);
 			_layer.addEventListener(LayerEvent.LAYER_UNLOADED, _onLayerUnLoad);
 			
-			// when a filter is applied
-			_layer.addEventListener(FilterEvent.FILTER_APPLIED, _onFilterApplied);
-			_layer.addEventListener(FilterEvent.FILTER_REMOVED, _onFilterRemoved);
-			_layer.addEventListener(FilterEvent.FILTER_MOVED, _onFilterMove);
 			_layer.addEventListener(ProgressEvent.PROGRESS, _onLayerProgress);
 			
 			// when the scrub button is pressed
@@ -313,58 +314,39 @@ package ui.layer {
 		 */
 		private function _draw():void {
 			
+			// resize preview
+			_preview.scaleX = _preview.scaleY = .6;
+			
 			// make the filename text have a drop shadow
 			_filename.filters = [new DropShadowFilter(1, 45,0x000000, 1, 0, 0, 1)];
 			_filename.cacheAsBitmap = true;
 			
 			var props:LayerProperties = _layer.properties;
 			
-			_loopStart = new LoopStart(props.getControl('loopStart'));
-			_loopEnd = new LoopEnd(props.getControl('loopEnd'));
+			_loopStart		= new LoopStart(props.getControl('loopStart'));
+			_loopEnd		= new LoopEnd(props.getControl('loopEnd'));
 			
 			var options:UIOptions		= new UIOptions();
 			var dropOptions:UIOptions	= new UIOptions(false, false, null, 140, 11);
-
-			var page:LayerPage	= _pages[0];
-			
-			// create basic page
-			addPage('BASIC',
-				props.position,
-				props.alpha,
-				props.scale,
-				props.brightness,
-				props.rotation,
-				props.contrast,
-				props.tint,
-				props.saturation,
-				props.color,
-				props.threshold,
-				props.framerate
-			);
-			
-			addPage('FILTERS');
-			addPage('CUSTOM');
-		
-			selectPage(0);
 						
 			addChildren(
 			
 				_assetLayer,														0,			0,
 				_preview,															1,			1,
 				_filename,															3,			3,
-				_controlPage,														6,			193,
+				controlPage,														3,			192,
 
 				new DropDown(dropOptions, props.blendMode),							4,			153,
 				_assetScrub,										 		SCRUB_LEFT,			139,
 				_btnScrub,															1,			139,
-				_filterPane,														111,		186,
+				filterPane,														111,		186,
 
 				_btnUp,																153,		154,
 				_btnDown,															162,		154,
 				_btnCopy,															171,		154,
 				_btnDelete,															180,		154,
 				
-				_controlTabs,														0,			169,
+				controlTabs,														0,			169,
 				
 				_loopStart,															10,			138,
 				_loopEnd,															184,		138
@@ -387,71 +369,6 @@ package ui.layer {
 		}
 		
 		/**
-		 * 
-		 */
-		public function selectPage(index:int, controls:Array = null):void {
-			
-			var page:LayerPage = _pages[index];
-			
-			if (controls) {
-				page.controls = controls;
-				_controlPage.addControls(page.controls);
-			}
-			
-			if (index !== _selectedPage) {
-				
-				_controlPage.addControls(page.controls);
-				_controlTabs.text	= page.name;
-				_controlTabs.x		= index * 35;
-				
-				_selectedPage = index;
-			}
-		}
-		
-		/**
-		 * 
-		 */
-		public function getPage(index:int):LayerPage {
-			return _pages[index];
-		}
-		
-		/**
-		 * 
-		 */
-		public function addPage(name:String, ... controls:Array):void {
-			var page:LayerPage = new LayerPage(name);
-			page.controls = controls || [];
-			
-			var index:int	= _pages.push(page) - 1;
-			
-			var button:LayerPageButton = new LayerPageButton(index);
-			button.x		= index * 35;
-			button.y		= 169;
-
-			addChild(button);
-
-			button.addEventListener(MouseEvent.MOUSE_DOWN, _onPageSelect);
-		}
-
-		/**
-		 * 	@private
-		 */
-		private function _onPageSelect(event:MouseEvent):void {
-			
-			var target:LayerPageButton = event.currentTarget as LayerPageButton;
-			
-			if (target.index === 1) {
-				var filter:LayerFilter = _filterPane.getFilter(layer.filters[0]);
-				if (filter) {
-					_filterPane.selectFilter(filter);
-				}
-			} else {
-				_filterPane.selectFilter(null);
-				selectPage(target.index);
-			}
-		}
-		
-		/**
 		 * 	@private
 		 * 	Handler that is evoked when a layer has finished loading a file
 		 */
@@ -462,12 +379,12 @@ package ui.layer {
 
 			// check for custom controls
 			if (_layer.controls) {
-				var page:LayerPage = _pages[2];
+				var page:LayerPage = pages[2];
 				page.controls = _layer.controls;
 
 				// check if we're on the custom controls page
-				if (_selectedPage == 2) {
-					_controlPage.addControls(_layer.controls);
+				if (selectedPage == 2) {
+					controlPage.addControls(_layer.controls);
 				}
 
 			}
@@ -475,17 +392,11 @@ package ui.layer {
 			// set name
 			_filename.text = StringUtil.removeExtension(path);
 			
-			// add the preview interval
-			_timer.addEventListener(TimerEvent.TIMER, _onUpdateTimer);
-			
 			// frame listener
 			addEventListener(Event.ENTER_FRAME, _updatePlayheadHandler);
 			
 			// make sure the timer is running
 			_timer.start();
-			
-			// update the bitmap
-			_onUpdateTimer(null);
 		}
 		
 		/**
@@ -494,40 +405,17 @@ package ui.layer {
 		 */
 		private function _onLayerUnLoad(event:LayerEvent):void {
 			
-			var page:LayerPage = _pages[2];
+			var page:LayerPage = pages[2];
 			if (page.controls) {
 				page.controls = null;
 			}
 			selectPage(0);
 			
-			_timer.stop();
-			_timer.removeEventListener(TimerEvent.TIMER, _onUpdateTimer);
-			
 			_filename.text = '';
 			_assetScrub.x = SCRUB_LEFT;
 			
 			removeEventListener(Event.ENTER_FRAME, _updatePlayheadHandler);
-			_preview.bitmapData.fillRect(_preview.bitmapData.rect, 0x000000);
 		}
-		
-		/**
-		 * 	@private
-		 * 	Handler that is evoked when an update is called for
-		 */
-		private function _onUpdateTimer(event:TimerEvent):void {
-			
-			// updates the bitmap
-			var bmp:BitmapData		= _preview.bitmapData;
-			var rendered:BitmapData	= _layer.rendered;
-			
-			var matrix:Matrix		= new Matrix();
-			matrix.scale(bmp.width / rendered.width, bmp.height / rendered.height);
-			
-			bmp.fillRect(bmp.rect, 0x00000000);
-			bmp.draw(rendered, matrix);
-						
-		}
-		
 		
 		/**
 		 * 	@private
@@ -537,6 +425,7 @@ package ui.layer {
 
 			// updates the playhead marker
 			_assetScrub.x = _layer.time * LAYER_WIDTH + SCRUB_LEFT;
+			_preview.bitmapData = _layer.rendered;
 
 		}
 
@@ -608,10 +497,10 @@ package ui.layer {
 			} else if (mouseY > 182) {
 			
 				// else check to see if the mouse is within the empty area
-				if (_filterPane.selectedFilter) {
+				if (filterPane.selectedFilter) {
 					if (mouseX > 105) {
 						if (!(event.target is LayerFilter)) {
-							_filterPane.selectFilter(null);
+							filterPane.selectFilter(null);
 						}
 					}
 				}
@@ -638,47 +527,6 @@ package ui.layer {
 			removeEventListener(MouseEvent.MOUSE_UP, _stopForwardMouse);
 			
 			_forwardMouse(event);
-		}
-
-		/**
-		 * 	Adds a filter
-		 */
-		public function addFilter(filter:Filter):void {
-			_layer.addFilter(filter);
-		}
-		
-		/**
-		 * 	Removes a filter
-		 */
-		public function removeFilter(filter:Filter):void {
-			filter.removeFilter();
-		}
-		
-		/**
-		 * 	@private
-		 * 	Event when filter is added
-		 */
-		private function _onFilterApplied(event:FilterEvent):void {
-			
-			_filterPane.register(event.filter);
-		}
-		
-		/**
-		 * 	@private
-		 * 	Called when a filter is removed
-		 */
-		private function _onFilterRemoved(event:FilterEvent):void {
-			
-			_filterPane.unregister(event.filter);
-			
-		}
-
-		/**
-		 * 	@private
-		 * 	When a filter is moved
-		 */		
-		private function _onFilterMove(event:FilterEvent):void {
-			_filterPane.reorder();
 		}
 
 		/**

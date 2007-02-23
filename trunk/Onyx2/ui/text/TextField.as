@@ -32,8 +32,7 @@ package ui.text {
 	
 	import flash.text.TextField;
 	import flash.text.TextFormat;
-	
-	import ui.assets.PixelFont;
+	import ui.styles.TEXT_DEFAULT;
 	
 	/**
 	 * 	Default TextField
@@ -47,7 +46,7 @@ package ui.text {
 			
 			super.selectable = selectable;
 
-			var format:TextFormat = PixelFont.DEFAULT;
+			var format:TextFormat = TEXT_DEFAULT;
 			format.align = align;
 
 			defaultTextFormat = format;
@@ -63,13 +62,9 @@ package ui.text {
 		 * 	Changes alignment
 		 */		
 		public function set align(a:String):void {
-			
 			var format:TextFormat = defaultTextFormat;
-			embedFonts = (format.font == 'PixelFont')
 			format.align = a;
-			
 			defaultTextFormat = format;
-			
 		}
 		
 		/**
@@ -77,17 +72,6 @@ package ui.text {
 		 */
 		public function get align():String {
 			return defaultTextFormat.align;
-		}
-		
-		/**
-		 * 	Sets text size
-		 */
-		public function set size(a:int):void {
-			var format:TextFormat = defaultTextFormat;
-			embedFonts = (format.font == 'PixelFont')
-			format.size = a;
-			
-			defaultTextFormat = format;
 		}
 	}
 }

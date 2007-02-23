@@ -27,6 +27,7 @@ package ui.states {
 		 */
 		override public function terminate():void {
 			
+			// remove listener
 			ROOT.removeEventListener(KeyboardEvent.KEY_DOWN, _onKeyPress);
 
 		}
@@ -88,8 +89,8 @@ package ui.states {
 					
 					break;
 				default:
-					trace(event.keyCode);
-					break;
+					// trace(event.keyCode);
+					// break;
 			}
 		}
 

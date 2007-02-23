@@ -36,6 +36,7 @@ package ui.window {
 	import flash.system.System;
 	import flash.utils.*;
 	
+	import onyx.constants.*;
 	import onyx.controls.*;
 	import onyx.core.*;
 	import onyx.display.*;
@@ -43,18 +44,9 @@ package ui.window {
 	
 	import ui.controls.*;
 	import ui.core.UIObject;
+	import ui.styles.*;
 
 	public final class SettingsWindow extends Window {
-		
-		/**
-		 * 	@private
-		 */
-		private static const TRANSFORM_NORMAL:ColorTransform = new ColorTransform(1,1,1);
-
-		/**
-		 * 	@private
-		 */
-		private static const TRANSFORM_WHITE:ColorTransform = new ColorTransform(2,2,2);
 		
 		/**
 		 * 	@private
@@ -121,7 +113,7 @@ package ui.window {
 			
 			// get controls for the display
 			controls				= display.controls;
-			control					= new ControlRange('size', 'size', DisplaySize.SIZES, 0, 'name');
+			control					= new ControlRange('size', 'size', DISPLAY_SIZES, 0, 'name');
 			control.target			= display;
 
 			// controls for display
@@ -191,7 +183,7 @@ package ui.window {
 		 * 	@private
 		 */
 		private function _onTempo(event:TempoEvent):void {
-			_tapTempo.transform.colorTransform = TRANSFORM_WHITE;
+			_tapTempo.transform.colorTransform = (event.beat % 4 == 0) ? TEMPO_BEAT : TEMPO_CLICK;
 			_releaseTimer.addEventListener(TimerEvent.TIMER, _onTempoOff);
 			_releaseTimer.start();
 		}
@@ -200,7 +192,7 @@ package ui.window {
 		 * 	@private
 		 */
 		private function _onTempoOff(event:TimerEvent):void {
-			_tapTempo.transform.colorTransform = TRANSFORM_NORMAL;
+			_tapTempo.transform.colorTransform = DEFAULT;
 			_releaseTimer.removeEventListener(TimerEvent.TIMER, _onTempoOff);
 			_releaseTimer.stop();
 		}

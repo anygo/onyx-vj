@@ -28,14 +28,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package ui.text {
-	
-	import flash.text.TextFormat;
-	
-	public class Style {
-		
-		public static const DEFAULT_GREY:int						= 0x212327;
-		public static const DEFAULT_HIGHLIGHT:int					= 0x6d7b88;
-		public static const DEFAULT_LIGHTGREY:int					= 0x46494c;
-	}
+package ui.styles {
+
+	public const DROPDOWN_DEFAULT:uint	= 0x212327;
+
 }

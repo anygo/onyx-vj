@@ -40,10 +40,10 @@ package ui.controls.browser {
 	import flash.net.URLRequest;
 	import flash.text.TextFormat;
 	
+	import onyx.file.*;
+	
 	import ui.assets.AssetCamera;
 	import ui.controls.*;
-	import ui.files.*;
-	import ui.text.Style;
 	import ui.text.TextField;
 	
 	/**

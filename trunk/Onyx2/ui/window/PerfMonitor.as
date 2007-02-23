@@ -33,19 +33,19 @@ package ui.window
 	import flash.events.Event;
 	import flash.utils.getTimer;
 	
-	import onyx.core.Onyx;
 	import onyx.controls.Control;
 	import onyx.controls.ControlInt;
+	import onyx.core.Onyx;
 	import onyx.events.ControlEvent;
 	
 	import ui.text.TextField;
 	
 	public final class PerfMonitor extends Window {
 		
-		private var _lasttime:int = getTimer();
+		private var _lasttime:int		= getTimer();
 		
-		private var _target:TextField = new TextField(55,9);
-		private var _label:TextField = new TextField(55,9);
+		private var _target:TextField	= new TextField(55,9);
+		private var _label:TextField	= new TextField(55,9);
 		
 		public function PerfMonitor():void {
 			

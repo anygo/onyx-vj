@@ -22,7 +22,7 @@ package ui.states {
 		/**
 		 * 	@private
 		 */
-		private var _label:TextField		= new TextField(200,125);
+		private var _label:TextField		= new TextField(400,125);
 		
 		/**
 		 * 	Initialize
@@ -73,7 +73,7 @@ package ui.states {
 		 */
 		private function _onItemAdded(event:Event):void {
 			
-			var stage:Stage = ROOT;
+			var stage:DisplayObjectContainer = ROOT;
 			stage.setChildIndex(_image, stage.numChildren - 1);
 			stage.setChildIndex(_label, stage.numChildren);
 			

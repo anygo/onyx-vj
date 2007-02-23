@@ -38,7 +38,7 @@ package ui.controls {
 	import onyx.controls.ControlRange;
 	import onyx.events.ControlEvent;
 	
-	import ui.text.Style;
+	import ui.styles.*;
 	import ui.text.TextField;
 	
 	public final class DropDown extends UIControl {
@@ -128,7 +128,7 @@ package ui.controls {
 			var local:Point = localToGlobal(new Point(0,0));
 			var start:int = Math.max(local.y - (_index * ITEM_HEIGHT), 0 - local.y) ;
 
-			graphics.lineStyle(0, 0x96abbc, .5);
+			graphics.lineStyle(0, LINE_DEFAULT, .5);
 			graphics.drawRect(-1, start - local.y - 1, _width + 1, _data.length * ITEM_HEIGHT + 2);
 			
 			var len:int = _data.length;
@@ -175,13 +175,13 @@ package ui.controls {
 		private function _onRollOver(event:MouseEvent):void {
 			var option:Option = event.currentTarget as Option;
 			_selectedIndex = option;
-			option.draw(Style.DEFAULT_HIGHLIGHT, _width);
+			option.draw(DROPDOWN_HIGHLIGHT, _width);
 		}
 
 		private function _onRollOut(event:MouseEvent):void {
 			var option:Option = event.currentTarget as Option;
 			_selectedIndex = null;
-			option.draw(Style.DEFAULT_GREY, _width);
+			option.draw(DROPDOWN_DEFAULT, _width);
 		}
 		
 		public function setText(value:*):void {
@@ -207,10 +207,11 @@ package ui.controls {
 	}
 }
 
-import ui.text.TextField;
-import ui.text.Style;
 import flash.display.Sprite
+
+import ui.text.TextField;
 import ui.controls.DropDown;
+import ui.styles.*;
 
 final class Option extends Sprite {
 	
@@ -227,7 +228,7 @@ final class Option extends Sprite {
 		_label.y			= 1;
 		_label.text = text.toUpperCase();
 		
-		graphics.beginFill(Style.DEFAULT_GREY);
+		graphics.beginFill(DROPDOWN_DEFAULT);
 		graphics.drawRect(0, 0, width, DropDown.ITEM_HEIGHT);
 		graphics.endFill();
 

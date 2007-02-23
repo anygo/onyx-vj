@@ -41,12 +41,6 @@ package ui.assets {
 	]
 	[ExcludeClass]
 	public final class PixelFont extends Font {
-		
-		public static function get DEFAULT():TextFormat	{
-			var format:TextFormat	= new TextFormat('Pixel', 7, 0xe4eaef);
-			format.letterSpacing	= .05;
-			format.leading			= 3;
-			return format;
-		}
+
 	}
 }

@@ -30,35 +30,47 @@
  */
 package ui.controls.filter {
 	
+	import flash.display.Bitmap;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
+	import flash.geom.ColorTransform;
 	import flash.utils.getTimer;
 	
-	import onyx.core.Onyx;
-	import onyx.core.onyx_ns;
+	import onyx.core.*;
 	import onyx.filter.Filter;
 	import onyx.layer.ILayer;
 	import onyx.layer.Layer;
 	import onyx.plugin.Plugin;
 	
 	import ui.assets.AssetLayerFilter;
-	import ui.controls.ButtonClear;
-	import ui.controls.UIControl;
+	import ui.controls.*;
 	import ui.core.UIObject;
 	import ui.layer.UILayer;
-	import ui.text.Style;
+	import ui.styles.*;
 	import ui.text.TextField;
-	
-	use namespace onyx_ns;
 
 	public final class LayerFilter extends UIObject {
 		
-		public var filter:Filter;;
+		public var filter:Filter;
 
+		/**
+		 * 	@private
+		 */
 		private var _label:TextField			= new TextField(70,10);
+
+		/**
+		 * 	@private
+		 */
 		private var _btnDelete:ButtonClear		= new ButtonClear(9,9);
-		private var _bg:AssetLayerFilter		= new AssetLayerFilter();
+
+		/**
+		 * 	@private
+		 */
+		private var _bg:Bitmap					= new AssetLayerFilter();
 		
+		/**
+		 * 	@constructor
+		 */
 		public function LayerFilter(filter:Filter):void {
 			
 			this.filter = filter;
@@ -68,6 +80,16 @@ package ui.controls.filter {
 
 			_btnDelete.addEventListener(MouseEvent.MOUSE_DOWN, _onDeleteDown, false, -1);
 			
+			muted = filter.muted;
+			addChildAt(_bg, 0);
+			
+		}
+		
+		/**
+		 * 
+		 */
+		public function set muted(value:Boolean):void {
+			transform.colorTransform = value ? FILTER_DISABLED : DEFAULT;
 		}
 		
 		/**
@@ -114,8 +136,7 @@ package ui.controls.filter {
 			
 			_btnDelete.x 		= 69;
 			_btnDelete.y 		= 2;
-			
-			addChild(_bg);
+
 			addChild(_label);
 			addChild(_btnDelete);
 		}
@@ -129,13 +150,6 @@ package ui.controls.filter {
 			filter = null;
 			
 			super.dispose();
-		}
-		
-		/**
-		 * 
-		 */
-		override public function toString():String {
-			return '[LayerFilter: ' + filter.toString() + ']';
 		}
 	}
 }
