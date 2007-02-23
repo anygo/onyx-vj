@@ -91,13 +91,8 @@ package onyx.content {
 		 */
 		override public function render():RenderTransform {
 			
-			trace('rendering custom');
-			
 			var content:IRenderObject			= _content as IRenderObject;
 			var transform:RenderTransform		= content.render();
-			
-			// get transform
-			transform = (transform) ? transform.concat(getTransform()) : getTransform();
 			
 			// render content
 			RenderManager.renderContent(_source, transform.content || _content, transform, _filter);
@@ -107,7 +102,6 @@ package onyx.content {
 						
 			// return transformation
 			return transform;
-			
 		}
 		
 		/**
