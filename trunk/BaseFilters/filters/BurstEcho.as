@@ -31,106 +31,106 @@
 package filters {
 	
 	import flash.display.BitmapData;
-	import flash.display.Stage;
-	import flash.geom.ColorTransform;
-	import flash.geom.Point;
-	import flash.geom.Rectangle;
+	import flash.events.Event;
+	import flash.geom.*;
 	
 	import onyx.constants.*;
 	import onyx.controls.*;
-	import onyx.core.*;
-	import onyx.filter.*;
+	import onyx.core.Tempo;
+	import onyx.filter.Filter;
+	import onyx.filter.IBitmapFilter;
+	import onyx.filter.TempoFilter;
+	import onyx.tween.*;
 
-	public final class EchoFilter extends Filter implements IBitmapFilter {
+	public final class BurstEcho extends TempoFilter implements IBitmapFilter {
 		
+		/**
+		 * 	@private
+		 */
 		private var _source:BitmapData;
 		
-		private var _feedAlpha:ColorTransform	= new ColorTransform(1,1,1,.09);
-		private var _mixAlpha:ColorTransform	= new ColorTransform(1,1,1,0);
+		/**
+		 * 
+		 */
+		private var _transform:ColorTransform	= new ColorTransform(1,1,1,.09);
 		
-		public var feedBlend:String				= 'normal';
-		public var mixBlend:String				= 'normal';
-		public var scrollX:int					= 0;
-		public var scrollY:int					= 0;
-		public var delay:int					= 1;
-		private var _count:int					= 0;
+		/**
+		 * 
+		 */
+		private var _matrix:Matrix				= new Matrix();
 		
-		public function EchoFilter():void {
-
+		/**
+		 * 	@constructor
+		 */
+		public function BurstEcho():void {
+			
 			super(
 				false,
-				new ControlNumber('feedAlpha', 'Echo Alpha', 0, 1, .09),
-				new ControlRange('feedBlend', 'Echo Blend', BLEND_MODES, 9),
-				new ControlNumber('mixAlpha', 'Mix Alpha', 0, 1, .02),
-				new ControlRange('mixBlend', 'Mix Blend', BLEND_MODES, 0),
-				new ControlProxy(
-					'scroll', 'scroll',
-					new ControlInt('scrollX', 'scroll X', -10, 10, 0),
-					new ControlInt('scrollY', 'scroll Y', -10, 10, 0)
-				),
-				new ControlInt('delay', 'Frame Delay', 1, 10, 2)
+				new ControlNumber('alpha', 'Echo Alpha', 0, 1, .09)
 			);
 		}
 		
+		/**
+		 * 
+		 */
+		public function set alpha(value:Number):void {
+			_transform.alphaMultiplier = value;
+		}
+		
+		/**
+		 * 
+		 */
+		public function get alpha():Number {
+			return _transform.alphaMultiplier;
+		}
+		/**
+		 * 
+		 */
 		override public function initialize():void {
-			_source		= content.source.clone();
+			_source = BASE_BITMAP();
+			super.initialize();
 		}
 		
-		public function set feedAlpha(value:Number):void {
-			_feedAlpha.alphaMultiplier = value;
+		/**
+		 * 
+		 */
+		override protected function onTrigger(beat:int):void {
+			
+			// stop tweens
+			Tween.stopTweens(_transform);
+			
+			var tween:Tween = new Tween(_transform, Tempo.tempo,
+				new TweenProperty('alphaMultiplier', _transform.alphaMultiplier, ((beat % 2) == 0) ? .95 : .1)
+			);
 		}
 		
-		public function get feedAlpha():Number {
-			return _feedAlpha.alphaMultiplier;
-		}
-		
-		public function set mixAlpha(value:Number):void {
-			_mixAlpha.alphaMultiplier = value;
-		}
-		
-		public function get mixAlpha():Number {
-			return _mixAlpha.alphaMultiplier;
-		}
-		
+		/**
+		 * 	Render
+		 */
 		public function applyFilter(bitmapData:BitmapData):void {
 			
-			_count = (_count + 1) % delay;
+			// draw
+			_source.draw(bitmapData, _matrix, _transform);
 			
-			if (_count == 0) {
-				
-				if (_feedAlpha.alphaMultiplier > 0) {
-					
-					// draw to our stored bitmap
-					_source.draw(bitmapData, null, _feedAlpha, feedBlend);
-	
-				}
-				
-				if (_mixAlpha.alphaMultiplier > 0) {
-
-					// draw the original bitmap
-					_source.draw(bitmapData, null, _mixAlpha, mixBlend);
-				}
-				
-			}
-
-			// check for scroll
-			if (scrollX != 0 || scrollY != 0) {
-				_source.scroll(scrollX, scrollY);
-			}		
-	
 			// copy the pixels back to the original bitmap
 			bitmapData.copyPixels(_source, bitmapData.rect, POINT);
+			
 		}
 		
+		/**
+		 * 
+		 */
 		override public function dispose():void {
+
+			// stop tweens
+			Tween.stopTweens(_transform);
+			
+			super.dispose();
+
 			if (_source) {
 				_source.dispose();
 				_source = null;
 			}
-			
-			_feedAlpha = null;
-			_mixAlpha = null;
-			super.dispose();
 		}
 	}
 }

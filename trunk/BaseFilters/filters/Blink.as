@@ -56,7 +56,7 @@ package filters {
 		/**
 		 * 
 		 */
-		override protected function onTrigger(event:Event):void {
+		override protected function onTrigger(beat:int):void {
 			content.alpha = ((max - min) * Math.random()) + min;
 		}
 	}
