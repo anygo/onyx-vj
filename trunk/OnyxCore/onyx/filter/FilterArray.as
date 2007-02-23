@@ -39,17 +39,11 @@ package onyx.filter {
 	import onyx.events.*;
 	import onyx.plugin.*;
 	import onyx.tween.*;
+	import onyx.utils.array.*;
 	
 	use namespace onyx_ns;
 	
-	
 	dynamic public final class FilterArray extends Array {
-		
-		/**
-		 * 	@constructor
-		 */
-		public function FilterArray():void {
-		}
 		
 		/**
 		 * 	Removes a filter
@@ -85,6 +79,15 @@ package onyx.filter {
 		}
 		
 		/**
+		 * 	Moves a filter
+		 */
+		public function moveFilter(filter:Filter, index:int, content:IContent):void {
+			if (swap(this, filter, index)) {
+				content.dispatchEvent(new FilterEvent(FilterEvent.FILTER_MOVED, filter));
+			}
+		}
+		
+		/**
 		 * 	Removes a filter
 		 * 	@returns	true if the removed filter existed in the array
 		 */
@@ -105,7 +108,7 @@ package onyx.filter {
 				filter.dispose();
 				
 				// clean up our references
-				filter.cleanContent();
+				filter.clean();
 				
 				// dispatch
 				var event:FilterEvent = new FilterEvent(FilterEvent.FILTER_REMOVED, filter)
@@ -115,7 +118,7 @@ package onyx.filter {
 		}
 		
 		/**
-		 * 
+		 * 	Clear filters
 		 */
 		public function clear(content:IContent):void {
 			while (super.length) {
@@ -124,12 +127,27 @@ package onyx.filter {
 		}
 		
 		/**
+		 * 	Mutes a filter
+		 */
+		public function muteFilter(filter:Filter, content:IContent, toggle:Boolean = true):void {
+			
+			filter._muted = toggle;
+			
+			// dispatch
+			var event:FilterEvent = new FilterEvent(FilterEvent.FILTER_MUTED, filter)
+			content.dispatchEvent(event);
+			
+		}
+		
+		/**
 		 * 	Renders all filters to the source bitmap
 		 */
 		public function render(source:BitmapData):void {
 			for each (var filter:Filter in this) {
 				if (filter is IBitmapFilter) {
-					(filter as IBitmapFilter).applyFilter(source);
+					if (!filter._muted) {
+						(filter as IBitmapFilter).applyFilter(source);
+					}
 				}
 			}
 		}

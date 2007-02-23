@@ -28,17 +28,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package onyx.display {
+package onyx.constants {
 	
-	public class DisplaySize {
-		
-		public var name:String;
-		public var scale:Number;
-		
-		public function DisplaySize(name:String, scale:Number):void {
-			this.name = name;
-			this.scale = scale;
-		}
-		
-	}
+	import flash.display.Stage;
+
+	public var STAGE:Stage;
+
 }

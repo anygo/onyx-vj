@@ -28,23 +28,25 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package onyx.net {
+package onyx.file {
 	
 	/**
-	 * 	Stores the type of content that files are, so that when loading we can
-	 * 	determine if they should share rendering space
+	 * 	Core Folder Class
 	 */
-	public final class FileManager {
+	public final class Folder {
 		
 		/**
-		 * 	@private
+		 * 	The path of the folder
 		 */
-		private static var _reg:Object = {};
+		public var path:String;
 		
 		/**
-		 * 	Registers a type
+		 * 	@constructor
 		 */
-		public static function register(path:String, type:String):void {
+		public function Folder(path:String):void {
+			
+			this.path = path;
+			
 		}
 		
 	}

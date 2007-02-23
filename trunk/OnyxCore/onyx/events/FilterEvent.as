@@ -39,12 +39,10 @@ package onyx.events {
 
 	public final class FilterEvent extends Event {
 		
-		onyx_ns static const FILTER_MOVE_UP:String		= 'fmoveup';
-		onyx_ns static const FILTER_MOVE_DOWN:String	= 'fmovedown';
-		
 		public static const FILTER_APPLIED:String		= 'fapply';
 		public static const FILTER_REMOVED:String		= 'fremove';
 		public static const FILTER_MOVED:String			= 'fmove';
+		public static const FILTER_MUTED:String			= 'fmute';
 		
 		/**
 		 * 	The filter
@@ -55,8 +53,8 @@ package onyx.events {
 		 * 	@constructor
 		 */
 		public function FilterEvent(type:String, filter:Filter):void {
-			super(type);
 			this.filter = filter;
+			super(type);
 		}
 		
 		/**

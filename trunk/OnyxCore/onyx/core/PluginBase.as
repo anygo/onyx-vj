@@ -58,14 +58,27 @@ package onyx.core {
 			_controls = new Controls(this);
 		}
 		
+		/**
+		 * 	Disposes the filter
+		 */
 		final public function get controls():Controls {
 			return _controls;
 		}
 		
+		/**
+		 * 	Disposes the filter
+		 */
 		public function dispose():void {
-			_controls.dispose();
-			_controls = null;
 		}
 		
+		/**
+		 * 	Cleans the content
+		 */
+		onyx_ns function clean():void {
+			if (_controls) {
+				_controls.dispose();
+				_controls = null;
+			}
+		}
 	}
 }

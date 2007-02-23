@@ -37,6 +37,7 @@ package onyx.display {
 	import flash.ui.Mouse;
 	import flash.utils.*;
 	
+	import onyx.constants.*;
 	import onyx.content.*;
 	import onyx.controls.*;
 	import onyx.core.*;
@@ -71,11 +72,6 @@ package onyx.display {
 		 * 	@private
 		 */
 		private var _backgroundColor:uint		= 0x000000;
-
-		/**
-		 * 	@private
-		 */
-		private var _background:BitmapData		= new BitmapData(320, 240, false, _backgroundColor);
 		
 		/**
 		 * 	@private
@@ -90,7 +86,7 @@ package onyx.display {
 		/**
 		 * 	@private
 		 */
-		private var	_size:DisplaySize			= DisplaySize.SIZES[0];
+		private var	_size:DisplaySize			= DISPLAY_SIZES[0];
 		
 		/**
 		 * 	@private
@@ -124,11 +120,14 @@ package onyx.display {
 				)
 			);
 			
+			// hide/show mouse when over the display
 			addEventListener(MouseEvent.MOUSE_OVER, _onMouseOver);
 			addEventListener(MouseEvent.MOUSE_OUT, _onMouseOut);
 			
+			// render content
 			addEventListener(Event.ENTER_FRAME, _renderContent);
 
+			// set background color
 			super(new BitmapData(320, 240, false, _backgroundColor));			
 		}
 		
@@ -319,11 +318,7 @@ package onyx.display {
 		 * 	@param	origin:ILayer
 		 * 	@param	transition:Transition
 		 */
-		public function load(... args:Array):void {
-			
-			var request:URLRequest		= args[0];
-			var origin:ILayer			= args[1];
-			var transition:Transition	= args[2];
+		public function load(request:URLRequest, origin:ILayer, transition:Transition):void {
 			
 			var job:LoadONXJob = new LoadONXJob(origin, transition);
 			JobManager.register(this, job, request);
@@ -334,7 +329,6 @@ package onyx.display {
 		 */
 		public function set backgroundColor(value:uint):void {
 			_backgroundColor = value;
-			_background.fillRect(_background.rect, _backgroundColor);
 		}
 		
 		/**
@@ -365,34 +359,37 @@ package onyx.display {
 		 */
 		private function _renderContent(event:Event):void {
 			
-			// var time:int = getTimer();
-			
 			// lock the bitmap
 			super.bitmapData.lock();
-			
-			// fill the display
-			super.bitmapData.fillRect(super.bitmapData.rect, _backgroundColor);
-			
 
 			// loop and render
 			// TBD: raise the framerate of the root movie, and do calculation to render different content on different frames
 			var length:int = _valid.length - 1;
 			
-			for (var count:int = length; count >= 0; count--) {
+			if (length >= 0) {
 				
-				var layer:ILayer = _valid[count];
-
-				layer.render();
-
-				if (layer.rendered) {
-					super.bitmapData.draw(layer.rendered, null, null, layer.blendMode);
+				// fill the display
+				super.bitmapData.fillRect(super.bitmapData.rect, _backgroundColor);
+	
+				// loop through layers and render			
+				for (var count:int = length; count >= 0; count--) {
+					
+					var layer:ILayer = _valid[count];
+	
+					layer.render();
+	
+					if (layer.rendered) {
+						super.bitmapData.draw(layer.rendered, null, null, layer.blendMode);
+					}
 				}
-			}
-
-			// unlock the bitmap
-			super.bitmapData.unlock();
+				
+				// render filters
+				_filters.render(super.bitmapData);
+	
+				// unlock the bitmap
+				super.bitmapData.unlock();
 			
-			// trace(getTimer() - time);
+			}
 		}
 
 		/**
@@ -692,6 +689,12 @@ package onyx.display {
 			return 0;
 		}
 		
+		/**
+		 * 
+		 */
+		public function muteFilter(filter:Filter, toggle:Boolean = true):void {
+			_filters.muteFilter(filter, this, toggle);
+		}
 		
 		/**
 		 * 

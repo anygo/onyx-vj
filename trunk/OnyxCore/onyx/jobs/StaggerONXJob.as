@@ -115,9 +115,11 @@ package onyx.jobs {
 		 * 
 		 */
 		public function dispose():void {
-			_timer.removeEventListener(TimerEvent.TIMER, _loadJob);
-			_timer.stop();
-			_timer		= null;
+			if (_timer) {
+				_timer.removeEventListener(TimerEvent.TIMER, _loadJob);
+				_timer.stop();
+				_timer		= null;
+			}
 			_transition	= null;
 			_jobs		= null;
 		}

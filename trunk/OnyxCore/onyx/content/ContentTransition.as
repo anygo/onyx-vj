@@ -138,15 +138,22 @@ package onyx.content {
 				
 			}
 
-			_transition.apply(ratio);
-
 			// check bitmap transition			
 			if (_transition is IBitmapTransition) {
 				
+				_transition.apply(ratio);
 				(_transition as IBitmapTransition).render(_source, ratio);
 				
 			// otherwise just normal render
 			} else {
+				
+				oldContent.render();
+				newContent.render();
+				
+				_transition.apply(ratio);
+
+				_source.copyPixels(oldContent.rendered, _source.rect, POINT);
+				_source.draw(newContent.rendered);
 
 			}
 			
@@ -448,7 +455,14 @@ package onyx.content {
 		 * 	Dispose
 		 */
 		override public function dispose():void {
+			
+			super.dispose();
+			
+			// clean transition
+			_transition.clean();
+			_transition = null;
 		
+			// remove listeners
 			newContent.removeEventListener(FilterEvent.FILTER_APPLIED,		_forwardEvents);
 			newContent.removeEventListener(FilterEvent.FILTER_MOVED,		_forwardEvents);
 			newContent.removeEventListener(FilterEvent.FILTER_REMOVED,		_forwardEvents);
@@ -458,11 +472,10 @@ package onyx.content {
 
 			// destroy the old content
 			oldContent.dispose();
-
+			
+			// clear out
 			oldContent = null;
 			newContent = null;
-			
-			super.dispose();
 		}
 		
 		/**

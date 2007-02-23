@@ -28,16 +28,14 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package onyx.display {
+package onyx.file {
 	
-	public class DisplaySize {
+	import flash.events.EventDispatcher;
+	
+	public class FileAdapter extends EventDispatcher {
 		
-		public var name:String;
-		public var scale:Number;
-		
-		public function DisplaySize(name:String, scale:Number):void {
-			this.name = name;
-			this.scale = scale;
+		public function query(path:String, callback:Function):FileQuery {
+			return null;
 		}
 		
 	}

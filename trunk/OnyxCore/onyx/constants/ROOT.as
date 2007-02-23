@@ -30,8 +30,8 @@
  */
 package onyx.constants {
 	
-	import flash.display.Stage;
+	import flash.display.DisplayObjectContainer;
 
-	public var ROOT:Stage;
+	public var ROOT:DisplayObjectContainer;
 
 }

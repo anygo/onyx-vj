@@ -284,6 +284,12 @@ package onyx.content {
 		public function get matrix():Matrix {
 			return null;
 		}
+		
+		/**
+		 * 
+		 */
+		public function muteFilter(filter:Filter, toggle:Boolean = true):void {
+		}
 
 	}
 }

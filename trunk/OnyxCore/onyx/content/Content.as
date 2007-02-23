@@ -48,6 +48,7 @@ package onyx.content {
 	[Event(name="filter_applied",	type="onyx.events.FilterEvent")]
 	[Event(name="filter_removed",	type="onyx.events.FilterEvent")]
 	[Event(name="filter_moved",		type="onyx.events.FilterEvent")]
+	[Event(name="filter_muted",		type="onyx.events.FilterEvent")]
 		
 	use namespace onyx_ns;
 	
@@ -230,7 +231,7 @@ package onyx.content {
 		/**
 		 * 	@constructor
 		 */		
-		public function Content(layer:Layer, path:String, content:IBitmapDrawable, newTarget:IControlObject = null):void {
+		public function Content(layer:Layer, path:String, content:IBitmapDrawable):void {
 			
 			var props:LayerProperties = layer.properties;
 
@@ -257,7 +258,7 @@ package onyx.content {
 			__blendMode		= props.blendMode;
 			
 			// set targets
-			props.target	= newTarget || this;
+			props.target	= this;
 			
 			// store content
 			_content	= content;
@@ -277,7 +278,7 @@ package onyx.content {
 			// if it wants the stage, pass it over
 			if (_content is IContentObject) {
 				var stageContent:IContentObject = _content as IContentObject;
-				stageContent.initialize(ROOT, this);
+				stageContent.initialize(STAGE, this);
 			}
 		}
 		
@@ -493,10 +494,7 @@ package onyx.content {
 		 * 	Moves a filter to an index
 		 */
 		public function moveFilter(filter:Filter, index:int):void {
-			
-			if (swap(_filters, filter, index)) {
-				super.dispatchEvent(new FilterEvent(FilterEvent.FILTER_MOVED, filter));
-			}
+			_filters.moveFilter(filter, index, this);
 		}
 				
 		/**
@@ -648,6 +646,48 @@ package onyx.content {
 		public function get matrix():Matrix {
 			return _matrix;
 		}
+		/**
+		 * 
+		 */
+		public function get rendered():BitmapData {
+			return _rendered;
+		}
+		
+		/**
+		 * 
+		 */
+		public function get blendMode():String {
+			return _blendMode;
+		}
+		
+		/**
+		 * 
+		 */
+		public function get path():String {
+			return _path;
+		}
+		
+		/**
+		 * 	@private
+		 * 	Builds the rendering matrix
+		 */
+		private function _buildMatrix():void {
+			_renderMatrix = new Matrix();
+			_renderMatrix.scale(_scaleX, _scaleY);
+			_renderMatrix.rotate(_rotation);
+			_renderMatrix.translate(_x, _y);
+			
+			if (_matrix) {
+				_renderMatrix.concat(_matrix);
+			}
+		}
+		
+		/**
+		 * 	Mutes a filter
+		 */
+		public function muteFilter(filter:Filter, toggle:Boolean = true):void {
+			_filters.muteFilter(filter, this, toggle);
+		}
 		
 		/**
 		 * 	Destroys the content
@@ -706,47 +746,5 @@ package onyx.content {
 			_layer = null;
 		}
 		
-		/**
-		 * 
-		 */
-		public function get rendered():BitmapData {
-			return _rendered;
-		}
-		
-		/**
-		 * 
-		 */
-		public function get blendMode():String {
-			return _blendMode;
-		}
-		
-		/**
-		 * 
-		 */
-		public function get path():String {
-			return _path;
-		}
-		
-		/**
-		 * 	@private
-		 * 	Builds the rendering matrix
-		 */
-		private function _buildMatrix():void {
-			_renderMatrix = new Matrix();
-			_renderMatrix.scale(_scaleX, _scaleY);
-			_renderMatrix.rotate(_rotation);
-			_renderMatrix.translate(_x, _y);
-			
-			if (_matrix) {
-				_renderMatrix.concat(_matrix);
-			}
-		}
-		
-		/**
-		 * 
-		 */
-		override public function toString():String {
-			return '[Content: ' + path + ']';
-		}
 	}
 }

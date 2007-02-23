@@ -28,17 +28,13 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package onyx.display {
+package onyx.constants {
+
+	import onyx.display.*;
 	
-	public class DisplaySize {
-		
-		public var name:String;
-		public var scale:Number;
-		
-		public function DisplaySize(name:String, scale:Number):void {
-			this.name = name;
-			this.scale = scale;
-		}
-		
-	}
+	public const DISPLAY_SIZES:Array = [
+		new DisplaySize('320x240', 1),
+		new DisplaySize('640x480', 2)
+	];
+
 }

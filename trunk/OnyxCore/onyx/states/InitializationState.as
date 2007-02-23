@@ -38,6 +38,7 @@ package onyx.states {
 	
 	import onyx.core.*;
 	import onyx.events.*;
+	import onyx.file.*;
 	import onyx.plugin.*;
 	
 	use namespace onyx_ns;
@@ -62,8 +63,6 @@ package onyx.states {
 		 */
 		override public function initialize(... args:Array):void {
 			
-			var dispatcher:Event
-			
 			// dispatch a start event
 			Onyx.instance.dispatchEvent(new ApplicationEvent(ApplicationEvent.ONYX_STARTUP_START));
 			
@@ -75,45 +74,26 @@ package onyx.states {
 		 * 	@private
 		 * 	Initializes the external filter loading
 		 */
-		private function _loadExternalPlugins():void {
-			var loader:URLLoader = new URLLoader();
+		private function _loadExternalPlugins(list:FolderList = null):void {
 			
-			loader.addEventListener(Event.COMPLETE,			_onFiltersLoaded);
-			loader.addEventListener(IOErrorEvent.IO_ERROR,	_onFiltersLoaded);
-			loader.load(new URLRequest(Settings.PLUGINS_DIRECTORY + 'filters.xml'));
-			
-			Console.output('LOADING PLUG-INS ... \n');
-		}
-		
-		/**
-		 * 	@private
-		 * 	When filter is loaded
-		 */
-		private function _onFiltersLoaded(event:Event):void {
-
-			var loader:URLLoader = event.currentTarget as URLLoader;
-			loader.removeEventListener(Event.COMPLETE, _onFiltersLoaded);
-			
-			if (!(event is IOErrorEvent)) {
+			// valid folder list
+			if (list) {
 				
-				var xml:XML = new XML(loader.data); 
-				
-				for each (var i:XML in xml.file) {
+				for each (var file:File in list.files) {
 					
 					var swfloader:Loader = new Loader();
 					swfloader.contentLoaderInfo.addEventListener(Event.COMPLETE, _onFilterLoaded);
 					swfloader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, _onFilterLoaded);
-					swfloader.load(new URLRequest(Settings.PLUGINS_DIRECTORY + String(i.@name)));
-					
+					swfloader.load(new URLRequest(file.path));
+
 					_filtersToLoad.push(swfloader);
 					
-					Console.output('LOADING ' + String(i.@name).toUpperCase());
+					Console.output('LOADING ' + String(file.path).toUpperCase());
 				}
+					
 			} else {
-				
-				Console.output('error loading filters:\n' + (event as IOErrorEvent).text);
-				
-				_initialize(2000);
+				Console.output('LOADING PLUG-INS: ' + Settings.PLUGINS_DIRECTORY + '... \n');
+				FileBrowser.query(Settings.PLUGINS_DIRECTORY, _loadExternalPlugins);
 			}
 		}
 		
@@ -124,10 +104,17 @@ package onyx.states {
 		private function _onFilterLoaded(event:Event):void {
 			
 			var info:LoaderInfo = event.currentTarget as LoaderInfo;
+			
+			// clear references
+			info.removeEventListener(Event.COMPLETE,					_onFilterLoaded);
+			info.removeEventListener(IOErrorEvent.IO_ERROR,				_onFilterLoaded);
+			info.removeEventListener(SecurityErrorEvent.SECURITY_ERROR,	_onFilterLoaded);
+			
+			// remove the loader
 			_filtersToLoad.splice(_filtersToLoad.indexOf(info.loader), 1);
 
 			// if valid swf
-			if (!(event is IOErrorEvent)) {
+			if (!(event is ErrorEvent)) {
 				
 				var pluginSWF:IPluginLoader = info.content as IPluginLoader;
 				

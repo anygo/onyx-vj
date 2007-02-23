@@ -30,13 +30,16 @@
  */
 package onyx.filter {
 	
-	public interface IFilterObject {
+	import flash.events.IEventDispatcher;
+	
+	public interface IFilterObject extends IEventDispatcher {
 		
 		function get filters():Array;
 		function addFilter(filter:Filter):void;
 		function removeFilter(filter:Filter):void;
 		function getFilterIndex(filter:Filter):int;
 		function moveFilter(filter:Filter, index:int):void;
+		function muteFilter(filter:Filter, toggle:Boolean = true):void;
 
 	}
 }

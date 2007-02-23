@@ -32,6 +32,7 @@
 package onyx.plugin {
 	
 	import flash.display.BitmapData;
+	import flash.display.DisplayObjectContainer;
 	import flash.display.Stage;
 	import flash.geom.ColorTransform;
 	import flash.geom.Matrix;
@@ -44,7 +45,7 @@ package onyx.plugin {
 	
 	public interface IContentObject extends IRenderObject, IDisposable {
 		
-		function initialize(stage:Stage, content:IContent):void;
+		function initialize(root:DisplayObjectContainer, content:IContent):void;
 		
 	}
 }

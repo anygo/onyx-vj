@@ -69,7 +69,8 @@ package onyx.layer {
 		private static const NULL_LAYER:ContentNull			= new ContentNull();
 		
 		/**
-		 * 
+		 * 	@private
+		 * 	The display the layer belongs to
 		 */
 		onyx_ns var			_display:Display;
 		
@@ -84,12 +85,6 @@ package onyx.layer {
 		 * 	Controls
 		 */
 		private var			_properties:LayerProperties;
-			
-		/**
-		 * 	@private
-		 * 	Stores the layer bitmap information
-		 */	
-		private var			bitmapData:BitmapData			= BASE_BITMAP();
 		
 		/**
 		 * 	@constructor
@@ -143,6 +138,7 @@ package onyx.layer {
 			
 			// remove references
 			var loader:ContentLoader = event.currentTarget as ContentLoader;
+			
 			loader.removeEventListener(Event.COMPLETE,						_onContentStatus);
 			loader.removeEventListener(IOErrorEvent.IO_ERROR,				_onContentStatus);
 			loader.removeEventListener(SecurityErrorEvent.SECURITY_ERROR,	_onContentStatus);
@@ -203,6 +199,7 @@ package onyx.layer {
 			
 			// listen for events to forward			
 			_content.addEventListener(FilterEvent.FILTER_APPLIED,		_forwardEvents);
+			_content.addEventListener(FilterEvent.FILTER_MUTED,			_forwardEvents);
 			_content.addEventListener(FilterEvent.FILTER_MOVED,			_forwardEvents);
 			_content.addEventListener(FilterEvent.FILTER_REMOVED,		_forwardEvents);
 			_content.addEventListener(TransitionEvent.TRANSITION_END,	_endTransition);
@@ -235,7 +232,10 @@ package onyx.layer {
 				
 				// destroys the earlier content
 				_content.removeEventListener(TransitionEvent.TRANSITION_END, _endTransition);
-	
+
+				// dispatch an unload event
+				super.dispatchEvent(new LayerEvent(LayerEvent.LAYER_UNLOADED));
+
 				// blow it up
 				_content.dispose();
 	
@@ -243,9 +243,7 @@ package onyx.layer {
 				_content.removeEventListener(FilterEvent.FILTER_APPLIED,	_forwardEvents);
 				_content.removeEventListener(FilterEvent.FILTER_MOVED,		_forwardEvents);
 				_content.removeEventListener(FilterEvent.FILTER_REMOVED,	_forwardEvents);
-				
-				// dispatch an unload event
-				super.dispatchEvent(new LayerEvent(LayerEvent.LAYER_UNLOADED));
+				_content.removeEventListener(FilterEvent.FILTER_MUTED,		_forwardEvents);
 				
 			}
 		}
@@ -563,6 +561,13 @@ package onyx.layer {
 		}
 		
 		/**
+		 * 
+		 */
+		public function muteFilter(filter:Filter, toggle:Boolean = true):void {
+			_content.muteFilter(filter, toggle);
+		}
+		
+		/**
 		 * 	Returns the filters
 		 */
 		public function get filters():Array {
@@ -618,8 +623,6 @@ package onyx.layer {
 		 */
 		public function dispose():void {
 			
-			bitmapData.fillRect(bitmapData.rect, 0x00000000);
-			
 			// disposes content
 			if (_content) {
 
@@ -651,14 +654,14 @@ package onyx.layer {
 		}
 		
 		/**
-		 *
+		 *	Gets the bitmap after filters are rendered
 		 */
 		public function get rendered():BitmapData {
 			return _content.rendered;
 		}
 
 		/**
-		 *
+		 *	Gets the source before filters are rendered
 		 */
 		public function get source():BitmapData {
 			return _content.source;

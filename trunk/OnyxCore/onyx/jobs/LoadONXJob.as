@@ -102,6 +102,8 @@ package onyx.jobs {
 					var index:int			= layers.indexOf(_origin);
 					var jobs:Array			= [];
 					
+					trace('got here');
+					
 					// loop through layers and apply settings
 					for each (var layerXML:XML in xml.layer) {
 						
@@ -118,21 +120,24 @@ package onyx.jobs {
 							job.settings				= settings;
 							jobs.push(job);
 							
+							
 						// break out
 						} else {
 							break;
 						}
 					}
-
-					if (_transition) {
-						_loadStagger(jobs);
-					} else {
-						_loadImmediately(jobs);
-					}
 					
-				} catch(e:Error) {
+				} catch (e:Error) {
 					Console.output(e.message)
 				}
+				
+
+				if (_transition) {
+					_loadStagger(jobs);
+				} else {
+					_loadImmediately(jobs);
+				}
+
 				
 			}
 		}

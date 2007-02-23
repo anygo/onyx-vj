@@ -1,39 +1,40 @@
-Bugs:
+3.1.00: FEATURES
+
+X Visualizer plug-in type implemented
+X Ability to add filters to global display
+X Snap to Tempo implemented, filters can respond to tempo events
+X Addition of TempoFilter Class
+X Ability to mute a filter -- need to figure out a way to pause effects
+
+STILL TO DO:
+- Scratch pad plug-in type implemented
+- add global filters to .onx
+- Rendering performance boost on layers that share a common movieclip or image
+- Controls can parent and change based on other controls
+
+BUGS LEFT:
 
 - blendmode not dispatching when transition is being changed
 - loading multiple layers at the same time not taking advantage of ContentManager
 - need a way of saving plugin-types in .onx files (for visualizer)
-- Colortransform bugged
 
 X console not dispatching
 X loading mixes bugged (layer 4 not dispatching)
 X transitions not rendering
 X layer move not rendering
 X transitions and a tween erroring out (i think filters is not being dispatched)
-	- add Blur, MoveScale
+X Colortransform bugged
 
-To Do:
-
-- Display needs to dispatch spectrum events if needed (or should it just go through SpectrumAnalysis?
-
-3.1.00:
-
-X Visualizer plug-in type implemented
-- Scratch pad plug-in type implemented
-- Ability to add filters to global display
-	- add global filters to .onx
-- Rendering performance boost on layers that share a common movieclip or image
-X Snap to Tempo implemented, filters can respond to tempo events
-	- Addition of TempoFilter Class
-- Ability to mute a filter
-
-Development Notes:
+DEV NOTES:
 
 - Rendering changed (once again), now types of IRenderObject, RenderStack, and RenderTransform
 - Rendering no longer happens through a list of DisplayObjects, but rather all rendered into a single bitmap (this was done so global filters could be added to the display)
+- Addition of a FileAdapter to handle different filesystems (getting ready for a local/m2 build), addition of HTTPAdapter
+- Sped up UI a bit through ui.styles, removal of UIObject.highlight
 
-
-UI Changes
+UI CHANGES:
 - Keys 1-6 now select layers
 - Keys Q,W,E select pages within the layers
 - FiltersWindow now has a seperate column for Bitmap Filters and Effect Filters
+- Preview windows now display at real time
+- Display window has been created, and you can drop filters onto the global display

@@ -28,17 +28,25 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package onyx.display {
+package onyx.file.http {
 	
-	public class DisplaySize {
+	import flash.events.Event;
+	
+	import onyx.file.FileAdapter;
+	import onyx.file.FileQuery;
+
+	/**
+	 * 	Adapter for http / local-without-networking
+	 */
+	public final class HTTPAdapter extends FileAdapter {
 		
-		public var name:String;
-		public var scale:Number;
-		
-		public function DisplaySize(name:String, scale:Number):void {
-			this.name = name;
-			this.scale = scale;
+		/**
+		 * 	Query
+		 */
+		override public function query(path:String, callback:Function):FileQuery {
+			
+			return new HTTPQuery(path, callback);
+
 		}
-		
 	}
 }

@@ -28,17 +28,33 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package onyx.display {
-	
-	public class DisplaySize {
+package onyx.file {
+
+	/**
+	 * 	Core FolderList Class
+	 */
+	public final class FolderList {
 		
-		public var name:String;
-		public var scale:Number;
+		/**
+		 * 	Path of the folder list
+		 */
+		public var path:String;
 		
-		public function DisplaySize(name:String, scale:Number):void {
-			this.name = name;
-			this.scale = scale;
+		/**
+		 * 	Files in the folder
+		 */
+		public var files:Array		= [];
+		
+		/**
+		 * 	Folders in the folder
+		 */
+		public var folders:Array	= [];
+		
+		/**
+		 * 	@constructor
+		 */
+		public function FolderList(path:String):void {
+			this.path = path;
 		}
-		
 	}
 }

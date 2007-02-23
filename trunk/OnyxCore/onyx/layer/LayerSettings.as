@@ -202,7 +202,7 @@ package onyx.layer {
 				}
 
 			} catch (e:Error) {
-				Console.output(name, e.message);
+				Console.output('error setting parameter: ', name);
 			}
 		}
 		

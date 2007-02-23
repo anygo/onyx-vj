@@ -6,9 +6,12 @@ package onyx.filter {
 	
 	import onyx.controls.*;
 	import onyx.core.Tempo;
+	import onyx.core.onyx_ns;
 	import onyx.events.TempoEvent;
 	import onyx.tween.*;
 	import onyx.tween.easing.*;
+	
+	use namespace onyx_ns;
 	
 	public class TempoFilter extends Filter {
 		
@@ -31,7 +34,7 @@ package onyx.filter {
 		/**
 		 * 	@constructor
 		 */
-		public function TempoFilter(unique:Boolean, ... controls:Array):void {
+		final public function TempoFilter(unique:Boolean, ... controls:Array):void {
 			
 			super(unique);
 			controls.unshift(new ControlBoolean('snapTempo', 'Use Tempo'));
@@ -41,18 +44,18 @@ package onyx.filter {
 		/**
 		 * 	Whether or not the filter snaps to beat
 		 */
-		public function set snapTempo(value:Boolean):void {
+		final public function set snapTempo(value:Boolean):void {
 			
 			// remove timer stuff
 			if (timer) {
-				timer.removeEventListener(TimerEvent.TIMER, onTrigger);
+				timer.removeEventListener(TimerEvent.TIMER, _onTimer);
 				timer.stop();
 				timer = null;
 			}
 			
 			// remove tempo stuff
 			var tempo:Tempo = Tempo.getInstance();
-			tempo.removeEventListener(TempoEvent.CLICK, onTrigger);
+			tempo.removeEventListener(TempoEvent.CLICK, _onTempo);
 			
 			// set value
 			_snapTempo = value;
@@ -66,7 +69,7 @@ package onyx.filter {
 		/**
 		 * 
 		 */
-		public function get snapTempo():Boolean {
+		final public function get snapTempo():Boolean {
 			return _snapTempo;
 		}
 		
@@ -74,25 +77,42 @@ package onyx.filter {
 		 * 	initialize
 		 */		
 		override public function initialize():void {
-
+			
 			if (_snapTempo) {
 
 				var tempo:Tempo = Tempo.getInstance();
-				tempo.addEventListener(TempoEvent.CLICK, onTrigger);
+				tempo.addEventListener(TempoEvent.CLICK, _onTempo);
 				
 			} else {
 				
 				timer = new Timer(delay);
 				timer.start();
-				timer.addEventListener(TimerEvent.TIMER, onTrigger);
+				timer.addEventListener(TimerEvent.TIMER, _onTimer);
 				
 			}
+			
 		}
 		
 		/**
+		 * 	@private
+		 */
+		final private function _onTempo(event:TempoEvent):void {
+			onTrigger(event.beat);
+		}
+		
+		
+		/**
+		 * 	@private
+		 */
+		final private function _onTimer(event:TimerEvent):void {
+			onTrigger((event.currentTarget as Timer).currentCount);
+		}
+
+		/**
 		 * 
 		 */
-		protected function onTrigger(event:Event):void {
+		protected function onTrigger(beat:int):void {
+			trace('BEAT');
 		}
 
 		/**
@@ -105,12 +125,12 @@ package onyx.filter {
 			// stop the timer
 			if (timer) {
 				timer.stop();
-				timer.removeEventListener(TimerEvent.TIMER, onTrigger);
+				timer.removeEventListener(TimerEvent.TIMER, _onTimer);
 				timer = null;
 			}
 			
 			var tempo:Tempo = Tempo.getInstance();
-			tempo.removeEventListener(TempoEvent.CLICK, onTrigger);
+			tempo.removeEventListener(TempoEvent.CLICK, _onTempo);
 		}
 	}
 }

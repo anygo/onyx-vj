@@ -202,17 +202,16 @@ package onyx.content {
 			
 			_tint = value;
 			
-			var r:Number = ((_color & 0xFF0000) >> 16) * value;
-			var g:Number = ((_color & 0x00FF00) >> 8) * value;
-			var b:Number = (_color & 0x0000FF) * value;
+			var r:int = ((_color & 0xFF0000) >> 16) * value;
+			var g:int = ((_color & 0x00FF00) >> 8) * value;
+			var b:int = (_color & 0x0000FF) * value;
 
 			var amount:Number = 1 - value;
 			
-			super.alphaMultiplier = super.redMultiplier = super.greenMultiplier = amount;
+			super.blueMultiplier = super.redMultiplier = super.greenMultiplier = amount;
 			super.redOffset		= r;
 			super.greenOffset	= g;
 			super.blueOffset	= b;
-			
 		}
 
 		/**
@@ -235,7 +234,7 @@ package onyx.content {
 
 			var amount:Number = 1 - _tint;
 
-			super.alphaMultiplier = super.redMultiplier = super.greenMultiplier = amount;
+			super.blueMultiplier = super.redMultiplier = super.greenMultiplier = amount;
 			super.redOffset		= r;
 			super.greenOffset	= g;
 			super.blueOffset	= b;

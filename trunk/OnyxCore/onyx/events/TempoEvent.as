@@ -43,9 +43,15 @@ package onyx.events {
 		public static const CLICK:String = 'click';
 		
 		/**
+		 * 
+		 */
+		public var beat:int;
+		
+		/**
 		 * 	@constructor
 		 */
-		public function TempoEvent():void {
+		public function TempoEvent(beat:int = 0):void {
+			this.beat = beat;
 			super(CLICK);
 		}
 	}

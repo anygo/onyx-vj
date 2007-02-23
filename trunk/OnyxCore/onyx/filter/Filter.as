@@ -50,21 +50,6 @@ package onyx.filter {
 	public class Filter extends PluginBase implements IControlObject {
 		
 		/**
-		 * 	Pre-process tells the filter that it is to render before the content renders
-		 */
-		public static const PRE_PROCESS:int		= 0;
-		
-		/**
-		 * 	Normal process tells the filter that it is to render normally (after content renders)
-		 */
-		public static const NORMAL_PROCESS:int	= 1;
-		
-		/**
-		 * 	Post process tells the filter that it is to render after all content and filters have been rendered
-		 */
-		public static const POST_PROCESS:int	= 2;
-		
-		/**
 		 * 	@private
 		 * 	Stores definitions
 		 */
@@ -91,7 +76,7 @@ package onyx.filter {
 		}
 		
 		/**
-		 * 
+		 * 	Returns a list of plugins of all filters registered
 		 */
 		public static function get filters():Array {
 			return _filters.concat();
@@ -109,6 +94,12 @@ package onyx.filter {
 		onyx_ns var _unique:Boolean;
 		
 		/**
+		 * 	@private
+		 * 	Whether the filter is muted
+		 */
+		onyx_ns var _muted:Boolean;
+		
+		/**
 		 * 	@contructor
 		 */
 		final public function Filter(unique:Boolean, ... controls:Array):void {
@@ -119,6 +110,21 @@ package onyx.filter {
 			
 			super.controls.addControl.apply(null, controls);
 			
+		}
+		
+		/**
+		 * 
+		 */
+		final public function set muted(value:Boolean):void {
+			content.muteFilter(this, value);
+		}
+		
+		
+		/**
+		 * 
+		 */
+		final public function get muted():Boolean {
+			return _muted;
 		}
 		
 		/**
@@ -172,7 +178,7 @@ package onyx.filter {
 		}
 		
 		/**
-		 * 
+		 * 	Removes the filter
 		 */
 		final public function removeFilter():void {
 			content.removeFilter(this);
@@ -181,12 +187,11 @@ package onyx.filter {
 		/**
 		 * 	@private
 		 */
-		onyx_ns final function cleanContent():void {
+		onyx_ns override final function clean():void {
+
 			content	= null;
-			
-			if (super.controls) {
-				super.dispose();
-			}
+			super.clean();
+
 		}
 	}
 }

@@ -30,6 +30,7 @@
  */
 package onyx.core {
 	
+	import flash.display.DisplayObjectContainer;
 	import flash.display.Stage;
 	import flash.events.*;
 	import flash.net.*;
@@ -39,6 +40,7 @@ package onyx.core {
 	import onyx.controls.*;
 	import onyx.display.Display;
 	import onyx.events.*;
+	import onyx.file.*;
 	import onyx.filter.*;
 	import onyx.layer.*;
 	import onyx.plugin.*;
@@ -75,14 +77,17 @@ package onyx.core {
 		/**
 		 * 	Initializes the Onyx engine
 		 */
-		public static function initialize(root:Stage, connection:String = null):EventDispatcher {
+		public static function initialize(root:DisplayObjectContainer, adapter:FileAdapter, connection:String = null):EventDispatcher {
 			
-			ROOT = root;
+			ROOT	= root;
+			STAGE	= root.stage;
 			
 			// create a timer so that objects can listen for events
 			var timer:Timer = new Timer(0);
 			timer.addEventListener(TimerEvent.TIMER, _onInitialize);
 			timer.start();
+			
+			FileBrowser.initialize(adapter);
 
 			return instance;
 		}
@@ -109,7 +114,7 @@ package onyx.core {
 		private static function _onResize(event:Event):void {
 			for each (var display:Display in _displays) {
 				display.displayY = 0;
-				display.displayX = ROOT.stageWidth - display.width;
+				display.displayX = STAGE.stageWidth - display.width;
 			}
 		}
 		

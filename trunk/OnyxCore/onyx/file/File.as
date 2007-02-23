@@ -28,17 +28,40 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package onyx.display {
+package onyx.file {
 	
-	public class DisplaySize {
+	import onyx.utils.*;
+	
+	/**
+	 * 	Core File Class
+	 */
+	public final class File {
 		
-		public var name:String;
-		public var scale:Number;
+		/**
+		 * 	Saves the path
+		 */
+		public var path:String;
 		
-		public function DisplaySize(name:String, scale:Number):void {
-			this.name = name;
-			this.scale = scale;
+		/**
+		 * 	Saves thumbnail
+		 */
+		public var thumbnail:Object;
+		
+		/**
+		 * 
+		 */
+		public function File(path:String, thumbnail:Object):void {
+			
+			this.path = path;
+			this.thumbnail = thumbnail;
+
 		}
 		
+		/**
+		 * 
+		 */
+		public function get extension():String {
+			return StringUtil.getExtension(path);
+		}
 	}
 }

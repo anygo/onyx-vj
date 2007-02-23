@@ -17,6 +17,13 @@ package onyx.core {
 	public final class Tempo extends EventDispatcher implements IControlObject {
 		
 		/**
+		 * 	Gets tempo
+		 */
+		public static function get tempo():int {
+			return _instance.tempo;
+		}
+		
+		/**
 		 * 	@private
 		 */
 		private static var _instance:Tempo	= new Tempo();
@@ -49,13 +56,18 @@ package onyx.core {
 		private var _controls:Controls;
 		
 		/**
+		 * 
+		 */
+		private var _step:int				= 0;
+		
+		/**
 		 * 	@constructor
 		 */
 		public function Tempo():void {
 			if (_instance) {
 				throw new Error('Singleton Error.');
 			} else {
-				_timer		= new Timer(20);
+				_timer		= new Timer(10);
 				_controls	= new Controls(this,
 					new ControlInt('tempo', 'tempo', 40, 1000, 500)
 				);
@@ -69,7 +81,8 @@ package onyx.core {
 			_timer.start();
 			_timer.addEventListener(TimerEvent.TIMER, _onTimer);
 			_last = getTimer();
-			dispatchEvent(new TempoEvent());
+			_step = 0;
+			dispatchEvent(new TempoEvent(0));
 		}
 		
 		/**
@@ -90,7 +103,8 @@ package onyx.core {
 			
 			if (time >= _tempo) {
 				_last = getTimer() + (time - _tempo);
-				dispatchEvent(new TempoEvent());
+				_step = ++_step % 16
+				dispatchEvent(new TempoEvent(_step));
 			}
 		}
 		

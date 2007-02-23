@@ -117,7 +117,7 @@ package onyx.content {
 			_frame			= 0;
 
 			// sets the last time we executed
-			_lastTime		= getTimer() - ROOT.frameRate;
+			_lastTime		= getTimer() - STAGE.frameRate;
 
 			// resize?
 			if (Settings.LAYER_AUTOSIZE) {
@@ -159,10 +159,10 @@ package onyx.content {
 			if (!_paused) {
 				
 				// get framerate
-				var time:int = 1000 / ((getTimer() - _lastTime)) || ROOT.frameRate;
+				var time:int = 1000 / ((getTimer() - _lastTime)) || STAGE.frameRate;
 				
 				// add the framerate based off the last time
-				var frame:Number = _frame + ((ROOT.frameRate / time) * _framerate);
+				var frame:Number = _frame + ((STAGE.frameRate / time) * _framerate);
 				
 				// constrain the frame
 				frame = (frame < _loopStart) ? _loopEnd : Math.max(frame % _loopEnd, _loopStart);
@@ -187,7 +187,7 @@ package onyx.content {
 		 */
 		override public function get framerate():Number {
 			// get the ratio of the original framerate and the actual framerate
-			var ratio:Number = _loader.contentLoaderInfo.frameRate / ROOT.frameRate;
+			var ratio:Number = _loader.contentLoaderInfo.frameRate / STAGE.frameRate;
 			
 			return (_framerate / ratio);
 		}
@@ -196,7 +196,7 @@ package onyx.content {
 		 * 	Sets framerate
 		 */
 		override public function set framerate(value:Number):void {
-			var ratio:Number = _loader.contentLoaderInfo.frameRate / ROOT.frameRate;
+			var ratio:Number = _loader.contentLoaderInfo.frameRate / STAGE.frameRate;
 
 			_framerate = value * ratio;
 

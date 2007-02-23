@@ -57,7 +57,7 @@ package onyx.core {
 			var now:int		= getTimer();
 			_dict[target]	= now;
 			
-			return (now - time) / ROOT.frameRate;
+			return (now - time) / STAGE.frameRate;
 		}
 		
 		/**
