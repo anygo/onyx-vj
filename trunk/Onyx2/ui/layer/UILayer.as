@@ -45,7 +45,7 @@ package ui.layer {
 	import onyx.plugin.Plugin;
 	import onyx.states.StateManager;
 	import onyx.transition.Transition;
-	import onyx.utils.*;
+	import onyx.utils.string.*;
 	
 	import ui.assets.*;
 	import ui.controls.*;
@@ -364,7 +364,7 @@ package ui.layer {
 				var transition:Transition = UIManager.transition.clone();
 			}
 			
-			_layer.load(new URLRequest(path), settings, transition);
+			_layer.load(path, settings, transition);
 			
 		}
 		
@@ -390,7 +390,7 @@ package ui.layer {
 			}
 			
 			// set name
-			_filename.text = StringUtil.removeExtension(path);
+			_filename.text = removeExtension(path);
 			
 			// frame listener
 			addEventListener(Event.ENTER_FRAME, _updatePlayheadHandler);

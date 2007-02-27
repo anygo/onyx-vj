@@ -100,7 +100,8 @@ package ui.window {
 			addChild(_folders);
 			addChild(_files);
 			
-			FileBrowser.query(Settings.INITIAL_APP_DIRECTORY, _onReceive);
+			// query default folder
+			FileBrowser.query(FileBrowser.initialDirectory + Settings.INITIAL_APP_DIRECTORY, _onReceive);
 		}
 		
 		/**

@@ -45,6 +45,7 @@ package ui.core {
 	
 	import ui.assets.*;
 	import ui.layer.UILayer;
+	import ui.settings.*;
 	import ui.states.*;
 	import ui.window.*;
 
@@ -105,21 +106,19 @@ package ui.core {
 				PerfMonitor,
 				Browser,
 				Filters,
-				TransitionWindow,
-				HostWindow
+				TransitionWindow
 			);
 
 			// add a display
-			var display:Display = Onyx.createDisplay(STAGE.stageWidth - 320, 525);
+			var display:Display = Onyx.createDisplay(STAGE.stageWidth - 320, 525, 1, 1, !SETTING_SUPPRESS_DISPLAYS);
 			display.addEventListener(DisplayEvent.LAYER_CREATED,		_onLayerCreate);
 			display.createLayers(5);
-			
-			ROOT.addChild(display);
 			
 			// add settings window
 			var settings:SettingsWindow = new SettingsWindow(display);
 			ROOT.addChild(settings);
 			
+			// add child
 			ROOT.addChild(new DisplayWindow(display));
 			
 			// listen for keys

@@ -47,31 +47,11 @@ package ui.window {
 	import ui.styles.*;
 
 	public final class SettingsWindow extends Window {
-		
-		/**
-		 * 	@private
-		 */
-		private var _controlXY:SliderV2;
-
-		/**
-		 * 	@private
-		 */
-		private var _controlScale:SliderV2;
-
-		/**
-		 * 	@private
-		 */
-		private var _controlColor:ColorPicker;
 
 		/**
 		 * 	@private
 		 */
 		private var _controlXML:TextButton;
-
-		/**
-		 * 	@private
-		 */
-		private var _controlSize:DropDown;
 		
 		/**
 		 * 	@private
@@ -105,32 +85,22 @@ package ui.window {
 			
 			super('SETTINGS WINDOW', 202, 100, 200, 522);
 			
-			var control:Control, controls:Controls;
+			var control:Control;
 
 			// create new ui options
 			var options:UIOptions	= new UIOptions();
 			options.width			= 50;
 			
-			// get controls for the display
-			controls				= display.controls;
-			control					= new ControlRange('size', 'size', DISPLAY_SIZES, 0, 'name');
-			control.target			= display;
 
 			// controls for display
-			_controlXY				= new SliderV2(options, controls.getControl('position'));
-			_controlColor			= new ColorPicker(options, controls.getControl('backgroundColor'));
 			_controlXML				= new TextButton(options, 'save layers');
-			_controlSize			= new DropDown(options, control, 'left');
 			
 			// tempo controls
 			_controlTempo			= new SliderV(options, _tempo.controls.getControl('tempo'));
 			
 			// add controls
 			addChildren(	
-				_controlXY,		2,	24,
-				_controlColor,	2,	70,
 				_controlXML,	2,	83,
-				_controlSize,	60,	24,
 				_controlTempo,	60,	70,
 				_tapTempo,		60,	83
 			);
