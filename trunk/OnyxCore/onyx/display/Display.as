@@ -81,7 +81,12 @@ package onyx.display {
 		/**
 		 * 	@private
 		 */
-		private var __y:Control					= new ControlInt('displayY', 'y', 0, 2000, 480)
+		private var __y:Control					= new ControlInt('displayY', 'y', 0, 2000, 480);
+		
+		/**
+		 * 	@private
+		 */
+		private var __visible:Control			= new ControlBoolean('visible', 'visible');
 
 		/**
 		 * 	@private
@@ -117,7 +122,11 @@ package onyx.display {
 				),
 				new ControlColor(
 					'backgroundColor', 'backgroundColor'
-				)
+				),
+				new ControlRange(
+					'size', 'size', DISPLAY_SIZES
+				),
+				__visible
 			);
 			
 			// hide/show mouse when over the display
@@ -283,7 +292,7 @@ package onyx.display {
 				var settings:LayerSettings = new LayerSettings();
 				settings.load(layer);
 				
-				copylayer.load(new URLRequest(layer.path), settings);
+				copylayer.load(layer.path, settings);
 				
 			}
 		}
@@ -318,10 +327,10 @@ package onyx.display {
 		 * 	@param	origin:ILayer
 		 * 	@param	transition:Transition
 		 */
-		public function load(request:URLRequest, origin:ILayer, transition:Transition):void {
+		public function load(path:String, origin:ILayer, transition:Transition):void {
 			
 			var job:LoadONXJob = new LoadONXJob(origin, transition);
-			JobManager.register(this, job, request);
+			JobManager.register(this, job, path);
 		}
 		
 		/**
@@ -362,14 +371,14 @@ package onyx.display {
 			// lock the bitmap
 			super.bitmapData.lock();
 
+			// fill the display
+			super.bitmapData.fillRect(super.bitmapData.rect, _backgroundColor);
+			
 			// loop and render
 			// TBD: raise the framerate of the root movie, and do calculation to render different content on different frames
 			var length:int = _valid.length - 1;
 			
 			if (length >= 0) {
-				
-				// fill the display
-				super.bitmapData.fillRect(super.bitmapData.rect, _backgroundColor);
 	
 				// loop through layers and render			
 				for (var count:int = length; count >= 0; count--) {
@@ -385,11 +394,10 @@ package onyx.display {
 				
 				// render filters
 				_filters.render(super.bitmapData);
-	
-				// unlock the bitmap
-				super.bitmapData.unlock();
-			
 			}
+			
+			// unlock the bitmap
+			super.bitmapData.unlock();
 		}
 
 		/**
@@ -694,6 +702,13 @@ package onyx.display {
 		 */
 		public function muteFilter(filter:Filter, toggle:Boolean = true):void {
 			_filters.muteFilter(filter, this, toggle);
+		}
+		
+		/**
+		 * 
+		 */
+		override public function set visible(value:Boolean):void {
+			super.visible = __visible.setValue(value);
 		}
 		
 		/**

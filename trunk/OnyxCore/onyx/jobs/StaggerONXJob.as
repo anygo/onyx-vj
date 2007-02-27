@@ -74,7 +74,7 @@ package onyx.jobs {
 				var layer:Layer = job.layer;
 				
 				if (!layer.path) {
-					layer.load(new URLRequest(job.settings.path), job.settings);
+					layer.load(job.settings.path, job.settings);
 				} else {
 					newJobs.push(job);
 				}
@@ -101,7 +101,7 @@ package onyx.jobs {
 	
 				var layer:Layer				= job.layer;
 				var settings:LayerSettings	= job.settings;
-				layer.load(new URLRequest(settings.path), settings, _transition);
+				layer.load(settings.path, settings, _transition);
 				
 				_timer.start();
 				

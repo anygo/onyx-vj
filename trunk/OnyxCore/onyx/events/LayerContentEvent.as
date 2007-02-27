@@ -31,11 +31,11 @@
 package onyx.events {
 	
 	import flash.events.Event;
+	import flash.net.URLRequest;
 	
 	import onyx.content.Content;
 	import onyx.layer.LayerSettings;
 	import onyx.transition.Transition;
-	import flash.net.URLRequest;
 
 	[ExcludeClass]
 	public final class LayerContentEvent extends Event {
@@ -44,7 +44,7 @@ package onyx.events {
 		public var reference:Object;
 		public var settings:LayerSettings;
 		public var transition:Transition;
-		public var request:URLRequest;
+		public var path:String;
 		
 		public function LayerContentEvent(type:String):void {
 			super(type);
@@ -56,6 +56,7 @@ package onyx.events {
 			event.reference = reference;
 			event.settings = settings;
 			event.transition = transition;
+			event.path = path;
 			
 			return event;
 		}

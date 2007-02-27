@@ -245,26 +245,42 @@ package onyx.content {
 		 * 	Destroys the content
 		 */
 		override public function dispose():void {
+
 			// dispose
 			super.dispose();
 
 			// remove reference
 			_loader = null;
 			_mc		= null;
+			
+			// unregister
+			ContentLoader.unregister(_path);
 		}
 		
+		/**
+		 * 
+		 */
 		override public function get scaleX():Number {
 			return super.scaleX / _ratioX;
 		}
 		
+		/**
+		 * 
+		 */
 		override public function set scaleX(value:Number):void {
 			super.scaleX = value * _ratioX;
 		}
 		
+		/**
+		 * 
+		 */
 		override public function get scaleY():Number {
 			return super.scaleY / _ratioY;
 		}
 		
+		/**
+		 * 
+		 */
 		override public function set scaleY(value:Number):void {
 			super.scaleY = value * _ratioY;
 		}

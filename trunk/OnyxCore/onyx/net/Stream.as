@@ -30,8 +30,7 @@
  */
 package onyx.net {
 	
-	import flash.events.AsyncErrorEvent;
-	import flash.events.Event;
+	import flash.events.*;
 	import flash.net.NetStream;
 
 	[Event(name='complete', type='flash.events.Event')]
@@ -68,6 +67,14 @@ package onyx.net {
 		public function onMetaData(info:Object):void {
 			metadata = info;
 			dispatchEvent(new Event(Event.COMPLETE));
+		}
+		
+		/**
+		 * 	@private
+		 * 	play Status
+		 */
+		public function onPlayStatus(info:Object):void {
+			dispatchEvent(new NetStatusEvent(NetStatusEvent.NET_STATUS, { code: info }));
 		}
 
 	}

@@ -34,6 +34,7 @@ package onyx.content {
 	import flash.events.*;
 	import flash.media.*;
 	import flash.net.*;
+	import flash.utils.getQualifiedClassName;
 	
 	import onyx.core.*;
 	import onyx.display.Display;
@@ -42,7 +43,7 @@ package onyx.content {
 	import onyx.net.*;
 	import onyx.plugin.IContentObject;
 	import onyx.transition.Transition;
-	import onyx.utils.StringUtil;
+	import onyx.utils.string.*;
 
 	[Event(name='complete',			type='flash.events.Event')]
 	[Event(name='security_error',	type='flash.events.SecurityErrorEvent')]
@@ -53,6 +54,61 @@ package onyx.content {
 	 * 	Loads different content based on the file url
 	 */
 	public final class ContentLoader extends EventDispatcher {
+		
+		/**
+		 * 	@private
+		 * 	Stores paths of loaded stuff
+		 */
+		private static const _dict:Object = {};
+		
+		/**
+		 * 	@private
+		 * 	Registers a loader
+		 */
+		private static function registration(path:String):Registration {
+			return _dict[path];
+		}
+		
+		/**
+		 * 
+		 */
+		private static function register(path:String, loader:Loader = null):void {
+			
+			var reg:Registration = _dict[path];
+			
+			if (!reg) {
+				reg			= new Registration();
+				reg.loader	= loader;
+				_dict[path] = reg;
+			}
+			
+			reg.refCount++;
+		}
+		
+		/**
+		 * 	Unregisters from shared
+		 */
+		public static function unregister(path:String):void {
+			var reg:Registration = _dict[path];
+			reg.refCount--;
+			
+			if (reg.refCount === 0) {
+				reg.dispose();
+				delete _dict[path];
+			}
+		}
+		
+		/**
+		 * 	@private
+		 * 	Gets registration
+		 */
+		private static function getRegistration(path:String):void {
+		}
+		
+		/**
+		 * 	@private
+		 * 	Handler for when registrations are completed loading
+		 */
 		
 		/**
 		 * 	@private
@@ -68,35 +124,23 @@ package onyx.content {
 		/**
 		 * 	@private
 		 */
-		private var _request:URLRequest;
-		
-		/**
-		 * 	@private
-		 */
 		private var _loaded:Boolean;
-		
+
 		/**
 		 * 	@private
 		 */
 		private var _path:String;
 		
 		/**
-		 * 
-		 */
-		public function ContentLoader(request:URLRequest):void {
-			_request = request;
-		}
-		
-		/**
 		 * 	Loads a file
 		 */
-		public function load(settings:LayerSettings, transition:Transition):void {
+		public function load(path:String, settings:LayerSettings, transition:Transition):void {
 			
-			_settings = settings || new LayerSettings();
+			_path		= path;
+			_settings	= settings || new LayerSettings();
 			_transition = transition;
 			
-			var path:String			= _request.url;
-			var extension:String	= StringUtil.getExtension(path);
+			var extension:String	= getExtension(path);
 		
 			// do different stuff based on the extension
 			switch (extension) {
@@ -106,6 +150,8 @@ package onyx.content {
 					stream.addEventListener(Event.COMPLETE, _onStreamComplete);
 					
 					break;
+					
+				// TBD: Multiple cameras should use the same content as well
 				case 'cam':
 				
 					var names:Array = Camera.names;
@@ -121,32 +167,38 @@ package onyx.content {
 					sound.addEventListener(Event.COMPLETE, _onSoundHandler);
 					sound.addEventListener(IOErrorEvent.IO_ERROR, _onSoundHandler);
 					sound.addEventListener(ProgressEvent.PROGRESS, _onLoadProgress);
-					sound.load(_request);
+					sound.load(new URLRequest(path));
 					break;
 
 				// load a loader if we're any other type of file
+				case 'swf':
+
+					var reg:Registration = registration(path);
+				
 				case 'jpg':
 				case 'jpeg':
 				case 'png':
-				case 'swf':
 				
-					var def:Loader = ContentManager.hasDefinition(_request.url);
-				
-					var loader:Loader  = def || new Loader();
-					loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, _onLoadHandler);
-					loader.contentLoaderInfo.addEventListener(Event.COMPLETE, _onLoadHandler);
-					loader.contentLoaderInfo.addEventListener(ProgressEvent.PROGRESS, _onLoadProgress);
-					loader.contentLoaderInfo.addEventListener(SecurityErrorEvent.SECURITY_ERROR, _onLoadHandler);
-					
-					if (def) {
-						_createLoaderContent(loader.contentLoaderInfo);
+					// check to see if it's to be a shared content object
+					if (reg) {
+						
+						register(path);
+						_createLoaderContent(reg.loader.contentLoaderInfo);
+						
 					} else {
-						loader.load(_request);
+						
+						var loader:Loader = new Loader();
+						
+						loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR,				_onLoadHandler);
+						loader.contentLoaderInfo.addEventListener(Event.COMPLETE,						_onLoadHandler);
+						loader.contentLoaderInfo.addEventListener(ProgressEvent.PROGRESS,				_onLoadProgress);
+						loader.contentLoaderInfo.addEventListener(SecurityErrorEvent.SECURITY_ERROR,	_onLoadHandler);
+						
+						loader.load(new URLRequest(path));
+						
 					}
-					
 					break;
 			}
-
 		}
 		
 		/**
@@ -191,15 +243,27 @@ package onyx.content {
 			
 			var info:LoaderInfo = event.currentTarget as LoaderInfo;
 			
-			info.removeEventListener(IOErrorEvent.IO_ERROR, _onLoadHandler);
-			info.removeEventListener(Event.COMPLETE, _onLoadHandler);
-			info.removeEventListener(ProgressEvent.PROGRESS, _onLoadProgress);
-			info.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, _onLoadHandler);
+			info.removeEventListener(IOErrorEvent.IO_ERROR,				_onLoadHandler);
+			info.removeEventListener(Event.COMPLETE,					_onLoadHandler);
+			info.removeEventListener(ProgressEvent.PROGRESS,			_onLoadProgress);
+			info.removeEventListener(SecurityErrorEvent.SECURITY_ERROR,	_onLoadHandler);
 			
 			if (!(event is ErrorEvent)) {
 				
+				if (getQualifiedClassName(info.content) === 'flash.display::MovieClip') {
+					
+					var reg:Registration = registration(_path);
+					
+					// if something loaded before us, use it's loader instead of our own
+					if (reg) {
+						info = reg.loader.contentLoaderInfo;
+					}
+					
+					register(_path, info.loader);
+				}
+
+				// load it
 				_createLoaderContent(info, event);
-				
 			}
 			
 		}
@@ -227,7 +291,7 @@ package onyx.content {
 				dispatch.reference		= reference;
 				dispatch.settings		= _settings;
 				dispatch.transition 	= _transition;
-				dispatch.request		= _request;
+				dispatch.path			= _path;
 				dispatchEvent(dispatch);
 			}
 		}
@@ -238,35 +302,34 @@ package onyx.content {
 		public function dispose():void {
 
 			// dispose
-			_settings = null;
+			_settings	= null;
 			_transition = null;
-			_request = null;
 
 		}
 	}
 }
 
-import flash.display.Loader;
 import onyx.content.ContentLoader;
+
+import flash.display.Loader;
 
 /**
  * 	Content registration
  */
 class Registration {
 	
+	// how many objects are looking at this loader?
 	public var refCount:int;
-	public var loader:ContentLoader;
-	public var type:Class;
-	public var content:Object;
 	
-	public function get loaded():Boolean {
-		return (type !== null);
-	}
-	
+	//
+	public var loader:Loader;
+
+	/**
+	 * 	Dispose and kill the content
+	 */
 	public function dispose():void {
+		loader.unload();
 		loader	= null;
-		type	= null;
-		content = null;
 	}
 	
 }

@@ -30,6 +30,7 @@
  */
 package onyx.core {
 
+	import onyx.constants.VERSION;
 	import onyx.display.Display;
 	import onyx.filter.Filter;
 	import onyx.jobs.StatJob;
@@ -66,7 +67,7 @@ package onyx.core {
 					text =	_createHeader('stat') + 'TESTS FRAMERATE AND LAYER RENDERING TIMES.<br><br>USAGE: STAT [NUM_SECONDS:INT]<br>';
 					break;
 				default:
-					text =	_createHeader('<b>ONYX 3.0.15</b>', 21) + 
+					text =	_createHeader('<b>ONYX ' + VERSION + '</b>', 21) + 
 							'COPYRIGHT 2003-2006: WWW.ONYX-VJ.COM' +
 							'<br>TYPE "HELP" OR "HELP COMMANDS" FOR MORE COMMANDS.';
 					break;

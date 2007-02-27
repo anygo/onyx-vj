@@ -66,15 +66,22 @@ package onyx.states {
 			// dispatch a start event
 			Onyx.instance.dispatchEvent(new ApplicationEvent(ApplicationEvent.ONYX_STARTUP_START));
 			
-			// load external plugs
-			_loadExternalPlugins();
+			// output to console
+			Console.output('LOADING PLUG-INS: ' + FileBrowser.initialDirectory + Settings.PLUGINS_DIRECTORY + '... \n');
+			
+			// query directory
+			FileBrowser.query(
+				FileBrowser.initialDirectory + Settings.PLUGINS_DIRECTORY,
+				_loadExternalPlugins,
+				new SWFFilter()
+			);
 		}
 		
 		/**
 		 * 	@private
 		 * 	Initializes the external filter loading
 		 */
-		private function _loadExternalPlugins(list:FolderList = null):void {
+		private function _loadExternalPlugins(list:FolderList):void {
 			
 			// valid folder list
 			if (list) {
@@ -82,18 +89,15 @@ package onyx.states {
 				for each (var file:File in list.files) {
 					
 					var swfloader:Loader = new Loader();
-					swfloader.contentLoaderInfo.addEventListener(Event.COMPLETE, _onFilterLoaded);
-					swfloader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, _onFilterLoaded);
+					swfloader.contentLoaderInfo.addEventListener(Event.COMPLETE,		_onFilterLoaded);
+					swfloader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR,	_onFilterLoaded);
 					swfloader.load(new URLRequest(file.path));
 
 					_filtersToLoad.push(swfloader);
-					
+
 					Console.output('LOADING ' + String(file.path).toUpperCase());
 				}
 					
-			} else {
-				Console.output('LOADING PLUG-INS: ' + Settings.PLUGINS_DIRECTORY + '... \n');
-				FileBrowser.query(Settings.PLUGINS_DIRECTORY, _loadExternalPlugins);
 			}
 		}
 		

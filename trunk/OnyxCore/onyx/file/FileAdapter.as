@@ -34,7 +34,13 @@ package onyx.file {
 	
 	public class FileAdapter extends EventDispatcher {
 		
-		public function query(path:String, callback:Function):FileQuery {
+		public var INITIAL_DIR:String;
+		
+		public function FileAdapter(dir:String):void {
+			INITIAL_DIR = dir;
+		}
+		
+		public function query(path:String, callback:Function, filter:FileFilter = null):FileQuery {
 			return null;
 		}
 		

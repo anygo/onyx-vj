@@ -46,25 +46,43 @@ package onyx.content {
 	[ExcludeClass]
 	public class ContentFLV extends Content {
 		
+		/**
+		 * 	@private
+		 */
 		private var _stream:Stream;
+
+		/**
+		 * 	@private
+		 */
 		private var _totalTime:Number;
+
+		/**
+		 * 	@private
+		 */
 		private var _loopStart:Number;
+
+		/**
+		 * 	@private
+		 */
 		private var _loopEnd:Number;
+
+		/**
+		 * 	@private
+		 */
 		private var _video:Video;
 	
 		/**
 		 * 	@constructor
 		 */
-		public function ContentFLV(layer:Layer, path:String, stream:Stream, props:LayerProperties):void {
+		public function ContentFLV(layer:Layer, path:String, stream:Stream):void {
 			
 			_stream = stream;
 			
-			_totalTime = stream.metadata.duration;
+			_totalTime	= stream.metadata.duration;
 			
-			_video = new Video(320,240);
-
+			_video		= new Video(320,240);
 			_video.attachNetStream(stream);
-
+			
 			super(layer, path, _video);
 		}
 		
@@ -73,7 +91,7 @@ package onyx.content {
 		 * 	Updates the bimap source
 		 */
 		override public function render():RenderTransform {
-
+			
 			// test loop points
 			if (_stream.time >= _loopEnd || _stream.time < _loopStart) {
 				_stream.seek(_loopStart);
@@ -109,7 +127,7 @@ package onyx.content {
 		 * 	Sets Loop Start
 		 */		
 		override public function set loopStart(value:Number):void {
-			_loopStart = __loopStart.setValue(_totalTime * value);
+			_loopStart = __loopStart.setValue(value) * _totalTime;
 		}
 
 		/**
@@ -124,7 +142,7 @@ package onyx.content {
 		 * 	Sets Loop Start
 		 */		
 		override public function set loopEnd(value:Number):void {
-			_loopEnd = __loopStart.setValue(_totalTime * value);
+			_loopEnd = __loopEnd.setValue(value) * _totalTime;
 		}
 		
 		/**

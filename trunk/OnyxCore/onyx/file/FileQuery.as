@@ -20,11 +20,17 @@ package onyx.file {
 		public var folderList:FolderList;
 		
 		/**
+		 * 	The filter to apply to the callback
+		 */
+		public var filter:FileFilter;
+				
+		/**
 		 * 	@constructor
 		 */
-		public function FileQuery(folder:String, callback:Function):void {
+		public function FileQuery(folder:String, callback:Function, filter:FileFilter = null):void {
 			this.path		= folder;
 			this.callback	= callback;
+			this.filter		= filter;
 		}
 		
 		public function load():void {

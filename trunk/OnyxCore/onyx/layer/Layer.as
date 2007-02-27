@@ -45,7 +45,7 @@ package onyx.layer {
 	import onyx.filter.*;
 	import onyx.net.Stream;
 	import onyx.transition.Transition;
-	import onyx.utils.*;
+	import onyx.utils.string.*;
 	
 	use namespace onyx_ns;
 	
@@ -99,34 +99,30 @@ package onyx.layer {
 		 * 	Loads a file type into a layer
 		 * 	The path of the file to load into the layer
 		 **/
-		public function load(request:URLRequest, settings:LayerSettings = null, transition:Transition = null):void {
-			
-			// get the path
-			var path:String = request.url;
+		public function load(path:String, settings:LayerSettings = null, transition:Transition = null):void {
 	
 			// get extension
-			var extension:String = StringUtil.getExtension(path);
+			var extension:String = getExtension(path);
 			
 			// if it's an onx file, pass it over to the display to load
 			if (extension === 'mix' || extension === 'xml') {
 				
-				_display.load(request, this, transition);
+				_display.load(path, this, transition);
 			
 			// individual content, load it here
 			} else {
 				
-				// load content
-				//  ContentManager.register(path);
+				// registers content
+				var loader:ContentLoader = new ContentLoader();
 				
-				var loader:ContentLoader = new ContentLoader(request);
-				
+				// add listeners
 				loader.addEventListener(Event.COMPLETE,						_onContentStatus);
 				loader.addEventListener(IOErrorEvent.IO_ERROR,				_onContentStatus);
 				loader.addEventListener(SecurityErrorEvent.SECURITY_ERROR,	_onContentStatus);
 				loader.addEventListener(ProgressEvent.PROGRESS,				_forwardEvents);
 				
 				// load
-				loader.load(settings, transition);
+				loader.load(path, settings, transition);
 			}
 		}
 		
@@ -155,7 +151,7 @@ package onyx.layer {
 				var contentEvent:LayerContentEvent = event as LayerContentEvent;
 
 				// create the new content object based on the type				
-				var loadedContent:Content = new contentEvent.contentType(this, contentEvent.request.url, contentEvent.reference);
+				var loadedContent:Content = new contentEvent.contentType(this, contentEvent.path, contentEvent.reference);
 
 				// if a transition was loaded, load the transition with the layer
 				if (contentEvent.transition && !(_content === NULL_LAYER)) {

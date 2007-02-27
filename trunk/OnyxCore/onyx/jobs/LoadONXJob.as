@@ -69,13 +69,13 @@ package onyx.jobs {
 		 * 	
 		 */
 		override public function initialize(...args):void {
-			var request:URLRequest = args[0];
+			var path:String = args[0];
 			
 			var urlLoader:URLLoader = new URLLoader();
 			urlLoader.addEventListener(Event.COMPLETE,						_onURLHandler);
 			urlLoader.addEventListener(SecurityErrorEvent.SECURITY_ERROR,	_onURLHandler);
 			urlLoader.addEventListener(IOErrorEvent.IO_ERROR,				_onURLHandler);
-			urlLoader.load(request);
+			urlLoader.load(new URLRequest(path));
 		}
 		
 		/**
@@ -101,8 +101,6 @@ package onyx.jobs {
 					var layers:Array		= display.layers;
 					var index:int			= layers.indexOf(_origin);
 					var jobs:Array			= [];
-					
-					trace('got here');
 					
 					// loop through layers and apply settings
 					for each (var layerXML:XML in xml.layer) {
@@ -152,7 +150,7 @@ package onyx.jobs {
 				var layer:Layer				= job.layer;
 				var settings:LayerSettings	= job.settings;
 
-				layer.load(new URLRequest(settings.path), settings);
+				layer.load(settings.path, settings);
 
 			}
 			

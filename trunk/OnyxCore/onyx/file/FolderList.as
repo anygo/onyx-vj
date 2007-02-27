@@ -56,5 +56,25 @@ package onyx.file {
 		public function FolderList(path:String):void {
 			this.path = path;
 		}
+		
+		/**
+		 * 
+		 */
+		public function clone(filter:FileFilter = null):FolderList {
+			var list:FolderList	= new FolderList(path);
+			list.folders		= folders.concat();
+			
+			if (filter) {
+				for each (var file:File in files) {
+					if (filter.validate(file)) {
+						list.files.push(file);
+					}
+				}
+			} else {
+				list.files = files.concat();
+			}
+			
+			return list;
+		}
 	}
 }

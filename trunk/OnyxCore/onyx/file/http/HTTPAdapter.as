@@ -34,19 +34,22 @@ package onyx.file.http {
 	
 	import onyx.file.FileAdapter;
 	import onyx.file.FileQuery;
+	import onyx.file.FileFilter;
 
 	/**
 	 * 	Adapter for http / local-without-networking
 	 */
 	public final class HTTPAdapter extends FileAdapter {
 		
+		public function HTTPAdapter():void {
+			super('');
+		}
+		
 		/**
 		 * 	Query
 		 */
-		override public function query(path:String, callback:Function):FileQuery {
-			
-			return new HTTPQuery(path, callback);
-
+		override public function query(path:String, callback:Function, filter:FileFilter = null):FileQuery {
+			return new HTTPQuery(path, callback, filter);
 		}
 	}
 }

@@ -28,27 +28,16 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package onyx.utils {
-	
-	/**
-	 * 	String utilities
-	 */	
-	public final class StringUtil {
-		
-		/**
-		 * 	Gets a file extension based on a file path
-		 */
-		public static function getExtension(path:String):String {
-			return path.substr(path.lastIndexOf('.')+1, path.length).toLowerCase();
-		}
+package onyx.utils.string {
 
-		/**
-		 * 	Returns a filename without it's extension
-		 */
-		public static function removeExtension(path:String):String {
-			var start:int = Math.max(path.lastIndexOf('\\')+1,path.lastIndexOf('/')+1);
-			var end:int = path.lastIndexOf('.');
-			return path.substr(start, end - start);
-		}
+	/**
+	 * 	Returns a filename without it's extension
+	 */
+	public function removeExtension(path:String):String {
+		
+		var start:int = Math.max(path.lastIndexOf('\\')+1,path.lastIndexOf('/')+1);
+		var end:int = path.lastIndexOf('.');
+		
+		return path.substr(start, end - start);
 	}
 }

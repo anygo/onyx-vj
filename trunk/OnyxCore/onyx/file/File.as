@@ -31,6 +31,7 @@
 package onyx.file {
 	
 	import onyx.utils.*;
+	import onyx.utils.string.*;
 	
 	/**
 	 * 	Core File Class
@@ -61,7 +62,7 @@ package onyx.file {
 		 * 
 		 */
 		public function get extension():String {
-			return StringUtil.getExtension(path);
+			return getExtension(path);
 		}
 	}
 }

@@ -31,22 +31,23 @@
 package onyx.file.http {
 	
 	import flash.events.*;
-	import flash.net.*;
+	import flash.net.URLLoader;
+	import flash.net.URLRequest;
 	
 	import onyx.core.Console;
-	import onyx.file.*; 
+	import onyx.file.*;
 
 	public final class HTTPQuery extends FileQuery {
 		
 		/**
 		 * 	@constructor
 		 */
-		public function HTTPQuery(folder:String, callback:Function):void {
-			super(folder, callback);
+		public function HTTPQuery(folder:String, callback:Function, filter:FileFilter = null):void {
+			super(folder, callback, filter);
 		}
 		
 		/**
-		 * 	Load
+		 * 	Loads files
 		 */
 		override public function load():void {
 			

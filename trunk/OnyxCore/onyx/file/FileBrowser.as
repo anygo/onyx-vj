@@ -33,7 +33,6 @@ package onyx.file {
 	import flash.display.Loader;
 	import flash.events.*;
 	import flash.media.Camera;
-	import flash.net.*;
 	
 	import onyx.core.*;
 	
@@ -60,6 +59,13 @@ package onyx.file {
 		/**
 		 * 
 		 */
+		public static function get initialDirectory():String {
+			return _adapter.INITIAL_DIR;
+		}
+		
+		/**
+		 * 
+		 */
 		public static function initialize(adapter:FileAdapter):void {
 			_adapter = adapter;
 		}
@@ -67,7 +73,7 @@ package onyx.file {
 		/**
 		 * 	Queries the filesystem
 		 */
-		public static function query(folder:String, callback:Function, refresh:Boolean = false):void {
+		public static function query(folder:String, callback:Function, filter:FileFilter = null, refresh:Boolean = false):void {
 			
 			if (folder == '..') {
 				var items:Array = _current.split('/');
@@ -80,7 +86,7 @@ package onyx.file {
 			// check for cache
 			if (refresh || !_cache[folder]) {
 				
-				var query:FileQuery = _adapter.query(folder, callback);
+				var query:FileQuery = _adapter.query(folder, callback, filter);
 				query.addEventListener(Event.COMPLETE,						_onLoadHandler);
 				query.addEventListener(IOErrorEvent.IO_ERROR,				_onLoadHandler);
 				query.addEventListener(SecurityErrorEvent.SECURITY_ERROR,	_onLoadHandler);
@@ -88,11 +94,9 @@ package onyx.file {
 				
 			} else {
 				
-				var cachedFolder:FolderList = _cache[folder];
-				callback(cachedFolder);
+				doCallBack(_cache[folder], callback, filter);
 				
 			}
-			
 		}
 		
 		/**
@@ -104,9 +108,23 @@ package onyx.file {
 			query.removeEventListener(IOErrorEvent.IO_ERROR,				_onLoadHandler);
 			query.removeEventListener(SecurityErrorEvent.SECURITY_ERROR,	_onLoadHandler);
 			
+			// save the path
 			_cache[query.path] = query.folderList;
 			
-			query.callback.apply(null, [query.folderList]);
+			// do the callback
+			doCallBack(query.folderList, query.callback, query.filter);
+		}
+		
+		/**
+		 * 	@private
+		 */
+		private static function doCallBack(list:FolderList, callback:Function, filter:FileFilter = null):void {
+			
+			if (filter) {
+				var list:FolderList = list.clone(filter);
+			}
+			
+			callback.apply(null, [list]);
 		}
 		
 		/**

@@ -161,7 +161,7 @@ package onyx.core {
 		 * 	@param		The number of layers to create in the display
 		 * 	@returns	Display
 		 */
-		public static function createDisplay(x:int = 0, y:int = 0, scaleX:Number = 1, scaleY:Number = 1):Display {
+		public static function createDisplay(x:int = 0, y:int = 0, scaleX:Number = 1, scaleY:Number = 1, visible:Boolean = true):Display {
 			
 			var display:Display = new Display();
 			_displays.push(display);
@@ -170,7 +170,9 @@ package onyx.core {
 			display.scaleX = scaleX;
 			display.scaleY = scaleY;
 			
-			ROOT.addChild(display);
+			if (visible) {
+				ROOT.addChild(display);
+			}
 			
 			return display;
 		}

@@ -36,9 +36,15 @@ package onyx.display {
 		public var scale:Number;
 		
 		public function DisplaySize(name:String, scale:Number):void {
-			this.name = name;
-			this.scale = scale;
+			this.name	= name;
+			this.scale	= scale;
 		}
 		
+		/**
+		 * 
+		 */
+		public function toString():String {
+			return '[' + Math.floor(320 * scale) + 'x' + Math.floor(240 * scale) + ']';
+		}
 	}
 }

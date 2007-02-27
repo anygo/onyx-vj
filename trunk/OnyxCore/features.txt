@@ -1,15 +1,17 @@
-3.1.00: FEATURES
+3.0.25: FEATURES: Nearly Ready for GMC1 Testing
 
 X Visualizer plug-in type implemented
 X Ability to add filters to global display
 X Snap to Tempo implemented, filters can respond to tempo events
 X Addition of TempoFilter Class
-X Ability to mute a filter -- need to figure out a way to pause effects
+X Ability to mute a bitmap filter
+X Rendering performance boost on layers that share a common movieclip or image
 
 STILL TO DO:
-- Scratch pad plug-in type implemented
 - add global filters to .onx
-- Rendering performance boost on layers that share a common movieclip or image
+
+DEFERREd:
+- Scratch pad plug-in type implemented
 - Controls can parent and change based on other controls
 
 BUGS LEFT:

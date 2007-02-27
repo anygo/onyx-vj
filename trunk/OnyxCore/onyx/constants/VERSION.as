@@ -28,34 +28,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package onyx.layer {
-	
-	import flash.display.BitmapData;
-	import flash.events.IEventDispatcher;
-	import flash.net.URLRequest;
-	
-	import onyx.content.IContent;
-	import onyx.controls.Controls;
-	import onyx.controls.IControlObject;
-	import onyx.core.IRenderObject;
-	import onyx.display.IDisplay;
-	import onyx.filter.IFilterObject;
-	import onyx.transition.Transition;
-	
-	[Event(name="filter_applied",	type="onyx.events.FilterEvent")]
-	[Event(name="filter_removed",	type="onyx.events.FilterEvent")]
-	[Event(name="filter_moved",		type="onyx.events.FilterEvent")]
-	[Event(name="layer_loaded",		type="onyx.events.LayerEvent")]
-	[Event(name="layer_moved",		type="onyx.events.LayerEvent")]
-	[Event(name="progress",			type="flash.events.Event")]
+package onyx.constants {
 
-	public interface ILayer extends IContent {
-
-		function get display():IDisplay;
-		function get properties():LayerProperties;
-		function moveLayer(index:int):void;
-		function copyLayer():void;
-		function get index():int;
-		function load(path:String, settings:LayerSettings = null, transition:Transition = null):void;
-	}
+	import flash.display.*;
+	
+	public const VERSION:String = '3.0.25';
+	
 }
