@@ -52,7 +52,7 @@ package ui.controls.browser {
 	public final class FileControl extends UIControl {
 		
 		private var _label:TextField	= new TextField(46, 35);
-		private var _button:ButtonClear	= new ButtonClear(46, 35);
+		private var _button:ButtonClear	= new ButtonClear(47, 36);
 		private var _loader:Loader;
 
 		/**
