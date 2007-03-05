@@ -295,7 +295,12 @@ package ui.layer {
 					_layer.copyLayer();
 					break;
 				case _btnDelete:
-					_layer.dispose();
+				
+					if (event.ctrlKey) {
+						_layer.display.dispose();
+					} else {
+						_layer.dispose();
+					}
 					break;
 					
 			}
@@ -502,8 +507,8 @@ package ui.layer {
 		 * 	Forwards mouse events to the layer based on clicking the preview
 		 */
 		private function _forwardMouse(event:MouseEvent):void {
-			event.localX = _preview.mouseX / .6 / _layer.scaleX;
-			event.localY = _preview.mouseY / .6 / _layer.scaleY;
+			event.localX = _preview.mouseX;
+			event.localY = _preview.mouseY;
 			
 			_layer.dispatchEvent(event);
 		}
