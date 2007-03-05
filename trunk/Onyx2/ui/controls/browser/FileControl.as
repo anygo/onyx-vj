@@ -76,7 +76,7 @@ package ui.controls.browser {
 			_label.wordWrap = true;
 			
 			var format:TextFormat = _label.getTextFormat();
-			var substr:int = Math.max(path.lastIndexOf('\\')+1,path.lastIndexOf('/')+1);
+			var substr:int = Math.max(path.lastIndexOf('/')+1,path.lastIndexOf('/')+1);
 			
 			_label.defaultTextFormat = format;
 			_label.text = path.substring(substr, path.length);
