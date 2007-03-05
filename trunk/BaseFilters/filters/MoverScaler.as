@@ -33,12 +33,10 @@ package filters {
 		/**
 		 * 
 		 */
-		override protected function onTrigger(beat:int):void {
+		override protected function onTrigger(beat:int, event:Event):void {
 			
-			var delay:int = (((maxdelay - mindelay) * Math.random()) + mindelay) * 1000;
-
-			if (timer) {
-				timer.delay = delay;
+			if (event is TimerEvent) {
+				delay = (((maxdelay - mindelay) * Math.random()) + mindelay) * 1000;
 			}
 			
 			var scale:Number	= ((scaleMax - scaleMin) * Math.random()) + scaleMin;

@@ -94,7 +94,7 @@ package filters {
 		/**
 		 * 
 		 */
-		override protected function onTrigger(beat:int):void {
+		override protected function onTrigger(beat:int, event:Event):void {
 			
 			// stop tweens
 			Tween.stopTweens(_transform);

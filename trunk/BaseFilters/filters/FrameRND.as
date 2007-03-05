@@ -68,8 +68,11 @@ package filters {
 			)
 		}
 		
-		override protected function onTrigger(beat:int):void {
-			var delay:int = (((maxdelay - mindelay) * Math.random()) + mindelay) * 1000;
+		override protected function onTrigger(beat:int, event:Event):void {
+
+			if (event is TimerEvent) {
+				delay = (((maxdelay - mindelay) * Math.random()) + mindelay) * 1000;
+			}
 			
 			if (rndframe) {
 				content.time = Math.random();
