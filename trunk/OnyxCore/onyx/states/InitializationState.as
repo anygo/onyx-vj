@@ -89,15 +89,15 @@ package onyx.states {
 				for each (var file:File in list.files) {
 					
 					var swfloader:Loader = new Loader();
-					swfloader.contentLoaderInfo.addEventListener(Event.COMPLETE,		_onFilterLoaded);
-					swfloader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR,	_onFilterLoaded);
+					swfloader.contentLoaderInfo.addEventListener(Event.COMPLETE,					_onFilterLoaded);
+					swfloader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR,				_onFilterLoaded);
+					swfloader.contentLoaderInfo.addEventListener(SecurityErrorEvent.SECURITY_ERROR, _onFilterLoaded);
 					swfloader.load(new URLRequest(file.path));
 
 					_filtersToLoad.push(swfloader);
 
 					Console.output('LOADING ' + String(file.path).toUpperCase());
 				}
-					
 			}
 		}
 		
@@ -118,7 +118,9 @@ package onyx.states {
 			_filtersToLoad.splice(_filtersToLoad.indexOf(info.loader), 1);
 
 			// if valid swf
-			if (!(event is ErrorEvent)) {
+			if (event is ErrorEvent) {
+				Console.output((event as ErrorEvent).text);
+			} else {
 				
 				var pluginSWF:IPluginLoader = info.content as IPluginLoader;
 				

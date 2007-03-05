@@ -35,7 +35,7 @@ package onyx.utils.string {
 	 */
 	public function removeExtension(path:String):String {
 		
-		var start:int = Math.max(path.lastIndexOf('\\')+1,path.lastIndexOf('/')+1);
+		var start:int = Math.max(path.lastIndexOf('//')+1,path.lastIndexOf('/')+1);
 		var end:int = path.lastIndexOf('.');
 		
 		return path.substr(start, end - start);

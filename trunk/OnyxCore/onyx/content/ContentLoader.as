@@ -147,7 +147,8 @@ package onyx.content {
 				
 				case 'flv':
 					var stream:Stream = new Stream(path);
-					stream.addEventListener(Event.COMPLETE, _onStreamComplete);
+					stream.addEventListener(Event.COMPLETE,				_onStreamComplete);
+					stream.addEventListener(NetStatusEvent.NET_STATUS,	_onStreamComplete);
 					
 					break;
 					
@@ -221,9 +222,24 @@ package onyx.content {
 		private function _onStreamComplete(event:Event):void {
 			
 			var stream:Stream = event.currentTarget as Stream;
-			stream.removeEventListener(Event.COMPLETE, _onStreamComplete);
-			
-			_dispatchContent(ContentFLV, stream, event);
+
+			if (event.type == Event.COMPLETE) {
+				
+				stream.removeEventListener(Event.COMPLETE, _onStreamComplete);
+				stream.removeEventListener(NetStatusEvent.NET_STATUS, _onStreamComplete);
+				
+				_dispatchContent(ContentFLV, stream, event);
+				
+			} else if (event is NetStatusEvent) {
+				var status:NetStatusEvent = event as NetStatusEvent;
+
+				if (status.info.code === 'NetStream.Play.StreamNotFound') {
+					stream.removeEventListener(Event.COMPLETE, _onStreamComplete);
+					stream.removeEventListener(NetStatusEvent.NET_STATUS, _onStreamComplete);
+					
+					_dispatchContent(null, null, new IOErrorEvent(IOErrorEvent.IO_ERROR, false, false, 'File Not Found'));
+				}
+			}
 
 		}
 		
@@ -264,6 +280,9 @@ package onyx.content {
 
 				// load it
 				_createLoaderContent(info, event);
+				
+			} else {
+				_dispatchContent(null, null, event);
 			}
 			
 		}

@@ -715,6 +715,10 @@ package onyx.display {
 		 * 
 		 */
 		public function dispose():void {
+			var valid:Array = _valid.concat();
+			for each (var layer:Layer in valid) {
+				layer.dispose();
+			}
 		}
 
 	}

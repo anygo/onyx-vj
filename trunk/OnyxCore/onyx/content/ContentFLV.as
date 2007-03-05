@@ -42,6 +42,7 @@ package onyx.content {
 	import onyx.layer.LayerSettings;
 	import onyx.net.Connection;
 	import onyx.net.Stream;
+	import flash.events.NetStatusEvent;
 
 	[ExcludeClass]
 	public class ContentFLV extends Content {
@@ -77,6 +78,7 @@ package onyx.content {
 		public function ContentFLV(layer:Layer, path:String, stream:Stream):void {
 			
 			_stream = stream;
+			_stream.addEventListener(NetStatusEvent.NET_STATUS, _onStatus);
 			
 			_totalTime	= stream.metadata.duration;
 			
@@ -87,13 +89,26 @@ package onyx.content {
 		}
 		
 		/**
+		 * 
+		 */
+		private function _onStatus(event:NetStatusEvent):void {
+			switch (event.info.code) {
+				case 'NetStream.Play.Complete':
+					_stream.seek(_loopStart);
+					break;
+			}
+		}
+		
+		/**
 		 * 	@private
 		 * 	Updates the bimap source
 		 */
 		override public function render():RenderTransform {
 			
+			var time:Number = _stream.time;
+			
 			// test loop points
-			if (_stream.time >= _loopEnd || _stream.time < _loopStart) {
+			if (time >= _loopEnd || time < _loopStart) {
 				_stream.seek(_loopStart);
 			}
 			

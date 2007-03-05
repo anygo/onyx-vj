@@ -41,6 +41,10 @@ package onyx.net {
 	public final class Stream extends NetStream {
 
 		public var metadata:Object;
+
+		/**
+		 * 	@private
+		 */
 		private var _path:String;
 
 		/**

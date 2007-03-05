@@ -82,7 +82,7 @@ package onyx.jobs {
 			
 			_jobs = newJobs;
 			
-			if (_jobs.length > 1) {
+			if (_jobs.length > 0) {
 				_timer = new Timer(_transition.duration);
 				_timer.addEventListener(TimerEvent.TIMER, _loadJob);
 			}
@@ -103,7 +103,9 @@ package onyx.jobs {
 				var settings:LayerSettings	= job.settings;
 				layer.load(settings.path, settings, _transition);
 				
-				_timer.start();
+				if (_timer) {
+					_timer.start();
+				}
 				
 				return;
 			}

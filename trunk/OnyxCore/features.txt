@@ -1,42 +1,92 @@
-3.0.25: FEATURES: Nearly Ready for GMC1 Testing
+<a href="http://www.onyx-vj.com/demo3/onyx2.swf">Play with 3.0.2 here</a>
 
-X Visualizer plug-in type implemented
-X Ability to add filters to global display
-X Snap to Tempo implemented, filters can respond to tempo events
-X Addition of TempoFilter Class
-X Ability to mute a bitmap filter
-X Rendering performance boost on layers that share a common movieclip or image
+<b>3.0.25: FEATURES:</b>
 
-STILL TO DO:
-- add global filters to .onx mixes
+<ul>
+	<li>
+		<b>Filters:</b><br><br>
+		<ul>
+			<li>
+				Snap to Tempo implemented, filters can respond to tempo events
+				<ul>
+					<li>A new TempoFilter class can be extended (onyx.filters.TempoFilter)</li>
+					<li>Change the tempo by clicking on the Tempometer in the settings window</li>
+				</ul>
+			</li>
+			<li>
+				Ability to add filters to global display
+			</li>
+			<li>
+				Ability to mute a bitmap filter
+				<ul><li>Hold down alt and select a filter to mute it</li></ul>
+			</li>
+		</ul>
+	</li>
+	<li>
+		<b>Transitions</b><br><br>
+		<ul>
+			<li>Transitions are now implemented.  Change the transition and duration with the transition window (underneath the file-browser)</li>
+			<li>Loading Onyx Mix files will use transitions and stagger the loading of the mix</li>
+		</ul>
+	</li>
+	<li>
+		<b>Global</b>:<br><br>
+		<ul>
+			<li>Multiple layers and filters can be saved to an Onyx Mix file.  See examples by browsing into the mix folder.
+			To save a mix file, click "save layers" in the settings window (you'll have to paste the output into a text file, and rename it .onx)
+			</li>
+			<li>
+				Visualizer plug-in type implemented
+				<ul>
+					<li>(load an mp3 file, click custom, then select a visualizer to use)</li>
+				</ul>
+			</li>
+			<li>Rendering performance boost on layers that share a common movieclip or image</li>
+		</ul>
+	</li>
+</ul>
 
-DEFERRED:
-- Scratch pad plug-in type implemented
-- Controls can parent and change based on other controls
+<b>3.0.25: USER INTERFACE CHANGES:</b>
 
-BUGS LEFT:
+<ul>
+	<li>
+		<b>Layers:</b><br><br>
+		<ul>
+			<li>Keys 1-6 now select layers</li>
+			<li>Keys Q,W,E select pages within the layers</li>
+			<li>Preview layers can dispatch mouse events to custom files by pressing control, and clicking on the layer (see DrawingClip.swf)</li>
+			<li>Press control and deleting a layer deletes all layers</li>
+			<li>Pressing control while loading a layer saves bitmaps and filters for the newly loaded layer</li>
+		</ul>
+	</li>
+	<li>
+		<b>Filters:</b><br><br>
+		<ul>
+			<li>Filter parameters have now moved into a parameter page (click "filters")</li>
+			<li>Mute a filter by pressing alt</li>
+			<li>FiltersWindow now has a seperate column for Bitmap Filters and Effect Filters</li>
+		</ul>
+	</li>
+	<li>
+		<b>Global:</b><br><br>
+		<ul>
+			<li>Preview windows now display at real time</li>
+			<li>Display window has been created, and you can drop filters onto the global display</li>
+		</ul>
+	</li>
+</ul>
 
-- blendmode not dispatching when transition is being changed
-- loading multiple layers at the same time not taking advantage of ContentManager
-- need a way of saving plugin-types in .onx files (for visualizer)
+3.0.25: BUG FIXES:
+<ul>
+	<li>Multiple cameras were not being recognized correctly.  Dual cams are now supported</li>
+</ul>
 
-X console not dispatching
-X loading mixes bugged (layer 4 not dispatching)
-X transitions not rendering
-X layer move not rendering
-X transitions and a tween erroring out (i think filters is not being dispatched)
-X Colortransform bugged
+3.0.25: KNOWN ISSUES:
 
-DEV NOTES:
+<ul>
+	<li>Global display filters do not currently save to mix files</li>
+</ul>
 
-- Rendering changed (once again), now types of IRenderObject, RenderStack, and RenderTransform
-- Rendering no longer happens through a list of DisplayObjects, but rather all rendered into a single bitmap (this was done so global filters could be added to the display)
-- Addition of a FileAdapter to handle different filesystems (getting ready for a local/m2 build), addition of HTTPAdapter
-- Sped up UI a bit through ui.styles, removal of UIObject.highlight
+3.0.25: BUG REPORTS:
 
-UI CHANGES:
-- Keys 1-6 now select layers
-- Keys Q,W,E select pages within the layers
-- FiltersWindow now has a seperate column for Bitmap Filters and Effect Filters
-- Preview windows now display at real time
-- Display window has been created, and you can drop filters onto the global display
+To submit bug reports, visit the <a href="http://code.google.com/p/onyx-vj/issues/list">bug reports page</a>.
