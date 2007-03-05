@@ -8,9 +8,9 @@ X Ability to mute a bitmap filter
 X Rendering performance boost on layers that share a common movieclip or image
 
 STILL TO DO:
-- add global filters to .onx
+- add global filters to .onx mixes
 
-DEFERREd:
+DEFERRED:
 - Scratch pad plug-in type implemented
 - Controls can parent and change based on other controls
 

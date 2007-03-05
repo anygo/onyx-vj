@@ -117,6 +117,5 @@ package onyx.controls {
 		public function set target(value:IControlObject):void {
 			_target = value;
 		}
-		
 	}
 }

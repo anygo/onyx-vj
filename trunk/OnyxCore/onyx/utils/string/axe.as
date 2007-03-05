@@ -28,57 +28,14 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package onyx.controls {
+package onyx.utils.string {
 	
-	import onyx.core.onyx_ns;
-	import onyx.events.ControlEvent;
-	
-	use namespace onyx_ns;
-	
-	public class ControlNumber extends Control {
-
-		public static const FACTOR:Object		= { multiplier: int(100) };
-		
-		private var _min:Number;
-		private var _max:Number;
-		
-		protected var _defaultValue:Number;
-		
-		public var multiplier:Number;
-		
-		public function ControlNumber(name:String, display:String, min:Number, max:Number, defaultvalue:Number, options:Object = null):void {
-			
-			_min = min;
-			_max = max;
-			_defaultValue = defaultvalue;
-			
-			super(name, display, options || FACTOR);
-		}
-				
-		/**
-		 * 	Resets
-		 */
-		override public function reset():void {
-			_target[name] = _defaultValue;
-			dispatchEvent(new ControlEvent(_defaultValue));
-		}
-		
-		/**
-		 * 
-		 */
-		public function defaultValue():Number {
-			return _defaultValue;
-		}
-		
-		/**
-		 * 
-		 */
-		override public function setValue(v:*):* {
-
-			var value:Number = Math.min(Math.max(v, _min), _max);
-			dispatchEvent(new ControlEvent(value));
-			
-			return value;
-		}
+	/**
+	 * 	Gets a file extension based on a file path
+	 */
+	public function axe(obj:Object, find:String):String {
+		var str:String = obj.toString();
+		return str.substr(0, str.indexOf(find) - 1);
 	}
+
 }

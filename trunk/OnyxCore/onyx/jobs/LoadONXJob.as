@@ -33,8 +33,7 @@ package onyx.jobs {
 	import flash.events.*;
 	import flash.net.*;
 	
-	import onyx.core.Console;
-	import onyx.core.IDisposable;
+	import onyx.core.*;
 	import onyx.display.Display;
 	import onyx.display.IDisplay;
 	import onyx.jobs.onx.LayerLoadSettings;
@@ -89,7 +88,10 @@ package onyx.jobs {
 			loader.removeEventListener(IOErrorEvent.IO_ERROR,				_onURLHandler);
 			
 			// success
-			if (event is IOErrorEvent) {
+			if (event is ErrorEvent) {
+				
+				Console.output((event as ErrorEvent).text);
+				
 				// error
 			} else {
 				

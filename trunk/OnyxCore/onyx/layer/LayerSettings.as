@@ -314,6 +314,9 @@ package onyx.layer {
 				var controlXML:XML = <controls/>;
 				
 				/*
+				
+				TBD: Need to be able to save visualizer based on plugin-control
+				
 				for each (var control:Control in controls) {
 					
 					var value:Object = control.value;

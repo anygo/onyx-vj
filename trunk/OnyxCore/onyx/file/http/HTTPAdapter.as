@@ -33,8 +33,8 @@ package onyx.file.http {
 	import flash.events.Event;
 	
 	import onyx.file.FileAdapter;
-	import onyx.file.FileQuery;
 	import onyx.file.FileFilter;
+	import onyx.file.FileQuery;
 
 	/**
 	 * 	Adapter for http / local-without-networking

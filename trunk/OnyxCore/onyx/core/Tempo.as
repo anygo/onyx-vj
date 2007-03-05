@@ -4,10 +4,8 @@ package onyx.core {
 	import flash.events.TimerEvent;
 	import flash.utils.*;
 	
-	import onyx.controls.IControlObject;
+	import onyx.controls.*;
 	import onyx.events.TempoEvent;
-	import onyx.controls.Controls;
-	import onyx.controls.ControlInt;
 	
 	[Event(name='click', type='onyx.events.TempoEvent')]
 	
@@ -42,23 +40,33 @@ package onyx.core {
 		
 		/**
 		 * 	@private
+		 * 	Store timer
 		 */
 		private var _timer:Timer;
 		
 		/**
 		 * 	@private
+		 * 	Last execution time
 		 */
 		private var _last:int;
 		
 		/**
-		 * 
+		 * 	@private
+		 * 	Controls related to tempometer
 		 */
 		private var _controls:Controls;
 		
 		/**
-		 * 
+		 * 	@private
+		 * 	The beat signature (0-15)
 		 */
 		private var _step:int				= 0;
+		
+		/**
+		 * 	@private
+		 * 	Whether active or not
+		 */
+		private var _active:Boolean			= true;
 		
 		/**
 		 * 	@constructor
@@ -69,9 +77,29 @@ package onyx.core {
 			} else {
 				_timer		= new Timer(10);
 				_controls	= new Controls(this,
+					new ControlBoolean('active', 'active', 0),
 					new ControlInt('tempo', 'tempo', 40, 1000, 500)
 				);
 			}
+		}
+		
+		/**
+		 * 
+		 */
+		public function set active(value:Boolean):void {
+			_active = value;
+			if (active) {
+				start();
+			} else {
+				stop();
+			}
+		}
+		
+		/**
+		 * 
+		 */
+		public function get active():Boolean {
+			return _active;
 		}
 		
 		/**
@@ -103,7 +131,7 @@ package onyx.core {
 			
 			if (time >= _tempo) {
 				_last = getTimer() + (time - _tempo);
-				_step = ++_step % 16
+				_step = ++_step % 16;
 				dispatchEvent(new TempoEvent(_step));
 			}
 		}
