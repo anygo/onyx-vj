@@ -45,6 +45,7 @@ package ui.core {
 	
 	import ui.styles.*;
 	import ui.text.TextField;
+	import onyx.tween.easing.Back;
 
 	/**
 	 * 	Base UIObject Class
@@ -180,11 +181,10 @@ package ui.core {
 		/**
 		 * 	Adds a label to the control
 		 */
-		protected function addLabel(name:String, align:String, width:int, height:int, offset:int = -8):void {
+		protected function addLabel(name:String, width:int, height:int, offset:int = -8):void {
 			
-			var label:TextField = new TextField(width + 3, height);
+			var label:TextField = new TextField(width + 3, height, TEXT_DEFAULT_CENTER);
 			label.textColor		= TEXT_LABEL;
-			label.align			= align || 'center';
 			label.text			= name.toUpperCase();
 			label.y				= offset;
 			label.mouseEnabled	= false;

@@ -3,6 +3,7 @@ package ui.controls.page {
 	import flash.display.Sprite;
 	
 	import ui.assets.AssetLayerTab;
+	import ui.styles.*;
 	import ui.text.TextField;
 
 	public final class ControlPageSelected extends Sprite {
@@ -15,7 +16,7 @@ package ui.controls.page {
 		/**
 		 * 	@private
 		 */
-		private var _label:TextField		= new TextField(36, 10, 'center');
+		private var _label:TextField		= new TextField(36, 10, TEXT_DEFAULT_CENTER);
 		
 		/**
 		 * 	offset the tabs

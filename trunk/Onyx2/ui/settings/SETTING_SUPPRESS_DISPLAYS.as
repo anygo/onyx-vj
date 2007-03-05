@@ -30,6 +30,6 @@
  */
 package ui.settings {
 
-	public var SETTING_SUPPRESS_DISPLAYS:Boolean = true;
+	public var SETTING_SUPPRESS_DISPLAYS:Boolean = false;
 	
 }

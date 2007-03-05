@@ -30,8 +30,8 @@
  */
 package ui.text {
 	
-	import flash.text.TextField;
-	import flash.text.TextFormat;
+	import flash.text.*;
+	
 	import ui.styles.TEXT_DEFAULT;
 	
 	/**
@@ -42,30 +42,25 @@ package ui.text {
 		/**
 		 * 	@constructor
 		 */
-		public function TextField(width:int, height:int, align:String = 'left', selectable:Boolean = false, mouseEnabled:Boolean = false):void {
+		public function TextField(width:int, height:int, format:TextFormat = null):void {
 			
-			super.selectable = selectable;
+			var format:TextFormat	= format || TEXT_DEFAULT;
 
-			var format:TextFormat = TEXT_DEFAULT;
-			format.align = align;
-
-			defaultTextFormat = format;
-			
-			this.width = width;
-			this.height = height;
-			this.mouseEnabled = mouseEnabled;
-			
-			embedFonts = true;
+			super.selectable		= false;
+			super.defaultTextFormat	= format;
+			super.width				= width;
+			super.height			= height;
+			super.embedFonts		= true;
 		}
 
 		/**
 		 * 	Changes alignment
-		 */		
 		public function set align(a:String):void {
 			var format:TextFormat = defaultTextFormat;
 			format.align = a;
 			defaultTextFormat = format;
 		}
+		 */		
 		
 		/**
 		 * 	Gets alignment

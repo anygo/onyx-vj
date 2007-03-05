@@ -32,11 +32,11 @@ package ui.controls {
 	
 	import flash.events.MouseEvent;
 	
-	import onyx.controls.Control;
-	import onyx.controls.ControlProxy;
+	import onyx.controls.*;
 	import onyx.events.ControlEvent;
 	import onyx.net.Stream;
 	
+	import ui.styles.*;
 	import ui.text.TextField;
 	
 	final public class SliderV2 extends UIControl {
@@ -78,7 +78,7 @@ package ui.controls {
 			super(options, true, proxy.display);
 
 			_button = new ButtonClear(width,	height);
-			_value	= new TextField(width + 3,	height);
+			_value	= new TextField(width + 3,	height,	TEXT_DEFAULT_CENTER);
 
 			_controlY = proxy.controlY;
 			_controlX = proxy.controlX;
@@ -86,7 +86,6 @@ package ui.controls {
 			_multiplier = multiplier;
 			_factor = factor;
 
-			_value.align	= 'center';
 			_value.y		= 1;
 			_value.text		= Math.floor(_controlY.value * _multiplier) + ':' + Math.floor(_controlX.value * _multiplier);	
 			

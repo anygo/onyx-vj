@@ -54,8 +54,8 @@ package ui.controls {
 		/**
 		 * 	@private
 		 */
-		override protected function _onControlChange(event:ControlEvent):void {
-			value = event.value.toFixed(1);
+		override protected function _onControlChange(event:ControlEvent = null):void {
+			value = event ? event.value.toFixed(1) : (_controlY.value as Number).toFixed(1);
 		}
 		
 		/**

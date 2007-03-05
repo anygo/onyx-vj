@@ -44,6 +44,7 @@ package ui.controls.browser {
 	
 	import ui.assets.AssetCamera;
 	import ui.controls.*;
+	import ui.styles.*;
 	import ui.text.TextField;
 	
 	/**
@@ -51,7 +52,7 @@ package ui.controls.browser {
 	 */
 	public final class FileControl extends UIControl {
 		
-		private var _label:TextField	= new TextField(46, 35);
+		private var _label:TextField	= new TextField(46, 35,	TEXT_DEFAULT_CENTER);
 		private var _button:ButtonClear	= new ButtonClear(47, 36);
 		private var _loader:Loader;
 
@@ -72,8 +73,8 @@ package ui.controls.browser {
 			var path:String = file.path;
 			
 			// add label
-			_label.align	= 'center';
 			_label.wordWrap = true;
+			
 			var format:TextFormat = _label.getTextFormat();
 			var substr:int = Math.max(path.lastIndexOf('\\')+1,path.lastIndexOf('/')+1);
 			

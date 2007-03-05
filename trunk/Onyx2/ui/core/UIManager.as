@@ -106,7 +106,8 @@ package ui.core {
 				PerfMonitor,
 				Browser,
 				Filters,
-				TransitionWindow
+				TransitionWindow,
+				HelpWindow
 			);
 
 			// add a display
@@ -145,6 +146,7 @@ package ui.core {
 			uilayer.reOrderLayer();
 
 			ROOT.addChildAt(uilayer, 0);
+			
 		}
 	}
 }

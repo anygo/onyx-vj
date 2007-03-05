@@ -59,7 +59,7 @@ package ui.controls {
 				}
 				
 				if (options.label && label) {
-					addLabel(label, options.labelAlign, options.width, options.height);
+					addLabel(label, options.width, options.height);
 				}
 			}
 			

@@ -93,7 +93,7 @@ package ui.controls {
 			
 			// check for label
 			if (label) {
-				super.addLabel(label, 'left', width, 10, -10);
+				super.addLabel(label, width, 10, -10);
 			}
 		}
 		

@@ -90,7 +90,7 @@ package ui.window {
 			var options:UIOptions	= new UIOptions();
 			options.width			= 100;
 			
- 			dropdown				= new DropDown(options, _controls.getControl('transition'), 'left');
+ 			dropdown				= new DropDown(options, _controls.getControl('transition'));
 			dropdown.x = 2;
 			dropdown.y = 20;
 			

@@ -54,7 +54,7 @@ package ui.controls {
 		private var _items:Array;
 		private var _selectedIndex:Option;
 		
-		public function DropDown(options:UIOptions, range:Control, align:String = 'left'):void {
+		public function DropDown(options:UIOptions, range:Control):void {
 
 			var control:ControlRange = range as ControlRange;
 			
@@ -69,7 +69,7 @@ package ui.controls {
 			_data = control.data;
 			
 			// draw
-			_draw(options.width, options.height, align);
+			_draw(options.width, options.height);
 
 			// add listeners			
 			_button.addEventListener(MouseEvent.MOUSE_DOWN, _onPress);
@@ -108,11 +108,11 @@ package ui.controls {
 			setText(event.value);
 		}
 		
-		private function _draw(width:int, height:int, align:String, drawBG:Boolean = false):void {
+		private function _draw(width:int, height:int, drawBG:Boolean = false):void {
 
 			_button	= new ButtonClear(width, height);
 						
-			_label		= new TextField(width, 9, align);
+			_label		= new TextField(width, 9);
 			_label.x	= 2;
 			_label.y	= 1;
 
@@ -136,7 +136,7 @@ package ui.controls {
 			for (var count:int = 0; count < len; count++) {
 				
 				var item:Option	= new Option(
-					(_control.binding) ? (_data[count] ? _data[count][_control.binding] : 'None') : _data[count], count, _width, _label.align, _control.binding)
+					(_control.binding) ? (_data[count] ? _data[count][_control.binding] : 'None') : _data[count], count, _width, _control.binding)
 				;
 				
 				item.addEventListener(MouseEvent.MOUSE_OVER, _onRollOver);
@@ -219,11 +219,11 @@ final class Option extends Sprite {
 
 	public var index:int;
 	
-	public function Option(text:String, index:int, width:int, align:String, bind:String = null):void {
+	public function Option(text:String, index:int, width:int, bind:String = null):void {
 		
 		this.index = index;
 		
-		_label				= new TextField(width, 9, align);
+		_label				= new TextField(width, 9);
 		_label.x			= 2;
 		_label.y			= 1;
 		_label.text = text.toUpperCase();

@@ -36,6 +36,7 @@ package ui.controls {
 	import onyx.controls.Control;
 	import onyx.events.ControlEvent;
 	
+	import ui.styles.*;
 	import ui.text.TextField;
 	
 	public class CheckBox extends UIControl {
@@ -52,7 +53,7 @@ package ui.controls {
 			
 			_value = control.value;
 
-			_label			= new TextField(options.width + 3, options.height, 'center');
+			_label			= new TextField(options.width + 3, options.height, TEXT_DEFAULT_CENTER);
 			_label.text		= _value.toString();
 			_label.y		= 1;
 			

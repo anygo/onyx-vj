@@ -28,21 +28,18 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package ui.controls {
+package ui.assets {
 	
-	import ui.core.UIObject;
+	import flash.text.Font;
 	
-	public final class TextButton extends UIObject {
-		
-		public function TextButton(options:UIOptions, name:String):void {
-			
-			var width:int	= options.width;
-			var height:int	= options.height;
-			
-			displayBackground(width, height);
-			addLabel(name.toUpperCase(), width, height, 1);
+	[Embed(
+			source='c:\\windows\\fonts\\FFFGALAX.ttf',
+			fontName='Pixel2',
+			mimeType='application/x-font',
+			unicodeRange='U+0020-U+0040,U+0041-U+005A,U+005B-U+0060,U+0061-U+007A,U+007B-U+007F')
+	]
+	[ExcludeClass]
+	public final class ArialFont extends Font {
 
-			addChild(new ButtonClear(width, height));
-		}
 	}
 }

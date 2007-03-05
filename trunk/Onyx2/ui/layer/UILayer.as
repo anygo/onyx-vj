@@ -494,16 +494,6 @@ package ui.layer {
 					
 				}
 				
-			} else if (mouseY > 182) {
-			
-				// else check to see if the mouse is within the empty area
-				if (filterPane.selectedFilter) {
-					if (mouseX > 105) {
-						if (!(event.target is LayerFilter)) {
-							filterPane.selectFilter(null);
-						}
-					}
-				}
 			}
 		}
 		
@@ -556,14 +546,13 @@ package ui.layer {
 		 */
 		public function selectFilterUp(up:Boolean):void {
 			
-			/*
-			if (_selectedFilter) {
-				var index:int = _selectedFilter.filter.index + (up ? -1 : 1);
-				selectFilter(_filters[index]);
+			if (filterPane.selectedFilter) {
+				var index:int = filterPane.selectedFilter.filter.index + (up ? -1 : 1);
+				filterPane.selectFilter(_layer.filters[index]);
 			} else {
-				selectFilter(_filters[int((up) ? _filters.length - 1 : 0)]);
+				filterPane.selectFilter(_layer.filters[int((up) ? _layer.filters.length - 1 : 0)]);
 			}
-			*/
+
 		}
 
 	}

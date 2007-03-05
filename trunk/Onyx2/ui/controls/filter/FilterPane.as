@@ -37,9 +37,9 @@ package ui.controls.filter {
 	import onyx.states.StateManager;
 	
 	import ui.controls.ScrollPane;
+	import ui.layer.UIFilterControl;
 	import ui.states.FilterMoveState;
 	import ui.styles.*;
-	import ui.layer.UIFilterControl;
 
 	/**
 	 * 
@@ -47,12 +47,12 @@ package ui.controls.filter {
 	public final class FilterPane extends ScrollPane {
 		
 		/**
-		 * 
+		 * 	The currently selected filter
 		 */
 		public var selectedFilter:LayerFilter;
 		
 		/**
-		 * 
+		 * 	@private
 		 */
 		private var _dict:Dictionary = new Dictionary();
 		
@@ -201,5 +201,11 @@ package ui.controls.filter {
 			}
 		}
 		
+		/**
+		 * 	Returns the control for a filter
+		 */
+		public function getControl(filter:Filter):LayerFilter {
+			return _dict[filter];
+		}
 	}
 }

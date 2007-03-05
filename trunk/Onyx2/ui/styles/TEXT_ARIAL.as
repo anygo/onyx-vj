@@ -28,21 +28,13 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package ui.controls {
+package ui.styles {
 	
-	import ui.core.UIObject;
+	import flash.text.TextFormat;
+	import ui.assets.ArialFont;
 	
-	public final class TextButton extends UIObject {
-		
-		public function TextButton(options:UIOptions, name:String):void {
-			
-			var width:int	= options.width;
-			var height:int	= options.height;
-			
-			displayBackground(width, height);
-			addLabel(name.toUpperCase(), width, height, 1);
-
-			addChild(new ButtonClear(width, height));
-		}
-	}
+	ArialFont;
+	
+	public const TEXT_ARIAL:TextFormat = new TextFormat('Pixel2', 8, 0xe4eaef);
+	
 }

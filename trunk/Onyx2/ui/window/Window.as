@@ -63,16 +63,20 @@ package ui.window {
 			
 			_windows.push(this);
 			
-			_title.autoSize			= TextFieldAutoSize.LEFT;
-			_title.x				= 2;
-			_title.y				= 1;
-			_title.text				= text;
-			
-			addChildAt(_background, 0);
-			addChild(_title);
-			
-			_background.width	= width;
-			_background.height	= height;
+			if (text) {
+				
+				_title.autoSize			= TextFieldAutoSize.LEFT;
+				_title.x				= 2;
+				_title.y				= 1;
+				_title.text				= text;
+				
+				addChildAt(_background, 0);
+				addChild(_title);
+				
+				_background.width	= width;
+				_background.height	= height;
+				
+			}
 			
 			this.x = x;
 			this.y = y;

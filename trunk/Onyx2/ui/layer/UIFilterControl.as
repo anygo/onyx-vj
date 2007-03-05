@@ -76,6 +76,13 @@ package ui.layer {
 		}
 		
 		/**
+		 * 	Returns the currently selected filter
+		 */
+		public function get selectedFilter():LayerFilter {
+			return filterPane.selectedFilter;
+		}
+		
+		/**
 		 * 	Selects a page
 		 */
 		public function selectPage(index:int, controls:Array = null):void {

@@ -7,6 +7,7 @@ package ui.controls {
 	import onyx.controls.*;
 	
 	import ui.core.UIObject;
+	import ui.styles.*;
 	import ui.text.TextField;
 	
 	public final class TextControl extends UIControl {
@@ -20,7 +21,7 @@ package ui.controls {
 
 			_control = control as ControlString;
 			
-			_label = new TextField(options.width + 3, options.height, 'center');
+			_label = new TextField(options.width + 3, options.height, TEXT_DEFAULT_CENTER);
 			addChild(_label);
 			
 			_label.y			= 1;

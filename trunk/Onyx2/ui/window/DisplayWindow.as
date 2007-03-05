@@ -49,36 +49,36 @@ package ui.window {
 		 * 	@private
 		 * 	The display controls
 		 */
-		private var _preview:Bitmap		= new Bitmap();
+		// private var _preview:Bitmap		= new Bitmap();
 		
 		/**
 		 * 	@constructor
 		 */
 		public function DisplayWindow(display:Display):void {
 			
-			super('DISPLAY', 596, 240, 412, 522);
+			super(null, 286, 240, 412, 522);
 			
 			_display	= new UIDisplay(display);
 			
-			_display.x	= 94;
-			_display.y	= 98;
+			_display.x	= 96;
+			_display.y	= 102;
 
 //			_display.x	= 4;
 //			_display.y	= 57;
 			
-			_preview.scaleX = .94;
-			_preview.scaleY = .94;
-			_preview.x = 292;
-			_preview.y = 13;
+			//_preview.scaleX = .94;
+			//_preview.scaleY = .94;
+			//_preview.x = 292;
+			//_preview.y = 13;
 
 //			_preview.scaleX = .585;
 //			_preview.scaleY = .585;
 //			_preview.y = 57;
 			
-			_preview.bitmapData = display.bitmapData;
+			//_preview.bitmapData = display.bitmapData;
 			
 			addChild(_display);
-			addChild(_preview);
+			// addChild(_preview);
 		}
 	}
 }

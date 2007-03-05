@@ -31,14 +31,21 @@
 package ui.text {
 
 	import flash.text.TextFieldType;
+	import ui.styles.*;
+	import flash.text.TextFormat;
 
 	public final class TextInput extends TextField {
 		
-		public function TextInput(width:int = 100, height:int = 16, align:String = 'left'):void {
+		/**
+		 * 	@constructor
+		 */
+		public function TextInput(width:int = 100, height:int = 16, format:TextFormat = null):void {
 
-			super(width, height, align, true, true);
-
-			type = TextFieldType.INPUT;
+			super(width, height, format);
+			
+			super.type = TextFieldType.INPUT;
+			super.mouseEnabled	= true;
+			super.selectable	= true;
 		}
 
 	}

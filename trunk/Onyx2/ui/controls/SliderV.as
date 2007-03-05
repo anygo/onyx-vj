@@ -36,6 +36,7 @@ package ui.controls {
 	import onyx.controls.ControlNumber;
 	import onyx.events.ControlEvent;
 	
+	import ui.styles.*;
 	import ui.text.TextField;
 	
 	/**
@@ -57,6 +58,11 @@ package ui.controls {
 		 * 	@private
 		 */
 		protected var _factor:Number;
+		
+		/**
+		 * 	@private
+		 */
+		protected var _toFixed:int;
 		
 		/**
 		 * 	@private
@@ -89,34 +95,41 @@ package ui.controls {
 			var height:int			= options.height;
 			var multiplier:Number	= 1;
 			var factor:Number		= 1;
+			var toFixed:Number		= 0;
 			
 			if (controlY.metadata) {
 				var metadata:Object = controlY.metadata;
-				multiplier	= (metadata.multiplier is Number) ? metadata.multiplier : multiplier;
-				factor		= (metadata.factor is Number) ? metadata.factor : factor;
+				multiplier			= (metadata.multiplier is Number) ? metadata.multiplier : multiplier;
+				factor				= (metadata.factor is Number) ? metadata.factor : factor;
+				toFixed				= (metadata.toFixed is Number) ? metadata.toFixed : toFixed;
 			}
 
 			_button = new ButtonClear(width,	height);
-			_value	= new TextField(width + 3,	height);
+			_value	= new TextField(width + 3,	height, TEXT_DEFAULT_CENTER);
 
-			_controlY = controlY as ControlNumber;
-			_multiplier = multiplier;
-			_factor = factor;
+			_controlY			= controlY as ControlNumber;
+			_multiplier			= multiplier;
+			_factor				= factor;
+			_toFixed			= toFixed;
 
-			_value.align	= 'center';
-			_value.y		= 1;
-			value			= Math.floor(_controlY.value * _multiplier).toString();
+			_value.y			= 1;
 			
 			addChild(_value);
 			addChild(_button);
 			
-			doubleClickEnabled = true;
+			doubleClickEnabled	= true;
 
-			addEventListener(MouseEvent.MOUSE_DOWN, _onMouseDown);
-			addEventListener(MouseEvent.DOUBLE_CLICK, _onDoubleClick);
-			addEventListener(MouseEvent.MOUSE_WHEEL, _onMouseWheel);
+			addEventListener(MouseEvent.MOUSE_DOWN,		_onMouseDown);
+			addEventListener(MouseEvent.DOUBLE_CLICK,	_onDoubleClick);
+			addEventListener(MouseEvent.MOUSE_WHEEL,	_onMouseWheel);
 			
-			_controlY.addEventListener(ControlEvent.CHANGE, _onControlChange);
+			if (_toFixed > 0) {
+				_controlY.addEventListener(ControlEvent.CHANGE, _onControlChangeFixed);
+				_onControlChangeFixed();
+			} else {
+				_controlY.addEventListener(ControlEvent.CHANGE, _onControlChange);
+				_onControlChange();
+			}
 		}
 		
 		/**
@@ -151,8 +164,10 @@ package ui.controls {
 		 */
 		protected function _onMouseMove(event:MouseEvent):void {
 			
-			var diff:int = (_mouseY - mouseY) / _factor;
+			var diff:Number = (_mouseY - mouseY) / _factor;
+			
 			_controlY.value = (diff + _tempY) / _multiplier;
+			
 		}
 		
 		/**
@@ -168,12 +183,19 @@ package ui.controls {
 		/**
 		 * 	@private
 		 */
-		protected function _onControlChange(event:ControlEvent):void {
-			value	= String(Math.floor(event.value * _multiplier))
+		protected function _onControlChange(event:ControlEvent = null):void {
+			value	= String(Math.floor(((event) ? event.value : _controlY.value) * _multiplier));
 		}
 		
 		/**
-		 * 
+		 * 	@private
+		 */
+		protected function _onControlChangeFixed(event:ControlEvent = null):void {
+			value	= String(Number(((event) ? event.value : _controlY.value) * _multiplier).toFixed(_toFixed));
+		}
+		
+		/**
+		 * 	Value
 		 */
 		protected function set value(value:String):void {
 			_value.text = value;
@@ -184,12 +206,14 @@ package ui.controls {
 		 */
 		override public function dispose():void {
 
-			// clean up events
+			// clean up event handlers
 			removeEventListener(MouseEvent.MOUSE_DOWN,		_onMouseDown);
 			removeEventListener(MouseEvent.DOUBLE_CLICK,	_onDoubleClick);
-			removeEventListener(MouseEvent.MOUSE_WHEEL,	_onMouseWheel);
+			removeEventListener(MouseEvent.MOUSE_WHEEL,		_onMouseWheel);
 			
+			// remove listeners
 			_controlY.removeEventListener(ControlEvent.CHANGE, _onControlChange);
+			_controlY.removeEventListener(ControlEvent.CHANGE, _onControlChangeFixed);
 
 			// remove display objects
 
