@@ -40,6 +40,7 @@ package ui.controls.filter {
 	import ui.layer.UIFilterControl;
 	import ui.states.FilterMoveState;
 	import ui.styles.*;
+//	import ui.window.PatchWindow;
 
 	/**
 	 * 
@@ -165,7 +166,7 @@ package ui.controls.filter {
 					
 					var state:FilterMoveState = new FilterMoveState();
 					StateManager.loadState(state, filter, _dict);
-				
+
 				}
 			}
 		}
@@ -192,12 +193,13 @@ package ui.controls.filter {
 				
 				control.transform.colorTransform = FILTER_HIGHLIGHT;
 				uilayer.selectPage(1, control.filter.controls);
+//				PatchWindow.display(control, control.filter);
 			
 			// select nothing
 			} else {
 				
 				uilayer.selectPage(0);
-				
+//				PatchWindow.display(uilayer, uilayer.target);
 			}
 		}
 		

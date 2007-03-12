@@ -42,10 +42,11 @@ package ui.core {
 	import flash.utils.getTimer;
 	
 	import onyx.core.IDisposable;
+	import onyx.tween.easing.Back;
 	
+	import ui.assets.AssetShape;
 	import ui.styles.*;
 	import ui.text.TextField;
-	import onyx.tween.easing.Back;
 
 	/**
 	 * 	Base UIObject Class
@@ -98,7 +99,7 @@ package ui.core {
 		public function UIObject(movesToTop:Boolean = false):void {
 
 			if (movesToTop) {
-				addEventListener(MouseEvent.MOUSE_DOWN, moveToTop);
+				addEventListener(MouseEvent.MOUSE_DOWN, moveToTop, false, 0, true);
 			}
 			
 			tabEnabled = false;
@@ -109,7 +110,7 @@ package ui.core {
 		 */
 		public override function set doubleClickEnabled(s:Boolean):void {
 			if (s) {
-				addEventListener(MouseEvent.MOUSE_DOWN, _mouseDown, true);
+				addEventListener(MouseEvent.MOUSE_DOWN, _mouseDown, true, 0, true);
 			} else {
 				removeEventListener(MouseEvent.MOUSE_DOWN, _mouseDown, true);
 			}
@@ -145,11 +146,11 @@ package ui.core {
 		 */
 		protected function displayBackground(width:int, height:int):void {
 			if (!background) {
-				background = new ControlShape(width, height);
+				background = new AssetShape(width, height);
 				addChildAt(background, 0);
 			}
 		}
-
+		
 		/**
 		 * 	Adds Children
 		 */
@@ -159,6 +160,7 @@ package ui.core {
 			for (var count:int = 0; count < len; count+=3) {
 				args[count].x = args[count+1];
 				args[count].y = args[count+2];
+
 				addChild(args[count]);
 			}
 		}
@@ -174,6 +176,7 @@ package ui.core {
 			
 			clearChildren();
 			
+			// removes listener
 			removeEventListener(MouseEvent.MOUSE_DOWN, moveToTop, true);
 		}
 
@@ -181,41 +184,16 @@ package ui.core {
 		/**
 		 * 	Adds a label to the control
 		 */
-		protected function addLabel(name:String, width:int, height:int, offset:int = -8):void {
+		protected function addLabel(name:String, width:int, height:int, offsetY:int = -8, offsetX:int = 0):void {
 			
 			var label:TextField = new TextField(width + 3, height, TEXT_DEFAULT_CENTER);
 			label.textColor		= TEXT_LABEL;
 			label.text			= name.toUpperCase();
-			label.y				= offset;
+			label.y				= offsetY;
+			label.x				= offsetX;
 			label.mouseEnabled	= false;
 
-			addChild(label);
-			
+			super.addChild(label);
 		}
-
 	}
-}
-
-
-import flash.display.Shape;
-
-/**
- * 	Stores shape
- */
-final class ControlShape extends Shape {
-	
-	/**
-	 * 	@constructor
-	 */
-	public function ControlShape(width:int, height:int):void {
-
-		graphics.lineStyle(0, 0x45525c);
-		graphics.beginFill(0x0e0f0f);
-		graphics.drawRect(0,0,width,height);
-		graphics.endFill();
-		
-		cacheAsBitmap = true;
-
-	}
-	
 }

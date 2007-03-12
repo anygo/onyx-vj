@@ -34,7 +34,6 @@ package ui.layer {
 	import flash.events.*;
 	import flash.filters.DropShadowFilter;
 	import flash.geom.*;
-	import flash.net.URLRequest;
 	import flash.utils.Timer;
 	
 	import onyx.controls.*;
@@ -66,7 +65,7 @@ package ui.layer {
 		/**
 		 * 	@private
 		 */
-		private static const LAYER_X:int			= 6;
+		private static const LAYER_X:int				= 6;
 
 		/**
 		 * 	@private
@@ -76,7 +75,7 @@ package ui.layer {
 		/**
 		 * 	@private
 		 */
-		private static const SCRUB_LEFT:int			= 3;
+		private static const SCRUB_LEFT:int				= 3;
 
 		/**
 		 * 	@private
@@ -91,7 +90,7 @@ package ui.layer {
 		/**
 		 * 	@private
 		 */
-		private static var _layers:Array			= [];
+		private static var _layers:Array				= [];
 
 		/**
 		 * 	Returns all layers
@@ -113,12 +112,8 @@ package ui.layer {
 		public static function selectLayer(uilayer:UILayer):void {
 			
 			if (selectedLayer) {
-				selectedLayer._timer.delay = 3000;
 				selectedLayer.transform.colorTransform = DEFAULT;
 			}
-			
-			// make the delay faster
-			uilayer._timer.delay = 1000;
 			
 			// highlight
 			uilayer.transform.colorTransform = LAYER_HIGHLIGHT;
@@ -172,9 +167,6 @@ package ui.layer {
 		private var _btnScrub:ButtonClear					= new ButtonClear(192, 12, false);
 
 		/** @private **/
-		private var _timer:Timer							= new Timer(2000);
-
-		/** @private **/
 		private var _preview:Bitmap							= new Bitmap();
 
 		/** @private **/
@@ -185,7 +177,7 @@ package ui.layer {
 		 **/
 		public function UILayer(layer:ILayer):void {
 			
-			var props:LayerProperties = layer.properties;
+			var props:LayerProperties = layer.properties as LayerProperties;
 			
 			// register for filter drops
 			super(
@@ -220,11 +212,15 @@ package ui.layer {
 			_draw();
 			
 			// add handlers			
-			_assignHandlers();
+			_assignHandlers(true);
 
 			// if there is no selected layer, select current layer
 			if (!selectedLayer) {
 				selectLayer(this);
+			}
+			
+			if (_layer.path) {
+				_onLayerLoad();
 			}
 		}
 
@@ -240,35 +236,72 @@ package ui.layer {
 		 * 	@private
 		 * 	assign handlers
 		 */
-		private function _assignHandlers():void {
+		private function _assignHandlers(value:Boolean):void {
 			
-			// add layer event handlers
-			_layer.addEventListener(LayerEvent.LAYER_LOADED, _onLayerLoad);
-			_layer.addEventListener(LayerEvent.LAYER_UNLOADED, _onLayerUnLoad);
-			
-			_layer.addEventListener(ProgressEvent.PROGRESS, _onLayerProgress);
-			
-			// when the scrub button is pressed
-			_btnScrub.addEventListener(MouseEvent.MOUSE_DOWN, _onScrubPress);
-			
-			// this listens for selecting the layer
-			addEventListener(MouseEvent.MOUSE_DOWN, _onMouseDown);
-
-			// set enabled
-			_btnUp.doubleClickEnabled = true;
-			_btnDown.doubleClickEnabled = true;	
-
-			// buttons
-			_btnUp.addEventListener(MouseEvent.CLICK, _onButtonPress);
-			_btnDown.addEventListener(MouseEvent.CLICK, _onButtonPress);
-			_btnUp.addEventListener(MouseEvent.DOUBLE_CLICK, _onButtonPress);
-			_btnDown.addEventListener(MouseEvent.DOUBLE_CLICK, _onButtonPress);
-			_btnCopy.addEventListener(MouseEvent.MOUSE_DOWN, _onButtonPress);
-			_btnDelete.addEventListener(MouseEvent.MOUSE_DOWN, _onButtonPress);
-
-			// when the layer is moved
-			_layer.addEventListener(LayerEvent.LAYER_MOVE, reOrderLayer);
-
+			if (value) {
+				
+				// add layer event handlers
+				_layer.addEventListener(LayerEvent.LAYER_LOADED,	_onLayerLoad);
+				_layer.addEventListener(LayerEvent.LAYER_UNLOADED,	_onLayerUnLoad);
+				
+				// listen for progress events
+				_layer.addEventListener(ProgressEvent.PROGRESS, _onLayerProgress);
+				
+				// when the scrub button is pressed
+				_btnScrub.addEventListener(MouseEvent.MOUSE_DOWN, _onScrubPress);
+				
+				// this listens for selecting the layer
+				addEventListener(MouseEvent.MOUSE_DOWN, _onMouseDown);
+	
+				// set enabled
+				_btnUp.doubleClickEnabled = true;
+				_btnDown.doubleClickEnabled = true;	
+	
+				// buttons
+				_btnUp.addEventListener(MouseEvent.CLICK, _onButtonPress);
+				_btnDown.addEventListener(MouseEvent.CLICK, _onButtonPress);
+				_btnUp.addEventListener(MouseEvent.DOUBLE_CLICK, _onButtonPress);
+				_btnDown.addEventListener(MouseEvent.DOUBLE_CLICK, _onButtonPress);
+				_btnCopy.addEventListener(MouseEvent.MOUSE_DOWN, _onButtonPress);
+				_btnDelete.addEventListener(MouseEvent.MOUSE_DOWN, _onButtonPress);
+	
+				// when the layer is moved
+				_layer.addEventListener(LayerEvent.LAYER_MOVE, reOrderLayer);
+				
+			} else {
+				
+				// add layer event handlers
+				_layer.removeEventListener(LayerEvent.LAYER_LOADED,		_onLayerLoad);
+				_layer.removeEventListener(LayerEvent.LAYER_UNLOADED,	_onLayerUnLoad);
+				
+				// listen for progress events
+				_layer.removeEventListener(ProgressEvent.PROGRESS,		_onLayerProgress);
+				
+				// when the scrub button is pressed
+				_btnScrub.removeEventListener(MouseEvent.MOUSE_DOWN,	_onScrubPress);
+				
+				// this listens for selecting the layer
+				removeEventListener(MouseEvent.MOUSE_DOWN,				_onMouseDown);
+	
+				// set enabled
+				_btnUp.doubleClickEnabled	= false;
+				_btnDown.doubleClickEnabled = false;	
+	
+				// buttons
+				_btnUp.removeEventListener(MouseEvent.CLICK,			_onButtonPress);
+				_btnDown.removeEventListener(MouseEvent.CLICK,			_onButtonPress);
+				_btnUp.removeEventListener(MouseEvent.DOUBLE_CLICK,		_onButtonPress);
+				_btnDown.removeEventListener(MouseEvent.DOUBLE_CLICK,	_onButtonPress);
+				_btnCopy.removeEventListener(MouseEvent.MOUSE_DOWN,		_onButtonPress);
+				_btnDelete.removeEventListener(MouseEvent.MOUSE_DOWN,	_onButtonPress);
+	
+				// when the layer is moved
+				_layer.removeEventListener(LayerEvent.LAYER_MOVE, reOrderLayer);
+				
+				// remove update
+				removeEventListener(Event.ENTER_FRAME, _updatePlayheadHandler);
+				
+			}
 		}
 		
 		/**
@@ -326,7 +359,7 @@ package ui.layer {
 			_filename.filters = [new DropShadowFilter(1, 45,0x000000, 1, 0, 0, 1)];
 			_filename.cacheAsBitmap = true;
 			
-			var props:LayerProperties = _layer.properties;
+			var props:LayerProperties = _layer.properties as LayerProperties;
 			
 			_loopStart		= new LoopStart(props.getControl('loopStart'));
 			_loopEnd		= new LoopEnd(props.getControl('loopEnd'));
@@ -377,7 +410,7 @@ package ui.layer {
 		 * 	@private
 		 * 	Handler that is evoked when a layer has finished loading a file
 		 */
-		private function _onLayerLoad(event:Event):void {
+		private function _onLayerLoad(event:Event = null):void {
 			
 			// parse out the extension
 			var path:String = _layer.path;
@@ -399,9 +432,6 @@ package ui.layer {
 			
 			// frame listener
 			addEventListener(Event.ENTER_FRAME, _updatePlayheadHandler);
-			
-			// make sure the timer is running
-			_timer.start();
 		}
 		
 		/**
@@ -559,6 +589,26 @@ package ui.layer {
 			}
 
 		}
+		
+		/**
+		 * 	Dispose
+		 */
+		override public function dispose():void {
+			// remove listeners
+			_assignHandlers(false);
 
+			// remove children
+			super.dispose();
+			
+			// remove layer
+			_layers.splice(_layers.indexOf(this), 1);
+			
+			// remove references
+			_layer = null;
+			
+			if (selectedLayer === this) {
+				selectLayer(null);
+			}
+		}
 	}
 }

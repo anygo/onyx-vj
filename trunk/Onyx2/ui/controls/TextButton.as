@@ -31,18 +31,31 @@
 package ui.controls {
 	
 	import ui.core.UIObject;
+	import ui.styles.UI_OPTIONS;
 	
+	/**
+	 * 	Text Button
+	 */
 	public final class TextButton extends UIObject {
 		
+		/**
+		 * 	@constsructor
+		 */
 		public function TextButton(options:UIOptions, name:String):void {
 			
+			var options:UIOptions = options || UI_OPTIONS;
 			var width:int	= options.width;
 			var height:int	= options.height;
-			
+
+			// create a background color			
 			displayBackground(width, height);
+			
+			// add a label
 			addLabel(name.toUpperCase(), width, height, 1);
 
+			// add a button
 			addChild(new ButtonClear(width, height));
+			
 		}
 	}
 }

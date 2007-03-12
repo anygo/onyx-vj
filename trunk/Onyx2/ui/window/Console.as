@@ -33,6 +33,7 @@ package ui.window {
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
 	
+	import onyx.core.Command;
 	import onyx.core.Console;
 	import onyx.core.onyx_ns;
 	import onyx.events.ConsoleEvent;
@@ -67,6 +68,8 @@ package ui.window {
 		 */
 		public function Console():void {
 			
+			super('console', 190, 180, 6, 582);
+
 			onyx.core.Console.getInstance().addEventListener(ConsoleEvent.OUTPUT, _onConsole);
 			
 			_draw();
@@ -74,8 +77,9 @@ package ui.window {
 			_input.addEventListener(KeyboardEvent.KEY_DOWN, _onKeyDown);
 			_input.addEventListener(MouseEvent.CLICK, _onClick);
 			
-			super('console', 190, 180, 6, 560);
-
+			// dispatch the start-up motd
+			Command.help();
+			Command.help('plugins');
 		}
 		
 		/**

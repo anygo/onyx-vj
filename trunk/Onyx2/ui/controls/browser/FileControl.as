@@ -52,8 +52,19 @@ package ui.controls.browser {
 	 */
 	public final class FileControl extends UIControl {
 		
+		/**
+		 * 	@private
+		 */
 		private var _label:TextField	= new TextField(46, 35,	TEXT_DEFAULT_CENTER);
+
+		/**
+		 * 	@private
+		 */
 		private var _button:ButtonClear	= new ButtonClear(47, 36);
+
+		/**
+		 * 	@private
+		 */
 		private var _loader:Loader;
 
 		/**
@@ -74,19 +85,17 @@ package ui.controls.browser {
 			
 			// add label
 			_label.wordWrap = true;
-			
-			var format:TextFormat = _label.getTextFormat();
-			var substr:int = Math.max(path.lastIndexOf('/')+1,path.lastIndexOf('/')+1);
-			
-			_label.defaultTextFormat = format;
-			_label.text = path.substring(substr, path.length);
+			_label.text = FileBrowser.getFileName(path);
 			_label.filters = [new DropShadowFilter(1,45, 0x000000,1,0,0,1)];
-			_label.cacheAsBitmap = true;
 
 			if (_file.thumbnail) {
 				
-				if (_file.thumbnail is Bitmap) {
-					var thumbnail:DisplayObject = addChild(_file.thumbnail as Bitmap);
+				// if it's a displayobject, add it directly
+				if (_file.thumbnail is DisplayObject) {
+					
+					var thumbnail:DisplayObject = addChild(_file.thumbnail as DisplayObject);
+				
+				// it's a string, so load it
 				} else if (_file.thumbnail is String) {
 					_loader = new Loader();
 					_loader.load(new URLRequest(_file.thumbnail as String));
@@ -104,7 +113,6 @@ package ui.controls.browser {
 			addChild(_label);
 			addChild(_button);
 
-			
 			// draw border
 			graphics.beginFill(0x647789);
 			graphics.drawRect(0,0,48,37);

@@ -33,7 +33,6 @@ package ui.window {
 	import flash.display.Loader;
 	import flash.events.MouseEvent;
 	import flash.media.Camera;
-	import flash.net.URLRequest;
 	
 	import onyx.core.*;
 	import onyx.file.*;
@@ -43,8 +42,8 @@ package ui.window {
 	import ui.controls.*;
 	import ui.controls.browser.*;
 	import ui.core.*;
-	import ui.events.DragEvent;
-	import ui.layer.UILayer;
+	import ui.events.*;
+	import ui.layer.*;
 	import ui.styles.*;
 	import ui.text.*;
 
@@ -66,7 +65,7 @@ package ui.window {
 		/**
 		 * 	@private
 		 */
-		private static const FILE_HEIGHT:int	= 37;
+		private static const FILE_HEIGHT:int	= 38;
 		
 		/**
 		 * 	@private
@@ -74,34 +73,85 @@ package ui.window {
 		private static const FOLDER_HEIGHT:int	= 10;
 		
 		/**
+		 * 	@private
 		 * 	Holds the file objects
 		 */
-		private var _files:ScrollPane	= new ScrollPane(300, 185);
+		private var _files:ScrollPane				= new ScrollPane(300, 210);
 		
 		/**
+		 * 	@private
 		 * 	Holds the folder objects
 		 */
-		private var _folders:ScrollPane	= new ScrollPane(90, 185);
+		private var _folders:ScrollPane				= new ScrollPane(91, 185, null, true);
+		
+		/**
+		 * 	@private
+		 * 	The browser files button
+		 */
+		private var _buttonFiles:BrowserFiles;
+		
+		/**
+		 * 	@private
+		 * 	The browser files button
+		 */
+		private var _buttonCameras:BrowserCameras;
+		
+		/**
+		 * 
+		 */
+		private var _path:String;
 		
 		/**
 		 * 	@constructor
 		 */
 		public function Browser():void {
 			
-			super('loading ... ', 396, 200, 6, 318);
+			super('loading ... ', 396, 222, 6, 318);
+			
+			var options:UIOptions	= new UIOptions();
+			options.width			= 90;
+			_buttonFiles			= new BrowserFiles(options, 'FILES');
+			_buttonCameras			= new BrowserCameras(options, 'CAMERAS')
 			
 			_files.x = 2;
-			_files.y = 14;
+			_files.y = 12;
 			
 			_folders.x = 304;
-			_folders.y = 14;
-			_folders.backgroundColor = 0x0d0d0d;
+			_folders.y = 12;
+			
+			_buttonFiles.x		= 304;
+			_buttonFiles.y		= 198;
+			_buttonCameras.x	= 304;
+			_buttonCameras.y	= 210;
+			
+			// add handlers for buttons
+			_buttonFiles.addEventListener(MouseEvent.MOUSE_DOWN, _onFileDown);
+			_buttonCameras.addEventListener(MouseEvent.MOUSE_DOWN, _onFileDown);
 			
 			addChild(_folders);
 			addChild(_files);
+			addChild(_buttonFiles);
+			addChild(_buttonCameras);
 			
 			// query default folder
-			FileBrowser.query(FileBrowser.initialDirectory + Settings.INITIAL_APP_DIRECTORY, _onReceive);
+			FileBrowser.query(FileBrowser.initialDirectory + Settings.INITIAL_APP_DIRECTORY, _onReceive, new SWFFilter());
+		}
+		
+		/**
+		 * 	@private
+		 * 	Handlers for Camera/File Button
+		 */
+		private function _onFileDown(event:MouseEvent):void {
+			switch (event.currentTarget) {
+				case _buttonFiles:
+					if (_path !== FileBrowser.initialDirectory + Settings.INITIAL_APP_DIRECTORY) {
+						FileBrowser.query(FileBrowser.initialDirectory + Settings.INITIAL_APP_DIRECTORY, _onReceive, new SWFFilter());
+					}
+					break;
+				case _buttonCameras:
+					FileBrowser.query('__cameras', _onReceive, new SWFFilter());
+					break;
+			}
 		}
 		
 		/**
@@ -119,9 +169,12 @@ package ui.window {
 
 			}
 			
-			while (_folders.numChildren) {
-				var folder:FolderControl = _folders.removeChildAt(0) as FolderControl;
-				folder.removeEventListener(MouseEvent.MOUSE_DOWN, _onFolderDown);
+			if (_folders.numChildren > 1) {
+				
+				while (_folders.numChildren > 1) {
+					var folder:FolderControl = _folders.removeChildAt(1) as FolderControl;
+					folder.removeEventListener(MouseEvent.MOUSE_DOWN, _onFolderDown);
+				}
 			}
 		}
 		
@@ -130,8 +183,8 @@ package ui.window {
 		 */
 		private function _onReceive(list:FolderList):void {
 			
-			var index:int;
-
+			_path = list.path;
+			
 			title = 'file browser: [' + list.path + ']';
 
 			// kill all previous objects here
@@ -140,19 +193,26 @@ package ui.window {
 			// Now we add all the new stuff for this folder;
 
 			_folders.reset();
-			for each (var folder:Folder in list.folders) {
+			
+			var folders:Array	= list.folders;
+			var len:int			= folders.length
+			
+			for (var index:int = 0; index < len; index++) {
+
+				var folder:Folder = folders[index];
 				
-				var foldercontrol:FolderControl = new FolderControl(folder);
+				var foldercontrol:FolderControl = new FolderControl(folder, folder.path.length < list.path.length);
 				foldercontrol.addEventListener(MouseEvent.MOUSE_DOWN, _onFolderDown);
 				_folders.addChild(foldercontrol);
 				
-				index = _folders.getChildIndex(foldercontrol);
+				index = _folders.getChildIndex(foldercontrol) - 1;
 				foldercontrol.x = 3;
 				foldercontrol.y = FOLDER_HEIGHT * index + 2;
 				
 			}
 			
 			_files.reset();
+			
 			for each (var file:File in list.files) {
 				
 				var control:FileControl = new FileControl(file);
@@ -207,7 +267,7 @@ package ui.window {
 		private function _onFolderDown(event:MouseEvent):void {
 			var control:FolderControl = event.currentTarget as FolderControl;
 
-			FileBrowser.query(control.path, _onReceive);
+			FileBrowser.query(control.path, _onReceive, new SWFFilter());
 
 		}
 		

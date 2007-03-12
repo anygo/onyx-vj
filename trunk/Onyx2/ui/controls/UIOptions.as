@@ -32,8 +32,6 @@ package ui.controls {
 	
 	public class UIOptions {
 		
-		public static const DEFAULT:UIOptions	= new UIOptions();
-		
 		public var background:Boolean;
 		public var labelAlign:String;
 		public var width:int;

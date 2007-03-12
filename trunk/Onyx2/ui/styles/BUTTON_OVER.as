@@ -31,6 +31,6 @@
 package ui.styles {
 	
 
-	public const BUTTON_OVER:uint = 0xFFFF00;
+	public const BUTTON_OVER:uint = 0xd9e2ec;
 	
 }

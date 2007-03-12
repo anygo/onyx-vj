@@ -3,14 +3,18 @@ package ui.states {
 	import flash.display.*;
 	import flash.events.*;
 	
-	import onyx.constants.ROOT;
-	import onyx.core.*;
-	import onyx.events.ConsoleEvent;
-	import onyx.states.ApplicationState;
+	import onyx.constants.*;
+	import onyx.core.Onyx;
+	import onyx.display.*;
+	import onyx.events.*;
+	import onyx.states.*;
 	
 	import ui.assets.*;
-	import ui.core.UIManager;
-	import ui.text.TextField;
+	import ui.core.*;
+	import ui.layer.UILayer;
+	import ui.settings.*;
+	import ui.text.*;
+	import ui.window.*;
 	
 	public final class DisplayStartState extends ApplicationState {
 
@@ -25,6 +29,11 @@ package ui.states {
 		private var _label:TextField		= new TextField(400,125);
 		
 		/**
+		 * 
+		 */
+		private var _states:Array;
+
+		/**
 		 * 	Initialize
 		 */
 		override public function initialize(... rest:Array):void {
@@ -38,16 +47,19 @@ package ui.states {
 			
 			// listen for mouse clicks
 			ROOT.addEventListener(MouseEvent.MOUSE_DOWN,	_captureEvents,	true, -1);
-			ROOT.addEventListener(MouseEvent.MOUSE_UP,	_captureEvents,	true, -1);
+			ROOT.addEventListener(MouseEvent.MOUSE_UP,		_captureEvents,	true, -1);
 			
 			// listen for updates
-			var console:Console = Console.getInstance();
+			var console:onyx.core.Console = onyx.core.Console.getInstance();
 			console.addEventListener(ConsoleEvent.OUTPUT, _onOutput);
 			
 			// set the label type
 			_label.selectable		= false;
 			_label.x				= 683;
 			_label.y				= 437;
+			
+			// save states to run
+			_states = rest;
 			
 		}
 		
@@ -84,14 +96,14 @@ package ui.states {
 		 */		
 		override public function terminate():void {
 			
-			var console:Console = Console.getInstance();
+			var console:onyx.core.Console = onyx.core.Console.getInstance();
 			console.removeEventListener(ConsoleEvent.OUTPUT, _onOutput);
 			
 			// remove listener to the stage
 			ROOT.removeEventListener(Event.ADDED, _onItemAdded);
 			
 			// remove listener for mouse clicks
-			ROOT.removeEventListener(MouseEvent.MOUSE_DOWN,	_captureEvents,	true);
+			ROOT.removeEventListener(MouseEvent.MOUSE_DOWN,		_captureEvents,	true);
 			ROOT.removeEventListener(MouseEvent.MOUSE_UP,		_captureEvents,	true);
 
 			// remove items
@@ -101,6 +113,35 @@ package ui.states {
 			// clear references
 			_image = null;
 			_label = null;
+			
+			// load menu bar
+			ROOT.addChild(MenuWindow.instance);
+			
+			// add a display
+			var display:Display = Onyx.createDisplay(STAGE.stageWidth - 320, 525, 1, 1, !SETTING_SUPPRESS_DISPLAYS);
+			display.createLayers(5);
+			
+			// loop through and load states			
+			if (_states) {
+				for each (var state:ApplicationState in _states) {
+					StateManager.loadState(state);
+				}
+			}
+
+			// remove references
+			_states = null;
+			
+			// register default windows
+			MenuWindow.register(
+				new WindowRegistration('FILE BROWSER',	Browser),
+				new WindowRegistration('CONSOLE',		ui.window.Console),
+				new WindowRegistration('FILTERS',		Filters),
+				new WindowRegistration('TRANSITIONS',	TransitionWindow),
+				new WindowRegistration('SETTINGS',		SettingsWindow),
+				new WindowRegistration('LAYERS',		LayerWindow),
+				new WindowRegistration('MEMORY',		MemoryWindow, false)
+			);
+			
 		}
 	}
 }

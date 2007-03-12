@@ -30,21 +30,19 @@
  */
 package ui.window {
 	
-	import flash.events.MouseEvent;
-	import flash.geom.Matrix;
-	import flash.geom.Rectangle;
+	import flash.events.*;
+	import flash.geom.*;
 	import flash.text.TextFieldAutoSize;
 	
-	import ui.core.UIObject;
-	import ui.text.TextField;
-	import ui.text.TextInput;
+	import onyx.plugin.Plugin;
 	
-	public class Window extends UIObject {
-		
-		/**
-		 * 	@private
-		 */
-		private static var _windows:Array		= [];
+	import ui.core.UIObject;
+	import ui.text.*;
+	
+	/**
+	 * 	Window
+	 */
+	internal class Window extends UIObject {
 		
 		/**
 		 * 	@private
@@ -60,8 +58,6 @@ package ui.window {
 		 * 	@constructor
 		 */
 		public function Window(text:String, width:int, height:int, x:int, y:int):void {
-			
-			_windows.push(this);
 			
 			if (text) {
 				
@@ -84,10 +80,16 @@ package ui.window {
 			super(true);	
 		}
 		
+		/**
+		 * 	Sets title
+		 */
 		public function set title(t:String):void {
 			_title.text = t;
 		}
 
+		/**
+		 * 	Returns title
+		 */
 		public function get title():String {
 			return _title.text;
 		}
@@ -100,7 +102,7 @@ package ui.window {
 		}
 		
 		/**
-		 * 
+		 * 	@private
 		 */
 		private function _dragMouseDown(event:MouseEvent):void {
 			/* check to see if thet mouse is hitting the title bar */
@@ -110,27 +112,29 @@ package ui.window {
 			}
 		}
 		
+		/**
+		 * 	@private
+		 */
 		private function _dragMouseUp(event:MouseEvent):void {
 			stopDrag();
 			removeEventListener(MouseEvent.MOUSE_UP, _dragMouseUp);
 			addEventListener(MouseEvent.MOUSE_DOWN, _dragMouseDown);
 		}
-
 	}
 }
 
-/**
- * 
- * 	HELPER CLASS
- * 
- **/
-
+import flash.display.Shape;
 import flash.display.Sprite;
 import flash.geom.Rectangle;
-import flash.display.Shape;
 
+/**
+ * 	Background for a window asset
+ */
 class WindowAsset extends Shape {
 	
+	/**
+	 * 	@constructor
+	 */
 	public function WindowAsset():void {
 		
 		graphics.lineStyle(0, 0x384754, 1, true);

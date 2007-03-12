@@ -41,19 +41,59 @@ package ui.controls {
 	import ui.styles.*;
 	import ui.text.TextField;
 	
+	/**
+	 * 	Drop down control (relates to ControlRange)
+	 */
 	public final class DropDown extends UIControl {
 		
+		/**
+		 * 	Option heights
+		 */
 		public static const ITEM_HEIGHT:int	= 12;
 
+		/**
+		 * 	@private
+		 */
 		private var _width:int;
+
+		/**
+		 * 	@private
+		 */
 		private var _label:TextField;
+
+		/**
+		 * 	@private
+		 */
 		private var _control:ControlRange;
+
+		/**
+		 * 	@private
+		 */
 		private var _index:int;
+
+		/**
+		 * 	@private
+		 */
 		private var _button:ButtonClear;
+
+		/**
+		 * 	@private
+		 */
 		private var _data:Array;
+
+		/**
+		 * 	@private
+		 */
 		private var _items:Array;
+
+		/**
+		 * 	@private
+		 */
 		private var _selectedIndex:Option;
 		
+		/**
+		 * 	@constructor
+		 */
 		public function DropDown(options:UIOptions, range:Control):void {
 
 			var control:ControlRange = range as ControlRange;
@@ -108,6 +148,9 @@ package ui.controls {
 			setText(event.value);
 		}
 		
+		/**
+		 * 	@private
+		 */
 		private function _draw(width:int, height:int, drawBG:Boolean = false):void {
 
 			_button	= new ButtonClear(width, height);
@@ -120,6 +163,9 @@ package ui.controls {
 			addChild(_button);
 		}
 		
+		/**
+		 * 	@private
+		 */
 		private function _onPress(event:MouseEvent):void {
 			
 			_items = [];
@@ -153,12 +199,16 @@ package ui.controls {
 			stage.addEventListener(MouseEvent.MOUSE_UP, _onRelease);
 		}
 		
+		/**
+		 * 	@private
+		 */
 		private function _onRelease(event:MouseEvent):void {
 			
 			graphics.clear();
 
 			if (_selectedIndex) {
 				_index = _selectedIndex.index;
+				
 				_control.value = _control.data[_index];
 			}
 			
@@ -171,13 +221,19 @@ package ui.controls {
 			_selectedIndex = null;
 			_items = null;
 		}
-		
+
+		/**
+		 * 	@private
+		 */
 		private function _onRollOver(event:MouseEvent):void {
 			var option:Option = event.currentTarget as Option;
 			_selectedIndex = option;
 			option.draw(DROPDOWN_HIGHLIGHT, _width);
 		}
 
+		/**
+		 * 	@private
+		 */
 		private function _onRollOut(event:MouseEvent):void {
 			var option:Option = event.currentTarget as Option;
 			_selectedIndex = null;
@@ -233,8 +289,6 @@ final class Option extends Sprite {
 		graphics.endFill();
 
 		addChild(_label);
-		
-		cacheAsBitmap	= true;
 	}
 	
 	public function draw(color:int, width:int):void {

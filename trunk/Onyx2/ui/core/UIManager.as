@@ -60,14 +60,21 @@ package ui.core {
 		public static var transition:Transition;
 
 		/**
-		 * 
+		 * 	@private
+		 * 	The displaystart state
 		 */
 		private static var displayState:DisplayStartState;
 		
 		/**
+		 * 	@private
+		 * 	The states to load when starting up
+		 */
+		private static var states:Array;
+		
+		/**
 		 * 	initialize
 		 */
-		public static function initialize(root:DisplayObjectContainer, adapter:FileAdapter):void {
+		public static function initialize(root:DisplayObjectContainer, adapter:FileAdapter, ... states:Array):void {
 			
 			// initializes onyx
 			var engine:EventDispatcher = Onyx.initialize(root, adapter);
@@ -77,13 +84,21 @@ package ui.core {
 			
 			// wait til we're done initializing
 			engine.addEventListener(ApplicationEvent.ONYX_STARTUP_END, _onInitializeEnd);
+			
+			// store states
+			UIManager.states = states;
 		}
 		
 		/**
 		 * 
 		 */
 		private static function _onInitializeStart(event:ApplicationEvent):void {
-			StateManager.loadState(displayState = new DisplayStartState());
+			
+			displayState = new DisplayStartState();
+			
+			StateManager.loadState.apply(StateManager, [displayState].concat(states));
+			
+			states = null;
 		}
 		
 		/**
@@ -91,62 +106,16 @@ package ui.core {
 		 */
 		private static function _onInitializeEnd(event:ApplicationEvent):void {
 			
-			// remove the startup image
-			StateManager.removeState(displayState);
-			
+			// start-up
 			var engine:EventDispatcher = event.currentTarget as EventDispatcher;
 
 			// listen for windows created
 			engine.removeEventListener(ApplicationEvent.ONYX_STARTUP_START, _onInitializeStart);
 			engine.removeEventListener(ApplicationEvent.ONYX_STARTUP_END, _onInitializeEnd);
 		
-			// load windows
-			_loadWindows(
-				Console,
-				PerfMonitor,
-				Browser,
-				Filters,
-				TransitionWindow,
-				HelpWindow
-			);
+			StateManager.loadState(new SettingsLoadState(), displayState);
+			displayState = null;
 
-			// add a display
-			var display:Display = Onyx.createDisplay(STAGE.stageWidth - 320, 525, 1, 1, !SETTING_SUPPRESS_DISPLAYS);
-			display.addEventListener(DisplayEvent.LAYER_CREATED,		_onLayerCreate);
-			display.createLayers(5);
-			
-			// add settings window
-			var settings:SettingsWindow = new SettingsWindow(display);
-			ROOT.addChild(settings);
-			
-			// add child
-			ROOT.addChild(new DisplayWindow(display));
-			
-			// listen for keys
-			StateManager.loadState(new KeyListenerState());
-		}
-		
-		/**
-		 * 	@private
-		 */
-		private static function _loadWindows(... windowsToLoad:Array):void {
-
-			for each (var window:Class in windowsToLoad) {
-				ROOT.addChild(new window());
-			}
-
-		}
-		
-		/**
-		 * 	@private
-		 */
-		private static function _onLayerCreate(event:DisplayEvent):void {
-			
-			var uilayer:UILayer = new UILayer(event.layer);
-			uilayer.reOrderLayer();
-
-			ROOT.addChildAt(uilayer, 0);
-			
 		}
 	}
 }

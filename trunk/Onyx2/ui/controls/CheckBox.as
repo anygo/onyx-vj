@@ -39,12 +39,29 @@ package ui.controls {
 	import ui.styles.*;
 	import ui.text.TextField;
 	
+	/**
+	 * 	Checkbox
+	 */
 	public class CheckBox extends UIControl {
 
+		/**
+		 * 	@private
+		 */
 		private var _control:Control;
+
+		/**
+		 * 	@private
+		 */
 		private var _value:Boolean;
+
+		/**
+		 * 	@private
+		 */
 		private var _label:TextField;
 
+		/**
+		 * 	@constructor
+		 */
 		public function CheckBox(options:UIOptions, control:Control):void {
 
 			_control = control;
@@ -66,24 +83,34 @@ package ui.controls {
 			addEventListener(MouseEvent.MOUSE_DOWN, _onMouseDown);
 		}
 		
+		/**
+		 * 	@private
+		 */
 		private function _onMouseDown(event:MouseEvent):void {
 			_control.value = !_value;
 		}
 		
+		/**
+		 * 	@private
+		 */
 		private function _onChanged(event:ControlEvent = null):void {
 			_value				= event ? event.value : _value;
 			_label.textColor	= _value ? 0xFFFFFF : 0x999999;
 			_label.text			= _value.toString();
 		}
 		
+		/**
+		 * 	Dispose
+		 */
 		override public function dispose():void {
+			
+			super.dispose();
+
 			_control.removeEventListener(ControlEvent.CHANGE, _onChanged);
 			_control = null;
 			_label	= null;
 			
 			removeEventListener(MouseEvent.MOUSE_DOWN, _onMouseDown);
-			super.dispose();
 		}
-		
 	}
 }

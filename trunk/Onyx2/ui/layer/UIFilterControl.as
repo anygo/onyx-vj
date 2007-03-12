@@ -194,6 +194,18 @@ package ui.layer {
 			filterPane.mute(event.filter);
 		}
 		
+		/**
+		 * 	Returns the target
+		 */
+		public function get target():IFilterObject {
+			return _target;
+		}
 		
+		/**
+		 * 	Disposes content
+		 */
+		override public function dispose():void {
+			super.dispose();
+		}
 	}
 }

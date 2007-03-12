@@ -30,16 +30,14 @@
  */
 package ui.controls.filter {
 	
-	import flash.display.Bitmap;
-	import flash.display.Sprite;
-	import flash.events.MouseEvent;
-	import flash.geom.ColorTransform;
-	import flash.utils.getTimer;
+	import flash.display.*;
+	import flash.events.*;
+	import flash.geom.*;
+	import flash.utils.*;
 	
 	import onyx.core.*;
 	import onyx.filter.Filter;
-	import onyx.layer.ILayer;
-	import onyx.layer.Layer;
+	import onyx.layer.*;
 	import onyx.plugin.Plugin;
 	
 	import ui.assets.AssetLayerFilter;
@@ -51,6 +49,9 @@ package ui.controls.filter {
 
 	public final class LayerFilter extends UIObject {
 		
+		/**
+		 * 	Stores the filter associated to the control
+		 */
 		public var filter:Filter;
 
 		/**

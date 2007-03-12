@@ -30,6 +30,7 @@
  */
 package ui.window {
 	
+	import flash.display.DisplayObject;
 	import flash.events.MouseEvent;
 	
 	import onyx.core.Onyx;
@@ -44,7 +45,6 @@ package ui.window {
 	import ui.layer.UILayer;
 	import ui.policy.*;
 	import ui.styles.*;
-	import flash.display.DisplayObject;
 	
 	/**
 	 * 	Filters Window
@@ -115,20 +115,32 @@ package ui.window {
 				// create library ui item
 				var lib:LibraryFilter = new LibraryFilter(plugin);
 				
-				if (plugin.getData('bitmapFilter')) {
+				if (plugin.getData('bitmap')) {
 					_bitmapPane.addChild(lib);
 				} else {
 					_normalPane.addChild(lib);
 				}
 				
 				// handle events
-				lib.addEventListener(MouseEvent.MOUSE_DOWN, _onMouseDown);
-				lib.addEventListener(MouseEvent.DOUBLE_CLICK, _onDoubleClick);
-				
 				lib.doubleClickEnabled = true;
 				
+				lib.addEventListener(MouseEvent.MOUSE_DOWN, _onMouseDown);
+				lib.addEventListener(MouseEvent.DOUBLE_CLICK, _onDoubleClick);
 			}
+		}
+
+		/**
+		 * 	@private
+		 */
+		private function _clearControls():void {
 			
+			while (_bitmapPane.numChildren) {
+				
+				var lib:LibraryFilter = _bitmapPane.removeChildAt(0) as LibraryFilter;
+				lib.removeEventListener(MouseEvent.MOUSE_DOWN, _onMouseDown);
+				lib.removeEventListener(MouseEvent.DOUBLE_CLICK, _onDoubleClick);
+				
+			}
 		}
 		
 		/**
@@ -202,6 +214,17 @@ package ui.window {
 			for each (var layer:UILayer in layers) {
 				layer.addFilter(plugin.getDefinition() as Filter);
 			}
+		}
+		
+		/**
+		 * 
+		 */
+		override public function dispose():void {
+
+			_clearControls();
+
+			super.dispose();
+
 		}
 	}
 }

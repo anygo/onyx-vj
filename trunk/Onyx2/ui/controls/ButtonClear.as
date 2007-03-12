@@ -66,8 +66,6 @@ final class HitState extends Shape {
 		graphics.beginFill(0);
 		graphics.drawRect(0, 0, width, height);
 		graphics.endFill();
-		
-		cacheAsBitmap = true;
 	}
 }
 
@@ -81,8 +79,6 @@ final class OverState extends Shape {
 		graphics.beginFill(BUTTON_OVER, .2);
 		graphics.drawRect(0, 0, width, height);
 		graphics.endFill();
-		
-		cacheAsBitmap = true;
 
 	}
 }
@@ -98,7 +94,5 @@ final class DownState extends Shape {
 		graphics.drawRect(0, 0, width, height);
 		graphics.endFill();
 		
-		cacheAsBitmap = true;
-
 	}
 }

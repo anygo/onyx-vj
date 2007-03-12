@@ -81,10 +81,11 @@ package ui.window {
 		/**
 		 * 	@constructor
 		 */
-		public function SettingsWindow(display:IDisplay):void {
+		public function SettingsWindow():void {
 			
-			super('SETTINGS WINDOW', 202, 100, 200, 522);
+			super('SETTINGS WINDOW', 202, 100, 200, 544);
 			
+			var display:IDisplay	= Onyx.displays[0];
 			var control:Control;
 
 			// create new ui options
@@ -189,6 +190,9 @@ package ui.window {
 
 import flash.display.Sprite;
 
+/**
+ * 	Tempo shape
+ */
 class TempoShape extends Sprite {
 	
 	/**

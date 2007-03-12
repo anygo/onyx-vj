@@ -28,92 +28,77 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package ui.controls.browser {
+package ui.controls {
 	
-	import flash.display.Bitmap;
+	import flash.display.Shape;
+	import flash.display.Sprite;
+	import flash.events.MouseEvent;
 	
-	import onyx.file.*;
+	import ui.assets.AssetShape;
+	import ui.core.UIObject;
+	import ui.styles.*;
+	import ui.text.*;
+	import ui.window.WindowRegistration;
 	
-	import ui.assets.AssetFolder;
-	import ui.assets.AssetFolderUp;
-	import ui.controls.ButtonClear;
-	import ui.controls.UIControl;
-	import ui.text.TextField;
-
 	/**
-	 * 	Folder Control
+	 * 	Text Button
 	 */
-	public final class FolderControl extends UIControl {
+	public final class MenuButton extends Sprite {
 		
 		/**
 		 * 	@private
 		 */
-		private static const FOLDER_WIDTH:int = 90;
-		
-		/**
-		 * 	@private
-		 */
-		private var _label:TextField = new TextField(FOLDER_WIDTH,10);
+		private var background:Shape;
 
 		/**
 		 * 	@private
 		 */
-		private var _img:Bitmap;
+		private var reg:WindowRegistration;
+		
+		/**
+		 * 	@constsructor
+		 */
+		public function MenuButton(reg:WindowRegistration, options:UIOptions):void {
+			
+			var options:UIOptions = options || UI_OPTIONS;
+			var width:int	= options.width;
+			var height:int	= options.height;
 
-		/**
-		 * 	@private
-		 */
-		private var _btn:ButtonClear = new ButtonClear(FOLDER_WIDTH + 2,11);
-		
-		/**
-		 * 	@private
-		 */
-		private var _folder:Folder;
-		
-		/**
-		 * 	@constructor
-		 */
-		public function FolderControl(folder:Folder, useArrowFolder:Boolean = false):void {
+			// add a label
+			var label:TextField = new TextField(width + 3, height, TEXT_DEFAULT_CENTER);
+			label.textColor		= TEXT_LABEL;
+			label.text			= reg.name.toUpperCase();
+			label.mouseEnabled	= false;
+			label.y				= 1;
+
+			addChild(label);
+
+			// add a button
+			addChild(new ButtonClear(width, height));
 			
-			super(null);
+			// add background
+			addChildAt(background = new AssetShape(width, height), 0);
 			
-			_folder = folder;
+			// save registration and set enabled / disabled
+			this.reg		= reg;
+			this.enabled	= reg.enabled;
 			
-			if (useArrowFolder) {
-				_img = new AssetFolderUp();
-				_label.text = 'up one level';
-			} else {
-				_img = new AssetFolder();
-				_label.text = FileBrowser.getFileName(folder.path);
-			}
-			
-			_btn.x = -2;
-			_btn.y = -1;
-			_img.y = 1;
-			_label.x = 9;
-			
-			addChild(_label);
-			addChild(_img);
-			addChild(_btn);
-			
+			// add listener
+			addEventListener(MouseEvent.MOUSE_DOWN, _onClick);
 		}
 		
 		/**
-		 * 	Returns path
+		 * 	Sets enabled
 		 */
-		public function get path():String {
-			return _folder.path;
+		public function set enabled(value:Boolean):void {
+			background.transform.colorTransform = (value) ? LAYER_HIGHLIGHT : DEFAULT;
 		}
 		
 		/**
-		 * 	Disposes the control
+		 * 	@private
 		 */
-		override public function dispose():void {
-			_label = null;
-			_img = null;
-			_btn = null;
-			
-			super.dispose();
+		private function _onClick(event:MouseEvent):void {
+			this.enabled = reg.enabled = !reg.enabled;
 		}
 	}
 }

@@ -13,9 +13,19 @@ package ui.controls {
 	
 	public final class TextControlPopUp extends UIObject {
 
+		/**
+		 * 	@private
+		 */
 		private var _input:TextInput;
+
+		/**
+		 * 	@private
+		 */
 		private var _control:ControlString;
 
+		/**
+		 * 	@constructor
+		 */
 		public function TextControlPopUp(parent:DisplayObjectContainer, width:int, height:int, text:String, control:ControlString = null):void {
 			
 			if (parent) {

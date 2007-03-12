@@ -42,12 +42,30 @@ package ui.controls {
 
 	public final class ColorPicker extends UIControl {
 		
+		/**
+		 * 	@private
+		 */
 		private static var _picker:Picker;
 		
+		/**
+		 * 	@private
+		 */
 		private var _control:ControlUInt;
-		private var _preview:Shape	= new Shape();
-		private var _lastX:int		= 0;
-		private var _lastY:int		= 0;
+
+		/**
+		 * 	@private
+		 */
+		private var _preview:Shape		= new Shape();
+
+		/**
+		 * 	@private
+		 */
+		private var _lastX:int			= 0;
+
+		/**
+		 * 	@private
+		 */
+		private var _lastY:int			= 0;
 
 		/**
 		 * 	@constructor
@@ -81,9 +99,9 @@ package ui.controls {
 		 */
 		private function _onMouseDown(event:MouseEvent):void {
 			
-			_picker = new Picker();
-			_picker.x = -_lastX + mouseX;
-			_picker.y = -_lastY + mouseY;
+			_picker		= new Picker();
+			_picker.x	= -_lastX + mouseX;
+			_picker.y	= -_lastY + mouseY;
 			
 			addChild(_picker);
 			
@@ -155,6 +173,9 @@ final class Picker extends Sprite {
 	public var cursor:Shape				= new Shape();
 	public var asset:AssetColorPicker	= new AssetColorPicker();
 	
+	/**
+	 * 	@constructor
+	 */
 	public function Picker():void {
 
 		addChild(asset);

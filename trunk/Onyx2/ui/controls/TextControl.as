@@ -12,9 +12,19 @@ package ui.controls {
 	
 	public final class TextControl extends UIControl {
 		
+		/**
+		 * 	@private
+		 */
 		private var _control:ControlString;
+
+		/**
+		 * 	@private
+		 */
 		private var _label:TextField;
 		
+		/**
+		 * 	@constructor
+		 */
 		public function TextControl(options:UIOptions, control:Control):void {
 			
 			super(options, true, control.display);
@@ -31,6 +41,9 @@ package ui.controls {
 			addEventListener(MouseEvent.MOUSE_DOWN, _onMouseDown);	
 		}
 
+		/**
+		 * 	@private
+		 */
 		private function _onMouseDown(event:MouseEvent):void {
 			
 			var popup:TextControlPopUp	= new TextControlPopUp(this, 200, 200, _control.value, _control);

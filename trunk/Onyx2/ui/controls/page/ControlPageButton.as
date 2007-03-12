@@ -28,8 +28,6 @@ final class HitState extends Shape {
 		graphics.beginFill(0);
 		graphics.drawRect(0, 0, width, height);
 		graphics.endFill();
-		
-		cacheAsBitmap = true;
 
 	}
 }

@@ -28,10 +28,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package ui.assets
-{
-	import flash.display.Bitmap;
-	import flash.geom.Rectangle;
+package ui.assets {
+	
+	import flash.display.*;
 
 	[Embed(source='/ui/assets/img/icon_tab.png')]
 	public final class AssetLayerTab extends Bitmap {

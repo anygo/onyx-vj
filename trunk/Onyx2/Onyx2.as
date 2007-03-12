@@ -36,14 +36,16 @@ package {
 	import flash.ui.*;
 	
 	import onyx.file.http.HTTPAdapter;
+	import onyx.states.BroadcastState;
 	import onyx.utils.array.*;
 	
+	import ui.assets.AssetLayerTab;
 	import ui.core.UIManager;
 	import ui.core.UIObject;
+	import ui.states.KeyListenerState;
 	
-	[ExcludeClass]
-
 	[SWF(width="1024", height="768", backgroundColor="#141515", frameRate='24')]
+	[ExcludeClass]
 	public class Onyx2 extends UIObject {
 		
 		/**
@@ -62,7 +64,11 @@ package {
 			contextMenu = menu;
 
 			// init
-			UIManager.initialize(stage, new HTTPAdapter());
+			UIManager.initialize(
+				stage, 
+				new HTTPAdapter(),
+				new KeyListenerState()
+			);
 		}
 	}
 }

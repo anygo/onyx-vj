@@ -73,7 +73,7 @@ package ui.controls {
 		/**
 		 * 	@constructor
 		 */
-		public function ScrollPane(width:int, height:int, label:String = null):void {
+		public function ScrollPane(width:int, height:int, label:String = null, background:Boolean = false):void {
 			
 			// create holder
 			_holder = new Sprite();
@@ -94,6 +94,11 @@ package ui.controls {
 			// check for label
 			if (label) {
 				super.addLabel(label, width, 10, -10);
+			}
+			
+			// check for background
+			if (background) {
+				super.displayBackground(_width - 1, _height - 1);
 			}
 		}
 		
@@ -133,8 +138,10 @@ package ui.controls {
 		 * 	@see DisplayObjectContainer.removeChild
 		 */
 		override public function removeChild(child:DisplayObject):DisplayObject {
+			
 			var child:DisplayObject = _holder.removeChild(child);
 			_calculateRemove();
+			
 			return child;
 		}
 		
@@ -287,33 +294,28 @@ package ui.controls {
 		}
 		
 		/**
-		 * 	Sets the background color
-		 */
-		public function set backgroundColor(value:uint):void {
-			graphics.clear();
-			graphics.beginFill(value);
-			graphics.lineStyle(0, LINE_DEFAULT);
-			graphics.drawRect(-4,-4,_width+4,_height+4);
-			graphics.endFill();
-		}
-		
-		/**
-		 * 	Disposes
-		 */
-		override public function dispose():void {
-			removeEventListener(MouseEvent.MOUSE_OVER, _onMouseOver);
-			removeEventListener(MouseEvent.MOUSE_OUT, _onMouseOut);
-			removeEventListener(MouseEvent.MOUSE_WHEEL, _onMouseWheel);
-
-		}
-		
-		/**
 		 * 	Resets
 		 */
 		public function reset():void {
 			_holder.y = 0;
 		}
+
 		
+		/**
+		 * 	Disposes
+		 */
+		override public function dispose():void {
+			
+			if (_scrollY) {
+				_scrollY.removeEventListener(MouseEvent.MOUSE_DOWN, _onScrollPress);
+			}
+
+			removeEventListener(MouseEvent.MOUSE_OVER, _onMouseOver);
+			removeEventListener(MouseEvent.MOUSE_OUT, _onMouseOut);
+			removeEventListener(MouseEvent.MOUSE_WHEEL, _onMouseWheel);
+
+			super.dispose();
+		}		
 	}
 }
 
