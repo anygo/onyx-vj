@@ -71,6 +71,7 @@ package onyx.transition {
 		 */
 		onyx_ns static function registerPlugin(plugin:Plugin):void {
 			_definition[plugin.name] = plugin;
+			plugin._parent = _transitions;
 			_transitions.push(plugin);
 			
 		}

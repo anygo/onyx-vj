@@ -1,6 +1,6 @@
 package onyx.file {
 	
-	public final class SWFFilter extends FileFilter {
+	public final class PluginFilter extends FileFilter {
 		
 		override public function validate(file:File):Boolean {
 			

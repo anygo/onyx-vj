@@ -227,13 +227,19 @@ package onyx.content {
 		 * 	@private
 		 */
 		protected var __loopEnd:Control;
+		
+		/**
+		 * 	@private
+		 */
+		protected var _properties:LayerProperties;
 
 		/**
 		 * 	@constructor
 		 */		
 		public function Content(layer:Layer, path:String, content:IBitmapDrawable):void {
 			
-			var props:LayerProperties = layer.properties;
+			var props:LayerProperties = layer.properties as LayerProperties;
+			_properties		= props;
 
 			// store layer
 			_layer = layer;
@@ -273,12 +279,6 @@ package onyx.content {
 				addEventListener(MouseEvent.MOUSE_DOWN,	_forwardEvents);
 				addEventListener(MouseEvent.MOUSE_UP,	_forwardEvents);
 				addEventListener(MouseEvent.MOUSE_MOVE,	_forwardEvents);
-			}
-			
-			// if it wants the stage, pass it over
-			if (_content is IContentObject) {
-				var stageContent:IContentObject = _content as IContentObject;
-				stageContent.initialize(STAGE, this);
 			}
 		}
 		
@@ -689,6 +689,14 @@ package onyx.content {
 			_filters.muteFilter(filter, this, toggle);
 		}
 		
+		
+		/**
+		 * 	Get Properties
+		 */
+		public function get properties():Controls {
+			return _properties;
+		}
+		
 		/**
 		 * 	Destroys the content
 		 */
@@ -745,6 +753,5 @@ package onyx.content {
 			_controls = null;
 			_layer = null;
 		}
-		
 	}
 }

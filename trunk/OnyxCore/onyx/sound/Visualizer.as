@@ -58,6 +58,7 @@ package onyx.sound {
 		onyx_ns static function registerPlugin(plugin:Plugin):void {
 			
 			_definition[plugin.name] = plugin;
+			plugin._parent = _visualizers;
 			_visualizers.push(plugin);
 
 		}

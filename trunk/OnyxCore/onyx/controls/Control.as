@@ -112,6 +112,20 @@ package onyx.controls {
 		}
 		
 		/**
+		 * 	Override this control with another control
+		 */
+		public function override(target:IControlObject, value:*):ControlOverride {
+			var j:ControlOverride = new ControlOverride();
+			j.target		= _target;
+			j.value			= _target[name];
+				
+			_target[name]	= value;
+			_target			= target;
+			
+			return j;
+		}
+		
+		/**
 		 * 	Changes the target
 		 */
 		public function set target(value:IControlObject):void {

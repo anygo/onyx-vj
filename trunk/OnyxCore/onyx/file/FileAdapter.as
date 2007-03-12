@@ -31,18 +31,44 @@
 package onyx.file {
 	
 	import flash.events.EventDispatcher;
+	import flash.utils.ByteArray;
 	
+	/**
+	 * 	Base class for file-access
+	 */
 	public class FileAdapter extends EventDispatcher {
 		
+		/**
+		 * 	Initial directory that application starts in
+		 */
 		public var INITIAL_DIR:String;
 		
+		/**
+		 * 	@constructor
+		 */
 		public function FileAdapter(dir:String):void {
 			INITIAL_DIR = dir;
 		}
 		
+		/**
+		 * 	Queries a directory
+		 */
 		public function query(path:String, callback:Function, filter:FileFilter = null):FileQuery {
 			return null;
 		}
 		
+		/**
+		 * 	Saves a document
+		 */
+		public function save(path:String, callback:Function, contents:ByteArray):void {
+		}
+
+		/**
+		 * 	Gets the filename
+		 */
+		public function getFileName(path:String):String {
+			return null;
+		}
+
 	}
 }

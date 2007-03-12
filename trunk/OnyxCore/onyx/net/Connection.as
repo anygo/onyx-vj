@@ -37,11 +37,20 @@ package onyx.net {
 	 */
 	public class Connection extends NetConnection {
 		
+		/**
+		 * 	Stores the default connection for all netconnections
+		 */
 		internal static const DEFAULT_CONNECTION:Connection = new Connection();
 		
+		/**
+		 * 	@constructor
+		 */
 		public function Connection():void {
-			if (DEFAULT_CONNECTION) throw new Error('error');
-				connect(null);
+			if (DEFAULT_CONNECTION) {
+				throw new Error('error');
+			}
+			
+			connect(null);
 		}
 	}
 }

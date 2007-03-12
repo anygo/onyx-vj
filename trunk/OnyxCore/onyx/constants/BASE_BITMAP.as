@@ -32,8 +32,12 @@ package onyx.constants {
 
 	import flash.display.*;
 	
+	import onyx.core.onyx_ns;
+	
+	use namespace onyx_ns;
+	
 	public function BASE_BITMAP():BitmapData {
-		return new BitmapData(320, 240, true, 0x00000000);
+		return new BitmapData(BITMAP_WIDTH, BITMAP_HEIGHT, true, 0x00000000);
 	}
 
 }

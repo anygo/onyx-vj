@@ -39,7 +39,8 @@ package onyx.core {
 		public static var LAYER_AUTOSIZE_CONSTRAIN:Boolean		= true;
 		
 		public static const INITIAL_APP_DIRECTORY:String		= 'video/';
-		public static const PLUGINS_DIRECTORY:String			= 'plugins/'
+		public static const PLUGINS_DIRECTORY:String			= 'plugins/';
+		public static const SETTINGS_DIRECTORY:String			= 'settings/';
 	
 		public static const SLOW_RENDER_SKIPS_FRAMES:Boolean	= true;
 

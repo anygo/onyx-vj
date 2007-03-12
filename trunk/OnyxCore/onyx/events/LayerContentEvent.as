@@ -31,7 +31,6 @@
 package onyx.events {
 	
 	import flash.events.Event;
-	import flash.net.URLRequest;
 	
 	import onyx.content.Content;
 	import onyx.layer.LayerSettings;

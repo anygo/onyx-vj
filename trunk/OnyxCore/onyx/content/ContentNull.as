@@ -37,6 +37,7 @@ package onyx.content {
 	import onyx.controls.Controls;
 	import onyx.core.*;
 	import onyx.filter.Filter;
+	import onyx.controls.Control;
 
 	[ExcludeClass]
 	public final class ContentNull implements IContent {
@@ -289,6 +290,13 @@ package onyx.content {
 		 * 
 		 */
 		public function muteFilter(filter:Filter, toggle:Boolean = true):void {
+		}
+		
+		/**
+		 * 
+		 */
+		public function get properties():Controls {
+			return null;
 		}
 
 	}

@@ -28,24 +28,14 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+package onyx.constants {
 
-package onyx.plugin {
+	import flash.display.*;
 	
-	import flash.display.BitmapData;
-	import flash.display.DisplayObjectContainer;
-	import flash.display.Stage;
-	import flash.geom.ColorTransform;
-	import flash.geom.Matrix;
-	import flash.geom.Rectangle;
+	import onyx.core.onyx_ns;
 	
-	import onyx.content.Content;
-	import onyx.content.IContent;
-	import onyx.core.IDisposable;
-	import onyx.core.IRenderObject;
+	use namespace onyx_ns;
 	
-	public interface IContentObject extends IRenderObject, IDisposable {
-		
-		function initialize(root:DisplayObjectContainer, content:IContent):void;
-		
-	}
+	internal var BITMAP_HEIGHT:int = 240;
+
 }

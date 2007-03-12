@@ -49,7 +49,7 @@ package onyx.file {
 		public var thumbnail:Object;
 		
 		/**
-		 * 
+		 * 	@constructor
 		 */
 		public function File(path:String, thumbnail:Object):void {
 			
@@ -59,7 +59,7 @@ package onyx.file {
 		}
 		
 		/**
-		 * 
+		 * 	Gets extension
 		 */
 		public function get extension():String {
 			return getExtension(path);

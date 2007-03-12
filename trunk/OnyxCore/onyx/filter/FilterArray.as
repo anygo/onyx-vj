@@ -40,6 +40,7 @@ package onyx.filter {
 	import onyx.plugin.*;
 	import onyx.tween.*;
 	import onyx.utils.array.*;
+	import flash.geom.Matrix;
 	
 	use namespace onyx_ns;
 	
@@ -143,6 +144,7 @@ package onyx.filter {
 		 * 	Renders all filters to the source bitmap
 		 */
 		public function render(source:BitmapData):void {
+			
 			for each (var filter:Filter in this) {
 				if (filter is IBitmapFilter) {
 					if (!filter._muted) {
@@ -150,6 +152,7 @@ package onyx.filter {
 					}
 				}
 			}
+			
 		}
 	}
 }

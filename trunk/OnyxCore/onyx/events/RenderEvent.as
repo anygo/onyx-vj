@@ -32,10 +32,21 @@ package onyx.events {
 	
 	import flash.events.Event;
 
+	/**
+	 * 	Dispatched when a display finishes rendering
+	 */
 	public final class RenderEvent extends Event {
 		
-		public function RenderEvent(type:String):void {
-			super(type);
+		/**
+		 * 	Dispatched when a display finishes rendering
+		 */
+		public static const RENDER:String = 'render';
+		
+		/**
+		 * 	@constructor
+		 */
+		public function RenderEvent():void {
+			super(RENDER);
 		}
 	}
 }

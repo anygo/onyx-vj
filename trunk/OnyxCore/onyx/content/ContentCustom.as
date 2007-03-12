@@ -93,9 +93,10 @@ package onyx.content {
 			
 			var content:IRenderObject			= _content as IRenderObject;
 			var transform:RenderTransform		= content.render();
+			var drawContent:IBitmapDrawable		= transform.content || _content;
 			
 			// render content
-			RenderManager.renderContent(_source, transform.content || _content, transform, _filter);
+			RenderManager.renderContent(_source, drawContent, transform, _filter);
 			
 			// render filters
 			RenderManager.renderFilters(_source, _rendered, _filters);

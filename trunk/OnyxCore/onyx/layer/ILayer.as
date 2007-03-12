@@ -32,7 +32,6 @@ package onyx.layer {
 	
 	import flash.display.BitmapData;
 	import flash.events.IEventDispatcher;
-	import flash.net.URLRequest;
 	
 	import onyx.content.IContent;
 	import onyx.controls.Controls;
@@ -52,7 +51,6 @@ package onyx.layer {
 	public interface ILayer extends IContent {
 
 		function get display():IDisplay;
-		function get properties():LayerProperties;
 		function moveLayer(index:int):void;
 		function copyLayer():void;
 		function get index():int;

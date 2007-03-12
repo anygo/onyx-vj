@@ -88,11 +88,14 @@ package onyx.file.http {
 				// parse for files Folder
 				for each (node in dirs) {
 					name = node.@name;
-					name = (name == '..') ? name : rootpath + name;
+
+					if (name === '..') {
+						name = rootpath.substr(0, rootpath.lastIndexOf('/', rootpath.length - 2)) + '/';
+					} else {
+						name = rootpath + name;
+					}
 					list.folders.push(new Folder(name));
 				}
-
-				list.folders.push(new Folder('cameras'));
 				
 				// parse for files Folder
 				for each (node in files) {

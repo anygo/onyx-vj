@@ -40,6 +40,7 @@ package onyx.states {
 	import onyx.events.*;
 	import onyx.file.*;
 	import onyx.plugin.*;
+	import flash.system.ApplicationDomain;
 	
 	use namespace onyx_ns;
 
@@ -57,7 +58,7 @@ package onyx.states {
 		 * 	@private
 		 */
 		private var _timer:Timer;
-
+		
 		/**
 		 * 	Initializes
 		 */
@@ -73,7 +74,7 @@ package onyx.states {
 			FileBrowser.query(
 				FileBrowser.initialDirectory + Settings.PLUGINS_DIRECTORY,
 				_loadExternalPlugins,
-				new SWFFilter()
+				new PluginFilter()
 			);
 		}
 		
@@ -92,10 +93,11 @@ package onyx.states {
 					swfloader.contentLoaderInfo.addEventListener(Event.COMPLETE,					_onFilterLoaded);
 					swfloader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR,				_onFilterLoaded);
 					swfloader.contentLoaderInfo.addEventListener(SecurityErrorEvent.SECURITY_ERROR, _onFilterLoaded);
+					
 					swfloader.load(new URLRequest(file.path));
 
-					_filtersToLoad.push(swfloader);
-
+					_filtersToLoad.push(swfloader.loaderInfo);
+					
 					Console.output('LOADING ' + String(file.path).toUpperCase());
 				}
 			}
@@ -115,7 +117,7 @@ package onyx.states {
 			info.removeEventListener(SecurityErrorEvent.SECURITY_ERROR,	_onFilterLoaded);
 			
 			// remove the loader
-			_filtersToLoad.splice(_filtersToLoad.indexOf(info.loader), 1);
+			_filtersToLoad.splice(_filtersToLoad.indexOf(info), 1);
 
 			// if valid swf
 			if (event is ErrorEvent) {
@@ -179,10 +181,6 @@ package onyx.states {
 
 			// we're done initializing
 			Onyx.instance.dispatchEvent(new ApplicationEvent(ApplicationEvent.ONYX_STARTUP_END));
-
-			// dispatch the start-up motd
-			Command.help();
-			Command.help('plugins');
 
 		}
 	}

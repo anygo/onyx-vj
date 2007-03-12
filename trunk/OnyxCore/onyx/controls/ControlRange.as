@@ -35,6 +35,9 @@ package onyx.controls {
 	
 	use namespace onyx_ns;
 
+	/**
+	 * 	Range Array Control
+	 */
 	public class ControlRange extends Control {
 		
 		/**
@@ -81,15 +84,17 @@ package onyx.controls {
 		}
 		
 		/**
-		 * 
+		 * 	Sets a new data
 		 */
 		public function set data(value:Array):void {
 			_data = value;
+
+			// dispatch an update
 			dispatchEvent(new ControlEvent(_target[name]));
 		}
-		
+
 		/**
-		 * 
+		 * 	Returns all data
 		 */
 		public function get data():Array {
 			return _data;

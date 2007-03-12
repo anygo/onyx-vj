@@ -31,6 +31,7 @@
 package onyx.file.http {
 	
 	import flash.events.Event;
+	import flash.utils.ByteArray;
 	
 	import onyx.file.FileAdapter;
 	import onyx.file.FileFilter;
@@ -40,9 +41,20 @@ package onyx.file.http {
 	 * 	Adapter for http / local-without-networking
 	 */
 	public final class HTTPAdapter extends FileAdapter {
-		
+
+		/**
+		 * 	@constructor
+		 */		
 		public function HTTPAdapter():void {
 			super('');
+		}
+		
+		/**
+		 * 
+		 */
+		override public function getFileName(path:String):String {
+			var index:int = path.lastIndexOf('/', path.length - 2)+1;
+			return (index) ? path.substr(index) : path;
 		}
 		
 		/**
@@ -50,6 +62,12 @@ package onyx.file.http {
 		 */
 		override public function query(path:String, callback:Function, filter:FileFilter = null):FileQuery {
 			return new HTTPQuery(path, callback, filter);
+		}
+		
+		/**
+		 * 
+		 */
+		override public function save(path:String, callback:Function, contents:ByteArray):void {
 		}
 	}
 }

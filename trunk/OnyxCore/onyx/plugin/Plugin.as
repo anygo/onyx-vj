@@ -33,6 +33,7 @@ package onyx.plugin {
 	import onyx.core.IDisposable;
 	import onyx.core.PluginBase;
 	import onyx.core.onyx_ns;
+	import onyx.utils.array.swap;
 	
 	use namespace onyx_ns;
 	
@@ -50,6 +51,11 @@ package onyx.plugin {
 		 * 	Class definition for the object
 		 */
 		onyx_ns var _definition:Class;
+		
+		/**
+		 * 
+		 */
+		onyx_ns var _parent:Array;
 		
 		/**
 		 * 	Stores the description for the plug-in (for use in UI)
@@ -98,6 +104,20 @@ package onyx.plugin {
 		public function getData(name:String):* {
 			return (metadata) ? metadata[name] : null;
 		}
+		
+		/**
+		 * 	Gets the index
+		 */
+		public function get index():int {
+			return _parent.indexOf(this);
+		}
+		
+		/**
+		 * 	Sets the index
+		 */
+		public function set index(value:int):void {
+			swap(_parent, this, value);
+		}		
 
 	}
 }

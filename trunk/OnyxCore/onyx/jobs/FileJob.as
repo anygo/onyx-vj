@@ -28,19 +28,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package onyx.net {
+package onyx.jobs {
 	
-	import flash.events.EventDispatcher;
-
-	public final class Host extends EventDispatcher {
-		
-		private var connection:IConnection;
-		
-		public function connect(hostname:String, port:int):void {
-			if (!connection) {
-				connection = new LocalConnection();
-				connection.connect('12345');
-			}
-		}	
+	public final class FileJob extends Job {
 	}
+	
 }

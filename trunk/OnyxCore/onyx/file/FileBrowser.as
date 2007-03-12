@@ -49,22 +49,24 @@ package onyx.file {
 		/**
 		 * 	@private
 		 */
-		private static var _current:String;
-		
-		/**
-		 * 	@private
-		 */
 		private static var _adapter:FileAdapter;
 		
 		/**
-		 * 
+		 * 	Returns initial directory
 		 */
 		public static function get initialDirectory():String {
 			return _adapter.INITIAL_DIR;
 		}
 		
 		/**
-		 * 
+		 * 	Gets file name from a path
+		 */
+		public static function getFileName(path:String):String {
+			return _adapter.getFileName(path);
+		}
+		
+		/**
+		 * 	initializes the adapter
 		 */
 		public static function initialize(adapter:FileAdapter):void {
 			_adapter = adapter;
@@ -74,14 +76,6 @@ package onyx.file {
 		 * 	Queries the filesystem
 		 */
 		public static function query(folder:String, callback:Function, filter:FileFilter = null, refresh:Boolean = false):void {
-			
-			if (folder == '..') {
-				var items:Array = _current.split('/');
-				items.splice(items.length - 2, 2);
-				folder = items.join('/') + '/';
-			}
-			
-			_current = folder;
 
 			// check for cache
 			if (refresh || !_cache[folder]) {
@@ -120,7 +114,7 @@ package onyx.file {
 		 */
 		private static function doCallBack(list:FolderList, callback:Function, filter:FileFilter = null):void {
 			
-			if (filter) {
+			if (filter && list) {
 				var list:FolderList = list.clone(filter);
 			}
 			
@@ -132,7 +126,7 @@ package onyx.file {
 		 */
 		private static function _getCameras():void {
 			
-			var list:FolderList = new FolderList('cameras');
+			var list:FolderList = new FolderList('__cameras');
 			
 			var cameras:Array = Camera.names;
 			

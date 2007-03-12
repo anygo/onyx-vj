@@ -28,12 +28,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package onyx.core {
-	
-	[ExcludeClass]
-	final public class ErrorDescription {
+package onyx.errors {
 		
-		public static const INVALID_CLASS_CREATION:Error	= new Error('You cannot create an instance of this class directly.');
-		
-	}
+	public const INVALID_CLASS_CREATION:Error	= new Error('You cannot create an instance of this class directly.');
+
 }

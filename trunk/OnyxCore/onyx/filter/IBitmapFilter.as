@@ -31,6 +31,7 @@
 package onyx.filter {
 	
 	import flash.display.BitmapData;
+	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
 	
 	public interface IBitmapFilter {

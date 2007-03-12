@@ -33,7 +33,6 @@ package onyx.layer {
 	import flash.display.*;
 	import flash.events.*;
 	import flash.geom.*;
-	import flash.net.URLRequest;
 	import flash.utils.getTimer;
 	
 	import onyx.constants.*;
@@ -42,6 +41,7 @@ package onyx.layer {
 	import onyx.core.*;
 	import onyx.display.*;
 	import onyx.events.*;
+	import onyx.file.FileBrowser;
 	import onyx.filter.*;
 	import onyx.net.Stream;
 	import onyx.transition.Transition;
@@ -84,7 +84,7 @@ package onyx.layer {
 		 * 	@private
 		 * 	Controls
 		 */
-		private var			_properties:LayerProperties;
+		private var			_properties:Controls;
 		
 		/**
 		 * 	@constructor
@@ -580,7 +580,7 @@ package onyx.layer {
 		/**
 		 * 	Returns properties related to the layer
 		 */
-		public function get properties():LayerProperties {
+		public function get properties():Controls {
 			return _properties;
 		}
 		
@@ -682,6 +682,13 @@ package onyx.layer {
 		 */
 		public function get display():IDisplay {
 			return _display;
+		}
+		
+		/**
+		 * 
+		 */
+		override public function toString():String {
+			return (_content.path) ? FileBrowser.getFileName(_content.path) : '';
 		}
 	}
 }

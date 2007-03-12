@@ -28,11 +28,18 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package onyx.net {
+package onyx.utils.string {
 	
-	public interface IConnection {
+	/**
+	 * 	Gets a file extension based on a file path
+	 */
+	public function pad(object:Object, len:int = 4):String {
+		var str:String = object.toString();
 		
-		function connect(name:String):void;
-		
+		while (str.length <= len) {
+			str = ' ' + str;
+		}
+		return str;
 	}
+
 }

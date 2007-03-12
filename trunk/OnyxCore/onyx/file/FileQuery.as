@@ -23,6 +23,11 @@ package onyx.file {
 		 * 	The filter to apply to the callback
 		 */
 		public var filter:FileFilter;
+		
+		/**
+		 * 
+		 */
+		// public var job:FileJob;
 				
 		/**
 		 * 	@constructor

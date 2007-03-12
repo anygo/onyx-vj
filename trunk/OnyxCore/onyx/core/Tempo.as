@@ -18,19 +18,19 @@ package onyx.core {
 		 * 	Gets tempo
 		 */
 		public static function get tempo():int {
-			return _instance.tempo;
+			return instance.tempo;
 		}
 		
 		/**
 		 * 	@private
 		 */
-		private static var _instance:Tempo	= new Tempo();
+		private static const instance:Tempo	= new Tempo();
 		
 		/**
 		 * 	Dispatcher
 		 */
 		public static function getInstance():Tempo {
-			return _instance;
+			return instance;
 		}
 		
 		/**
@@ -72,7 +72,7 @@ package onyx.core {
 		 * 	@constructor
 		 */
 		public function Tempo():void {
-			if (_instance) {
+			if (instance) {
 				throw new Error('Singleton Error.');
 			} else {
 				_timer		= new Timer(10);

@@ -40,6 +40,9 @@ package onyx.net {
 	 */
 	public final class Stream extends NetStream {
 
+		/**
+		 * 	Stores metadata for the stream
+		 */
 		public var metadata:Object;
 
 		/**
@@ -70,6 +73,8 @@ package onyx.net {
 		 */
 		public function onMetaData(info:Object):void {
 			metadata = info;
+			
+			// dispatch an event complete for a stream metadata event
 			dispatchEvent(new Event(Event.COMPLETE));
 		}
 		

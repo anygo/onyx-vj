@@ -41,7 +41,6 @@ package onyx.content {
 	import onyx.events.LayerContentEvent;
 	import onyx.layer.LayerSettings;
 	import onyx.net.*;
-	import onyx.plugin.IContentObject;
 	import onyx.transition.Transition;
 	import onyx.utils.string.*;
 
@@ -282,7 +281,9 @@ package onyx.content {
 				_createLoaderContent(info, event);
 				
 			} else {
+				
 				_dispatchContent(null, null, event);
+				
 			}
 			
 		}
@@ -292,7 +293,8 @@ package onyx.content {
 		 */
 		private function _createLoaderContent(info:LoaderInfo, event:Event = null):void {
 			var loader:Loader	= info.loader;
-			var type:Class = (loader.content is MovieClip) ? ContentMC : (loader.content is IContentObject) ? ContentCustom : ContentSprite;
+			
+			var type:Class = (loader.content is MovieClip) ? ContentMC : (loader.content is IRenderObject) ? ContentCustom : ContentSprite;
 
 			_dispatchContent(type, loader, event || new Event(Event.COMPLETE));
 		}

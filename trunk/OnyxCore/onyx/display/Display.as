@@ -51,6 +51,8 @@ package onyx.display {
 	
 	use namespace onyx_ns;
 	
+	[Event(name='render', type='onyx.events.RenderEvent')]
+	
 	/**
 	 * 	Base Display class
 	 */
@@ -101,12 +103,12 @@ package onyx.display {
 		/**
 		 * 	@private
 		 */
-		private var _layers:Array		= [];
+		onyx_ns var _layers:Array		= [];
 		
 		/**
 		 * 
 		 */
-		private var _valid:Array		= [];
+		onyx_ns var _valid:Array		= [];
 		
 		/**
 		 * 	@constructor
@@ -133,9 +135,6 @@ package onyx.display {
 			addEventListener(MouseEvent.MOUSE_OVER, _onMouseOver);
 			addEventListener(MouseEvent.MOUSE_OUT, _onMouseOut);
 			
-			// render content
-			addEventListener(Event.ENTER_FRAME, _renderContent);
-
 			// set background color
 			super(new BitmapData(320, 240, false, _backgroundColor));			
 		}
@@ -186,6 +185,10 @@ package onyx.display {
 					new DisplayEvent(DisplayEvent.LAYER_CREATED, layer)
 				);
 			}
+			
+			// render content
+			addEventListener(Event.ENTER_FRAME, _renderContent);
+
 		}
 		
 		/**
@@ -305,23 +308,6 @@ package onyx.display {
 		}
 		
 		/**
-		 * 	Returns the display as xml
-		 */
-		public function toXML():XML {
-			var xml:XML = <display/>
-			
-			for each (var layer:Layer in _layers) {
-				if (layer.path) {
-					var settings:LayerSettings = new LayerSettings();
-					settings.load(layer);
-					xml.appendChild(settings.toXML());
-				}
-			}
-			
-			return xml;
-		}
-		
-		/**
 		 * 	Loads a mix file into the layers
 		 * 	@param	request:URLRequest
 		 * 	@param	origin:ILayer
@@ -341,14 +327,14 @@ package onyx.display {
 		}
 		
 		/**
-		 * 
+		 * 	Sets the background color
 		 */
 		public function get backgroundColor():uint {
 			return _backgroundColor;
 		}
 		
 		/**
-		 * 
+		 * 	Sets the size of the display
 		 */
 		public function set size(value:DisplaySize):void {
 			_size	= value;
@@ -364,7 +350,8 @@ package onyx.display {
 		}
 		
 		/**
-		 * 
+		 * 	@private
+		 * 	Renders the content
 		 */
 		private function _renderContent(event:Event):void {
 			
@@ -398,6 +385,9 @@ package onyx.display {
 			
 			// unlock the bitmap
 			super.bitmapData.unlock();
+			
+			// dispatch a render event
+			dispatchEvent(new RenderEvent());
 		}
 
 		/**
@@ -698,7 +688,7 @@ package onyx.display {
 		}
 		
 		/**
-		 * 
+		 * 	Mutes a filter
 		 */
 		public function muteFilter(filter:Filter, toggle:Boolean = true):void {
 			_filters.muteFilter(filter, this, toggle);
@@ -712,6 +702,23 @@ package onyx.display {
 		}
 		
 		/**
+		 * 	Returns the display as xml
+		 */
+		public function toXML():XML {
+			var xml:XML = <display/>
+			
+			for each (var layer:Layer in _layers) {
+				if (layer.path) {
+					var settings:LayerSettings = new LayerSettings();
+					settings.load(layer);
+					xml.appendChild(settings.toXML());
+				}
+			}
+			
+			return xml;
+		}
+		
+		/**
 		 * 
 		 */
 		public function dispose():void {
@@ -721,5 +728,11 @@ package onyx.display {
 			}
 		}
 
+		/**
+		 * 
+		 */
+		public function get properties():Controls {
+			return null;
+		}
 	}
 }

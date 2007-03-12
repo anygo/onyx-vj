@@ -127,7 +127,7 @@ package onyx.layer {
 		/**
 		 * 	@constructor
 		 */
-		public function LayerProperties(layer:Layer):void {
+		public function LayerProperties(layer:ILayer):void {
 			
 			super(layer);
 			

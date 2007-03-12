@@ -1,4 +1,10 @@
-<a href="http://www.onyx-vj.com/demo3/onyx2.swf">Play with 3.0.2 here</a>
+
+3.0.28: FEATURES
+
+Application Settings
+Ability to save settings data
+
+<a href="http://www.onyx-vj.com/demo2">Play with 3.0.25 here</a>
 
 <b>3.0.25: FEATURES:</b>
 

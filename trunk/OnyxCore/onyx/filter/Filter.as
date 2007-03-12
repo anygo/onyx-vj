@@ -63,9 +63,12 @@ package onyx.filter {
 		/**
 		 * 	Registers a plugin
 		 */
-		onyx_ns static function registerPlugin(plugin:Plugin):void {
-			_definition[plugin.name] = plugin;
-			_filters.push(plugin);
+		onyx_ns static function registerPlugin(plugin:Plugin, index:int = -1):void {
+			if (!_definition[plugin.name]) {
+				_definition[plugin.name] = plugin;
+				plugin._parent = _filters;
+				_filters.splice(index || _filters.length - 1, 0, plugin);
+			}
 		}
 
 		/**

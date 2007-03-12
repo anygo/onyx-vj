@@ -28,23 +28,12 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
- 
-// this is just here for easier testing
-package onyx.net {
-	
-	import flash.events.EventDispatcher;
-	import flash.net.LocalConnection;
+package onyx.constants {
 
-	public final class LocalConnection extends EventDispatcher implements IConnection {
-		
-		private var lc:flash.net.LocalConnection	= new flash.net.LocalConnection();
-		
-		public function LocalConnection():void {
-		}
-		
-		public function connect(name:String):void {
-			lc.connect(name);
-		}
-		
-	}
+	import flash.display.*;
+	
+	import onyx.core.onyx_ns;
+	
+	internal var BITMAP_WIDTH:int = 320;
+
 }
