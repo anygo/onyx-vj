@@ -2,11 +2,7 @@ package {
 	
 	import cursor.*;
 	
-	import flash.display.Bitmap;
-	import flash.display.BitmapData;
-	import flash.display.Shape;
-	import flash.display.Sprite;
-	import flash.display.Stage;
+	import flash.display.*;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.filters.ColorMatrixFilter;
@@ -14,71 +10,86 @@ package {
 	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
 	
+	import onyx.constants.*;
 	import onyx.content.IContent;
 	import onyx.controls.*;
+	import onyx.core.IRenderObject;
 	import onyx.core.RenderTransform;
-	import onyx.plugin.IContentObject;
-	import flash.display.DisplayObjectContainer;
 
 	/**
 	 * 
 	 */
 	[SWF(width='320', height='240', frameRate='24')]
-	public class ScreenShare extends Sprite implements IControlObject, IContentObject {
-		
-		private var _stage:DisplayObjectContainer;
+	public class ScreenShare extends Sprite implements IControlObject, IRenderObject {
+
+		/**
+		 * 	@private
+		 */
 		private var _mouseX:int;
+
+		/**
+		 * 	@private
+		 */
 		private var _mouseY:int;
+
+		/**
+		 * 	@private
+		 */
 		private var _scale:Number			= 1;
-		private var _cursor:Cursor			= new Cursor();
+
+		/**
+		 * 	@private
+		 */
 		private var _backgroundColor:uint 	= 0x000000;
-		
+
+		/**
+		 * 	@private
+		 */
 		private var _controls:Controls;
 		
+		/**
+		 * 	@constructor
+		 */
 		public function ScreenShare():void {
 			_controls = new Controls(this,
 				new ControlInt('scale', 'scale', 1, 200, 100),
 				new ControlColor('backgroundColor', 'Background Color')
 			);
-		}
-		
-		public function initialize(stage:DisplayObjectContainer, content:IContent):void {
 			
-			_stage	= stage;
+
+			_mouseX = STAGE.mouseX;
+			_mouseY = STAGE.mouseY;
 			
-			_mouseX = stage.mouseX;
-			_mouseY = stage.mouseY;
-			
-			_stage.addEventListener(MouseEvent.MOUSE_DOWN, _onMouseDown);
-			_stage.addEventListener(MouseEvent.MOUSE_MOVE, _onMouseMove, false);
+			STAGE.addEventListener(MouseEvent.MOUSE_DOWN, _onMouseDown);
+			STAGE.addEventListener(MouseEvent.MOUSE_MOVE, _onMouseMove);
 		}
 		
 		/**
 		 * 	@private
 		 */
 		private function _onMouseDown(event:MouseEvent):void {
-			_stage.addEventListener(MouseEvent.MOUSE_UP, _onMouseUp);
+			STAGE.addEventListener(MouseEvent.MOUSE_UP, _onMouseUp);
 			
-			_mouseX = _stage.mouseX;
-			_mouseY = _stage.mouseY;
+			_mouseX = STAGE.mouseX;
+			_mouseY = STAGE.mouseY;
 			
-			_stage.removeEventListener(MouseEvent.MOUSE_MOVE, _onMouseMove);
+			STAGE.removeEventListener(MouseEvent.MOUSE_MOVE, _onMouseMove);
 		}
 		
 		/**
 		 * 	@private
 		 */
 		private function _onMouseUp(event:MouseEvent):void {
-			_stage.removeEventListener(MouseEvent.MOUSE_UP, _onMouseUp);
-			_stage.addEventListener(MouseEvent.MOUSE_MOVE, _onMouseMove);
+			STAGE.removeEventListener(MouseEvent.MOUSE_UP, _onMouseUp);
+			STAGE.addEventListener(MouseEvent.MOUSE_MOVE, _onMouseMove);
 		}
 		
 		/**
 		 * 	@private
 		 */
 		private function _onMouseMove(event:MouseEvent):void {
-			_mouseX = _stage.mouseX;
-			_mouseY = _stage.mouseY;
+			_mouseX = STAGE.mouseX;
+			_mouseY = STAGE.mouseY;
 		}
 			
 		/**
@@ -87,11 +98,12 @@ package {
 		public function render():RenderTransform {
 			
 			var transform:RenderTransform = new RenderTransform();
-			transform.content	= _stage;
+			transform.content	= STAGE;
 			transform.rect		= new Rectangle(0,0,320,240);
 
-			var offsetX:int		= _stage.mouseX - 160;
-			var offsetY:int		= _stage.mouseY - 120;
+			var offsetX:int		= STAGE.mouseX - 160;
+			var offsetY:int		= STAGE.mouseY - 120;
+			
 			var matrix:Matrix	= new Matrix();
 			matrix.translate(-offsetX, -offsetY);
 			transform.matrix	= matrix;
@@ -140,6 +152,10 @@ package {
 		public function dispose():void {
 			_controls.dispose();
 			_controls = null;
+			
+			STAGE.removeEventListener(MouseEvent.MOUSE_DOWN, _onMouseDown);
+			STAGE.removeEventListener(MouseEvent.MOUSE_MOVE, _onMouseMove);
+
 		}
 	}
 }
