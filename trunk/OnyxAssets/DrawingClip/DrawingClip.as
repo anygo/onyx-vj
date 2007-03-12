@@ -1,6 +1,7 @@
 package {
 	
 	import flash.display.BitmapData;
+	import flash.display.DisplayObjectContainer;
 	import flash.display.Sprite;
 	import flash.display.Stage;
 	import flash.events.MouseEvent;
@@ -8,20 +9,16 @@ package {
 	import flash.geom.*;
 	
 	import onyx.content.*;
-	import onyx.controls.ControlColor;
-	import onyx.controls.Controls;
-	import onyx.controls.IControlObject;
-	import onyx.core.IDisposable;
-	import onyx.core.RenderTransform;
+	import onyx.controls.*;
+	import onyx.core.*;
 	import onyx.plugin.*;
-	import flash.display.DisplayObjectContainer;
 
 	/**
 	 * 	Drawing clip
 	 * 	Control click on a layer the preview box to send mouse events to this file
 	 */
 	[SWF(width='320', height='240', frameRate='24')]
-	public class DrawingClip extends Sprite implements IContentObject, IControlObject {
+	public class DrawingClip extends Sprite implements IRenderObject, IControlObject {
 		
 		public var color:uint	= 0xFFFFFF;
 		
@@ -33,9 +30,6 @@ package {
 				new ControlColor('color', 'color')
 			);
 			addEventListener(MouseEvent.MOUSE_DOWN, _onMouseDown);
-		}
-		
-		public function initialize(root:DisplayObjectContainer, content:IContent):void {
 		}
 		
 		private function _onMouseDown(event:MouseEvent):void {
