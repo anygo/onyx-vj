@@ -30,6 +30,7 @@
  */
 package {
 	
+	import effects.*;
 	import filters.*;
 	
 	import flash.display.Sprite;
@@ -46,11 +47,7 @@ package {
 
 		public function get plugins():Array {
 			return [
-				new Plugin(
-						'Mirror Filter',
-						MirrorFilter,
-						'Mirror Filter'
-				),
+				new Plugin('Mirror Filter', MirrorFilter, 'Mirror Filter'),
 				new Plugin(
 						'Echo Filter',
 						EchoFilter,
@@ -63,6 +60,7 @@ package {
 						'Frame Delay: # of frames to skip'
 				),
 				new Plugin('Blur Filter', 			Blur,			'Blur Filter'),
+				new Plugin('Halo Filter', 			Halo,			'Halo Filter'),
 				new Plugin('Noise Filter',			NoiseFilter,	'Noise Filter'),
 				new Plugin('Repeater Filter',		Repeater,		'Repeater Filter'),
 				new Plugin('Blink Effect', 			Blink,			'Blinks the layer'),
@@ -71,10 +69,12 @@ package {
 //				new Plugin('Matrix Effect',			MatrixEffect,	'Matrix Effect'),
 //				new Plugin('Bleed Filter',			PasteFilter,	'Bleed Filter'),
 				new Plugin('Blur Transition',		BlurTransition, 'Blurs the loaded layer'),
-				new Plugin('Dissolve Transition',	DissolveTransition, 'Dissolves the loaded layer'),
+//				new Plugin('Dissolve Transition',	DissolveTransition, 'Dissolves the loaded layer'),
 				new Plugin('Basic',					BasicVisualizer, 'Visualizer'),
-				new Plugin('Burst Echo',			BurstEcho,		'Burst Echo'),
-				new Plugin('Invert',				InvertFilter,	'Invert')
+//				new Plugin('Burst Echo',			BurstEcho,		'Burst Echo'),
+				new Plugin('Invert',				InvertFilter,	'Invert'),
+//				new Plugin('Loop Scroll',			LoopScroll,		'Loop Scroll Filter'),
+//				new Plugin('Displace',				DisplaceFilter,	'Displace Filter')
 			];
 		}
 	}

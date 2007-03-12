@@ -1,4 +1,4 @@
-package filters {
+package effects {
 	
 	import flash.events.Event;
 	import flash.events.TimerEvent;

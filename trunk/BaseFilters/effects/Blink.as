@@ -28,67 +28,36 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package filters {
+package effects {
 	
-	import flash.display.Stage;
 	import flash.events.Event;
-	import flash.events.TimerEvent;
 	import flash.utils.Timer;
 	
 	import onyx.constants.*;
+	import onyx.content.Content;
 	import onyx.controls.*;
-	import onyx.core.Tempo;
-	import onyx.events.TempoEvent;
 	import onyx.filter.Filter;
-	import onyx.tween.*;
-	import onyx.tween.easing.*;
 	import onyx.filter.TempoFilter;
 
-	public final class FrameRND extends TempoFilter {
+	public final class Blink extends TempoFilter {
 		
-		public var rndframe:Boolean = true;
+		public var min:Number		= 0;
+		public var max:Number		= 1;
 		
-		public var mindelay:Number	= .5;
-		public var maxdelay:Number	= 2;
-		public var minframe:Number	= .6;
-		public var maxframe:Number	= 4;
-		public var smooth:Boolean	= true;
+		public function Blink():void {
 
-		private var _tempo:Boolean	= true;
-		
-		public function FrameRND():void {
-
-			super(
+			super(	
 				true,
-				new ControlNumber('mindelay',	'Min Delay', .1, 50, .5),
-				new ControlNumber('maxdelay',	'Min Delay', .1, 50, 2),
-				new ControlRange('rndframe',	'RND Frame', [true, false], 0),
-				new ControlNumber('minframe',	'min framerate', .2, 8, .6),
-				new ControlNumber('maxframe',	'max framerate', .2, 8, 4)
+				new ControlNumber('min',	'min alpha',	0,	1,	1),
+				new ControlNumber('max',	'max alpha',	0,	1,	1)
 			)
 		}
 		
+		/**
+		 * 
+		 */
 		override protected function onTrigger(beat:int, event:Event):void {
-
-			if (event is TimerEvent) {
-				delay = (((maxdelay - mindelay) * Math.random()) + mindelay) * 1000;
-			}
-			
-			if (rndframe) {
-				content.time = Math.random();
-			}
-			
-			var framerate:Number = (((maxframe - minframe) * Math.random()) + minframe) * (Math.random() <= .5 ? 1 : -1);
-			
-			if (smooth) {
-				if (Math.random() > .5) {
-					new Tween(content, 500, new TweenProperty('framerate', 0, 1));
-					return;
-				}
-			}
-			
-			content.framerate = framerate;
+			content.alpha = ((max - min) * Math.random()) + min;
 		}
-		
 	}
 }
