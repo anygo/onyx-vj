@@ -1,0 +1,8 @@
+<response>
+
+	<query path="plugins/">
+		<file name="BaseFilters.swf" />
+		<file name="moveset.xml" />
+	</query>
+	
+</response>

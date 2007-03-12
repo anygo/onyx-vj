@@ -1,0 +1,12 @@
+<response>
+	<query path="video/mixes/">
+
+		<folder name=".." />
+		
+		<file name="mix4.xml" thumb="thumbs/mix4.jpg" />
+		<file name="mix1.xml" thumb="thumbs/mix1.jpg" />
+		<file name="mix2.xml" thumb="thumbs/mix2.jpg" />
+		<file name="mix3.xml" thumb="thumbs/mix3.jpg" />
+		
+	</query>
+</response>
