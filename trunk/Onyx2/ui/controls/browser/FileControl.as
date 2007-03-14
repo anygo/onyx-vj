@@ -117,7 +117,6 @@ package ui.controls.browser {
 			graphics.beginFill(0x647789);
 			graphics.drawRect(0,0,48,37);
 			graphics.endFill();
-			cacheAsBitmap = true;
 		}
 		
 		/**
