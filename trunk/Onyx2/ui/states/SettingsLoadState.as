@@ -63,10 +63,14 @@ package ui.states {
 			
 			displayState = args[0];
 			
-			var loader:URLLoader = new URLLoader();
-			loader.addEventListener(Event.COMPLETE,			_onLoad);
-			loader.addEventListener(IOErrorEvent.IO_ERROR,	_onLoad);
-			loader.load(new URLRequest(PATH));
+			// bypass settings for now
+			
+			// var loader:URLLoader = new URLLoader();
+			// loader.addEventListener(Event.COMPLETE,			_onLoad);
+			// loader.addEventListener(IOErrorEvent.IO_ERROR,	_onLoad);
+			// loader.load(new URLRequest(PATH));
+			
+			StateManager.removeState(this);
 		}
 		
 		/**
@@ -104,6 +108,7 @@ package ui.states {
 
 			// remove the startup image
 			StateManager.removeState(displayState);
+			displayState = null;
 
 		}
 	}

@@ -61,6 +61,12 @@ package ui.window {
 		/**
 		 * 	@private
 		 */
+		private var _controlActive:DropDown
+
+		
+		/**
+		 * 	@private
+		 */
 		private var _tapTempo:TempoShape	= new TempoShape();
 		
 		/**
@@ -74,7 +80,7 @@ package ui.window {
 		private var _samples:Array			= [0];
 		
 		/**
-		 * 
+		 * 	@private
 		 */
 		private var _tempo:Tempo			= Tempo.getInstance();
 		
@@ -98,12 +104,14 @@ package ui.window {
 			
 			// tempo controls
 			_controlTempo			= new SliderV(options, _tempo.controls.getControl('tempo'));
+			_controlActive			= new DropDown(options, _tempo.controls.getControl('active'));
 			
 			// add controls
 			addChildren(	
-				_controlXML,	2,	83,
-				_controlTempo,	60,	70,
-				_tapTempo,		60,	83
+				_controlActive,	2,		20,
+				_controlTempo,	60,		20,
+				_tapTempo,		118,	20,
+				_controlXML,	2,		40
 			);
 
 			// start the timer

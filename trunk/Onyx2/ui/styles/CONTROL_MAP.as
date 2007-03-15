@@ -28,96 +28,23 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package ui.controls.page {
+package ui.styles {
 	
 	import flash.utils.*;
 	
 	import onyx.controls.*;
 	
 	import ui.controls.*;
-	import ui.core.UIObject;
-	import ui.styles.CONTROL_MAP;
-	import ui.text.TextField;
 
-	/**
-	 * 	The pages
-	 */
-	public final class ControlPage extends UIObject {
-		
-		/**
-		 * 	@private
-		 */
-		private static const DEFAULT:UIOptions = new UIOptions();
-		DEFAULT.width = 48;
+	public const CONTROL_MAP:Object = {};
 
-		/**	
-		 * 	@private
-		 */
-		private var _controls:Array		= [];
-		
-		/**
-		 * 	@constructor
-		 */		
-		public function ControlPage():void {
-			super(true);
-			mouseEnabled = false;
-		}
-		
-		/**
-		 * 	
-		 */
-		public function removeControls():void {
-			for each (var uicontrol:UIControl in _controls) {
-				uicontrol.dispose();
-			}
-			_controls = [];
-		}
-		
-		/**
-		 * 	
-		 */
-		public function addControls(controls:Array):void {
-			
-			var uicontrol:UIControl, x:int = 0, y:int = 0;
-			var options:UIOptions	= DEFAULT;
-			var width:int = 65;
-			
-			removeControls();
+	CONTROL_MAP['onyx.controls::ControlProxy']		= SliderV2;
+	CONTROL_MAP['onyx.controls::ControlRange']		= DropDown;
+	CONTROL_MAP['onyx.controls::ControlLayer']		= DropDown;
+	CONTROL_MAP['onyx.controls::ControlDisplay']	= DropDown;
+	CONTROL_MAP['onyx.controls::ControlColor']		= ColorPicker;
+	CONTROL_MAP['onyx.controls::ControlToggle']		= CheckBox;
+	CONTROL_MAP['onyx.controls::ControlString']		= TextControl;
+	CONTROL_MAP['onyx.controls::ControlBoolean']	= DropDown;
 
-			for each (var control:Control in controls) {
-				
-				uicontrol = null;
-				
-				var def:String		= getQualifiedClassName(control);
-				var metadata:Object = control.metadata || {};
-				var uiClass:Class	= CONTROL_MAP[def];
-				
-				if (!uiClass && control is ControlNumber) {
-					if (metadata.display === 'frame') {
-						uiClass = SliderVFrameRate;
-					} else {
-						uiClass = SliderV;
-					}
-				}
-				
-				if (uiClass) {
-					uicontrol = new uiClass(options, control);
-
-					uicontrol.x = metadata.x || x;
-					uicontrol.y = metadata.y || y;
-					
-					_controls.push(uicontrol);
-					
-					x += options.width + 3;
-					
-					if (x > width) {
-						x = 0;
-						y += options.height + 10;
-					}
-					
-					addChild(uicontrol);
-				}				
-			}
-		}
-	}
 }

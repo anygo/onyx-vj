@@ -193,7 +193,8 @@ package ui.layer {
 										props.saturation,
 										props.color,
 										props.threshold,
-										props.framerate
+										props.framerate,
+										props.muted
 				),
 				new LayerPage('FILTERS'),
 				new LayerPage('CUSTOM')
