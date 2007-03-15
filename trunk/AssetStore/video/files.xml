@@ -13,7 +13,6 @@
 		<file name="flv/rich_converse.flv" thumb="swf/thumbs/rich_converse.png"/>
 		<file name="flv/speedcar.flv" thumb="swf/thumbs/speedcar.png"/>
 		<file name="flv/tokyo1.flv" thumb="swf/thumbs/Japones_Tokyo.png"/>
-		<file name="flv/tokyo2.flv" thumb="swf/thumbs/Tokyo_3D_2.png"/>
 
 		<file name="flv/mix1.xml" thumb="flv/thumbs/mix1.jpg"/>
 		<file name="flv/mix2.xml" thumb="flv/thumbs/mix2.jpg"/>
@@ -21,8 +20,12 @@
 		<file name="flv/mix4.xml" thumb="flv/thumbs/mix4.jpg"/>
 		
 		-->
+
+		<file name="flv/tokyo2.flv" thumb="swf/thumbs/Tokyo_3D_2.png"/>
 		
 		<folder name="mixes/" />
+		<folder name="f8/" />
+		<folder name="movies/" />
 
 		<file name="swf_custom/DCClassTest.swf" thumb="swf_custom/thumbs/OnyxText.png" />
 
@@ -56,6 +59,7 @@
 		<file name="swf/Tokyo_3D_2.swf" thumb="swf/thumbs/Tokyo_3D_2.png"/>
 		<file name="swf/Velky_Kychac.swf" thumb="swf/thumbs/Velky_Kychac.png"/>
 
+		<file name="swf_custom/LoopMachine.swf" thumb="swf_custom/thumbs/ScreenShare.png" />
 		<file name="swf_custom/FunInTheSun.swf" thumb="swf_custom/thumbs/FunInTheSun.png" />
 		<file name="swf_custom/LayerCopy.swf" thumb="swf_custom/thumbs/FunInTheSun.png" />
 		<file name="swf_custom/DrawingClip.swf" thumb="swf_custom/thumbs/DrawingClip.png" />
