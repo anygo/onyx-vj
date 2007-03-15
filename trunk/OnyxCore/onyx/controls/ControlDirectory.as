@@ -28,34 +28,13 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package onyx.layer {
+package onyx.controls {
 	
-	import flash.display.BitmapData;
-	import flash.events.IEventDispatcher;
-	
-	import onyx.content.IContent;
-	import onyx.controls.Controls;
-	import onyx.controls.IControlObject;
-	import onyx.core.IRenderObject;
-	import onyx.display.IDisplay;
-	import onyx.filter.IFilterObject;
-	import onyx.transition.Transition;
-	
-	[Event(name="filter_applied",	type="onyx.events.FilterEvent")]
-	[Event(name="filter_removed",	type="onyx.events.FilterEvent")]
-	[Event(name="filter_moved",		type="onyx.events.FilterEvent")]
-	[Event(name="layer_loaded",		type="onyx.events.LayerEvent")]
-	[Event(name="layer_moved",		type="onyx.events.LayerEvent")]
-	[Event(name="progress",			type="flash.events.Event")]
-
-	public interface ILayer extends IContent {
-
-		function get display():IDisplay;
-		function moveLayer(index:int):void;
-		function copyLayer():void;
-		function get index():int;
-		function load(path:String, settings:LayerSettings = null, transition:Transition = null):void;
-		function get muted():Boolean;
-		function set muted(value:Boolean):void;
+	public final class ControlDirectory extends Control {
+		
+		public function ControlDirectory():void {
+			super(null, null);
+		}
+		
 	}
 }

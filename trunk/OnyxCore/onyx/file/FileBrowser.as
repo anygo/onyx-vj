@@ -35,6 +35,7 @@ package onyx.file {
 	import flash.media.Camera;
 	
 	import onyx.core.*;
+	import onyx.file.http.HTTPAdapter;
 	
 	/**
 	 * 	Stores a cache of directories - so re-querying will not be necessary

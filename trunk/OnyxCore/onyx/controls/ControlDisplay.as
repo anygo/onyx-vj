@@ -28,34 +28,37 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package onyx.layer {
+package onyx.controls {
 	
-	import flash.display.BitmapData;
-	import flash.events.IEventDispatcher;
+	import onyx.core.Onyx;
+	import onyx.core.onyx_ns;
+	import onyx.display.Display;
+	import onyx.events.ControlEvent;
+	import onyx.layer.ILayer;
+	import onyx.layer.Layer;
 	
-	import onyx.content.IContent;
-	import onyx.controls.Controls;
-	import onyx.controls.IControlObject;
-	import onyx.core.IRenderObject;
-	import onyx.display.IDisplay;
-	import onyx.filter.IFilterObject;
-	import onyx.transition.Transition;
+	use namespace onyx_ns;
 	
-	[Event(name="filter_applied",	type="onyx.events.FilterEvent")]
-	[Event(name="filter_removed",	type="onyx.events.FilterEvent")]
-	[Event(name="filter_moved",		type="onyx.events.FilterEvent")]
-	[Event(name="layer_loaded",		type="onyx.events.LayerEvent")]
-	[Event(name="layer_moved",		type="onyx.events.LayerEvent")]
-	[Event(name="progress",			type="flash.events.Event")]
+	/**
+	 * 	Layer Control
+	 */
+	public final class ControlDisplay extends ControlRange {
+		
+		/**
+		 * 	@constructor
+		 */
+		public function ControlDisplay(name:String, displayName:String):void {
+			
+			super(name, displayName, Onyx.displays);
 
-	public interface ILayer extends IContent {
-
-		function get display():IDisplay;
-		function moveLayer(index:int):void;
-		function copyLayer():void;
-		function get index():int;
-		function load(path:String, settings:LayerSettings = null, transition:Transition = null):void;
-		function get muted():Boolean;
-		function set muted(value:Boolean):void;
+		}
+		
+		/**
+		 * 
+		 */
+		override public function set value(v:*):void {
+			_target[name] = v;
+			dispatchEvent(new ControlEvent(v));
+		}
 	}
 }

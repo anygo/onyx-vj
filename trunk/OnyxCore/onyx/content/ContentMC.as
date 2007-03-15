@@ -51,13 +51,13 @@ package onyx.content {
 		 * 	@private
 		 * 	The left loop point
 		 */
-		protected var _loopStart:int						= 0;
+		protected var _loopStart:Number						= 0;
 		
 		/**
 		 * 	@private
 		 * 	The right loop point
 		 */
-		protected var _loopEnd:int							= 1;
+		protected var _loopEnd:Number						= 1;
 		
 		/**
 		 * 	@private
@@ -99,11 +99,6 @@ package onyx.content {
 		private var _mc:MovieClip;
 
 		/**
-		 * 	@private
-		 */
-		private var _totalFrames:int;
-
-		/**
 		 * 	@constructor
 		 */		
 		public function ContentMC(layer:Layer, path:String, loader:Loader):void {
@@ -113,7 +108,6 @@ package onyx.content {
 			
 			// sets the framerate based on the swf framerate
 			_framerate		= loader.contentLoaderInfo.frameRate / framerate;
-			_totalFrames	= _mc.totalFrames;
 			_frame			= 0;
 
 			// sets the last time we executed
@@ -133,7 +127,7 @@ package onyx.content {
 		 */
 		override public function set time(value:Number):void {
 			
-			_frame = _totalFrames * value;
+			_frame = _mc.totalFrames * value;
 			
 		}
 		
@@ -141,14 +135,14 @@ package onyx.content {
 		 * 	Gets the time
 		 */
 		override public function get time():Number {
-			return _frame / _totalFrames;
+			return _frame / (_mc.totalFrames );
 		}
 		
 		/**
 		 * 	Gets the total time
 		 */
 		override public function get totalTime():int {
-			return (_totalFrames / _loader.contentLoaderInfo.frameRate) * 1000;
+			return (_mc.totalFrames / _loader.contentLoaderInfo.frameRate) * 1000;
 		}
 		
 		/**
@@ -163,9 +157,12 @@ package onyx.content {
 				
 				// add the framerate based off the last time
 				var frame:Number = _frame + ((STAGE.frameRate / time) * _framerate);
+				var totalFrames:int	= _mc.totalFrames;
+				var loopEnd:int = totalFrames * _loopEnd;
+				var loopStart:int = totalFrames * _loopStart;
 				
 				// constrain the frame
-				frame = (frame < _loopStart) ? _loopEnd : Math.max(frame % _loopEnd, _loopStart);
+				frame = (frame < loopStart) ? loopEnd : Math.max(frame % loopEnd, loopStart);
 
 				// save the frame				
 				_frame = frame;
@@ -209,13 +206,8 @@ package onyx.content {
 		 * 	Sets the beginning loop point (percentage)
 		 */		
 		override public function set loopStart(value:Number):void {
-
-			// loop
-			var end:Number = loopEnd;
-			var frame:Number = Math.min(value, end);
 			
-			_loopStart = __loopStart.setValue(frame) * _totalFrames;
-			_frame = Math.max(_frame, _loopStart);
+			_loopStart = Math.min(value, _loopEnd);
 			
 		}
 		
@@ -223,7 +215,7 @@ package onyx.content {
 		 * 
 		 */
 		override public function get loopStart():Number {
-			return _loopStart / _totalFrames;
+			return _loopStart;
 		}
 		
 		/**
@@ -231,14 +223,16 @@ package onyx.content {
 		 */
 		override public function set loopEnd(value:Number):void {
 			
-			// loop
-			var start:Number = loopStart;
-			var frame:Number = Math.max(value, start);
-			
-			_loopEnd = __loopEnd.setValue(frame) * _totalFrames;
+			_loopEnd = Math.max(value, _loopStart, 0.01);
 
-			_frame = Math.min(_frame, _loopEnd);
-
+		}
+		
+		
+		/**
+		 * 	Sets the end loop point
+		 */
+		override public function get loopEnd():Number {
+			return _loopEnd;
 		}
 		
 		/**

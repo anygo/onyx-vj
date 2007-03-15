@@ -33,9 +33,9 @@ package onyx.controls {
 	import onyx.core.Onyx;
 	import onyx.core.onyx_ns;
 	import onyx.display.Display;
-	import onyx.layer.Layer;
-	import onyx.layer.ILayer;
 	import onyx.events.ControlEvent;
+	import onyx.layer.ILayer;
+	import onyx.layer.Layer;
 	
 	use namespace onyx_ns;
 	

@@ -110,7 +110,7 @@ package onyx.states {
 		private function _onFilterLoaded(event:Event):void {
 			
 			var info:LoaderInfo = event.currentTarget as LoaderInfo;
-			
+
 			// clear references
 			info.removeEventListener(Event.COMPLETE,					_onFilterLoaded);
 			info.removeEventListener(IOErrorEvent.IO_ERROR,				_onFilterLoaded);

@@ -374,7 +374,7 @@ package onyx.display {
 	
 					layer.render();
 	
-					if (layer.rendered) {
+					if (!layer.muted && layer.rendered) {
 						super.bitmapData.draw(layer.rendered, null, null, layer.blendMode);
 					}
 				}

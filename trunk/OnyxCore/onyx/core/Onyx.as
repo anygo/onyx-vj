@@ -186,5 +186,12 @@ package onyx.core {
 			
 			return display;
 		}
+		
+		/**
+		 * 
+		 */
+		override public function toString():String {
+			return '[Display]';
+		}
 	}
 }

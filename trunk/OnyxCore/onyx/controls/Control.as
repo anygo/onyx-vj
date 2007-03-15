@@ -31,7 +31,6 @@
 package onyx.controls {
 
 	import flash.events.EventDispatcher;
-	import flash.utils.getQualifiedClassName;
 	
 	import onyx.core.onyx_ns;
 	import onyx.events.ControlEvent;
@@ -49,17 +48,20 @@ package onyx.controls {
 		// set by Controls
 		onyx_ns var _target:IControlObject;
 
-		// stores the display name		
+		/**
+		 * 	stores the display name
+		 */
 		public var display:String;
 
-		// name of the property to affect
+		/**
+		 * 	name of the property to affect
+		 */
 		public var name:String;
 		
-		// stores options that will be implemented by the UI
+		/**
+		 * 	stores options that will be implemented by the UI
+		 */
 		public var metadata:Object;
-		
-		// whether the item is visible or not
-		private var _visible:Boolean;
 		
 		/**
 		 * @constructor
@@ -71,8 +73,7 @@ package onyx.controls {
 		}
 		
 		/**
-		 *	@public
-		 * 	Returns target value
+		 *	Returns target value
 		 */
 		public function get value():* {
 			return _target[name];
@@ -106,7 +107,7 @@ package onyx.controls {
 		}
 		
 		/**
-		 * 	Resets
+		 * 	Resets the control
 		 */
 		public function reset():void {
 		}
@@ -126,7 +127,7 @@ package onyx.controls {
 		}
 		
 		/**
-		 * 	Changes the target
+		 * 	Changes the target to another object
 		 */
 		public function set target(value:IControlObject):void {
 			_target = value;

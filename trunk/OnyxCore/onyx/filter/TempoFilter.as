@@ -91,6 +91,19 @@ package onyx.filter {
 				_delayControl
 			);
 			super.controls.addControl.apply(null, controls);
+			
+			var tempo:Tempo = Tempo.getInstance();
+			tempo.addEventListener(TempoEvent.TEMPO_ON, _onTempoEvent);
+			tempo.addEventListener(TempoEvent.TEMPO_OFF, _onTempoEvent);
+
+			snapTempo = tempo.active;
+		}
+		
+		/**
+		 * 	@private
+		 */
+		private function _onTempoEvent(event:TempoEvent):void {
+			snapTempo = event.type === TempoEvent.TEMPO_ON;
 		}
 		
 		/**
@@ -199,6 +212,8 @@ package onyx.filter {
 			
 			var tempo:Tempo = Tempo.getInstance();
 			tempo.removeEventListener(TempoEvent.CLICK, onTempo);
+			tempo.removeEventListener(TempoEvent.TEMPO_ON, _onTempoEvent);
+			tempo.removeEventListener(TempoEvent.TEMPO_OFF, _onTempoEvent);
 			
 			_snapControl	= null;
 			_delayControl	= null;

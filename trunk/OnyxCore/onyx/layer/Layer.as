@@ -87,6 +87,11 @@ package onyx.layer {
 		private var			_properties:Controls;
 		
 		/**
+		 * 	@private
+		 */
+		private var 		_muted:Boolean					= false;
+		
+		/**
 		 * 	@constructor
 		 */
 		public function Layer():void {
@@ -689,6 +694,20 @@ package onyx.layer {
 		 */
 		override public function toString():String {
 			return (_content.path) ? FileBrowser.getFileName(_content.path) : '';
+		}
+		
+		/**
+		 * 
+		 */
+		public function get muted():Boolean {
+			return _muted;
+		}
+
+		/**
+		 * 
+		 */
+		public function set muted(value:Boolean):void {
+			_muted = value;
 		}
 	}
 }

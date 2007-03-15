@@ -89,11 +89,13 @@ package onyx.content {
 		 */
 		public static function unregister(path:String):void {
 			var reg:Registration = _dict[path];
-			reg.refCount--;
-			
-			if (reg.refCount === 0) {
-				reg.dispose();
-				delete _dict[path];
+			if (reg) {
+				reg.refCount--;
+				
+				if (reg.refCount === 0) {
+					reg.dispose();
+					delete _dict[path];
+				}
 			}
 		}
 		
@@ -294,7 +296,13 @@ package onyx.content {
 		private function _createLoaderContent(info:LoaderInfo, event:Event = null):void {
 			var loader:Loader	= info.loader;
 			
-			var type:Class = (loader.content is MovieClip) ? ContentMC : (loader.content is IRenderObject) ? ContentCustom : ContentSprite;
+			if (loader.content is MovieClip) {
+				var type:Class = ContentMC;
+			} else if (loader.content is IRenderObject) {
+				type = ContentCustom;
+			} else {
+				type = ContentSprite;
+			}
 
 			_dispatchContent(type, loader, event || new Event(Event.COMPLETE));
 		}

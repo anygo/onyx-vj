@@ -30,22 +30,68 @@
  */
 package onyx.content {
 	
+	import flash.display.BitmapData;
 	import flash.events.Event;
 	import flash.media.Camera;
 	import flash.media.Video;
 	
+	import onyx.constants.*;
+	import onyx.controls.Control;
+	import onyx.controls.ControlBoolean;
+	import onyx.controls.ControlInt;
 	import onyx.controls.Controls;
+	import onyx.core.RenderTransform;
+	import onyx.layer.Layer;
 	import onyx.layer.LayerProperties;
 	import onyx.layer.LayerSettings;
-	import onyx.layer.Layer;
 	
 	[ExcludeClass]
 	public final class ContentCamera extends Content {
 		
+		/**
+		 * 	@private
+		 * 	The video to attach the camera to
+		 */
 		private var _video:Video;
 		
+		/**
+		 * 	@private
+		 * 	The number of frames to save
+		 */
+		public var save:int				= 0;
+		
+		/**
+		 * 	@private
+		 * 	The frames we've saved
+		 */
+		private var _frames:Array		= [];
+		
+		/**
+		 * 	@private
+		 */
+		private var _currentFrame:int	= 0;
+		
+		/**
+		 * 
+		 */
+		private var _frameRate:int		= 1;
+		
+		/**
+		 * 
+		 */
+		private var _camera:Camera;
+		
+		/**
+		 * 	@constructor
+		 */
 		public function ContentCamera(layer:Layer, path:String, camera:Camera):void {
 			
+			_controls = new Controls(this,
+				new ControlInt('save', 'save', 0, 240, 0),
+				new ControlInt('qualityRate', 'framerate', 24, 1, 30)
+			);
+			
+			_camera	= camera;
 			_video	= new Video(320, 240);
 			
 			camera.setMode(320,240, 24);
@@ -53,6 +99,80 @@ package onyx.content {
 			_video.attachCamera(camera);
 			
 			super(layer, path, _video);
+			
+		}
+		
+		/**
+		 * 
+		 */
+		public function set qualityRate(value:int):void {
+			_camera.setMode(320,240,value);
+		}
+
+		/**
+		 * 
+		 */
+		public function get qualityRate():int {
+
+			return 24;
+		}
+		
+		/**
+		 * 	Overload render
+		 */
+		override public function render():RenderTransform {
+			
+			if (save === 0) {
+				
+				super.render();
+				
+			} else {
+				// render a bitmap
+				var bmp:BitmapData = BASE_BITMAP();
+				bmp.draw(_video);
+				
+				// add the bitmap
+				_frames.push(bmp);
+				
+				// if the frame is over the save amount, dispose bitmap, shift the array
+				while (_frames.length > save) {
+					
+					bmp = _frames[0];
+					bmp.dispose();
+					
+					_frames.shift();
+				}
+				
+				// now increment the currentFrame
+				_currentFrame = _currentFrame ++ & _frames.length;
+				
+				bmp = _frames[_currentFrame];
+				_content = bmp;
+				
+				super.render();
+			}
+			
+			return null;
+		}
+		
+		/**
+		 * 
+		 */
+		override public function get time():Number {
+			return ((_frames) ? _currentFrame / _frames.length : 0);
+		}
+		
+		/**
+		 * 
+		 */
+		override public function set time(value:Number):void {
+			_currentFrame = value * _frames.length;
+		}
+		
+		/**
+		 * 
+		 */
+		override public function set framerate(value:Number):void {
 		}
 		
 		/**
@@ -64,6 +184,7 @@ package onyx.content {
 
 			_video.attachCamera(null);
 			_video = null;
+			_camera = null;
 		}
 		
 	}

@@ -52,7 +52,6 @@ package onyx.content {
 		
 	use namespace onyx_ns;
 	
-	[ExcludeClass]
 	public class Content extends EventDispatcher implements IContent {
 		
 		/**
@@ -752,6 +751,21 @@ package onyx.content {
 			_filters = null;
 			_controls = null;
 			_layer = null;
+		}
+		
+		/**
+		 * 
+		 */
+		public function set muted(value:Boolean):void {
+			_layer.muted = value;
+		}
+
+
+		/**
+		 * 
+		 */
+		public function get muted():Boolean {
+			return _layer.muted;
 		}
 	}
 }

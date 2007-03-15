@@ -120,8 +120,10 @@ package onyx.core {
 			_active = value;
 			if (active) {
 				start();
+				dispatchEvent(new TempoEvent(TempoEvent.TEMPO_ON));
 			} else {
 				stop();
+				dispatchEvent(new TempoEvent(TempoEvent.TEMPO_OFF));
 			}
 		}
 		
@@ -140,7 +142,7 @@ package onyx.core {
 			_timer.addEventListener(TimerEvent.TIMER, _onTimer);
 			_last = getTimer();
 			_step = 0;
-			dispatchEvent(new TempoEvent(0));
+			dispatchEvent(new TempoEvent(TempoEvent.CLICK, 0));
 		}
 		
 		/**
@@ -162,7 +164,8 @@ package onyx.core {
 			if (time >= _tempo) {
 				_last = getTimer() + (time - _tempo);
 				_step = ++_step % 16;
-				dispatchEvent(new TempoEvent(_step));
+
+				dispatchEvent(new TempoEvent(TempoEvent.CLICK, _step));
 			}
 		}
 		

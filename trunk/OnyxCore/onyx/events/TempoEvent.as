@@ -40,7 +40,17 @@ package onyx.events {
 		/**
 		 * 	Click
 		 */
-		public static const CLICK:String = 'click';
+		public static const CLICK:String		= 'click';
+		
+		/**
+		 * 
+		 */
+		public static const TEMPO_OFF:String	= 'tempo_off';
+		
+		/**
+		 * 
+		 */
+		public static const TEMPO_ON:String		= 'tempo_on';
 		
 		/**
 		 * 
@@ -50,9 +60,9 @@ package onyx.events {
 		/**
 		 * 	@constructor
 		 */
-		public function TempoEvent(beat:int = 0):void {
+		public function TempoEvent(type:String, beat:int = 0):void {
 			this.beat = beat;
-			super(CLICK);
+			super(type);
 		}
 	}
 }

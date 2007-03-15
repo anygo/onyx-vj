@@ -44,7 +44,7 @@ package onyx.controls {
 		public function ControlBoolean(name:String, display:String, defaultvalue:uint = 0, binding:String = null, options:Object = null):void {
 
 			super(name, display, BOOLEAN, defaultvalue, binding, options);
-			
+
 		}
 	}
 }

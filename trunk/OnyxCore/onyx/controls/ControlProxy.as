@@ -33,11 +33,24 @@ package onyx.controls {
 	import onyx.core.onyx_ns;
 	use namespace onyx_ns;
 	
+	/**
+	 * 	A proxy control is a control that points to multiple other controls (used for dual values)
+	 */
 	public final class ControlProxy extends Control {
 		
+		/**
+		 * 	ControlY
+		 */
 		public var controlY:Control;
+		
+		/**
+		 * 	ControlX
+		 */
 		public var controlX:Control;
 		
+		/**
+		 * 	@constructor
+		 */
 		public function ControlProxy(property:String, displayName:String, controlX:Control, controlY:Control, metadata:Object = null):void {
 			
 			this.controlY = controlY;

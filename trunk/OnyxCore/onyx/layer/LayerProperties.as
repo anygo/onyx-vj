@@ -52,6 +52,7 @@ package onyx.layer {
 		public static const X:String			= 'x';
 		public static const Y:String			= 'y';
 		public static const TIME:String			= 'time';
+		public static const MUTE:String			= 'mute';
 		
 		// playhead properties
 		public static const FRAMERATE:String	= 'framerate';
@@ -123,6 +124,8 @@ package onyx.layer {
 												scaleX, scaleY,
 												{ multiplier: 100, invert: true }
 											);
+											
+		public var muted:ControlBoolean	=	new ControlBoolean('muted', 'muted');
 													
 		/**
 		 * 	@constructor
@@ -146,7 +149,8 @@ package onyx.layer {
 				loopEnd,
 				time,
 				tint,
-				color
+				color,
+				muted
 			);
 		}
 		
