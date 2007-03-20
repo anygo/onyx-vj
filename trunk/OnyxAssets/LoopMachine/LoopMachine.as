@@ -1,5 +1,7 @@
 package {
 	
+	import flash.display.Bitmap;
+	import flash.display.BitmapData;
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -7,17 +9,16 @@ package {
 	import onyx.constants.*;
 	import onyx.controls.*;
 	import onyx.core.*;
+	import onyx.display.*;
 	import onyx.events.ControlEvent;
 	import onyx.layer.ILayer;
-	import flash.display.BitmapData;
-	import flash.display.Bitmap;
-	import onyx.display.IDisplay;
+	import onyx.render.*;
 
 	[SWF(width='320', height='240', frameRate='24')]
 	public class LoopMachine extends MovieClip implements IControlObject {
 		
 		/**
-		 * 
+		 * 	@private
 		 */
 		private var _bitmap:Bitmap		= new Bitmap();
 		
@@ -39,7 +40,7 @@ package {
 		/**
 		 * 	@private
 		 */
-		private var _layer:IDisplay		= Onyx.displays[0];
+		private var _layer:IDisplay		= Display.displays[0];
 		
 		/**
 		 * 	@private
@@ -55,7 +56,6 @@ package {
 				new ControlBoolean('record', 'record', 1),
 				new ControlInt('maxframes', 'frames', 120, 640, 240)
 			);
-			
 			addChild(_bitmap);
 		}
 		
@@ -64,10 +64,21 @@ package {
 		 */
 		public function set record(value:Boolean):void {
 			if (value && _layer) {
+				
+				for each (var bitmapData:BitmapData in _frames) {
+					bitmapData.dispose();
+				}
+	
+				_frames = [];
+				
+				if (contains(_bitmap)) {
+					removeChild(_bitmap);
+				}
 				addEventListener(Event.ENTER_FRAME, _record);
 				_currentFrame = 0;
 			} else {
 				removeEventListener(Event.ENTER_FRAME, _record);
+				addChild(_bitmap);
 			}
 		}
 		
@@ -129,6 +140,7 @@ package {
 		}
 		
 		public function dispose():void {
+			
 			removeEventListener(Event.ENTER_FRAME, _record);
 
 			for each (var bitmapData:BitmapData in _frames) {
