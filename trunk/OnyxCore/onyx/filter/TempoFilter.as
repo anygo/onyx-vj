@@ -96,7 +96,7 @@ package onyx.filter {
 			tempo.addEventListener(TempoEvent.TEMPO_ON, _onTempoEvent);
 			tempo.addEventListener(TempoEvent.TEMPO_OFF, _onTempoEvent);
 
-			snapTempo = tempo.active;
+			// snapTempo = tempo.active;
 		}
 		
 		/**

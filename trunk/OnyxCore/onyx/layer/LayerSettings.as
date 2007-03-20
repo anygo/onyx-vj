@@ -33,11 +33,12 @@ package onyx.layer {
 	import flash.events.EventDispatcher;
 	
 	import onyx.content.Content;
+	import onyx.content.IContent;
 	import onyx.controls.*;
 	import onyx.core.*;
 	import onyx.filter.Filter;
 	import onyx.plugin.Plugin;
-	import onyx.content.IContent;
+	import onyx.filter.FilterArray;
 	
 	use namespace onyx_ns;
 
@@ -46,8 +47,8 @@ package onyx.layer {
 	 */
 	public class LayerSettings extends EventDispatcher {
 
-		public var x:Number				= 0;
-		public var y:Number				= 0;
+		public var x:int				= 0;
+		public var y:int				= 0;
 		public var scaleX:Number		= 1;
 		public var scaleY:Number		= 1;
 		public var rotation:Number		= 0;
@@ -60,6 +61,7 @@ package onyx.layer {
 		public var color:uint			= 0;
 		public var threshold:Number		= 0;
 		public var blendMode:String		= 'normal';
+		public var visible:Boolean		= true;
 		
 		public var time:Number			= 0;
 		public var framerate:Number		= 1;
@@ -102,8 +104,10 @@ package onyx.layer {
 			loopStart	= content.loopStart;
 			loopEnd		= content.loopEnd;
 			
+			visible		= content.visible;
+			
 			path		= content.path;
-			filters		= content.filters.concat();
+			filters		= content.filters;
 			
 			if (content.controls) {
 				controls = content.controls;
@@ -145,82 +149,11 @@ package onyx.layer {
 			}
 			
 			// TBD: needs to be cleaned up
-			
 			if (xml.filters) {
 				
-				filters = [];
-				
-				for each (var filterXML:XML in xml.filters.*) {
-					
-					var name:String			= filterXML.@id;
-					var plugin:Plugin		= Filter.getDefinition(name);
-					
-					if (plugin) {
-						
-						var filter:Filter = plugin.getDefinition() as Filter;
-						
-						for each (controlXML in filterXML.*) {
-							
-							_xmlToTarget(controlXML, filter.controls);
-							
-						}
-						
-						filters.push(filter);
-						
-					}
-				}
+				filters = new FilterArray(null);
+				filters.loadXML(xml.filters);
 			}
-		}
-		
-		/**
-		 * 	@private
-
-		 */
-		private function _xmlToTarget(xml:XML, controls:Controls):void {
-
-			try {
-				
-				// proxy control
-				if (xml.hasComplexContent()) {
-					for each (var proxy:XML in xml.*) {
-
-						name			= proxy.name();
-						value			= _parseBoolean(xml);
-						
-						control			= controls.getControl(name);
-						control.value	= value;
-					}
-				// individual property
-				} else {
-
-					var name:String 	= xml.name();
-					var value:*			= _parseBoolean(xml);
-					var control:Control	= controls.getControl(name);
-					control.value		= value;
-
-				}
-
-			} catch (e:Error) {
-				Console.output('error setting parameter: ', name);
-			}
-		}
-		
-		/**
-		 * 	@private
-		 * 	Converts String 'false' to Boolean 
-		 */
-		private function _parseBoolean(value:*):* {
-			var name:String = value;
-			
-			if (name === 'false') {
-				return false;
-			} else if (name === 'true') {
-				return true;
-			} else if (name is Number) {
-				return Number(name);
-			} 
-			
-			return name;
 		}
 		
 		/**
@@ -228,26 +161,27 @@ package onyx.layer {
 		 */
 		public function apply(content:Content):void {
 			
-			content.x = x;
-			content.y = y;
-			content.scaleX = scaleX;
-			content.scaleY = scaleY;
-			content.rotation = rotation;
+			content.x			= x;
+			content.y			= y;
+			content.scaleX		= scaleX;
+			content.scaleY		= scaleY;
+			content.rotation	= rotation;
 			
-			content.alpha = alpha;
+			content.alpha		= alpha;
 			
-			content.brightness = brightness;
-			content.contrast = contrast;
-			content.saturation = saturation;
-			content.color = color;
-			content.tint = tint;
-			content.threshold = threshold;
-			content.blendMode = blendMode;
+			content.brightness	= brightness;
+			content.contrast	= contrast;
+			content.saturation	= saturation;
+			content.color		= color;
+			content.tint		= tint;
+			content.threshold	= threshold;
+			content.blendMode	= blendMode;
 			
-			content.framerate = framerate;
-			content.loopStart = loopStart;
-			content.loopEnd = loopEnd;
-			content.time = time;
+			content.framerate	= framerate;
+			content.loopStart	= loopStart;
+			content.loopEnd		= loopEnd;
+			content.time		= time;
+			content.visible		= visible;
 			
 			// clone filters
 			for each (var filter:Filter in filters) {
@@ -265,118 +199,6 @@ package onyx.layer {
 					}
 				}
 			}
-		}
-		
-		/**
-		 * 	Gets xml
-		 */
-		public function toXML():XML {
-
-			var xml:XML =
-				<layer path={path}>
-					<properties>
-						<x>{x}</x>
-						<y>{y}</y>
-						<scaleX>{scaleX.toFixed(3)}</scaleX>
-						<scaleY>{scaleY.toFixed(3)}</scaleY>
-						<rotation>{rotation.toFixed(3)}</rotation>
-						<alpha>{alpha.toFixed(3)}</alpha>
-						<brightness>{brightness.toFixed(3)}</brightness>
-						<contrast>{contrast.toFixed(3)}</contrast>
-						<saturation>{saturation.toFixed(3)}</saturation>
-						<tint>{tint.toFixed(3)}</tint>
-						<color>{color}</color>
-						<threshold>{threshold.toFixed(3)}</threshold>
-						<blendMode>{blendMode}</blendMode>
-						<time>{time.toFixed(3)}</time>
-						<framerate>{framerate.toFixed(3)}</framerate>
-						<loopStart>{loopStart.toFixed(3)}</loopStart>
-						<loopEnd>{loopEnd.toFixed(3)}</loopEnd>
-					</properties>
-				</layer>
-
-			if (filters.length) {
-				var filterXML:XML = <filters/>
-			
-				for each (var filter:Filter in filters) {
-					
-					var prop:XML = _controlsToXML.apply(this, [<filter id={filter.name}/>].concat(filter.controls));
-					filterXML.appendChild(prop);
-					
-				}
-				
-				xml.appendChild(filterXML);
-			}
-			
-			if (controls) {
-				
-				var controlXML:XML = <controls/>;
-				
-				/*
-				
-				TBD: Need to be able to save visualizer based on plugin-control
-				
-				for each (var control:Control in controls) {
-					
-					var value:Object = control.value;
-					
-					if (value is Plugin) {
-						// var plugin:PluginBase = (value as Plugin).relatedObject;
-						
-						
-						trace(value);
-						
-						if (plugin) {
-							var pluginParent:XML = <{control.name}/>;
-							var pluginXML:XML	 = <plugin id={plugin._name}/>;
-
-							for each (control in plugin.controls) {
-								pluginXML.appendChild(<{control.name}>{control.value}</{control.name}>);
-							}
-							
-							pluginParent.appendChild(pluginXML);
-							controlXML.appendChild(pluginParent);
-						}
-					} else {
-						controlXML.appendChild(<{control.name}>{control.value}</{control.name}>);
-					}
-				}
-				*/
-				
-				xml.appendChild(controlXML);
-			}
-			
-			return xml;
-			
-		}
-		
-		/**
-		 * 	@private
-		 */
-		private function _controlsToXML(xml:XML, ... controls:Array):XML {
-			
-			var propXML:XML;
-			
-			for each (var control:Control in controls) {
-				var name:String = control.name;
-				if (control.value is Number) {
-					var value:String = (control.value as Number).toFixed(3);
-					propXML = <{name}>{value}</{name}>;
-				} else {
-					if (control is ControlProxy) {
-						var proxy:ControlProxy = control as ControlProxy;
-						propXML = <{name}></{name}>;
-						_controlsToXML.apply(null, [propXML, proxy.controlX, proxy.controlY]);
-						
-					} else {
-						propXML = <{name}>{control.value}</{name}>;
-					}
-				}
-				
-				xml.appendChild(propXML);
-			}
-			
-			return xml;
 		}
 	}
 }

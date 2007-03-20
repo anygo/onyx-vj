@@ -44,6 +44,7 @@ package onyx.layer {
 	import onyx.file.FileBrowser;
 	import onyx.filter.*;
 	import onyx.net.Stream;
+	import onyx.render.*;
 	import onyx.transition.Transition;
 	import onyx.utils.string.*;
 	
@@ -85,11 +86,6 @@ package onyx.layer {
 		 * 	Controls
 		 */
 		private var			_properties:Controls;
-		
-		/**
-		 * 	@private
-		 */
-		private var 		_muted:Boolean					= false;
 		
 		/**
 		 * 	@constructor
@@ -343,6 +339,7 @@ package onyx.layer {
 
 		/**
 		 * 	Sets the right loop point for the video
+		 * 	@param		Percentage for the end loop point
 		 */
 		public function set loopEnd(value:Number):void {
 			_content.loopEnd = value;
@@ -350,7 +347,7 @@ package onyx.layer {
 
 		/**
 		 * 	Pauses the layer
-		 *	@param			True to pause, false to unpause
+		 *	@param		True to pause, false to unpause
 		 */
 		public function pause(b:Boolean = true):void {
 			_content.pause(b);
@@ -562,7 +559,7 @@ package onyx.layer {
 		}
 		
 		/**
-		 * 
+		 * 	Mutes a filter
 		 */
 		public function muteFilter(filter:Filter, toggle:Boolean = true):void {
 			_content.muteFilter(filter, toggle);
@@ -572,7 +569,7 @@ package onyx.layer {
 		 * 	Returns the filters
 		 */
 		public function get filters():Array {
-			return _content.filters.concat();
+			return _content.filters;
 		}
 		
 		/**
@@ -606,14 +603,14 @@ package onyx.layer {
 		}
 		
 		/**
-		 * 
+		 * 	Returns filter index
 		 */
 		public function getFilterIndex(filter:Filter):int {
 			return _content.getFilterIndex(filter);
 		}
 		
 		/**
-		 * 
+		 * 	Move Filter
 		 */
 		public function moveFilter(filter:Filter, index:int):void {
 			_content.moveFilter(filter, index);
@@ -641,14 +638,14 @@ package onyx.layer {
 		}
 		
 		/**
-		 * 
+		 * 	Gets Blendmode
 		 */
 		public function get blendMode():String {
 			return _content.blendMode;
 		}
 		
 		/**
-		 * 
+		 * 	Renders
 		 */
 		public function render():RenderTransform {
 			return _content.render();
@@ -669,45 +666,77 @@ package onyx.layer {
 		}
 		
 		/**
-		 * 
+		 * 	Returns the layer's matrix
 		 */
 		public function get matrix():Matrix {
 			return _content.matrix;
 		}
 		
 		/**
-		 * 
+		 * 	Sets the layer's matrix
 		 */
 		public function set matrix(value:Matrix):void {
 			_content.matrix = value;
 		}
 		
 		/**
-		 * 
+		 * 	Returns the associated display
 		 */
 		public function get display():IDisplay {
 			return _display;
 		}
 		
 		/**
-		 * 
+		 * 	Returns visibility
 		 */
-		override public function toString():String {
-			return (_content.path) ? FileBrowser.getFileName(_content.path) : '';
-		}
-		
-		/**
-		 * 
-		 */
-		public function get muted():Boolean {
-			return _muted;
+		public function get visible():Boolean {
+			return _content.visible;
 		}
 
 		/**
-		 * 
+		 * 	Sets the visibility
 		 */
-		public function set muted(value:Boolean):void {
-			_muted = value;
+		public function set visible(value:Boolean):void {
+			_content.visible = value;
+		}
+		
+		/**
+		 * 	Returns xml representation of the layer
+		 */
+		public function toXML():XML {
+			var xml:XML = 
+				<layer path={path}>
+					<properties>
+						<x>{x}</x>
+						<y>{y}</y>
+						<scaleX>{scaleX.toFixed(3)}</scaleX>
+						<scaleY>{scaleY.toFixed(3)}</scaleY>
+						<rotation>{rotation.toFixed(3)}</rotation>
+						<alpha>{alpha.toFixed(3)}</alpha>
+						<brightness>{brightness.toFixed(3)}</brightness>
+						<contrast>{contrast.toFixed(3)}</contrast>
+						<saturation>{saturation.toFixed(3)}</saturation>
+						<tint>{tint.toFixed(3)}</tint>
+						<color>{color}</color>
+						<threshold>{threshold.toFixed(3)}</threshold>
+						<blendMode>{blendMode}</blendMode>
+						<time>{time.toFixed(3)}</time>
+						<framerate>{framerate.toFixed(3)}</framerate>
+						<loopStart>{loopStart.toFixed(3)}</loopStart>
+						<loopEnd>{loopEnd.toFixed(3)}</loopEnd>
+					</properties>
+				</layer>;
+				
+			xml.appendChild(_content.filters.toXML());
+				
+			return xml;
+		}
+		
+		/**
+		 * 	String representation of the layer
+		 */
+		override public function toString():String {
+			return (_content.path) ? FileBrowser.getFileName(_content.path) : '';
 		}
 	}
 }

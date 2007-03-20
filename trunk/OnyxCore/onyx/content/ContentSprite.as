@@ -39,6 +39,7 @@ package onyx.content {
 	import onyx.controls.Controls;
 	import onyx.core.*;
 	import onyx.layer.*;	
+	import onyx.settings.LAYER_AUTOSIZE;
 	
 	[Event(name="filter_applied",	type="onyx.events.FilterEvent")]
 	[Event(name="filter_removed",	type="onyx.events.FilterEvent")]
@@ -73,7 +74,7 @@ package onyx.content {
 			_loader		= loader;
 
 			// resize?
-			if (Settings.LAYER_AUTOSIZE) {
+			if (LAYER_AUTOSIZE) {
 				_ratioX = 320 / loader.contentLoaderInfo.width;
 				_ratioY = 240 / loader.contentLoaderInfo.height;
 			}

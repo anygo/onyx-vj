@@ -33,16 +33,15 @@ package onyx.content {
 	
 	import flash.display.BitmapData;
 	import flash.events.Event;
+	import flash.events.NetStatusEvent;
 	import flash.media.Video;
 	
 	import onyx.controls.Controls;
 	import onyx.core.*;
-	import onyx.layer.Layer;
-	import onyx.layer.LayerProperties;
-	import onyx.layer.LayerSettings;
+	import onyx.layer.*;
 	import onyx.net.Connection;
 	import onyx.net.Stream;
-	import flash.events.NetStatusEvent;
+	import onyx.render.*;
 
 	[ExcludeClass]
 	public class ContentFLV extends Content {

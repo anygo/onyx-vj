@@ -46,6 +46,8 @@ package onyx.display {
 	import onyx.jobs.*;
 	import onyx.layer.*;
 	import onyx.plugin.*;
+	import onyx.render.*;
+	import onyx.states.*;
 	import onyx.transition.*;
 	import onyx.utils.array.*;
 	
@@ -57,6 +59,26 @@ package onyx.display {
 	 * 	Base Display class
 	 */
 	public class Display extends Bitmap implements IDisplay {
+		
+		/**
+		 * 	@private
+		 * 
+		 */
+		private static var _displays:Array		= [];
+		
+		/**
+		 * 
+		 */
+		public static function get displays():Array {
+			return _displays;
+		}
+		
+		/**
+		 * 
+		 */
+		public static function getDisplay(index:int):Display {
+			return _displays[index];
+		}
 
 		/**
 		 * 	@private
@@ -68,7 +90,7 @@ package onyx.display {
 		 * 	@private
 		 * 	Stores the filters for this content
 		 */
-		private var _filters:FilterArray		= new FilterArray();
+		private var _filters:FilterArray;
 		
 		/**
 		 * 	@private
@@ -115,6 +137,16 @@ package onyx.display {
 		 */
 		public function Display():void {
 			
+			// create new filter array
+			_filters = new FilterArray(this);
+			
+			// set background color
+			super(new BitmapData(320, 240, false, _backgroundColor));
+			
+			// add it to the displays index
+			_displays.push(this);
+			
+			// set controls
 			_controls = new Controls(this,
 				new ControlProxy(
 					'position', 'position',
@@ -134,9 +166,9 @@ package onyx.display {
 			// hide/show mouse when over the display
 			addEventListener(MouseEvent.MOUSE_OVER, _onMouseOver);
 			addEventListener(MouseEvent.MOUSE_OUT, _onMouseOut);
-			
-			// set background color
-			super(new BitmapData(320, 240, false, _backgroundColor));			
+
+			// load the rendering state
+			StateManager.loadState(new DisplayRenderState(this));
 		}
 		
 		/**
@@ -185,10 +217,6 @@ package onyx.display {
 					new DisplayEvent(DisplayEvent.LAYER_CREATED, layer)
 				);
 			}
-			
-			// render content
-			addEventListener(Event.ENTER_FRAME, _renderContent);
-
 		}
 		
 		/**
@@ -233,7 +261,7 @@ package onyx.display {
 		public function get layers():Array {
 			return _layers.concat();
 		}
-		
+
 		/**
 		 * 	Moves a layer to a specified index
 		 */
@@ -272,7 +300,7 @@ package onyx.display {
 		 * 	Gets the display index
 		 */
 		public function get index():int {
-			return Onyx._displays.indexOf(this);
+			return _displays.indexOf(this);
 		}
 		
 		/**
@@ -320,7 +348,7 @@ package onyx.display {
 		}
 		
 		/**
-		 * 
+		 * 	Sets background color
 		 */
 		public function set backgroundColor(value:uint):void {
 			_backgroundColor = value;
@@ -348,60 +376,19 @@ package onyx.display {
 		public function get size():DisplaySize {
 			return _size;
 		}
-		
-		/**
-		 * 	@private
-		 * 	Renders the content
-		 */
-		private function _renderContent(event:Event):void {
-			
-			// lock the bitmap
-			super.bitmapData.lock();
-
-			// fill the display
-			super.bitmapData.fillRect(super.bitmapData.rect, _backgroundColor);
-			
-			// loop and render
-			// TBD: raise the framerate of the root movie, and do calculation to render different content on different frames
-			var length:int = _valid.length - 1;
-			
-			if (length >= 0) {
-	
-				// loop through layers and render			
-				for (var count:int = length; count >= 0; count--) {
-					
-					var layer:ILayer = _valid[count];
-	
-					layer.render();
-	
-					if (!layer.muted && layer.rendered) {
-						super.bitmapData.draw(layer.rendered, null, null, layer.blendMode);
-					}
-				}
-				
-				// render filters
-				_filters.render(super.bitmapData);
-			}
-			
-			// unlock the bitmap
-			super.bitmapData.unlock();
-			
-			// dispatch a render event
-			dispatchEvent(new RenderEvent());
-		}
 
 		/**
 		 * 	Adds a filter
 		 */
 		public function addFilter(filter:Filter):void {
-			_filters.addFilter(filter, this);
+			_filters.addFilter(filter);
 		}
 
 		/**
 		 * 	Removes a filter
 		 */		
 		public function removeFilter(filter:Filter):void {
-			_filters.removeFilter(filter, this);
+			_filters.removeFilter(filter);
 		}
 		
 		/**
@@ -624,9 +611,41 @@ package onyx.display {
 		}
 		
 		/**
-		 * 
+		 * 	Renders the display
 		 */
 		public function render():RenderTransform {
+			
+			// fill the display
+			super.bitmapData.fillRect(super.bitmapData.rect, _backgroundColor);
+			
+			// loop and render
+			// TBD: raise the framerate of the root movie, and do calculation to render different content on different frames
+			var length:int = _valid.length - 1;
+			
+			if (length >= 0) {
+	
+				// loop through layers and render			
+				for (var count:int = length; count >= 0; count--) {
+					
+					var layer:ILayer = _valid[count];
+	
+					layer.render();
+	
+					if (layer.visible && layer.rendered) {
+						super.bitmapData.draw(layer.rendered, null, null, layer.blendMode);
+					}
+				}
+				
+				// render filters
+				_filters.render(super.bitmapData);
+			}
+			
+			// apply threshold, etc
+			super.bitmapData.applyFilter(super.bitmapData, super.bitmapData.rect, POINT, _filter.filter);
+			
+			// dispatch a render event
+			dispatchEvent(new RenderEvent());
+			
 			return null;
 		}
 
@@ -691,11 +710,11 @@ package onyx.display {
 		 * 	Mutes a filter
 		 */
 		public function muteFilter(filter:Filter, toggle:Boolean = true):void {
-			_filters.muteFilter(filter, this, toggle);
+			_filters.muteFilter(filter, toggle);
 		}
 		
 		/**
-		 * 
+		 * 	Sets visibility
 		 */
 		override public function set visible(value:Boolean):void {
 			super.visible = __visible.setValue(value);
@@ -705,13 +724,34 @@ package onyx.display {
 		 * 	Returns the display as xml
 		 */
 		public function toXML():XML {
-			var xml:XML = <display/>
+			var xml:XML = <mix/>
+
+			// add version metadata
+			var meta:XML = <metadata />
+			meta.appendChild(<version>{XML_FORMAT_VERSION}</version>);
 			
+			xml.appendChild(meta);
+		
+			// add display xml
+			var display:XML = <display />;
+			
+			// add background color
+			display.appendChild(<backgroundColor>{_backgroundColor}</backgroundColor>);
+			
+			// add filters
+			display.appendChild(_filters.toXML());
+			
+			// add display settings			
+			xml.appendChild(display);
+
+			// add layers
+			var layers:XML = <layers />
+			display.appendChild(layers);
+			
+			// create xml for all the layers
 			for each (var layer:Layer in _layers) {
 				if (layer.path) {
-					var settings:LayerSettings = new LayerSettings();
-					settings.load(layer);
-					xml.appendChild(settings.toXML());
+					layers.appendChild(layer.toXML());
 				}
 			}
 			
@@ -719,20 +759,26 @@ package onyx.display {
 		}
 		
 		/**
-		 * 
+		 * 	Loads settings from xml
+		 */
+		public function loadXML(xml:XML):void {
+			if (xml.backgroundColor) {
+				backgroundColor = xml.backgroundColor;
+			}
+			
+			if (xml.filters) {
+				_filters.loadXML(xml.filters);
+			}
+		}
+		
+		/**
+		 * 	Disposes the display
 		 */
 		public function dispose():void {
 			var valid:Array = _valid.concat();
 			for each (var layer:Layer in valid) {
 				layer.dispose();
 			}
-		}
-
-		/**
-		 * 
-		 */
-		public function get properties():Controls {
-			return null;
 		}
 	}
 }

@@ -49,7 +49,7 @@ package onyx.controls {
 		 */
 		public function ControlDisplay(name:String, displayName:String):void {
 			
-			super(name, displayName, Onyx.displays);
+			super(name, displayName, Display.displays);
 
 		}
 		

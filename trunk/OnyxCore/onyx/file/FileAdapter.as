@@ -53,14 +53,15 @@ package onyx.file {
 		/**
 		 * 	Queries a directory
 		 */
-		public function query(path:String, callback:Function, filter:FileFilter = null):FileQuery {
+		public function query(path:String, callback:Function):FileQuery {
 			return null;
 		}
 		
 		/**
 		 * 	Saves a document
 		 */
-		public function save(path:String, callback:Function, contents:ByteArray):void {
+		public function save(path:String, callback:Function):FileQuery {
+			return null;
 		}
 
 		/**

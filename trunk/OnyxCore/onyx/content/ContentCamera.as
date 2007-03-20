@@ -32,18 +32,12 @@ package onyx.content {
 	
 	import flash.display.BitmapData;
 	import flash.events.Event;
-	import flash.media.Camera;
-	import flash.media.Video;
+	import flash.media.*;
 	
 	import onyx.constants.*;
-	import onyx.controls.Control;
-	import onyx.controls.ControlBoolean;
-	import onyx.controls.ControlInt;
-	import onyx.controls.Controls;
-	import onyx.core.RenderTransform;
-	import onyx.layer.Layer;
-	import onyx.layer.LayerProperties;
-	import onyx.layer.LayerSettings;
+	import onyx.controls.*;
+	import onyx.layer.*;
+	import onyx.render.*;
 	
 	[ExcludeClass]
 	public final class ContentCamera extends Content {

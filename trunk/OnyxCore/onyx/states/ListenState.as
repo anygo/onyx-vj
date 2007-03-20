@@ -52,16 +52,19 @@ package onyx.states {
 		private var display:Display;
 		
 		/**
+		 * 
+		 */
+		public function ListenState(display:Display):void {
+			this.display = display;
+		}
+		
+		/**
 		 * 	Initialize
 		 */
-		override public function initialize(...args):void {
+		override public function initialize():void {
 			
 			conn = new LocalClient();
 			conn.connect();
-			
-			// save the display
-			display = args[0];
-			display.addEventListener(Event.ENTER_FRAME, _onFrame)
 			
 		}
 		
@@ -74,6 +77,7 @@ package onyx.states {
 		}
 		
 		override public function terminate():void {
+			display = null;
 		}
 		
 	}

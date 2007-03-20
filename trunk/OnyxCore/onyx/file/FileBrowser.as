@@ -33,9 +33,11 @@ package onyx.file {
 	import flash.display.Loader;
 	import flash.events.*;
 	import flash.media.Camera;
+	import flash.utils.ByteArray;
 	
 	import onyx.core.*;
 	import onyx.file.http.HTTPAdapter;
+	import onyx.settings.*;
 	
 	/**
 	 * 	Stores a cache of directories - so re-querying will not be necessary
@@ -81,11 +83,11 @@ package onyx.file {
 			// check for cache
 			if (refresh || !_cache[folder]) {
 				
-				var query:FileQuery = _adapter.query(folder, callback, filter);
+				var query:FileQuery = _adapter.query(folder, callback);
 				query.addEventListener(Event.COMPLETE,						_onLoadHandler);
 				query.addEventListener(IOErrorEvent.IO_ERROR,				_onLoadHandler);
 				query.addEventListener(SecurityErrorEvent.SECURITY_ERROR,	_onLoadHandler);
-				query.load();
+				query.load(filter);
 				
 			} else {
 				
@@ -95,9 +97,30 @@ package onyx.file {
 		}
 		
 		/**
+		 * 	Saves a bytearray to the filesystem
+		 */
+		public static function save(path:String, bytes:ByteArray, callback:Function):void {
+			var query:FileQuery = _adapter.save(path, callback);
+			query.addEventListener(Event.COMPLETE, _onSaveHandler);
+			query.save(bytes);
+		}
+		
+		/**
+		 * 	@private
+		 */
+		private static function _onSaveHandler(event:Event):void {
+			var query:FileQuery = event.currentTarget as FileQuery;
+			var fn:Function = query.callback;
+			fn.apply(null);
+			
+			query.dispose();
+		}
+		
+		/**
 		 * 	@private
 		 */
 		private static function _onLoadHandler(event:Event):void {
+			
 			var query:FileQuery = event.currentTarget as FileQuery;
 			query.removeEventListener(Event.COMPLETE,						_onLoadHandler);
 			query.removeEventListener(IOErrorEvent.IO_ERROR,				_onLoadHandler);
@@ -108,6 +131,9 @@ package onyx.file {
 			
 			// do the callback
 			doCallBack(query.folderList, query.callback, query.filter);
+
+			// clear reference
+			query.dispose();
 		}
 		
 		/**
@@ -131,7 +157,7 @@ package onyx.file {
 			
 			var cameras:Array = Camera.names;
 			
-			var folder:Folder = new Folder(Settings.INITIAL_APP_DIRECTORY);
+			var folder:Folder = new Folder(INITIAL_APP_DIRECTORY);
 			list.folders.push(folder);
 			
 			for each (var name:String in cameras) {

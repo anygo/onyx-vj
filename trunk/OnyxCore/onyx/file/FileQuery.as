@@ -1,6 +1,7 @@
 package onyx.file {
 	
 	import flash.events.EventDispatcher;
+	import flash.utils.ByteArray;
 
 	public class FileQuery extends EventDispatcher {
 		
@@ -27,18 +28,34 @@ package onyx.file {
 		/**
 		 * 
 		 */
+		public var bytes:ByteArray;
+		
+		/**
+		 * 
+		 */
 		// public var job:FileJob;
+		
+		[Event(name='complete', type='flash.events.Event')]
 				
 		/**
 		 * 	@constructor
 		 */
-		public function FileQuery(folder:String, callback:Function, filter:FileFilter = null):void {
+		public function FileQuery(folder:String, callback:Function):void {
 			this.path		= folder;
 			this.callback	= callback;
-			this.filter		= filter;
 		}
 		
-		public function load():void {
+		public function save(bytes:ByteArray):void {
+		}
+		
+		public function load(file:FileFilter):void {
+		}
+		
+		public function dispose():void {
+			callback	= null;
+			folderList	= null;
+			filter		= null;
+			bytes		= null;
 		}
 	}
 }

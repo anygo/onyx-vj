@@ -28,39 +28,28 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package onyx.controls {
+package onyx.render {
 	
-	import onyx.core.Onyx;
-	import onyx.core.onyx_ns;
-	import onyx.display.Display;
-	import onyx.events.ControlEvent;
-	import onyx.layer.ILayer;
-	import onyx.layer.Layer;
+	import flash.display.*;
+	import flash.geom.*;
 	
-	use namespace onyx_ns;
-	
+	import onyx.constants.*;
+	import onyx.content.ColorFilter;
+	import onyx.filter.FilterArray;
+
 	/**
-	 * 	Layer Control
+	 * 	Renders filters
 	 */
-	public final class ControlLayer extends ControlRange {
+	public function renderFilters(source:BitmapData, rendered:BitmapData, filters:FilterArray):void {
 		
-		/**
-		 * 	@constructor
-		 */
-		public function ControlLayer(name:String, displayName:String):void {
-			
-			var display:Display = Display.getDisplay(0);
-
-			super(name, displayName, (display) ? display._valid : []);
-
-		}
+		// copy to the rendered bitmap
+		rendered.copyPixels(source, source.rect, POINT);
 		
-		/**
-		 * 
-		 */
-		override public function set value(v:*):void {
-			_target[name] = v;
-			dispatchEvent(new ControlEvent(v));
-		}
-	}
+		// render filters
+		filters.render(source);
+		
+		// copy pixels to the rendered bitmap
+		rendered.copyPixels(source, source.rect, POINT);
+
+	}	
 }

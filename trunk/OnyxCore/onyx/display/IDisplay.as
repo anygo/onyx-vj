@@ -42,6 +42,11 @@ package onyx.display {
 
 		function set displayY(value:int):void;
 		function get displayY():int;
+		
+		function set backgroundColor(value:uint):void;
+		function get backgroundColor():uint;
+		
+		function loadXML(xml:XML):void;
 
 	}
 }

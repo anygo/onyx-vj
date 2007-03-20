@@ -33,6 +33,8 @@ package onyx.file.http {
 	import flash.events.*;
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
+	import flash.system.System;
+	import flash.utils.ByteArray;
 	
 	import onyx.core.Console;
 	import onyx.file.*;
@@ -42,20 +44,32 @@ package onyx.file.http {
 		/**
 		 * 	@constructor
 		 */
-		public function HTTPQuery(folder:String, callback:Function, filter:FileFilter = null):void {
-			super(folder, callback, filter);
+		public function HTTPQuery(folder:String, callback:Function):void {
+			super(folder, callback);
 		}
 		
 		/**
 		 * 	Loads files
 		 */
-		override public function load():void {
+		override public function load(filter:FileFilter):void {
+			
+			super.filter = filter;
 			
 			var loader:URLLoader = new URLLoader();
 			loader.addEventListener(Event.COMPLETE, _onLoadHandler);
 			loader.addEventListener(IOErrorEvent.IO_ERROR, _onLoadHandler);
 			
 			loader.load(new URLRequest(path + 'files.xml'));
+		}
+		
+		/**
+		 * 	For now saves it to the clipboard
+		 */
+		override public function save(bytes:ByteArray):void {
+			bytes.position = 0;
+			System.setClipboard(bytes.readUTFBytes(bytes.length));
+			
+			dispatchEvent(new Event(Event.COMPLETE))
 		}
 		
 		/**

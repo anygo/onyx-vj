@@ -81,5 +81,13 @@ package onyx.controls {
 			controlY.target = value;
 			controlX.target = value;
 		}
+		
+		override public function toXML():XML {
+			var xml:XML = <{name}></{name}>;
+			xml.appendChild(controlX.toXML());
+			xml.appendChild(controlY.toXML());
+
+			return xml;
+		}
 	}
 }

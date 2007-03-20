@@ -31,6 +31,7 @@
 package onyx.filter {
 	
 	import flash.events.IEventDispatcher;
+	
 	import onyx.controls.IControlObject;
 	
 	public interface IFilterObject extends IControlObject, IEventDispatcher {

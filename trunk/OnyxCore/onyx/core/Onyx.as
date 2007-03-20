@@ -62,12 +62,6 @@ package onyx.core {
 		onyx_ns static const instance:Onyx = new Onyx();
 		
 		/**
-		 * 	@private
-		 * 	Stores references to all the displays
-		 */
-		onyx_ns static var _displays:Array	= [];
-		
-		/**
 		 * 	
 		 */
 		public static function getInstance():EventDispatcher {
@@ -114,17 +108,6 @@ package onyx.core {
 		}
 		
 		/**
-		 * 	@private
-		 * 	When resized change the display location
-		 */		
-		private static function _onResize(event:Event):void {
-			for each (var display:Display in _displays) {
-				display.displayY = 0;
-				display.displayX = STAGE.stageWidth - display.width;
-			}
-		}
-		
-		/**
 		 * 	Registers plug-ins
 		 */
 		public static function registerPlugin(plugin:Plugin):void {
@@ -160,13 +143,6 @@ package onyx.core {
 		}
 
 		/**
-		 * 	Returns all the displays
-		 */
-		public static function get displays():Array {
-			return _displays.concat();
-		}
-
-		/**
 		 * 	Creates a display
 		 * 	@param		The number of layers to create in the display
 		 * 	@returns	Display
@@ -174,7 +150,6 @@ package onyx.core {
 		public static function createDisplay(x:int = 0, y:int = 0, scaleX:Number = 1, scaleY:Number = 1, visible:Boolean = true):Display {
 			
 			var display:Display = new Display();
-			_displays.push(display);
 			display.displayX = x;
 			display.displayY = y;
 			display.scaleX = scaleX;

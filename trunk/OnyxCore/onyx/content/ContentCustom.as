@@ -39,9 +39,9 @@ package onyx.content {
 	import onyx.constants.POINT;
 	import onyx.controls.Controls;
 	import onyx.core.*;
-	import onyx.layer.Layer;
-	import onyx.layer.LayerProperties;
-	import onyx.layer.LayerSettings;
+	import onyx.layer.*;
+	import onyx.render.*;
+	import onyx.settings.LAYER_AUTOSIZE;
 	
 	[Event(name="filter_applied",	type="onyx.events.FilterEvent")]
 	[Event(name="filter_removed",	type="onyx.events.FilterEvent")]
@@ -76,7 +76,7 @@ package onyx.content {
 			_loader		= loader;
 
 			// resize?
-			if (Settings.LAYER_AUTOSIZE) {
+			if (LAYER_AUTOSIZE) {
 				_ratioX = 320 / loader.contentLoaderInfo.width;
 				_ratioY = 240 / loader.contentLoaderInfo.height;
 			}
@@ -96,10 +96,10 @@ package onyx.content {
 			var drawContent:IBitmapDrawable		= transform.content || _content;
 			
 			// render content
-			RenderManager.renderContent(_source, drawContent, transform, _filter);
+			renderContent(_source, drawContent, transform, _filter);
 			
 			// render filters
-			RenderManager.renderFilters(_source, _rendered, _filters);
+			renderFilters(_source, _rendered, _filters);
 						
 			// return transformation
 			return transform;
@@ -115,20 +115,31 @@ package onyx.content {
 			_loader.unload();
 			_loader	= null;
 		}
-		
 
+		/**
+		 * 
+		 */		
 		override public function get scaleX():Number {
 			return super.scaleX / _ratioX;
 		}
 		
+		/**
+		 * 
+		 */		
 		override public function set scaleX(value:Number):void {
 			super.scaleX = value * _ratioX;
 		}
 		
+		/**
+		 * 
+		 */		
 		override public function get scaleY():Number {
 			return super.scaleY / _ratioY;
 		}
 		
+		/**
+		 * 
+		 */		
 		override public function set scaleY(value:Number):void {
 			super.scaleY = value * _ratioY;
 		}

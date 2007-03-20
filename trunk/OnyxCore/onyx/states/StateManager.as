@@ -44,10 +44,10 @@ package onyx.states {
 		/**
 		 * 	Loads an application state
 		 */
-		public static function loadState(state:ApplicationState, ... args:Array):void {
+		public static function loadState(state:ApplicationState):void {
 
 			_states.push(state);
-			state.initialize.apply(state, args);
+			state.initialize();
 
 		}
 		
@@ -55,10 +55,30 @@ package onyx.states {
 		 * 	Removes an application state
 		 */
 		public static function removeState(state:ApplicationState):void {
+			
+			state.pause();
 			state.terminate();
 			_states.splice(_states.indexOf(state), 1);
+			
 		}
-
 		
+		/**
+		 * 	Returns state matches
+		 */
+		public static function getStates(type:Class):Array {
+			var matches:Array = [];
+			for each (var state:ApplicationState in _states) {
+				if (state is type) {
+					matches.push(type);
+				}
+			}
+			return matches;
+		}
+		
+		/**
+		 * 	Pauses all states (unimplemented)
+		 */
+		public static function pauseStates():void {
+		}
 	}
 }

@@ -28,50 +28,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package onyx.core {
+package onyx.settings {
+
+	public const PLUGINS_DIRECTORY:String			= 'plugins/';
 	
-	import flash.display.DisplayObject;
-	import flash.display.IBitmapDrawable;
-	import flash.geom.ColorTransform;
-	import flash.geom.Matrix;
-	import flash.geom.Rectangle;
-	
-	import onyx.content.ColorFilter;
-	import onyx.sound.SpectrumAnalysis;
-	
-	public final class RenderTransform {
-
-		/**
-		 * 
-		 */
-		public static function getTransform(ref:DisplayObject):RenderTransform {
-			
-			var transform:RenderTransform	= new RenderTransform();
-			var matrix:Matrix				= new Matrix();
-			
-			matrix.scale(ref.scaleX, ref.scaleY);
-			matrix.rotate(ref.rotation);
-			matrix.translate(ref.x, ref.y);
-
-			transform.matrix			= matrix;
-			transform.rect				= (ref.rotation === 0) ? new Rectangle(0, 0, Math.max(320 / ref.scaleX, 320), Math.max(240 / ref.scaleY, 240)) : null;
-			transform.content			= ref;
-
-			return transform;
-		}
-				
-		public var content:IBitmapDrawable;
-		public var matrix:Matrix;
-		public var rect:Rectangle;
-
-		/**
-		 * 	Concatenates a transformation
-		 */		
-		public function concat(transform:RenderTransform):RenderTransform {
-			if (matrix && transform && transform.matrix) {
-				matrix.concat(transform.matrix);
-			}
-			return this;
-		}
-	}
 }

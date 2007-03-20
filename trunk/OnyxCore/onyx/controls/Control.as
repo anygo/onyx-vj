@@ -45,7 +45,10 @@ package onyx.controls {
 	 */
 	public class Control extends EventDispatcher {
 
-		// set by Controls
+		/**
+		 * 	@private
+		 * 	The target object for the control
+		 */
 		onyx_ns var _target:IControlObject;
 
 		/**
@@ -81,7 +84,7 @@ package onyx.controls {
 		
 		/**
 		 * 	Returns the contrained value.  Use this function on a property when you
-		 * 	want an object to dispatch a controlevent where changing of the property:
+		 * 	want an object to dispatch a controlevent when changing of the property occurs:
 		 * 
 		 * 	For instance:
 		 * 
@@ -107,12 +110,6 @@ package onyx.controls {
 		}
 		
 		/**
-		 * 	Resets the control
-		 */
-		public function reset():void {
-		}
-		
-		/**
 		 * 	Override this control with another control
 		 */
 		public function override(target:IControlObject, value:*):ControlOverride {
@@ -131,6 +128,19 @@ package onyx.controls {
 		 */
 		public function set target(value:IControlObject):void {
 			_target = value;
+		}
+		
+		/**
+		 * 	Resets the control
+		 */
+		public function reset():void {
+		}
+		
+		/**
+		 * 	Returns xml representation of the control
+		 */
+		public function toXML():XML {
+			return <{name}>{_target[name].toString()}</{name}>;
 		}
 	}
 }

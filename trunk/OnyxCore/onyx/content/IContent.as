@@ -40,26 +40,23 @@ package onyx.content {
 	
 	import onyx.controls.Controls;
 	import onyx.controls.IControlObject;
-	import onyx.core.IDisposable;
-	import onyx.core.IRenderObject;
+	import onyx.core.*;
 	import onyx.filter.Filter;
 	import onyx.filter.IFilterObject;
-	import onyx.layer.IColorObject;
-	import onyx.layer.Layer;
+	import onyx.render.IRenderObject;
 
 	[Event(name="filter_applied",	type="onyx.events.FilterEvent")]
 	[Event(name="filter_removed",	type="onyx.events.FilterEvent")]
 	[Event(name="filter_moved",		type="onyx.events.FilterEvent")]
 	[Event(name="transition_end",	type="onyx.events.TransitionEvent")]
 	
-	public interface IContent extends IFilterObject, IControlObject, IColorObject, IRenderObject, IEventDispatcher {
+	public interface IContent extends ITimeObject, IFilterObject, IControlObject, IColorObject, IRenderObject, IEventDispatcher {
 
 		function get source():BitmapData;
 		function get rendered():BitmapData;
 		function set matrix(value:Matrix):void;
 		function get matrix():Matrix;
 		function get path():String;
-		function get properties():Controls;
-		
+
 	}
 }

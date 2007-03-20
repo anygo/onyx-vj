@@ -28,39 +28,60 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package onyx.controls {
+package onyx.core {
 	
-	import onyx.core.Onyx;
-	import onyx.core.onyx_ns;
-	import onyx.display.Display;
-	import onyx.events.ControlEvent;
-	import onyx.layer.ILayer;
-	import onyx.layer.Layer;
+	import flash.events.IEventDispatcher;
 	
-	use namespace onyx_ns;
+	import onyx.filter.Filter;
 	
 	/**
-	 * 	Layer Control
+	 * 	Base interface for DisplayObject interface as well as tint, saturation etc
 	 */
-	public final class ControlLayer extends ControlRange {
+	public interface IColorObject extends IEventDispatcher {
 		
-		/**
-		 * 	@constructor
-		 */
-		public function ControlLayer(name:String, displayName:String):void {
-			
-			var display:Display = Display.getDisplay(0);
+		function set color(value:uint):void;
+		function get color():uint;
 
-			super(name, displayName, (display) ? display._valid : []);
+		function get alpha():Number;
+		function set alpha(value:Number):void;
 
-		}
+		function get brightness():Number;
+		function set brightness(value:Number):void;
+
+		function get contrast():Number;
+		function set contrast(value:Number):void;
+
+		function get scaleX():Number;
+		function set scaleX(value:Number):void;
+
+		function get scaleY():Number;
+		function set scaleY(value:Number):void;
+
+		function get rotation():Number;
+		function set rotation(value:Number):void;
+
+		function get saturation():Number;
+		function set saturation(value:Number):void;
+
+		function get threshold():int;
+		function set threshold(value:int):void;
+
+		function get tint():Number;
+		function set tint(value:Number):void;
+
+		function get x():Number;
+		function set x(value:Number):void;
+
+		function get y():Number;
+		function set y(value:Number):void;
 		
-		/**
-		 * 
-		 */
-		override public function set value(v:*):void {
-			_target[name] = v;
-			dispatchEvent(new ControlEvent(v));
-		}
+		function get blendMode():String;
+		function set blendMode(value:String):void;
+		
+		function get visible():Boolean;
+		function set visible(value:Boolean):void;
+		
+		function pause(b:Boolean = true):void;
+		
 	}
 }

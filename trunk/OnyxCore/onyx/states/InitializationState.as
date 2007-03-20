@@ -33,6 +33,7 @@ package onyx.states {
 	import flash.display.*;
 	import flash.events.*;
 	import flash.net.*;
+	import flash.system.ApplicationDomain;
 	import flash.text.TextField;
 	import flash.utils.Timer;
 	
@@ -40,7 +41,7 @@ package onyx.states {
 	import onyx.events.*;
 	import onyx.file.*;
 	import onyx.plugin.*;
-	import flash.system.ApplicationDomain;
+	import onyx.settings.*;
 	
 	use namespace onyx_ns;
 
@@ -62,17 +63,17 @@ package onyx.states {
 		/**
 		 * 	Initializes
 		 */
-		override public function initialize(... args:Array):void {
+		override public function initialize():void {
 			
 			// dispatch a start event
 			Onyx.instance.dispatchEvent(new ApplicationEvent(ApplicationEvent.ONYX_STARTUP_START));
 			
 			// output to console
-			Console.output('LOADING PLUG-INS: ' + FileBrowser.initialDirectory + Settings.PLUGINS_DIRECTORY + '... \n');
+			Console.output('LOADING PLUG-INS: ' + FileBrowser.initialDirectory + PLUGINS_DIRECTORY + '... \n');
 			
 			// query directory
 			FileBrowser.query(
-				FileBrowser.initialDirectory + Settings.PLUGINS_DIRECTORY,
+				FileBrowser.initialDirectory + PLUGINS_DIRECTORY,
 				_loadExternalPlugins,
 				new PluginFilter()
 			);

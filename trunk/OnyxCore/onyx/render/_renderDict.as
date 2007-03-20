@@ -28,71 +28,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package onyx.core {
-
-	import flash.display.*;
-	import flash.geom.*;
-	import flash.utils.*;
+package onyx.render {
 	
-	import onyx.constants.*;
-	import onyx.content.ColorFilter;
-	import onyx.filter.FilterArray;
+	import flash.utils.Dictionary;
 	
-	/**
-	 * 	This class stores the last rendering time for a given target
-	 */
-	public final class RenderManager {
-		
-		/**
-		 * 	@private
-		 */
-		private static var _dict:Dictionary = new Dictionary(true);
-		
-		/**
-		 * 
-		 */
-		public static function getTime(target:Object):int {
-			
-			var time:int	= _dict[target];
-			var now:int		= getTimer();
-			_dict[target]	= now;
-			
-			return (now - time) / STAGE.frameRate;
-		}
-		
-		/**
-		 * 	
-		 */
-		public static function renderContent(source:BitmapData, content:IBitmapDrawable, transform:RenderTransform, filter:ColorFilter):void {
-			
-			var matrix:Matrix = transform.matrix;
-			var rect:Rectangle = transform.rect;
-			
-			// fill our source with nothing
-			source.fillRect(source.rect, 0x00000000);
-			
-			// draw our content
-			source.draw(content, matrix, filter, null, rect);
-
-			// apply the color filter to the source
-			source.applyFilter(source, source.rect, POINT, filter.filter);
-			
-		}
-		
-		/**
-		 * 
-		 */
-		public static function renderFilters(source:BitmapData, rendered:BitmapData, filters:FilterArray):void {
-			
-			// copy to the rendered bitmap
-			rendered.copyPixels(source, source.rect, POINT);
-			
-			// render filters
-			filters.render(source);
-			
-			// copy pixels to the rendered bitmap
-			rendered.copyPixels(source, source.rect, POINT);
-
-		}
-	}
+	internal const _renderDict:Dictionary = new Dictionary(true);
+	
 }

@@ -34,11 +34,10 @@ package onyx.layer {
 	import flash.events.IEventDispatcher;
 	
 	import onyx.content.IContent;
-	import onyx.controls.Controls;
-	import onyx.controls.IControlObject;
-	import onyx.core.IRenderObject;
+	import onyx.controls.*;
 	import onyx.display.IDisplay;
 	import onyx.filter.IFilterObject;
+	import onyx.render.*;
 	import onyx.transition.Transition;
 	
 	[Event(name="filter_applied",	type="onyx.events.FilterEvent")]
@@ -50,12 +49,14 @@ package onyx.layer {
 
 	public interface ILayer extends IContent {
 
-		function get display():IDisplay;
-		function moveLayer(index:int):void;
-		function copyLayer():void;
 		function get index():int;
+		function get properties():Controls;
+		function get display():IDisplay;
+
+		function copyLayer():void;
+		function moveLayer(index:int):void;
+
 		function load(path:String, settings:LayerSettings = null, transition:Transition = null):void;
-		function get muted():Boolean;
-		function set muted(value:Boolean):void;
+
 	}
 }

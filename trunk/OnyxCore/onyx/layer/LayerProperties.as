@@ -125,7 +125,7 @@ package onyx.layer {
 												{ multiplier: 100, invert: true }
 											);
 											
-		public var muted:ControlBoolean	=	new ControlBoolean('muted', 'muted');
+		public var visible:ControlBoolean	=	new ControlBoolean('visible', 'visible', 1);
 													
 		/**
 		 * 	@constructor
@@ -150,7 +150,7 @@ package onyx.layer {
 				time,
 				tint,
 				color,
-				muted
+				visible
 			);
 		}
 		

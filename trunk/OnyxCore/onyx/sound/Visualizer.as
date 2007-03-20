@@ -36,6 +36,7 @@ package onyx.sound {
 	import onyx.controls.IControlObject;
 	import onyx.core.*;
 	import onyx.plugin.Plugin;
+	import onyx.render.*;
 	
 	use namespace onyx_ns;
 		

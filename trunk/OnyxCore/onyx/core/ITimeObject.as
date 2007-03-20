@@ -30,11 +30,23 @@
  */
 package onyx.core {
 	
-	import flash.display.BitmapData;
+	import flash.events.IEventDispatcher;
 	
-	public interface IRenderObject {
+	public interface ITimeObject extends IEventDispatcher {
+
+		function get time():Number;
+		function set time(value:Number):void;
+
+		function get totalTime():int;
+
+		function get framerate():Number;
+		function set framerate(value:Number):void;
 		
-		function render():RenderTransform;
+		function get loopStart():Number;
+		function set loopStart(value:Number):void;
+
+		function get loopEnd():Number;
+		function set loopEnd(value:Number):void;
 		
 	}
 }

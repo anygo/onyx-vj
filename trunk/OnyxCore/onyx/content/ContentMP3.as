@@ -44,6 +44,7 @@ package onyx.content {
 	import onyx.layer.*;
 	import onyx.plugin.Plugin;
 	import onyx.sound.*;
+	import onyx.render.*;
 
 	use namespace onyx_ns;
 	
@@ -146,9 +147,11 @@ package onyx.content {
 				var rect:Rectangle					= transform.rect;
 				var matrix:Matrix					= transform.matrix;
 				
-				RenderManager.renderContent(_source, transform.content, transform, _filter);
+				// render content
+				renderContent(_source, transform.content, transform, _filter);
 				
-				RenderManager.renderFilters(_source, _rendered, _filters);
+				// render filters
+				renderFilters(_source, _rendered, _filters);
 	
 				// return transformation
 				return transform;

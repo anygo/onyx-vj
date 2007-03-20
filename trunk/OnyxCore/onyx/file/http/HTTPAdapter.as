@@ -60,14 +60,15 @@ package onyx.file.http {
 		/**
 		 * 	Query
 		 */
-		override public function query(path:String, callback:Function, filter:FileFilter = null):FileQuery {
-			return new HTTPQuery(path, callback, filter);
+		override public function query(path:String, callback:Function):FileQuery {
+			return new HTTPQuery(path, callback);
 		}
 		
 		/**
 		 * 
 		 */
-		override public function save(path:String, callback:Function, contents:ByteArray):void {
+		override public function save(path:String, callback:Function):FileQuery {
+			return new HTTPQuery(path, callback);
 		}
 	}
 }

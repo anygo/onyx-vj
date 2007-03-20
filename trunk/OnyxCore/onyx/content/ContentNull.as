@@ -34,10 +34,11 @@ package onyx.content {
 	import flash.events.Event;
 	import flash.geom.Matrix;
 	
+	import onyx.controls.Control;
 	import onyx.controls.Controls;
 	import onyx.core.*;
 	import onyx.filter.Filter;
-	import onyx.controls.Control;
+	import onyx.render.*;
 
 	[ExcludeClass]
 	public final class ContentNull implements IContent {
@@ -299,5 +300,18 @@ package onyx.content {
 			return null;
 		}
 
+		/**
+		 * 
+		 */
+		public function get visible():Boolean {
+			return false;
+		}
+
+
+		/**
+		 * 
+		 */
+		public function set visible(value:Boolean):void {
+		}
 	}
 }

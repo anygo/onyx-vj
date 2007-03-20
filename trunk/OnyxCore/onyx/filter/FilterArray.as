@@ -31,6 +31,7 @@
 package onyx.filter {
 
 	import flash.display.BitmapData;
+	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
 	
 	import onyx.constants.*;
@@ -40,17 +41,32 @@ package onyx.filter {
 	import onyx.plugin.*;
 	import onyx.tween.*;
 	import onyx.utils.array.*;
-	import flash.geom.Matrix;
+	import flash.events.IEventDispatcher;
 	
 	use namespace onyx_ns;
 	
+	/**
+	 * 	Filter array
+	 */
 	dynamic public final class FilterArray extends Array {
+		
+		/**
+		 * 	@private
+		 */
+		private var _parent:IContent;
+		
+		/**
+		 * 	@constructor
+		 */
+		public function FilterArray(parent:IContent):void {
+			_parent = parent;
+		}
 		
 		/**
 		 * 	Removes a filter
 		 * 	@returns	true if the filter was added successfully
 		 */
-		public function addFilter(filter:Filter, content:IContent):void {
+		public function addFilter(filter:Filter):void {
 
 			// check for unique filters
 			if (filter._unique) {
@@ -65,7 +81,7 @@ package onyx.filter {
 			}
 			
 			// it's alive!
-			filter.setContent(content);
+			filter.setContent(_parent);
 			
 			// push the layer into the array
 			super.push(filter);
@@ -75,7 +91,7 @@ package onyx.filter {
 			
 			// dispatch
 			var event:FilterEvent = new FilterEvent(FilterEvent.FILTER_APPLIED, filter)
-			content.dispatchEvent(event);
+			_parent.dispatchEvent(event);
 
 		}
 		
@@ -83,6 +99,8 @@ package onyx.filter {
 		 * 	Moves a filter
 		 */
 		public function moveFilter(filter:Filter, index:int, content:IContent):void {
+			
+			// swaps a filter
 			if (swap(this, filter, index)) {
 				content.dispatchEvent(new FilterEvent(FilterEvent.FILTER_MOVED, filter));
 			}
@@ -92,7 +110,7 @@ package onyx.filter {
 		 * 	Removes a filter
 		 * 	@returns	true if the removed filter existed in the array
 		 */
-		public function removeFilter(filter:Filter, content:IContent):void {
+		public function removeFilter(filter:Filter):void {
 
 			// now remove it
 			var index:int = super.indexOf(filter);
@@ -113,7 +131,7 @@ package onyx.filter {
 				
 				// dispatch
 				var event:FilterEvent = new FilterEvent(FilterEvent.FILTER_REMOVED, filter)
-				content.dispatchEvent(event);
+				_parent.dispatchEvent(event);
 
 			}
 		}
@@ -123,20 +141,20 @@ package onyx.filter {
 		 */
 		public function clear(content:IContent):void {
 			while (super.length) {
-				removeFilter(this[0], content);
+				removeFilter(this[0]);
 			}
 		}
 		
 		/**
 		 * 	Mutes a filter
 		 */
-		public function muteFilter(filter:Filter, content:IContent, toggle:Boolean = true):void {
+		public function muteFilter(filter:Filter, toggle:Boolean = true):void {
 			
 			filter._muted = toggle;
 			
 			// dispatch
 			var event:FilterEvent = new FilterEvent(FilterEvent.FILTER_MUTED, filter)
-			content.dispatchEvent(event);
+			_parent.dispatchEvent(event);
 			
 		}
 		
@@ -152,7 +170,42 @@ package onyx.filter {
 					}
 				}
 			}
+		}
+		
+		/**
+		 * 
+		 */
+		public function loadXML(xml:XMLList):void {
 			
+			for each (var filterXML:XML in xml.filter) {
+				
+				var name:String			= filterXML.@id;
+				var plugin:Plugin		= Filter.getDefinition(name);
+				
+				if (plugin) {
+					
+					var filter:Filter = plugin.getDefinition() as Filter;
+					
+					for each (var controlXML:XML in filterXML.*) {
+						filter.controls.loadXML(controlXML);
+					}
+					
+					(_parent) ? addFilter(filter) : push(filter);
+				}
+			}
+		}
+		
+		/**
+		 * 	Returns the filters in an xml format
+		 */
+		public function toXML():XML {
+			var xml:XML = <filters />;
+			
+			for each (var filter:Filter in this) {
+				xml.appendChild(filter.toXML());
+			}
+			
+			return xml;
 		}
 	}
 }

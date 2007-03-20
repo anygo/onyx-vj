@@ -28,39 +28,47 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package onyx.controls {
+package onyx.render {
 	
-	import onyx.core.Onyx;
-	import onyx.core.onyx_ns;
-	import onyx.display.Display;
-	import onyx.events.ControlEvent;
-	import onyx.layer.ILayer;
-	import onyx.layer.Layer;
+	import flash.display.*;
+	import flash.geom.*;
 	
-	use namespace onyx_ns;
+	import onyx.content.ColorFilter;
+	import onyx.sound.SpectrumAnalysis;
 	
-	/**
-	 * 	Layer Control
-	 */
-	public final class ControlLayer extends ControlRange {
-		
-		/**
-		 * 	@constructor
-		 */
-		public function ControlLayer(name:String, displayName:String):void {
-			
-			var display:Display = Display.getDisplay(0);
+	public final class RenderTransform {
 
-			super(name, displayName, (display) ? display._valid : []);
-
-		}
-		
 		/**
 		 * 
 		 */
-		override public function set value(v:*):void {
-			_target[name] = v;
-			dispatchEvent(new ControlEvent(v));
+		public static function getTransform(ref:DisplayObject):RenderTransform {
+			
+			var transform:RenderTransform	= new RenderTransform();
+			var matrix:Matrix				= new Matrix();
+			
+			matrix.scale(ref.scaleX, ref.scaleY);
+			matrix.rotate(ref.rotation);
+			matrix.translate(ref.x, ref.y);
+
+			transform.matrix			= matrix;
+			transform.rect				= (ref.rotation === 0) ? new Rectangle(0, 0, Math.max(320 / ref.scaleX, 320), Math.max(240 / ref.scaleY, 240)) : null;
+			transform.content			= ref;
+
+			return transform;
+		}
+				
+		public var content:IBitmapDrawable;
+		public var matrix:Matrix;
+		public var rect:Rectangle;
+
+		/**
+		 * 	Concatenates a transformation
+		 */		
+		public function concat(transform:RenderTransform):RenderTransform {
+			if (matrix && transform && transform.matrix) {
+				matrix.concat(transform.matrix);
+			}
+			return this;
 		}
 	}
 }

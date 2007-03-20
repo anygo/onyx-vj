@@ -39,7 +39,6 @@ package onyx.filter {
 	import onyx.controls.*;
 	import onyx.core.*;
 	import onyx.events.FilterEvent;
-	import onyx.layer.IColorObject;
 	import onyx.plugin.Plugin;
 	
 	use namespace onyx_ns;
@@ -195,6 +194,15 @@ package onyx.filter {
 			content	= null;
 			super.clean();
 
+		}
+		
+		/**
+		 * 	Returns xml
+		 */
+		public function toXML():XML {
+			var xml:XML = <filter id={_name} />;
+			xml.appendChild(controls.toXML());
+			return xml;
 		}
 	}
 }

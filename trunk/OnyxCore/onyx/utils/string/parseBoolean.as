@@ -28,39 +28,16 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package onyx.controls {
+package onyx.utils.string {
 	
-	import onyx.core.Onyx;
-	import onyx.core.onyx_ns;
-	import onyx.display.Display;
-	import onyx.events.ControlEvent;
-	import onyx.layer.ILayer;
-	import onyx.layer.Layer;
-	
-	use namespace onyx_ns;
-	
-	/**
-	 * 	Layer Control
-	 */
-	public final class ControlLayer extends ControlRange {
+	public function parseBoolean(value:Object):* {
+		var name:String = value.toString();
 		
-		/**
-		 * 	@constructor
-		 */
-		public function ControlLayer(name:String, displayName:String):void {
-			
-			var display:Display = Display.getDisplay(0);
-
-			super(name, displayName, (display) ? display._valid : []);
-
+		if (name === 'false') {
+			return false;
+		} else if (name === 'true') {
+			return true;
 		}
-		
-		/**
-		 * 
-		 */
-		override public function set value(v:*):void {
-			_target[name] = v;
-			dispatchEvent(new ControlEvent(v));
-		}
+		return name;
 	}
 }

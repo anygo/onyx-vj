@@ -38,7 +38,7 @@ package onyx.states {
 		/**
 		 * 	Called when the application state is initialized
 		 */
-		public function initialize(... args:Array):void {
+		public function initialize():void {
 		}
 		
 		/**
@@ -47,5 +47,11 @@ package onyx.states {
 		public function terminate():void {
 		}
 		
+		/**
+		 * 
+		 */
+		public function pause():void {
+		}
+
 	}
 }

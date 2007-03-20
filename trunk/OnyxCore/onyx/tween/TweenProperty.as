@@ -31,13 +31,34 @@
 
 package onyx.tween {
 	
+	/**
+	 * 	Tween property
+	 */
 	public final class TweenProperty {
 		
+		/**
+		 * 	The property to affect
+		 */
 		public var property:String;
+		
+		/**
+		 * 	The easing equation
+		 */
 		public var easing:Function;
+		
+		/**
+		 * 	The start value
+		 */
 		public var start:Number;
+		
+		/**
+		 * 	The end value
+		 */
 		public var end:Number;
 		
+		/**
+		 * 	@constructor
+		 */
 		public function TweenProperty(property:String, start:Number, end:Number, easing:Function = null):void {
 			this.property = property;
 			this.start = start;

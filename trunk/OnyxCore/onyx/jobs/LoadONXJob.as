@@ -98,32 +98,35 @@ package onyx.jobs {
 				try {
 					
 					var xml:XML				= new XML(loader.data);
-
 					var display:IDisplay	= _origin.display;
 					var layers:Array		= display.layers;
 					var index:int			= layers.indexOf(_origin);
 					var jobs:Array			= [];
 					
-					// loop through layers and apply settings
-					for each (var layerXML:XML in xml.layer) {
+					for each (var displayXML:XML in xml.display) {
 						
-						var layer:Layer				= layers[index++];
+						display.loadXML(displayXML);
 						
-						// valid layer, load it
-						if (layer) {
+						// loop through layers and apply settings
+						for each (var layerXML:XML in displayXML.layers.*) {
 							
-							var settings:LayerSettings	= new LayerSettings();
-							settings.loadFromXML(layerXML);
+							var layer:Layer				= layers[index++];
 							
-							var job:LayerLoadSettings	= new LayerLoadSettings();
-							job.layer					= layer;
-							job.settings				= settings;
-							jobs.push(job);
-							
-							
-						// break out
-						} else {
-							break;
+							// valid layer, load it
+							if (layer) {
+								
+								var settings:LayerSettings	= new LayerSettings();
+								settings.loadFromXML(layerXML);
+								
+								var job:LayerLoadSettings	= new LayerLoadSettings();
+								job.layer					= layer;
+								job.settings				= settings;
+								jobs.push(job);
+								
+							// break out
+							} else {
+								break;
+							}
 						}
 					}
 					

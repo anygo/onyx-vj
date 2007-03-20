@@ -41,6 +41,7 @@ package onyx.content {
 	import onyx.events.LayerContentEvent;
 	import onyx.layer.LayerSettings;
 	import onyx.net.*;
+	import onyx.render.*;
 	import onyx.transition.Transition;
 	import onyx.utils.string.*;
 
@@ -87,7 +88,7 @@ package onyx.content {
 		/**
 		 * 	Unregisters from shared
 		 */
-		public static function unregister(path:String):void {
+		public static function unregister(path:String):Boolean {
 			var reg:Registration = _dict[path];
 			if (reg) {
 				reg.refCount--;
@@ -96,7 +97,11 @@ package onyx.content {
 					reg.dispose();
 					delete _dict[path];
 				}
+			} else {
+				return false;
 			}
+			
+			return true;
 		}
 		
 		/**

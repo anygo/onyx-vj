@@ -28,39 +28,32 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package onyx.controls {
+package onyx.render {
 	
-	import onyx.core.Onyx;
-	import onyx.core.onyx_ns;
-	import onyx.display.Display;
-	import onyx.events.ControlEvent;
-	import onyx.layer.ILayer;
-	import onyx.layer.Layer;
+	import flash.display.*;
+	import flash.geom.*;
 	
-	use namespace onyx_ns;
-	
+	import onyx.constants.*;
+	import onyx.content.ColorFilter;
+
 	/**
-	 * 	Layer Control
+	 * 	Renders content
 	 */
-	public final class ControlLayer extends ControlRange {
+	public function renderContent(source:BitmapData, content:IBitmapDrawable, transform:RenderTransform, filter:ColorFilter):void {
 		
-		/**
-		 * 	@constructor
-		 */
-		public function ControlLayer(name:String, displayName:String):void {
-			
-			var display:Display = Display.getDisplay(0);
-
-			super(name, displayName, (display) ? display._valid : []);
-
-		}
+		var matrix:Matrix = transform.matrix;
+		var rect:Rectangle = transform.rect;
 		
-		/**
-		 * 
-		 */
-		override public function set value(v:*):void {
-			_target[name] = v;
-			dispatchEvent(new ControlEvent(v));
-		}
+		// fill our source with nothing
+		source.fillRect(source.rect, 0x00000000);
+		
+		// draw our content
+		source.draw(content, matrix, filter, null, rect);
+
+		// apply the color filter to the source
+		source.applyFilter(source, source.rect, POINT, filter.filter);
+		
 	}
+
+	
 }

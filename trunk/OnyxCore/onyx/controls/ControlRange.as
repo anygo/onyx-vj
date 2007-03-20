@@ -65,7 +65,6 @@ package onyx.controls {
 			this._defaultvalue	= defaultvalue;
 			
 			super(name, display, options);
-			
 		}
 		
 		/**
@@ -81,16 +80,6 @@ package onyx.controls {
 		 */
 		override public function reset():void {
 			_target[name] = _data[_defaultvalue];
-		}
-		
-		/**
-		 * 	Sets a new data
-		 */
-		public function set data(value:Array):void {
-			_data = value;
-
-			// dispatch an update
-			dispatchEvent(new ControlEvent(_target[name]));
 		}
 
 		/**

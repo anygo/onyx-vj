@@ -33,8 +33,8 @@ package onyx.tween {
 	import flash.events.*;
 	import flash.utils.*;
 	
-	import onyx.core.*;
 	import onyx.constants.*;
+	import onyx.core.*;
 	import onyx.tween.easing.*;
 	
 	use namespace onyx_ns;

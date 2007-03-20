@@ -41,6 +41,8 @@ package onyx.content {
 	import onyx.events.*;
 	import onyx.filter.*;
 	import onyx.layer.*;
+	import onyx.render.*;
+	import onyx.settings.*;
 			
 	use namespace onyx_ns;
 	
@@ -114,7 +116,7 @@ package onyx.content {
 			_lastTime		= getTimer() - STAGE.frameRate;
 
 			// resize?
-			if (Settings.LAYER_AUTOSIZE) {
+			if (LAYER_AUTOSIZE) {
 				_ratioX = 320 / loader.contentLoaderInfo.width;
 				_ratioY = 240 / loader.contentLoaderInfo.height;
 			}
@@ -206,9 +208,7 @@ package onyx.content {
 		 * 	Sets the beginning loop point (percentage)
 		 */		
 		override public function set loopStart(value:Number):void {
-			
-			_loopStart = Math.min(value, _loopEnd);
-			
+			_loopStart = __loopStart.setValue(Math.min(value, _loopEnd));
 		}
 		
 		/**
@@ -223,10 +223,9 @@ package onyx.content {
 		 */
 		override public function set loopEnd(value:Number):void {
 			
-			_loopEnd = Math.max(value, _loopStart, 0.01);
+			_loopEnd = __loopEnd.setValue(Math.max(value, _loopStart, 0.01));
 
 		}
-		
 		
 		/**
 		 * 	Sets the end loop point
@@ -243,12 +242,16 @@ package onyx.content {
 			// dispose
 			super.dispose();
 
+			// unregister
+			var value:Boolean = ContentLoader.unregister(_path);
+			
+			if (!value && _mc is IDisposable) {
+				(_mc as IDisposable).dispose();
+			}
+			
 			// remove reference
 			_loader = null;
 			_mc		= null;
-			
-			// unregister
-			ContentLoader.unregister(_path);
 		}
 		
 		/**

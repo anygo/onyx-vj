@@ -28,70 +28,19 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package onyx.layer {
+package onyx.render {
 	
-	import onyx.filter.Filter;
-	import flash.events.IEventDispatcher;
+	import flash.utils.*;
 	
 	/**
-	 * 	Base interface for DisplayObject interface as well as tint, saturation etc
+	 * 	Gets object time
 	 */
-	public interface IColorObject extends IEventDispatcher {
+	public static function getLastRender(target:Object):int {
 		
-		function set color(value:uint):void;
-		function get color():uint;
-
-		function get alpha():Number;
-		function set alpha(value:Number):void;
-
-		function get brightness():Number;
-		function set brightness(value:Number):void;
-
-		function get contrast():Number;
-		function set contrast(value:Number):void;
-
-		function get scaleX():Number;
-		function set scaleX(value:Number):void;
-
-		function get scaleY():Number;
-		function set scaleY(value:Number):void;
-
-		function get rotation():Number;
-		function set rotation(value:Number):void;
-
-		function get saturation():Number;
-		function set saturation(value:Number):void;
-
-		function get threshold():int;
-		function set threshold(value:int):void;
-
-		function get tint():Number;
-		function set tint(value:Number):void;
-
-		function get x():Number;
-		function set x(value:Number):void;
-
-		function get y():Number;
-		function set y(value:Number):void;
+		var time:int		= _renderDict[target];
+		var now:int			= getTimer();
+		_renderDict[target]	= now;
 		
-		function get blendMode():String;
-		function set blendMode(value:String):void;
-
-		function get time():Number;
-		function set time(value:Number):void;
-
-		function get totalTime():int;
-
-		function get framerate():Number;
-		function set framerate(value:Number):void;
-		
-		function get loopStart():Number;
-		function set loopStart(value:Number):void;
-
-		function get loopEnd():Number;
-		function set loopEnd(value:Number):void;
-		
-		function pause(b:Boolean = true):void;
-		
+		return (now - time) / STAGE.frameRate;
 	}
 }

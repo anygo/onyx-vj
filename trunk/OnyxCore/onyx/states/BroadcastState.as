@@ -50,12 +50,17 @@ package onyx.states {
 		private var conn:LocalHost;
 		
 		/**
-		 * 	Initialize
+		 * 
 		 */
-		override public function initialize(...args):void {
-			
+		public function BroadcastState():void {
 			conn = new LocalHost();
 			conn.addEventListener(Event.CONNECT, _onClientConnect);
+		}
+		
+		/**
+		 * 	Initialize
+		 */
+		override public function initialize():void {
 			
 			conn.connect();
 			
@@ -65,7 +70,7 @@ package onyx.states {
 		 * 	@private
 		 */
 		private function _onClientConnect(event:Event):void {
-			var display:Display = Onyx.displays[0];
+			var display:Display = Display.getDisplay(0);
 			display.addEventListener(RenderEvent.RENDER, _onDisplayRender);
 		}
 		

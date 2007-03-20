@@ -1,13 +1,36 @@
 
 3.0.26: FEATURES
 
-Application Settings
-Ability to save settings data
-
 Changes:
 
 - Addition of Windowing Buttons
 - Ability to save certain settings
 - All tempo filters can be turned on or off through a global setting (if they do not use tempo, they'll be timer based)
+- Mix files can now save display background color and filters, as well as the xml format version
+- Addition of new custom movies:
+	- Layer copy -- copies another fully rendered layer
+	- Loop Machine -- copies the display output for 10 seconds into a layer
 - Addition of a memory consumption graph
-- Addition of other assets (layer copy -- copies another layer with it's filters)
+- Addition of Midi Learn (not totally done)
+
+Bug Fixes:
+
+- Fixed a bug where pressing up or down (selecting filters) was crashing Onyx
+- Fixed a bug where the visible property was not dispatching to the UI
+- Fixed a bug where turning off the global tempo, and then adding a tempo filter, would re-start the tempo
+- Fixed a bug where the loop start and end points were not dispatching changes to the UI
+
+API Changes:
+
+- RenderManager changed to onyx.render.renderContent and onyx.render.renderFilters
+- onyx.core.RenderTransform moved to onyx.render
+- onyx.core.IRenderObject moved to onyx.render
+- onyx.core.settings removed, variables now live in onyx.settings.*
+
+Dev Notes:
+
+- Onyx.displays moved to Display.displays
+- Display._renderContent moved to DisplayRenderState (for future pausing of rendering)
+- ApplicationState.initialize changes to no arguments
+- Addition of ApplicationState.pause
+- XML loading and saving moved to individual classes (controls.loadXML, filters.loadXML, etc)

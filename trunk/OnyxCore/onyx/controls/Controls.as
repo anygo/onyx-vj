@@ -34,6 +34,7 @@ package onyx.controls {
 	import flash.utils.Dictionary;
 	
 	import onyx.core.onyx_ns;
+	import onyx.utils.string.parseBoolean;
 	
 	use namespace onyx_ns;
 
@@ -96,6 +97,61 @@ package onyx.controls {
 			}
 		}
 		
+		/**
+		 * 	Returns the control array as an xml object
+		 * 	@param	An array of control names to exclude from the xml 
+		 */
+		public function toXML(... excludeControls:Array):XML {
+			
+			var exclude:Array = excludeControls || [];
+			var xml:XML = <controls />;
+			var propXML:XML;
+			
+			for each (var control:Control in this) {
+				
+				// if it's not excluded
+				if (exclude.indexOf(control.name) === -1) {
+					xml.appendChild(control.toXML());
+				}
+				
+			}
+			
+			return xml;
+		}
+		
+		/**
+		 * 
+		 */
+		public function loadXML(xml:XML):void {
+			
+			for each (var controlXML:XML in xml.*) {
+				try {
+					
+					// proxy control
+					if (controlXML.hasComplexContent()) {
+						for each (var proxy:XML in controlXML.*) {
+	
+							name			= proxy.name();
+							value			= parseBoolean(controlXML);
+							
+							control			= getControl(name);
+							control.value	= value;
+						}
+					// individual property
+					} else {
+	
+						var name:String 	= controlXML.name();
+						var value:*			= parseBoolean(controlXML);
+						var control:Control	= getControl(name);
+						control.value		= value;
+	
+					}
+	
+				} catch (e:Error) {
+				}
+			}
+		}
+
 		/**
 		 * 	Destroys
 		 */

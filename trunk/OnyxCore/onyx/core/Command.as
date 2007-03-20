@@ -100,7 +100,7 @@ package onyx.core {
 			
 			try {
 				
-				var display:Display = Onyx.displays[0];
+				var display:Display = Display.getDisplay(0);
 				var layer:ILayer	= display.layers[args[0]];
 				
 				layer[args[1]] = args[2];

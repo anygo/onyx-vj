@@ -44,6 +44,7 @@ package onyx.content {
 	import onyx.filter.Filter;
 	import onyx.layer.Layer;
 	import onyx.layer.LayerProperties;
+	import onyx.render.*;
 	import onyx.transition.IBitmapTransition;
 	import onyx.transition.Transition;
 	

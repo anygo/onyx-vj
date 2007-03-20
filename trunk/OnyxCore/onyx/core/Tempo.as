@@ -191,7 +191,10 @@ package onyx.core {
 		 */
 		override public function addEventListener(type:String, listener:Function, useCapture:Boolean=false, priority:int=0.0, useWeakReference:Boolean=false):void {
 			super.addEventListener(type, listener, useCapture, priority, useWeakReference);
-			start();
+			
+			if (type === TempoEvent.CLICK) {
+				start();
+			}
 		}
 		
 		

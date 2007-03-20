@@ -44,6 +44,7 @@ package onyx.content {
 	import onyx.plugin.*;
 	import onyx.tween.*;
 	import onyx.utils.array.*;
+	import onyx.render.*;
 	
 	[Event(name="filter_applied",	type="onyx.events.FilterEvent")]
 	[Event(name="filter_removed",	type="onyx.events.FilterEvent")]
@@ -58,6 +59,11 @@ package onyx.content {
 		 * 	@private
 		 */
 		private var _blendMode:String					= 'normal';
+		
+		/**
+		 * 	@private
+		 */
+		private var _visible:Boolean					= true;
 		 
 		/**
 		 * 	@private
@@ -68,7 +74,7 @@ package onyx.content {
 		 * 	@private
 		 * 	Stores the filters for this content
 		 */
-		protected var _filters:FilterArray				= new FilterArray();
+		protected var _filters:FilterArray;
 
 		/**
 		 * 	@private
@@ -230,8 +236,13 @@ package onyx.content {
 		/**
 		 * 	@private
 		 */
-		protected var _properties:LayerProperties;
+		protected var __visible:Control;
 
+		/**
+		 * 	@private
+		 */
+		protected var _properties:LayerProperties;
+		
 		/**
 		 * 	@constructor
 		 */		
@@ -239,6 +250,9 @@ package onyx.content {
 			
 			var props:LayerProperties = layer.properties as LayerProperties;
 			_properties		= props;
+			
+			// create filters
+			_filters		= new FilterArray(this);
 
 			// store layer
 			_layer = layer;
@@ -261,6 +275,7 @@ package onyx.content {
 			__loopStart		= props.loopStart;
 			__loopEnd		= props.loopEnd;
 			__blendMode		= props.blendMode;
+			__visible		= props.visible;
 			
 			// set targets
 			props.target	= this;
@@ -339,28 +354,46 @@ package onyx.content {
 			_buildMatrix();
 		}
 
+		/**
+		 * 	Sets scaleX
+		 */
 		public function set scaleX(value:Number):void {
 			_scaleX			= __scaleX.setValue(value);
 			_buildMatrix();
 		}
 
+		/**
+		 * 	Sets scaleY
+		 */
 		public function set scaleY(value:Number):void {
 			_scaleY			= __scaleY.setValue(value);
 			_buildMatrix();
 		}
 		
+		/**
+		 * 	Gets scaleX
+		 */
 		public function get scaleX():Number {
 			return _scaleX;
 		}
 
+		/**
+		 * 	Gets scaleY
+		 */
 		public function get scaleY():Number {
 			return _scaleY;
 		}
 
+		/**
+		 * 	Gets x
+		 */
 		public function get x():Number {
 			return _x;
 		}
 
+		/**
+		 * 	Gets y
+		 */
 		public function get y():Number {
 			return _y;
 		}
@@ -442,7 +475,7 @@ package onyx.content {
 		 */
 		public function addFilter(filter:Filter):void {
 			
-			if (_filters.addFilter(filter, this)) {
+			if (_filters.addFilter(filter)) {
 			
 				// dispatch
 				var event:FilterEvent = new FilterEvent(FilterEvent.FILTER_APPLIED, filter);
@@ -456,7 +489,7 @@ package onyx.content {
 		 */		
 		public function removeFilter(filter:Filter):void {
 			
-			_filters.removeFilter(filter, this);
+			_filters.removeFilter(filter);
 		}
 		
 		/**
@@ -470,7 +503,7 @@ package onyx.content {
 		}
 		
 		/**
-		 * 
+		 * 	Sets filters
 		 */
 		public function set filters(value:Array):void {
 			throw new Error('set filters overridden, use addFilter, removeFilter');
@@ -550,10 +583,10 @@ package onyx.content {
 				var transform:RenderTransform		= getTransform();
 				
 				// render content
-				RenderManager.renderContent(_source, _content, transform, _filter);
+				renderContent(_source, _content, transform, _filter);
 				
 				// render filters
-				RenderManager.renderFilters(_source, _rendered, _filters);
+				renderFilters(_source, _rendered, _filters);
 				
 			}
 
@@ -685,7 +718,7 @@ package onyx.content {
 		 * 	Mutes a filter
 		 */
 		public function muteFilter(filter:Filter, toggle:Boolean = true):void {
-			_filters.muteFilter(filter, this, toggle);
+			_filters.muteFilter(filter, toggle);
 		}
 		
 		
@@ -713,7 +746,7 @@ package onyx.content {
 			
 			// check to see if it's disposable, but only if it's not a movieclip
 			// movieclips are handled through ContentManager
-			if (_content is IDisposable && (!_content is MovieClip)) {
+			if (_content is IDisposable && (!this is ContentMC)) {
 				(_content as IDisposable).dispose();
 			}
 			
@@ -754,18 +787,18 @@ package onyx.content {
 		}
 		
 		/**
-		 * 
+		 * 	Sets visible
 		 */
-		public function set muted(value:Boolean):void {
-			_layer.muted = value;
+		public function set visible(value:Boolean):void {
+			_visible = __visible.setValue(value);
 		}
 
 
 		/**
-		 * 
+		 * 	Return visible
 		 */
-		public function get muted():Boolean {
-			return _layer.muted;
+		public function get visible():Boolean {
+			return _visible;
 		}
 	}
 }
