@@ -41,15 +41,13 @@ package effects {
 
 	public final class Blink extends TempoFilter {
 		
-		public var min:Number		= 0;
-		public var max:Number		= 1;
+		public var seed:int			= 50;
 		
 		public function Blink():void {
 
 			super(	
 				true,
-				new ControlNumber('min',	'min alpha',	0,	1,	1),
-				new ControlNumber('max',	'max alpha',	0,	1,	1)
+				new ControlInt('seed',	'seed', 0, 100, 50)
 			)
 		}
 		
@@ -57,7 +55,7 @@ package effects {
 		 * 
 		 */
 		override protected function onTrigger(beat:int, event:Event):void {
-			content.alpha = ((max - min) * Math.random()) + min;
+			content.visible = Math.random() * 100 > seed;
 		}
 	}
 }

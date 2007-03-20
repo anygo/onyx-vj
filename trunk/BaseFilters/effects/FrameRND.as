@@ -53,6 +53,7 @@ package effects {
 		public var minframe:Number	= .6;
 		public var maxframe:Number	= 4;
 		public var smooth:Boolean	= true;
+		public var direction:String	= 'both';
 
 		private var _tempo:Boolean	= true;
 		
@@ -64,7 +65,8 @@ package effects {
 				new ControlNumber('maxdelay',	'Min Delay', .1, 50, 2),
 				new ControlRange('rndframe',	'RND Frame', [true, false], 0),
 				new ControlNumber('minframe',	'min framerate', .2, 8, .6),
-				new ControlNumber('maxframe',	'max framerate', .2, 8, 4)
+				new ControlNumber('maxframe',	'max framerate', .2, 8, 4),
+				new ControlRange('direction',	'direction',	['both', 'forward', 'reverse'], 0)
 			)
 		}
 		
@@ -78,7 +80,15 @@ package effects {
 				content.time = Math.random();
 			}
 			
-			var framerate:Number = (((maxframe - minframe) * Math.random()) + minframe) * (Math.random() <= .5 ? 1 : -1);
+			var framerate:Number = (((maxframe - minframe) * Math.random()) + minframe);
+			switch (direction) {
+				case 'both':
+					framerate *= (Math.random() <= .5 ? 1 : -1)
+					break;
+				case 'reverse':
+					framerate *= -1;
+					break;
+			}
 			
 			if (smooth) {
 				if (Math.random() > .5) {

@@ -4,6 +4,7 @@ package visualizer {
 	import flash.display.Shape;
 	
 	import onyx.core.*;
+	import onyx.render.RenderTransform;
 	import onyx.sound.SpectrumAnalysis;
 	import onyx.sound.SpectrumAnalyzer;
 	import onyx.sound.Visualizer;

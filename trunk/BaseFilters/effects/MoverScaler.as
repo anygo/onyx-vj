@@ -16,7 +16,7 @@ package effects {
 		public var mindelay:Number	= .4;
 		public var maxdelay:Number	= 1;
 		public var scaleMin:Number	= 1;
-		public var scaleMax:Number	= 1.5;
+		public var scaleMax:Number	= 1.3;
 		
 		public function MoverScaler():void {
 

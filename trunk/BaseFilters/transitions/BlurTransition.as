@@ -38,7 +38,7 @@ package transitions {
 	import flash.geom.Transform;
 	
 	import onyx.constants.POINT;
-	import onyx.core.RenderTransform;
+	import onyx.render.RenderTransform;
 	import onyx.transition.*;
 	
 	public final class BlurTransition extends Transition implements IBitmapTransition {

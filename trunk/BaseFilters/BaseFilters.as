@@ -63,7 +63,8 @@ package {
 				new Plugin('Halo Filter', 			Halo,			'Halo Filter'),
 				new Plugin('Noise Filter',			NoiseFilter,	'Noise Filter'),
 				new Plugin('Repeater Filter',		Repeater,		'Repeater Filter'),
-				new Plugin('Blink Effect', 			Blink,			'Blinks the layer'),
+				new Plugin('Alpha Effect', 			Alpha,			'Randomizes the alpha'),
+				new Plugin('Blink Effect', 			Blink,			'Randomizes the visibility'),
 				new Plugin('Frame Random', 			FrameRND,		'Randomizes Frame Rates'),
 				new Plugin('MoveScale Effect', 		MoverScaler,	'Moves and Scales Object'),
 //				new Plugin('Matrix Effect',			MatrixEffect,	'Matrix Effect'),
@@ -75,6 +76,7 @@ package {
 				new Plugin('Invert',				InvertFilter,	'Invert'),
 //				new Plugin('Loop Scroll',			LoopScroll,		'Loop Scroll Filter'),
 //				new Plugin('Displace',				DisplaceFilter,	'Displace Filter')
+				new Plugin('Convolve Filter', 		ConvolveFilter,	'Convolve')
 			];
 		}
 	}

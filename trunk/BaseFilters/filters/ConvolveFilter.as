@@ -31,10 +31,9 @@
 package filters {
 	
 	import flash.display.BitmapData;
-	import flash.events.TimerEvent;
-	import flash.filters.BlurFilter;
-	import flash.geom.Point;
-	import flash.geom.Rectangle;
+	import flash.events.*;
+	import flash.filters.*;
+	import flash.geom.*;
 	import flash.utils.Timer;
 	
 	import onyx.constants.*;
@@ -45,18 +44,22 @@ package filters {
 	
 	use namespace onyx_ns;
 
-	public final class Halo extends Filter implements IBitmapFilter {
-		
+	/**
+	 * 	TBD: Turn this into a convolve filter
+	 */
+	public final class ConvolveFilter extends Filter implements IBitmapFilter {
+
+		/**
+		 * 
+		 */
 		private var __blurX:Control;
 		private var __blurY:Control;
-		private var _filter:BlurFilter					= new BlurFilter(20, 20);
-		private var _bmp:BitmapData						= BASE_BITMAP();
-		public var blendMode:String						= 'overlay';
+		private var _filter:BlurFilter					= new BlurFilter(4, 4);
 		
-		public function Halo():void {
+		public function ConvolveFilter():void {
 
-			__blurX = new ControlInt('blurX', 'blurX', 0, 42, _filter.blurX);
-			__blurY = new ControlInt('blurY', 'blurY', 0, 42, _filter.blurY);
+			__blurX = new ControlInt('blurX', 'blurX', 0, 42, 4);
+			__blurY = new ControlInt('blurY', 'blurY', 0, 42, 4);
 			
 			super(
 				false,
@@ -64,17 +67,12 @@ package filters {
 					__blurX,
 					__blurY,
 					{ factor: 5, invert: true }
-				),
-				new ControlRange('blendMode', 'blendMode', BLEND_MODES, 0)
+				)
 			);
 		}
 		
 		public function applyFilter(bitmapData:BitmapData):void {
-
-			_bmp.copyPixels(bitmapData, bitmapData.rect, POINT);
-			_bmp.applyFilter(bitmapData, bitmapData.rect, new Point(0,0), _filter);
-			
-			bitmapData.draw(_bmp, null, null, blendMode);
+			bitmapData.applyFilter(bitmapData, bitmapData.rect, new Point(0,0), _filter);
 		}
 		
 		public function terminate():void {
@@ -97,13 +95,11 @@ package filters {
 			return _filter.blurY;
 		}
 		
+		public function get quality():int {
+			return _filter.quality;
+		}
+		
 		override public function dispose():void {
-			
-			if (_bmp) {
-				_filter = null;
-				_bmp.dispose();
-				_bmp = null;
-			}
 
 		}
 	}

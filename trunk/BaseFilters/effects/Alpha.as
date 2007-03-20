@@ -28,83 +28,36 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package filters {
+package effects {
 	
-	import flash.display.BitmapData;
-	import flash.events.TimerEvent;
-	import flash.filters.BlurFilter;
-	import flash.geom.Point;
-	import flash.geom.Rectangle;
+	import flash.events.Event;
 	import flash.utils.Timer;
 	
 	import onyx.constants.*;
+	import onyx.content.Content;
 	import onyx.controls.*;
-	import onyx.core.*;
-	import onyx.filter.*;
-	import onyx.tween.*;
-	
-	use namespace onyx_ns;
+	import onyx.filter.Filter;
+	import onyx.filter.TempoFilter;
 
-	public final class Halo extends Filter implements IBitmapFilter {
+	public final class Alpha extends TempoFilter {
 		
-		private var __blurX:Control;
-		private var __blurY:Control;
-		private var _filter:BlurFilter					= new BlurFilter(20, 20);
-		private var _bmp:BitmapData						= BASE_BITMAP();
-		public var blendMode:String						= 'overlay';
+		public var min:Number		= 0;
+		public var max:Number		= 1;
 		
-		public function Halo():void {
+		public function Alpha():void {
 
-			__blurX = new ControlInt('blurX', 'blurX', 0, 42, _filter.blurX);
-			__blurY = new ControlInt('blurY', 'blurY', 0, 42, _filter.blurY);
-			
-			super(
-				false,
-				new ControlProxy('blur', 'blur',
-					__blurX,
-					__blurY,
-					{ factor: 5, invert: true }
-				),
-				new ControlRange('blendMode', 'blendMode', BLEND_MODES, 0)
-			);
+			super(	
+				true,
+				new ControlNumber('min',	'min alpha',	0,	1,	1),
+				new ControlNumber('max',	'max alpha',	0,	1,	1)
+			)
 		}
 		
-		public function applyFilter(bitmapData:BitmapData):void {
-
-			_bmp.copyPixels(bitmapData, bitmapData.rect, POINT);
-			_bmp.applyFilter(bitmapData, bitmapData.rect, new Point(0,0), _filter);
-			
-			bitmapData.draw(_bmp, null, null, blendMode);
-		}
-		
-		public function terminate():void {
-			_filter = null;
-		}
-		
-		public function set blurX(x:int):void {
-			_filter.blurX = __blurX.setValue(x);
-		}
-		
-		public function get blurX():int {
-			return _filter.blurX;
-		}
-		
-		public function set blurY(y:int):void {
-			_filter.blurY = __blurY.setValue(y);
-		}
-		
-		public function get blurY():int {
-			return _filter.blurY;
-		}
-		
-		override public function dispose():void {
-			
-			if (_bmp) {
-				_filter = null;
-				_bmp.dispose();
-				_bmp = null;
-			}
-
+		/**
+		 * 
+		 */
+		override protected function onTrigger(beat:int, event:Event):void {
+			content.alpha = ((max - min) * Math.random()) + min;
 		}
 	}
 }
