@@ -30,9 +30,7 @@
  */
 package ui.controls {
 	
-	import flash.display.DisplayObject;
-	import flash.display.Shape;
-	import flash.display.Sprite;
+	import flash.display.*;
 	import flash.geom.ColorTransform;
 	
 	import onyx.controls.Control;
@@ -41,16 +39,24 @@ package ui.controls {
 	
 	import ui.core.UIObject;
 	import ui.text.TextField;
+	import flash.utils.Dictionary;
 
 	/**
 	 * 	Base UIControl class
 	 */
 	public class UIControl extends UIObject implements IDisposable {
+		
+		/**
+		 * 
+		 */
+		public static const controls:Dictionary	= new Dictionary(true);
 
 		/**
 		 * 	@constructor
 		 */
 		public function UIControl(options:UIOptions, movesToTop:Boolean = false, label:String = null):void {
+			
+			controls[this] = null;
 			
 			if (options) {
 			

@@ -59,14 +59,23 @@ package ui.states {
 		private var _label:TextField		= new TextField(400,125);
 		
 		/**
-		 * 
+		 * 	@private
 		 */
 		private var _states:Array;
+		
+		/**
+		 * 
+		 */
+		public function DisplayStartState(states:Array):void {
+			
+			// save states to run
+			_states = states;
+		}
 
 		/**
 		 * 	Initialize
 		 */
-		override public function initialize(... rest:Array):void {
+		override public function initialize():void {
 			
 			// create the image and a label
 			_image = new OnyxStartUpImage();
@@ -87,10 +96,6 @@ package ui.states {
 			_label.selectable		= false;
 			_label.x				= 683;
 			_label.y				= 437;
-			
-			// save states to run
-			_states = rest;
-			
 		}
 		
 		/**
@@ -148,7 +153,7 @@ package ui.states {
 			ROOT.addChild(MenuWindow.instance);
 			
 			// add a display
-			var display:Display = Onyx.createDisplay(STAGE.stageWidth - 320, 525, 1, 1, !SETTING_SUPPRESS_DISPLAYS);
+			var display:Display = Onyx.createDisplay(STAGE.stageWidth - 640, 0, 2, 2, !SETTING_SUPPRESS_DISPLAYS);
 			display.createLayers(5);
 			
 			// loop through and load states			

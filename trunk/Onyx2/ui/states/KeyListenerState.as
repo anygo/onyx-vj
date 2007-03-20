@@ -42,24 +42,39 @@ package ui.states {
 
 	public final class KeyListenerState extends ApplicationState {
 		
-		public static var SELECT_PAGE_0:int	= 81;
-		public static var SELECT_PAGE_1:int	= 87;
-		public static var SELECT_PAGE_2:int	= 69;
+		public static var SELECT_FILTER_UP:int		= 38;
+		public static var SELECT_FILTER_DOWN:int	= 40;
 		
-		override public function initialize(... args:Array):void {
+		public static var SELECT_LAYER_PREV:int		= 37;
+		public static var SELECT_LAYER_NEXT:int		= 39;
+		public static var SELECT_PAGE_0:int			= 81;
+		public static var SELECT_PAGE_1:int			= 87;
+		public static var SELECT_PAGE_2:int			= 69;
+		public static var SELECT_LAYER_0:int		= 49;
+		public static var SELECT_LAYER_1:int		= 50;
+		public static var SELECT_LAYER_2:int		= 51;
+		public static var SELECT_LAYER_3:int		= 52;
+		public static var SELECT_LAYER_4:int		= 53;
+		
+		override public function initialize():void {
 			
 			// listen for keys
 			ROOT.addEventListener(KeyboardEvent.KEY_DOWN, _onKeyPress);
 		}
 		
 		/**
+		 * 
+		 */
+		override public function pause():void {
+
+			// remove listener
+			ROOT.removeEventListener(KeyboardEvent.KEY_DOWN, _onKeyPress);
+		}
+		
+		/**
 		 * 	Terminates the keylistener
 		 */
 		override public function terminate():void {
-			
-			// remove listener
-			ROOT.removeEventListener(KeyboardEvent.KEY_DOWN, _onKeyPress);
-
 		}
 		
 		/**
@@ -70,32 +85,40 @@ package ui.states {
 			var layer:UILayer;
 			
 			switch (event.keyCode) {
-				case 37:
+				case SELECT_LAYER_PREV:
 					layer = UILayer.getLayerAt(UILayer.selectedLayer.index - 1);
 					if (layer) {
 						UILayer.selectLayer(layer);
 					}
 					
 					break;
-				case 39:
+				case SELECT_LAYER_NEXT:
 					layer = UILayer.getLayerAt(UILayer.selectedLayer.index + 1);
 					if (layer) {
 						UILayer.selectLayer(layer);
 					}
 
 					break;
-				case 38:
+				case SELECT_FILTER_UP:
 					UILayer.selectedLayer.selectFilterUp(true);
 					break;
-				case 40:
+				case SELECT_FILTER_DOWN:
 					UILayer.selectedLayer.selectFilterUp(false);
 					break;
-				case 49:
-				case 50:
-				case 51:
-				case 52:
-				case 53:
-					UILayer.selectLayer(UILayer.layers[event.keyCode - 49]);
+				case SELECT_LAYER_0:
+					UILayer.selectLayer(UILayer.layers[0]);
+					break;
+				case SELECT_LAYER_1:
+					UILayer.selectLayer(UILayer.layers[1]);
+					break;
+				case SELECT_LAYER_2:
+					UILayer.selectLayer(UILayer.layers[2]);
+					break;
+				case SELECT_LAYER_3:
+					UILayer.selectLayer(UILayer.layers[3]);
+					break;
+				case SELECT_LAYER_4:
+					UILayer.selectLayer(UILayer.layers[4]);
 					break;
 				case SELECT_PAGE_0:
 				

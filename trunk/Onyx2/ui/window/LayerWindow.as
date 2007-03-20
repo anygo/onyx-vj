@@ -24,7 +24,7 @@ package ui.window {
 			super(null, 0, 0, 0, 0);
 
 			// listen and create layer controls
-			var display:IDisplay = Onyx.displays[0];
+			var display:IDisplay = Display.getDisplay(0);
 			display.addEventListener(DisplayEvent.LAYER_CREATED, _onLayerCreate);
 			
 			// create already created layers

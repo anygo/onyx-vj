@@ -41,17 +41,31 @@ package ui.window {
 	import onyx.core.*;
 	import onyx.display.*;
 	import onyx.events.TempoEvent;
+	import onyx.file.FileBrowser;
+	import onyx.jobs.*;
+	import onyx.states.StateManager;
 	
 	import ui.controls.*;
 	import ui.core.UIObject;
+	import ui.states.MidiLearnState;
 	import ui.styles.*;
 
 	public final class SettingsWindow extends Window {
 
 		/**
+		 * 
+		 */
+		private var _saveButton:TextButton;
+
+		/**
 		 * 	@private
 		 */
 		private var _controlXML:TextButton;
+
+		/**
+		 * 	@private
+		 */
+		private var _midiButton:TextButton;
 		
 		/**
 		 * 	@private
@@ -62,7 +76,6 @@ package ui.window {
 		 * 	@private
 		 */
 		private var _controlActive:DropDown
-
 		
 		/**
 		 * 	@private
@@ -78,7 +91,6 @@ package ui.window {
 		 * 	@private
 		 */
 		private var _samples:Array			= [0];
-		
 		/**
 		 * 	@private
 		 */
@@ -91,16 +103,17 @@ package ui.window {
 			
 			super('SETTINGS WINDOW', 202, 100, 200, 544);
 			
-			var display:IDisplay	= Onyx.displays[0];
+			var display:IDisplay	= Display.getDisplay(0);
 			var control:Control;
 
 			// create new ui options
 			var options:UIOptions	= new UIOptions();
 			options.width			= 50;
-			
 
 			// controls for display
 			_controlXML				= new TextButton(options, 'save layers');
+			_saveButton				= new TextButton(options, 'save jpgs');
+			_midiButton				= new TextButton(options, 'midi learn');
 			
 			// tempo controls
 			_controlTempo			= new SliderV(options, _tempo.controls.getControl('tempo'));
@@ -111,7 +124,9 @@ package ui.window {
 				_controlActive,	2,		20,
 				_controlTempo,	60,		20,
 				_tapTempo,		118,	20,
-				_controlXML,	2,		40
+				_controlXML,	2,		40,
+				_saveButton,	2,		60,
+				_midiButton,	2,		80
 			);
 
 			// start the timer
@@ -122,7 +137,17 @@ package ui.window {
 			
 			// xml
 			_controlXML.addEventListener(MouseEvent.MOUSE_DOWN, _onMouseDown);
+			_saveButton.addEventListener(MouseEvent.MOUSE_DOWN, _onSaveDown);
+			_midiButton.addEventListener(MouseEvent.MOUSE_DOWN, _onMidiDown);
 			
+		}
+
+		/**
+		 * 	@private
+		 */
+		private function _onMidiDown(event:MouseEvent):void {
+			StateManager.loadState(new MidiLearnState());
+			event.stopPropagation();
 		}
 
 		/**
@@ -168,6 +193,13 @@ package ui.window {
 		}
 		
 		/**
+		 * 
+		 */
+		private function _onSaveDown(event:MouseEvent):void {
+			new SaveJob(Display.getDisplay(0), 100);
+		}
+		
+		/**
 		 * 	@private
 		 */
 		private function _onTempoOff(event:TimerEvent):void {
@@ -180,7 +212,8 @@ package ui.window {
 		 * 	@private
 		 */
 		private function _onMouseDown(event:MouseEvent):void {
-			var display:Display = Onyx.displays[0];
+			
+			var display:Display = Display.getDisplay(0);
 			var text:String		= display.toXML().normalize();
 			
 			var popup:TextControlPopUp = new TextControlPopUp(this, 200, 200, 'Copied to clipboard\n\n' + text);
@@ -189,9 +222,16 @@ package ui.window {
 			var arr:Array = text.split(String.fromCharCode(10));
 			text		= arr.join(String.fromCharCode(13,10));
 			
-			System.setClipboard(text);
+			var bytes:ByteArray = new ByteArray();
+			bytes.writeUTFBytes(text);
+			
+			FileBrowser.save('test.mix', bytes, _onFileSaved);
 			
 			event.stopPropagation();
+		}
+		
+		private function _onFileSaved():void {
+			trace('saved');
 		}
 	}
 }
@@ -208,11 +248,9 @@ class TempoShape extends Sprite {
 	 */
 	public function TempoShape():void {
 		
-		mouseChildren = false;
 		graphics.beginFill(0xAAAAAA);
 		graphics.drawRect(0,0,20,10);
 		graphics.endFill();
 		
-		cacheAsBitmap = true;
 	}
 }

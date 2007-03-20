@@ -164,8 +164,8 @@ package ui.controls.filter {
 	
 					selectFilter(filter);
 					
-					var state:FilterMoveState = new FilterMoveState();
-					StateManager.loadState(state, filter, _dict);
+					var state:FilterMoveState = new FilterMoveState(filter, _dict);
+					StateManager.loadState(state);
 
 				}
 			}

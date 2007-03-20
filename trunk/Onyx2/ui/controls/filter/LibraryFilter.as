@@ -37,9 +37,10 @@ package ui.controls.filter {
 	import ui.controls.ButtonClear;
 	import ui.controls.UIControl;
 	import ui.core.ToolTipManager;
+	import ui.core.UIObject;
 	import ui.text.TextField;
 	
-	public final class LibraryFilter extends UIControl {
+	public final class LibraryFilter extends UIObject {
 		
 		/**
 		 * 	@private
@@ -66,8 +67,6 @@ package ui.controls.filter {
 		 * 	@constructor
 		 */
 		public function LibraryFilter(plugin:Plugin):void {
-			
-			super(null);
 			
 			_plugin = plugin;
 			_draw();

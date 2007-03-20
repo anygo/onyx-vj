@@ -38,6 +38,9 @@ package ui.window {
 	
 	import ui.layer.UIDisplay;
 	
+	/**
+	 * 	Display Window
+	 */
 	public final class DisplayWindow extends Window {
 		
 		/**
@@ -50,7 +53,7 @@ package ui.window {
 		 * 	@private
 		 * 	The display controls
 		 */
-		// private var _preview:Bitmap		= new Bitmap();
+		private var _preview:Bitmap		= new Bitmap();
 		
 		/**
 		 * 	@constructor
@@ -59,7 +62,7 @@ package ui.window {
 			
 			super(null, 286, 240, 412, 500);
 			
-			_display	= new UIDisplay(Onyx.displays[0]);
+			_display	= new UIDisplay(Display.getDisplay(0));
 			
 			_display.x	= 96;
 			_display.y	= 102;

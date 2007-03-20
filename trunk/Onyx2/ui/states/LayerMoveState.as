@@ -32,12 +32,13 @@ package ui.states {
 	
 	import flash.events.MouseEvent;
 	
+	import onyx.constants.*;
+	import onyx.controls.Control;
+	import onyx.layer.Layer;
 	import onyx.states.ApplicationState;
 	import onyx.states.StateManager;
-	import onyx.layer.Layer;
 	
 	import ui.layer.UILayer;
-	import onyx.controls.Control;
 
 	/**
 	 * 	When a layer is clicked and dragged, this state allows the layer to be moved by dragging
@@ -47,24 +48,29 @@ package ui.states {
 		/**
 		 * 	@private
 		 */		
-		private var origin:UILayer;
+		private var _origin:UILayer;
+		
+		/**
+		 * 	@constructor
+		 */
+		public function LayerMoveState(origin:UILayer):void {
+			_origin = origin;
+		}
 		
 		/**
 		 * 
 		 */
-		override public function initialize(... args:Array):void {
-
-			origin = args[0];
+		override public function initialize():void {
 
 			// listen for rollover events for all layers except the one that originated the layer
 			for each (var layer:UILayer in UILayer.layers) {
-				if (layer !== origin) {
+				if (layer !== _origin) {
 					layer.addEventListener(MouseEvent.MOUSE_OVER, _onLayerOver);
 				}
 			}
 
 			// listen for mouse up
-			origin.stage.addEventListener(MouseEvent.MOUSE_UP, _onMouseUp);
+			STAGE.addEventListener(MouseEvent.MOUSE_UP, _onMouseUp);
 		}
 		
 		/**
@@ -73,14 +79,14 @@ package ui.states {
 		 */
 		private function _onLayerOver(event:MouseEvent):void {
 			var layer:UILayer = event.currentTarget as UILayer;
-			origin.moveLayer(layer.index);
+			_origin.moveLayer(layer.index);
 
 			// if control key is down, swap the blendModes			
 			if (event.shiftKey) {
-				var originBlend:String	= origin.blendMode;
+				var originBlend:String	= _origin.blendMode;
 				var newBlend:String		= layer.blendMode;
 				
-				var originControl:Control = origin.layer.properties.blendMode;
+				var originControl:Control = _origin.layer.properties.blendMode;
 				var newControl:Control = layer.layer.properties.blendMode;
 				
 				originControl.value = newBlend;
@@ -99,15 +105,15 @@ package ui.states {
 		 * 	Terminates state
 		 */
 		override public function terminate():void {
-			if (origin) {
-				origin.stage.removeEventListener(MouseEvent.MOUSE_UP, _onMouseUp);
+			if (_origin) {
+				STAGE.removeEventListener(MouseEvent.MOUSE_UP, _onMouseUp);
 			}
 
 			for each (var layer:UILayer in UILayer.layers) {
 				layer.removeEventListener(MouseEvent.MOUSE_OVER, _onLayerOver);
 			}
 			
-			origin = null;
+			_origin = null;
 		}
 	}
 }

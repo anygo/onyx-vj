@@ -194,7 +194,7 @@ package ui.layer {
 										props.color,
 										props.threshold,
 										props.framerate,
-										props.muted
+										props.visible
 				),
 				new LayerPage('FILTERS'),
 				new LayerPage('CUSTOM')
@@ -420,12 +420,7 @@ package ui.layer {
 			if (_layer.controls) {
 				var page:LayerPage = pages[2];
 				page.controls = _layer.controls;
-
-				// check if we're on the custom controls page
-				if (selectedPage == 2) {
-					controlPage.addControls(_layer.controls);
-				}
-
+				selectPage(2);
 			}
 			
 			// set name
@@ -526,7 +521,7 @@ package ui.layer {
 				
 				} else {
 					
-					StateManager.loadState(new LayerMoveState(), this);
+					StateManager.loadState(new LayerMoveState(this));
 					
 				}
 				
@@ -584,9 +579,9 @@ package ui.layer {
 			
 			if (filterPane.selectedFilter) {
 				var index:int = filterPane.selectedFilter.filter.index + (up ? -1 : 1);
-				filterPane.selectFilter(_layer.filters[index]);
+				filterPane.selectFilter(filterPane.getFilter(_layer.filters[index]));
 			} else {
-				filterPane.selectFilter(_layer.filters[int((up) ? _layer.filters.length - 1 : 0)]);
+				filterPane.selectFilter(filterPane.getFilter(_layer.filters[int((up) ? _layer.filters.length - 1 : 0)]));
 			}
 
 		}

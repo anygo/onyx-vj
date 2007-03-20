@@ -55,13 +55,18 @@ package ui.states {
 		 * 	@private
 		 */
 		private var displayState:DisplayStartState;
+		
+		/**
+		 * 
+		 */
+		public function SettingsLoadState(state:DisplayStartState):void {
+			displayState = state;
+		}
 
 		/**
 		 * 
 		 */
-		override public function initialize(... args:Array):void {
-			
-			displayState = args[0];
+		override public function initialize():void {
 			
 			// bypass settings for now
 			

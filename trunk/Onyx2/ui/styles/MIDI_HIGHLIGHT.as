@@ -28,91 +28,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package ui.controls.browser {
-	
-	import flash.display.Bitmap;
-	
-	import onyx.file.*;
-	
-	import ui.assets.AssetFolder;
-	import ui.assets.AssetFolderUp;
-	import ui.controls.ButtonClear;
-	import ui.controls.UIControl;
-	import ui.core.UIObject;
-	import ui.text.TextField;
+package ui.styles {
 
-	/**
-	 * 	Folder Control
-	 */
-	public final class FolderControl extends UIObject {
-		
-		/**
-		 * 	@private
-		 */
-		private static const FOLDER_WIDTH:int = 90;
-		
-		/**
-		 * 	@private
-		 */
-		private var _label:TextField = new TextField(FOLDER_WIDTH,10);
+	import flash.geom.ColorTransform;
+	
+	public const MIDI_HIGHLIGHT:ColorTransform = new ColorTransform(1,1,1,.5,160,80,80);
 
-		/**
-		 * 	@private
-		 */
-		private var _img:Bitmap;
-
-		/**
-		 * 	@private
-		 */
-		private var _btn:ButtonClear = new ButtonClear(FOLDER_WIDTH + 2,11);
-		
-		/**
-		 * 	@private
-		 */
-		private var _folder:Folder;
-		
-		/**
-		 * 	@constructor
-		 */
-		public function FolderControl(folder:Folder, useArrowFolder:Boolean = false):void {
-			
-			_folder = folder;
-			
-			if (useArrowFolder) {
-				_img = new AssetFolderUp();
-				_label.text = 'up one level';
-			} else {
-				_img = new AssetFolder();
-				_label.text = FileBrowser.getFileName(folder.path);
-			}
-			
-			_btn.x = -2;
-			_btn.y = -1;
-			_img.y = 1;
-			_label.x = 9;
-			
-			addChild(_label);
-			addChild(_img);
-			addChild(_btn);
-			
-		}
-		
-		/**
-		 * 	Returns path
-		 */
-		public function get path():String {
-			return _folder.path;
-		}
-		
-		/**
-		 * 	Disposes the control
-		 */
-		override public function dispose():void {
-			_label = null;
-			_img = null;
-			_btn = null;
-			
-			super.dispose();
-		}
-	}
 }

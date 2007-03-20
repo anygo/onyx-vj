@@ -37,6 +37,7 @@ package ui.window {
 	import onyx.core.*;
 	import onyx.file.*;
 	import onyx.layer.LayerSettings;
+	import onyx.settings.*;
 	
 	import ui.assets.*;
 	import ui.controls.*;
@@ -134,7 +135,7 @@ package ui.window {
 			addChild(_buttonCameras);
 			
 			// query default folder
-			FileBrowser.query(FileBrowser.initialDirectory + Settings.INITIAL_APP_DIRECTORY, _onReceive, new SWFFilter());
+			FileBrowser.query(FileBrowser.initialDirectory + INITIAL_APP_DIRECTORY, _onReceive, new SWFFilter());
 		}
 		
 		/**
@@ -144,8 +145,8 @@ package ui.window {
 		private function _onFileDown(event:MouseEvent):void {
 			switch (event.currentTarget) {
 				case _buttonFiles:
-					if (_path !== FileBrowser.initialDirectory + Settings.INITIAL_APP_DIRECTORY) {
-						FileBrowser.query(FileBrowser.initialDirectory + Settings.INITIAL_APP_DIRECTORY, _onReceive, new SWFFilter());
+					if (_path !== FileBrowser.initialDirectory + INITIAL_APP_DIRECTORY) {
+						FileBrowser.query(FileBrowser.initialDirectory + INITIAL_APP_DIRECTORY, _onReceive, new SWFFilter());
 					}
 					break;
 				case _buttonCameras:

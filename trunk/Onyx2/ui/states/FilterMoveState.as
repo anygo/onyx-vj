@@ -31,24 +31,27 @@
 package ui.states {
 	
 	import flash.events.MouseEvent;
+	import flash.utils.Dictionary;
 	
+	import onyx.constants.STAGE;
 	import onyx.states.ApplicationState;
 	import onyx.states.StateManager;
 	
 	import ui.controls.filter.LayerFilter;
-	import flash.utils.Dictionary;
 
 	public final class FilterMoveState extends ApplicationState {
 		
 		private var _origin:LayerFilter;
 		private var _filters:Dictionary;
 		
-		override public function initialize(... args:Array):void {
+		public function FilterMoveState(origin:LayerFilter, filters:Dictionary):void {
+			_origin = origin;
+			_filters = filters;
+		}
+		
+		override public function initialize():void {
 
-			_origin = args[0];
-			_filters = args[1];
-			
-			_origin.stage.addEventListener(MouseEvent.MOUSE_UP, _onMouseUp);
+			STAGE.addEventListener(MouseEvent.MOUSE_UP, _onMouseUp);
 
 			for each (var filter:LayerFilter in _filters) {
 				if (filter !== _origin) {
@@ -77,7 +80,7 @@ package ui.states {
 		 * 	Terminate
 		 */
 		override public function terminate():void {
-			_origin.stage.removeEventListener(MouseEvent.MOUSE_UP, _onMouseUp);
+			STAGE.removeEventListener(MouseEvent.MOUSE_UP, _onMouseUp);
 
 			for each (var filter:LayerFilter in _filters) {
 				filter.removeEventListener(MouseEvent.MOUSE_OVER, _onMouseOver);

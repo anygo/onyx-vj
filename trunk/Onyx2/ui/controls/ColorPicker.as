@@ -80,6 +80,9 @@ package ui.controls {
 			
 			addEventListener(MouseEvent.MOUSE_DOWN, _onMouseDown);
 			
+			useHandCursor	= true;
+			buttonMode		= true;
+			mouseChildren	= false;
 		}
 		
 		/**

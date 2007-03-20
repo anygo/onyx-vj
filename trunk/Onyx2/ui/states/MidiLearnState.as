@@ -28,91 +28,47 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package ui.controls.browser {
+package ui.states {
 	
-	import flash.display.Bitmap;
+	import flash.events.MouseEvent;
+	import flash.utils.Dictionary;
 	
-	import onyx.file.*;
+	import onyx.constants.*;
+	import onyx.states.*;
 	
-	import ui.assets.AssetFolder;
-	import ui.assets.AssetFolderUp;
-	import ui.controls.ButtonClear;
 	import ui.controls.UIControl;
-	import ui.core.UIObject;
-	import ui.text.TextField;
+	import ui.styles.*;
+	import flash.geom.ColorTransform;
 
-	/**
-	 * 	Folder Control
-	 */
-	public final class FolderControl extends UIObject {
+	public final class MidiLearnState extends ApplicationState {
 		
-		/**
-		 * 	@private
-		 */
-		private static const FOLDER_WIDTH:int = 90;
+		public function MidiLearnState():void {
+		}
 		
-		/**
-		 * 	@private
-		 */
-		private var _label:TextField = new TextField(FOLDER_WIDTH,10);
-
-		/**
-		 * 	@private
-		 */
-		private var _img:Bitmap;
-
-		/**
-		 * 	@private
-		 */
-		private var _btn:ButtonClear = new ButtonClear(FOLDER_WIDTH + 2,11);
-		
-		/**
-		 * 	@private
-		 */
-		private var _folder:Folder;
-		
-		/**
-		 * 	@constructor
-		 */
-		public function FolderControl(folder:Folder, useArrowFolder:Boolean = false):void {
-			
-			_folder = folder;
-			
-			if (useArrowFolder) {
-				_img = new AssetFolderUp();
-				_label.text = 'up one level';
-			} else {
-				_img = new AssetFolder();
-				_label.text = FileBrowser.getFileName(folder.path);
+		override public function initialize():void {
+			for (var i:Object in UIControl.controls) {
+				var control:UIControl = i as UIControl;
+				UIControl.controls[control] = control.transform.colorTransform;
+				control.transform.colorTransform = MIDI_HIGHLIGHT;
 			}
 			
-			_btn.x = -2;
-			_btn.y = -1;
-			_img.y = 1;
-			_label.x = 9;
-			
-			addChild(_label);
-			addChild(_img);
-			addChild(_btn);
-			
+			STAGE.addEventListener(MouseEvent.MOUSE_DOWN, _onMouseDown, true, 9999);
 		}
 		
-		/**
-		 * 	Returns path
-		 */
-		public function get path():String {
-			return _folder.path;
+		private function _onMouseDown(event:MouseEvent):void {
+			event.stopPropagation();
+			StateManager.removeState(this);
 		}
 		
-		/**
-		 * 	Disposes the control
-		 */
-		override public function dispose():void {
-			_label = null;
-			_img = null;
-			_btn = null;
-			
-			super.dispose();
+		override public function terminate():void {
+			STAGE.removeEventListener(MouseEvent.MOUSE_DOWN, _onMouseDown, true);
+
+			for (var i:Object in UIControl.controls) {
+				var control:UIControl = i as UIControl;
+				control.transform.colorTransform = UIControl.controls[control] || new ColorTransform();
+				UIControl.controls[control] = null;
+			}
 		}
+		
 	}
 }

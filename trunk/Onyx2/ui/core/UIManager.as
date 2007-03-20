@@ -94,9 +94,9 @@ package ui.core {
 		 */
 		private static function _onInitializeStart(event:ApplicationEvent):void {
 			
-			displayState = new DisplayStartState();
+			displayState = new DisplayStartState(states);
 			
-			StateManager.loadState.apply(StateManager, [displayState].concat(states));
+			StateManager.loadState(displayState);
 			
 			states = null;
 		}
@@ -113,7 +113,7 @@ package ui.core {
 			engine.removeEventListener(ApplicationEvent.ONYX_STARTUP_START, _onInitializeStart);
 			engine.removeEventListener(ApplicationEvent.ONYX_STARTUP_END, _onInitializeEnd);
 		
-			StateManager.loadState(new SettingsLoadState(), displayState);
+			StateManager.loadState(new SettingsLoadState(displayState));
 			displayState = null;
 
 		}

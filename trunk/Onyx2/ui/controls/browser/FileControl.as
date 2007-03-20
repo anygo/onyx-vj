@@ -30,10 +30,7 @@
  */
 package ui.controls.browser {
 	
-	import flash.display.Bitmap;
-	import flash.display.DisplayObject;
-	import flash.display.Loader;
-	import flash.display.LoaderInfo;
+	import flash.display.*;
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
 	import flash.filters.DropShadowFilter;
@@ -44,13 +41,14 @@ package ui.controls.browser {
 	
 	import ui.assets.AssetCamera;
 	import ui.controls.*;
+	import ui.core.UIObject;
 	import ui.styles.*;
 	import ui.text.TextField;
 	
 	/**
 	 * 	Thumbnail for file
 	 */
-	public final class FileControl extends UIControl {
+	public final class FileControl extends UIObject {
 		
 		/**
 		 * 	@private
@@ -76,8 +74,6 @@ package ui.controls.browser {
 		 * 	@constructor
 		 */
 		public function FileControl(file:File):void {
-			
-			super(null);
 			
 			_file = file;
 			
