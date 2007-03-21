@@ -98,7 +98,7 @@ package ui.controls {
 		 * 	@private
 		 */
 		private function _onClick(event:MouseEvent):void {
-			this.enabled = reg.enabled = !reg.enabled;
+			this.enabled = reg.visible = !reg.visible;
 		}
 	}
 }

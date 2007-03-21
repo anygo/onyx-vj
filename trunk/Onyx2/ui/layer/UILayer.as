@@ -36,6 +36,7 @@ package ui.layer {
 	import flash.geom.*;
 	import flash.utils.Timer;
 	
+	import onyx.constants.*;
 	import onyx.controls.*;
 	import onyx.core.Onyx;
 	import onyx.events.*;
@@ -220,9 +221,11 @@ package ui.layer {
 				selectLayer(this);
 			}
 			
+			// if there's already a file in there, set it to update
 			if (_layer.path) {
 				_onLayerLoad();
 			}
+			
 		}
 
 		/**
@@ -354,7 +357,8 @@ package ui.layer {
 		private function _draw():void {
 			
 			// resize preview
-			_preview.scaleX = _preview.scaleY = .6;
+			_preview.scaleX = .6 * (320 / BITMAP_WIDTH);
+			_preview.scaleY = .6 * (240 / BITMAP_HEIGHT);
 			
 			// make the filename text have a drop shadow
 			_filename.filters = [new DropShadowFilter(1, 45,0x000000, 1, 0, 0, 1)];

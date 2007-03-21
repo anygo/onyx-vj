@@ -48,6 +48,7 @@ package ui.core {
 	import ui.settings.*;
 	import ui.states.*;
 	import ui.window.*;
+	import flash.events.Event;
 
 	/**
 	 * 	Class that handles top-level management of all ui objects
@@ -94,10 +95,13 @@ package ui.core {
 		 */
 		private static function _onInitializeStart(event:ApplicationEvent):void {
 			
+			// create the loading window
 			displayState = new DisplayStartState(states);
 			
+			// load state
 			StateManager.loadState(displayState);
 			
+			// remove the states
 			states = null;
 		}
 		
@@ -113,9 +117,21 @@ package ui.core {
 			engine.removeEventListener(ApplicationEvent.ONYX_STARTUP_START, _onInitializeStart);
 			engine.removeEventListener(ApplicationEvent.ONYX_STARTUP_END, _onInitializeEnd);
 		
-			StateManager.loadState(new SettingsLoadState(displayState));
+			// load settings
+			var state:SettingsLoadState = new SettingsLoadState();
+			state.addEventListener(Event.COMPLETE, _onSettingsComplete);
+			StateManager.loadState(state);
+		}
+		
+		/**
+		 * 
+		 */
+		private static function _onSettingsComplete(event:Event):void {
+			var state:SettingsLoadState = event.currentTarget as SettingsLoadState;
+			state.removeEventListener(Event.COMPLETE, _onSettingsComplete);
+			
+			StateManager.removeState(displayState);
 			displayState = null;
-
 		}
 	}
 }

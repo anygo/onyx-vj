@@ -68,7 +68,7 @@ package ui.window {
 		 */
 		public function Console():void {
 			
-			super('console', 190, 180, 6, 582);
+			super('console', 190, 180);
 
 			onyx.core.Console.getInstance().addEventListener(ConsoleEvent.OUTPUT, _onConsole);
 			

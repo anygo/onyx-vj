@@ -35,11 +35,14 @@ package ui.states {
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
 	
+	import onyx.constants.*;
 	import onyx.core.Console;
 	import onyx.filter.Filter;
 	import onyx.plugin.Plugin;
-	import onyx.states.ApplicationState;
-	import onyx.states.StateManager;
+	import onyx.states.*;
+	import onyx.utils.string.parseBoolean;
+	
+	import ui.window.WindowRegistration;
 
 	/**
 	 * 	Load settings
@@ -49,18 +52,12 @@ package ui.states {
 		/**
 		 * 	Path
 		 */
-		public static const PATH:String = 'settings.xml';
+		public static const PATH:String = 'settings/settings.xml';
 
-		/**
-		 * 	@private
-		 */
-		private var displayState:DisplayStartState;
-		
 		/**
 		 * 
 		 */
-		public function SettingsLoadState(state:DisplayStartState):void {
-			displayState = state;
+		public function SettingsLoadState():void {
 		}
 
 		/**
@@ -68,14 +65,10 @@ package ui.states {
 		 */
 		override public function initialize():void {
 			
-			// bypass settings for now
-			
-			// var loader:URLLoader = new URLLoader();
-			// loader.addEventListener(Event.COMPLETE,			_onLoad);
-			// loader.addEventListener(IOErrorEvent.IO_ERROR,	_onLoad);
-			// loader.load(new URLRequest(PATH));
-			
-			StateManager.removeState(this);
+			var loader:URLLoader = new URLLoader();
+			loader.addEventListener(Event.COMPLETE,			_onLoad);
+			loader.addEventListener(IOErrorEvent.IO_ERROR,	_onLoad);
+			loader.load(new URLRequest(PATH));
 		}
 		
 		/**
@@ -88,10 +81,11 @@ package ui.states {
 			
 			try {
 				var xml:XML = new XML(loader.data);
-				parse(xml);
 			} catch (e:Error) {
-				Console.output(e);
+				return Console.error(e);
 			}
+
+			parse(xml);
 		}
 
 		/**
@@ -100,21 +94,58 @@ package ui.states {
 		 */
 		private function parse(xml:XML):void {
 			
+			// set default core settings
+			if (xml.core.bitmapData) {
+				BITMAP_WIDTH = xml.core.bitmapData.@width;
+				BITMAP_HEIGHT = xml.core.bitmapData.@height;
+			}
+			
+			// set blend modes
+			if (xml.core.blendModes) {
+				while (BLEND_MODES.length) {
+					BLEND_MODES.pop();
+				}
+				
+				for each (var mode:XML in xml.core.blendModes.*) {
+					BLEND_MODES.push(String(mode.name()));
+				}
+			}
+			
+			// re-order the filters based on settings
 			for each (var filter:XML in xml.filters.order.filter) {
 				var plugin:Plugin = Filter.getDefinition(filter.@name);
 				plugin.index = filter.@index;
 			}
 			
+			// stored keys
+			if (xml.keys) {
+				
+				for each (var key:XML in xml.keys.*) {
+					try {
+						KeyListenerState[key.name()] = key;
+					} catch (e:Error) {
+						Console.error(e.message);
+					}
+				}
+			}
+			
+			// set window locations / enabled
+			if (xml.windows) {
+				for each (var windowXML:XML in xml.windows.*) {
+					var reg:WindowRegistration = WindowRegistration.getWindow(windowXML.@name);
+					if (reg) {
+						reg.x		= windowXML.@x;
+						reg.y		= windowXML.@y;
+						reg.enabled = parseBoolean(windowXML.@enabled);
+					}
+				}
+			}
+
 			// kill myself
 			StateManager.removeState(this);
 		}
 		
 		override public function terminate():void {
-
-			// remove the startup image
-			StateManager.removeState(displayState);
-			displayState = null;
-
 		}
 	}
 }

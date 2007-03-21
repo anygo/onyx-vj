@@ -182,7 +182,7 @@ package ui.controls {
 			for (var count:int = 0; count < len; count++) {
 				
 				var item:Option	= new Option(
-					(_control.binding) ? (_data[count] ? _data[count][_control.binding] : 'None') : _data[count], count, _width, _control.binding)
+					(_control.binding) ? (_data[count] ? _data[count][_control.binding] : 'None') : _data[count] || 'off', count, _width, _control.binding)
 				;
 				
 				item.addEventListener(MouseEvent.MOUSE_OVER, _onRollOver);
@@ -282,7 +282,7 @@ final class Option extends Sprite {
 		_label				= new TextField(width, 9);
 		_label.x			= 2;
 		_label.y			= 1;
-		_label.text = text.toUpperCase();
+		_label.text			= text.toUpperCase();
 		
 		graphics.beginFill(DROPDOWN_DEFAULT);
 		graphics.drawRect(0, 0, width, DropDown.ITEM_HEIGHT);

@@ -28,48 +28,35 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package {
+package ui.window {
 	
-	import flash.display.*;
-	import flash.events.Event;
-	import flash.system.Security;
-	import flash.ui.*;
+	import onyx.controls.ControlInt;
+	import onyx.controls.ControlRange;
+	import onyx.controls.Controls;
+	import onyx.controls.IControlObject;
+	import onyx.core.Onyx;
+	import onyx.events.TransitionEvent;
+	import onyx.layer.Layer;
+	import onyx.plugin.Plugin;
+	import onyx.transition.Transition;
 	
-	import onyx.file.http.HTTPAdapter;
-	import onyx.states.BroadcastState;
-	import onyx.utils.array.*;
-	
-	import ui.assets.AssetLayerTab;
+	import ui.controls.DropDown;
+	import ui.controls.SliderV;
+	import ui.controls.*;
 	import ui.core.UIManager;
-	import ui.core.UIObject;
-	import ui.states.KeyListenerState;
-	import ui.states.SettingsLoadState;
+	import ui.styles.UI_OPTIONS;
 	
-	[SWF(width="1024", height="768", backgroundColor="#141515", frameRate='24')]
-	[ExcludeClass]
-	public class Onyx2 extends UIObject {
-		
-		/**
-		 * 	@constructor
-		 */
-		public function Onyx2():void {
-			
-			// no scale please thanks
-			stage.align = StageAlign.TOP_LEFT;
-			stage.scaleMode = StageScaleMode.NO_SCALE;
-			stage.quality = StageQuality.LOW;
-			
-			// hide context menu
-			var menu:ContextMenu = new ContextMenu();
-			menu.hideBuiltInItems();
-			contextMenu = menu;
+	public final class KeysWindow extends Window {
 
-			// init
-			UIManager.initialize(
-				stage, 
-				new HTTPAdapter(),
-				new KeyListenerState()
-			);
+		/**
+		 * 	@Constructor
+		 */
+		public function KeysWindow():void {
+
+			// position and create			
+			super('KEY MAPPING', 190, 34);
+			
 		}
+		
 	}
 }

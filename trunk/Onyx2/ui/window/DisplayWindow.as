@@ -33,11 +33,12 @@ package ui.window {
 	
 	import flash.display.Bitmap;
 	
+	import onyx.constants.*;
 	import onyx.core.Onyx;
 	import onyx.display.Display;
 	
 	import ui.layer.UIDisplay;
-	
+
 	/**
 	 * 	Display Window
 	 */
@@ -60,7 +61,7 @@ package ui.window {
 		 */
 		public function DisplayWindow():void {
 			
-			super(null, 286, 240, 412, 500);
+			super(null, 286, BITMAP_HEIGHT);
 			
 			_display	= new UIDisplay(Display.getDisplay(0));
 			

@@ -54,7 +54,7 @@ package ui.window {
 		 */
 		public function MemoryWindow():void {
 			
-			super('MEMORY', 200,200,200,200);
+			super('MEMORY', 200,200);
 
 			_memory.y = 12;
 			addChild(_memory);

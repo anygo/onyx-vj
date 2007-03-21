@@ -70,6 +70,7 @@ package ui.states {
 			
 			// save states to run
 			_states = states;
+			
 		}
 
 		/**
@@ -87,6 +88,8 @@ package ui.states {
 			// listen for mouse clicks
 			ROOT.addEventListener(MouseEvent.MOUSE_DOWN,	_captureEvents,	true, -1);
 			ROOT.addEventListener(MouseEvent.MOUSE_UP,		_captureEvents,	true, -1);
+			
+			ROOT.addEventListener(Event.ADDED,				_onItemAdded);
 			
 			// listen for updates
 			var console:onyx.core.Console = onyx.core.Console.getInstance();
@@ -121,8 +124,8 @@ package ui.states {
 		private function _onItemAdded(event:Event):void {
 			
 			var stage:DisplayObjectContainer = ROOT;
-			stage.setChildIndex(_image, stage.numChildren - 1);
-			stage.setChildIndex(_label, stage.numChildren);
+			stage.setChildIndex(_image, stage.numChildren - 2);
+			stage.setChildIndex(_label, stage.numChildren - 1);
 			
 		}
 
@@ -149,35 +152,30 @@ package ui.states {
 			_image = null;
 			_label = null;
 			
-			// load menu bar
-			ROOT.addChild(MenuWindow.instance);
-			
-			// add a display
-			var display:Display = Onyx.createDisplay(STAGE.stageWidth - 640, 0, 2, 2, !SETTING_SUPPRESS_DISPLAYS);
-			display.createLayers(5);
-			
 			// loop through and load states			
 			if (_states) {
 				for each (var state:ApplicationState in _states) {
 					StateManager.loadState(state);
 				}
 			}
+			
+			var window:MenuWindow = new MenuWindow();
+			
+			// load menu bar
+			ROOT.addChild(window);
+			
+			// add a display
+			var display:Display = Onyx.createDisplay(STAGE.stageWidth - 640, 0, 640 / BITMAP_WIDTH, 480 / BITMAP_HEIGHT, !SETTING_SUPPRESS_DISPLAYS);
+			display.createLayers(5);
+
+			// now add all the windows
+			window.createButtons();
+
+			// create all windows
+			WindowRegistration.createWindows();
 
 			// remove references
 			_states = null;
-			
-			// register default windows
-			MenuWindow.register(
-				new WindowRegistration('FILE BROWSER',	Browser),
-				new WindowRegistration('CONSOLE',		ui.window.Console),
-				new WindowRegistration('FILTERS',		Filters),
-				new WindowRegistration('TRANSITIONS',	TransitionWindow),
-				new WindowRegistration('SETTINGS',		SettingsWindow),
-				new WindowRegistration('LAYERS',		LayerWindow),
-				new WindowRegistration('MEMORY',		MemoryWindow, false),
-				new WindowRegistration('DISPLAY',		DisplayWindow)
-			);
-			
 		}
 	}
 }

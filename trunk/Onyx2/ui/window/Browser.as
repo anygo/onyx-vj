@@ -107,7 +107,7 @@ package ui.window {
 		 */
 		public function Browser():void {
 			
-			super('loading ... ', 396, 222, 6, 318);
+			super('loading ... ', 396, 222);
 			
 			var options:UIOptions	= new UIOptions();
 			options.width			= 90;

@@ -28,8 +28,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package ui.window
-{
+package ui.window {
+	
 	import flash.events.Event;
 	import flash.utils.getTimer;
 	

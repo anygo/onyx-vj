@@ -31,6 +31,7 @@
 package ui.window {
 	
 	import flash.display.DisplayObject;
+	import flash.utils.Dictionary;
 	
 	import onyx.constants.ROOT;
 	
@@ -38,6 +39,58 @@ package ui.window {
 	 * 	Window Registration
 	 */
 	public final class WindowRegistration {
+		
+		/**
+		 * 	All window registrations
+		 */
+		public static const registrations:Array	= register(
+			new WindowRegistration('FILE BROWSER',	Browser, 6, 318),
+			new WindowRegistration('CONSOLE',		ui.window.Console, 6, 582),
+			new WindowRegistration('FILTERS',		Filters, 412, 318),
+			new WindowRegistration('TRANSITIONS',	TransitionWindow, 6, 544),
+			new WindowRegistration('SETTINGS',		SettingsWindow, 200, 544),
+			new WindowRegistration('LAYERS',		LayerWindow, 0, 0),
+			new WindowRegistration('MEMORY',		MemoryWindow, 200,200, false),
+			new WindowRegistration('DISPLAY',		DisplayWindow, 412, 500),
+			new WindowRegistration('KEY MAPPING',	KeysWindow, 6, 544, false)
+		);
+		
+		/**
+		 * 	Returns a window based on name
+		 */
+		public static function getWindow(name:String):WindowRegistration {
+			return definition[name];
+		}
+		
+		/**
+		 * 	@private
+		 * 	Stores the window registration name indexes
+		 */
+		private static var definition:Object;
+		
+		/**
+		 * 	@private
+		 * 	Registers windows
+		 */
+		private static function register(... rest:Array):Array {
+			
+			definition = {};
+			
+			for each (var reg:WindowRegistration in rest) {
+				definition[reg.name] = reg;
+			}
+			
+			return rest;
+		}
+		
+		/**
+		 * 	Creates the windows
+		 */
+		public static function createWindows():void {
+			for each (var reg:WindowRegistration in registrations) {
+				reg.visible = reg.enabled;
+			}
+		}
 		
 		/**
 		 * 	The name of the window to put on the button
@@ -57,10 +110,27 @@ package ui.window {
 		private var window:Window;
 		
 		/**
+		 * 	The x location of the window
+		 */
+		public var x:int;
+		
+		/**
+		 * 	The y location of the window
+		 */
+		public var y:int;
+		
+		/**
+		 * 	@private
+		 */
+		public var enabled:Boolean;
+		
+		/**
 		 * 	@constructor
 		 */
-		public function WindowRegistration(name:String, definition:Class, enabled:Boolean = true):void {
+		public function WindowRegistration(name:String, definition:Class, x:int, y:int, enabled:Boolean = true):void {
 			this.name			= name;
+			this.x				= x;
+			this.y				= y;
 			this.definition		= definition;
 			this.enabled		= enabled;
 		}
@@ -68,11 +138,13 @@ package ui.window {
 		/**
 		 * 	Creates windows, etc
 		 */
-		public function set enabled(value:Boolean):void {
+		public function set visible(value:Boolean):void {
 			
 			// create the window
 			if (value && !window) {
 				this.window = ROOT.addChild(new definition()) as Window;
+				this.window.x = x;
+				this.window.y = y;
 				
 			// remove the window
 			} else if (!value && window) {
@@ -87,8 +159,15 @@ package ui.window {
 		/**
 		 * 	Gets enabled
 		 */
-		public function get enabled():Boolean {
+		public function get visible():Boolean {
 			return (window !== null);
+		}
+		
+		/**
+		 * 	Returns index
+		 */
+		public function get index():int {
+			return registrations.indexOf(this);
 		}
 	}
 }

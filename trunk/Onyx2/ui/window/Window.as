@@ -57,7 +57,7 @@ package ui.window {
 		/**
 		 * 	@constructor
 		 */
-		public function Window(text:String, width:int, height:int, x:int, y:int):void {
+		public function Window(text:String, width:int, height:int):void {
 			
 			if (text) {
 				

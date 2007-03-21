@@ -80,7 +80,7 @@ package ui.window {
 		public function Filters():void {
 			
 			// set title, etc
-			super('FILTERS', 192, 200, 412, 318);
+			super('FILTERS', 192, 200);
 			
 			// add panes
 			addChild(_normalPane);

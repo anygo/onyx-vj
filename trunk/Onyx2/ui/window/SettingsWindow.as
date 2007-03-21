@@ -91,17 +91,13 @@ package ui.window {
 		 * 	@private
 		 */
 		private var _samples:Array			= [0];
-		/**
-		 * 	@private
-		 */
-		private var _tempo:Tempo			= Tempo.getInstance();
 		
 		/**
 		 * 	@constructor
 		 */
 		public function SettingsWindow():void {
 			
-			super('SETTINGS WINDOW', 202, 100, 200, 544);
+			super('SETTINGS WINDOW', 202, 100);
 			
 			var display:IDisplay	= Display.getDisplay(0);
 			var control:Control;
@@ -116,8 +112,8 @@ package ui.window {
 			_midiButton				= new TextButton(options, 'midi learn');
 			
 			// tempo controls
-			_controlTempo			= new SliderV(options, _tempo.controls.getControl('tempo'));
-			_controlActive			= new DropDown(options, _tempo.controls.getControl('active'));
+			_controlTempo			= new SliderV(options, TEMPO.controls.getControl('tempo'));
+			_controlActive			= new DropDown(options, TEMPO.controls.getControl('snapTempo'));
 			
 			// add controls
 			addChildren(	
@@ -130,7 +126,7 @@ package ui.window {
 			);
 
 			// start the timer
-			_tempo.addEventListener(TempoEvent.CLICK, _onTempo);
+			TEMPO.addEventListener(TempoEvent.CLICK, _onTempo);
 			
 			// tap tempo click
 			_tapTempo.addEventListener(MouseEvent.MOUSE_DOWN, _onTempoDown);
@@ -172,9 +168,9 @@ package ui.window {
 				}
 
 				total /= (count - 1);
-				_tempo.tempo = total;
+				TEMPO.tempo = (total / 4);
 			} else {
-				_tempo.start();
+				TEMPO.start();
 			}
 			
 			if (_samples.length > 8) {
@@ -187,9 +183,11 @@ package ui.window {
 		 * 	@private
 		 */
 		private function _onTempo(event:TempoEvent):void {
-			_tapTempo.transform.colorTransform = (event.beat % 4 == 0) ? TEMPO_BEAT : TEMPO_CLICK;
-			_releaseTimer.addEventListener(TimerEvent.TIMER, _onTempoOff);
-			_releaseTimer.start();
+			if (event.beat % 4 === 0) {
+				_tapTempo.transform.colorTransform = (event.beat % 16 == 0) ? TEMPO_BEAT : TEMPO_CLICK;
+				_releaseTimer.addEventListener(TimerEvent.TIMER, _onTempoOff);
+				_releaseTimer.start();
+			}
 		}
 		
 		/**

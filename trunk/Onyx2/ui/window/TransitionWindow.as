@@ -70,7 +70,7 @@ package ui.window {
 		public function TransitionWindow():void {
 
 			// position and create			
-			super('TRANSITIONS', 190, 34, 6, 544);
+			super('TRANSITIONS', 190, 34);
 			
 			// add a default plugin
 			var plugin:Plugin = Transition.transitions[0];

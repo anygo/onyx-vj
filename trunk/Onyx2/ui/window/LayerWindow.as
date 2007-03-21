@@ -21,7 +21,7 @@ package ui.window {
 		public function LayerWindow():void {
 			
 			// position and create window
-			super(null, 0, 0, 0, 0);
+			super(null, 0, 0);
 
 			// listen and create layer controls
 			var display:IDisplay = Display.getDisplay(0);
