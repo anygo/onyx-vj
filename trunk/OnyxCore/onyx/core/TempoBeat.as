@@ -28,10 +28,23 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package onyx.constants {
-
-	import flash.display.*;
+package onyx.core {
 	
-	public var BITMAP_HEIGHT:int = 240;
-
+	/**
+	 *  Beats
+	 */
+	public final class TempoBeat {
+		
+		public var name:String;
+		public var mod:int;
+		
+		public function TempoBeat(name:String, mod:int):void {
+			this.name	= name;
+			this.mod	= mod;
+		}
+		
+		public function toString():String {
+			return '[ ' + name + ' ]';
+		}
+	}
 }

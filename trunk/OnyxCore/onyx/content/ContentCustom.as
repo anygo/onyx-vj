@@ -36,12 +36,13 @@ package onyx.content {
 	import flash.filters.BitmapFilter;
 	import flash.geom.*;
 	
-	import onyx.constants.POINT;
+	import onyx.constants.*;
 	import onyx.controls.Controls;
 	import onyx.core.*;
 	import onyx.layer.*;
 	import onyx.render.*;
 	import onyx.settings.LAYER_AUTOSIZE;
+
 	
 	[Event(name="filter_applied",	type="onyx.events.FilterEvent")]
 	[Event(name="filter_removed",	type="onyx.events.FilterEvent")]
@@ -77,8 +78,8 @@ package onyx.content {
 
 			// resize?
 			if (LAYER_AUTOSIZE) {
-				_ratioX = 320 / loader.contentLoaderInfo.width;
-				_ratioY = 240 / loader.contentLoaderInfo.height;
+				_ratioX = BITMAP_WIDTH / loader.contentLoaderInfo.width;
+				_ratioY = BITMAP_HEIGHT / loader.contentLoaderInfo.height;
 			}
 			
 			// pass controls

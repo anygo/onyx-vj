@@ -63,6 +63,13 @@ package onyx.core {
 		}
 		
 		/**
+		 * 	Outputs an error event to the console
+		 */
+		public static function error(e:Error):void {
+			dispatcher.dispatchEvent(new ConsoleEvent(e.message));
+		}
+		
+		/**
 		 * 	Executes a command
 		 */
 		public static function executeCommand(command:String):void {
@@ -80,7 +87,7 @@ package onyx.core {
 					try {
 						var message:String = fn.apply(null, commands);
 					} catch (e:Error) {
-						output(e.message);
+						error(e.message);
 					}
 				}
 			}

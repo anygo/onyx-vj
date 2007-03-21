@@ -34,6 +34,7 @@ package onyx.core {
 	import flash.events.TimerEvent;
 	import flash.utils.*;
 	
+	import onyx.constants.*;
 	import onyx.controls.*;
 	import onyx.events.TempoEvent;
 	
@@ -48,25 +49,13 @@ package onyx.core {
 		 * 	Gets tempo
 		 */
 		public static function get tempo():int {
-			return instance.tempo;
+			return TEMPO.tempo;
 		}
 		
 		/**
 		 * 	@private
 		 */
-		private static const instance:Tempo	= new Tempo();
-		
-		/**
-		 * 	Dispatcher
-		 */
-		public static function getInstance():Tempo {
-			return instance;
-		}
-		
-		/**
-		 * 	@private
-		 */
-		private var _tempo:int				= 500;
+		private var _tempo:int				= 125;
 		
 		/**
 		 * 	@private
@@ -94,44 +83,42 @@ package onyx.core {
 		
 		/**
 		 * 	@private
-		 * 	Whether active or not
+		 * 	The beat signature to apply to all tempo filters
 		 */
-		private var _active:Boolean			= true;
+		private var _snapTempo:TempoBeat	= TEMPO_BEATS[3];
 		
 		/**
 		 * 	@constructor
 		 */
 		public function Tempo():void {
-			if (instance) {
+			if (TEMPO) {
 				throw new Error('Singleton Error.');
 			} else {
-				_timer		= new Timer(10);
+				_timer		= new Timer(5);
 				_controls	= new Controls(this,
-					new ControlBoolean('active', 'active', 0),
-					new ControlInt('tempo', 'tempo', 40, 1000, 500)
+					new ControlRange('snapTempo', 'snapTempo', TEMPO_BEATS),
+					new ControlInt('tempo', 'tempo', 40, 1000, 125)
 				);
 			}
 		}
 		
 		/**
-		 * 
+		 * 	Sets global tempo filters
 		 */
-		public function set active(value:Boolean):void {
-			_active = value;
-			if (active) {
+		public function set snapTempo(value:TempoBeat):void {
+			_snapTempo = value;
+			if (value) {
 				start();
-				dispatchEvent(new TempoEvent(TempoEvent.TEMPO_ON));
 			} else {
 				stop();
-				dispatchEvent(new TempoEvent(TempoEvent.TEMPO_OFF));
 			}
 		}
 		
 		/**
-		 * 
+		 * 	Gets global tempo filters
 		 */
-		public function get active():Boolean {
-			return _active;
+		public function get snapTempo():TempoBeat {
+			return _snapTempo;
 		}
 		
 		/**
@@ -142,7 +129,7 @@ package onyx.core {
 			_timer.addEventListener(TimerEvent.TIMER, _onTimer);
 			_last = getTimer();
 			_step = 0;
-			dispatchEvent(new TempoEvent(TempoEvent.CLICK, 0));
+			dispatchEvent(new TempoEvent(0));
 		}
 		
 		/**
@@ -162,10 +149,11 @@ package onyx.core {
 			var time:int = getTimer() - _last;
 			
 			if (time >= _tempo) {
-				_last = getTimer() + (time - _tempo);
-				_step = ++_step % 16;
+				
+				_last = getTimer() - (time - _tempo);
+				_step = ++_step % 64;
 
-				dispatchEvent(new TempoEvent(TempoEvent.CLICK, _step));
+				dispatchEvent(new TempoEvent(_step));
 			}
 		}
 		
@@ -175,7 +163,7 @@ package onyx.core {
 		public function set tempo(value:int):void {
 			
 			// offset by 3 cause it's a little slow sometimes
-			_tempo = _controls.getControl('tempo').setValue(value - 6);
+			_tempo = _controls.getControl('tempo').setValue(value);
 			start();
 		}
 		

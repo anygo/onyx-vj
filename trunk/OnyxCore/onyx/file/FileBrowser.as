@@ -38,6 +38,7 @@ package onyx.file {
 	import onyx.core.*;
 	import onyx.file.http.HTTPAdapter;
 	import onyx.settings.*;
+	import flash.net.URLRequest;
 	
 	/**
 	 * 	Stores a cache of directories - so re-querying will not be necessary
@@ -79,6 +80,17 @@ package onyx.file {
 		 * 	Queries the filesystem
 		 */
 		public static function query(folder:String, callback:Function, filter:FileFilter = null, refresh:Boolean = false):void {
+			
+			// check folder for ..'s
+			var index:int = folder.indexOf('../');
+			var ext:String = folder.substr(index+3);
+			while (index >= 0) {
+				
+				var last:int = folder.lastIndexOf('/', index - 2);
+				folder = folder.substr(0, last) + '/' + ext;
+		
+				index = folder.indexOf('../');
+			}
 
 			// check for cache
 			if (refresh || !_cache[folder]) {
@@ -126,11 +138,20 @@ package onyx.file {
 			query.removeEventListener(IOErrorEvent.IO_ERROR,				_onLoadHandler);
 			query.removeEventListener(SecurityErrorEvent.SECURITY_ERROR,	_onLoadHandler);
 			
-			// save the path
-			_cache[query.path] = query.folderList;
-			
-			// do the callback
-			doCallBack(query.folderList, query.callback, query.filter);
+			// check for error
+			if (!(event is ErrorEvent)) {
+				
+				// save the path
+				_cache[query.path] = query.folderList;
+				
+				// do the callback
+				doCallBack(query.folderList, query.callback, query.filter);
+				
+			} else {
+				var error:ErrorEvent = event as ErrorEvent;
+				Console.error(new Error(error.text));
+				
+			}
 
 			// clear reference
 			query.dispose();

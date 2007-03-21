@@ -81,14 +81,14 @@ package onyx.content {
 		public function ContentCamera(layer:Layer, path:String, camera:Camera):void {
 			
 			_controls = new Controls(this,
-				new ControlInt('save', 'save', 0, 240, 0),
+				new ControlInt('save', 'save', 0, BITMAP_HEIGHT, 0),
 				new ControlInt('qualityRate', 'framerate', 24, 1, 30)
 			);
 			
 			_camera	= camera;
-			_video	= new Video(320, 240);
+			_video	= new Video(BITMAP_WIDTH, BITMAP_HEIGHT);
 			
-			camera.setMode(320,240, 24);
+			camera.setMode(BITMAP_WIDTH,BITMAP_HEIGHT, 24);
 			
 			_video.attachCamera(camera);
 			
@@ -100,7 +100,7 @@ package onyx.content {
 		 * 
 		 */
 		public function set qualityRate(value:int):void {
-			_camera.setMode(320,240,value);
+			_camera.setMode(BITMAP_WIDTH,BITMAP_HEIGHT,value);
 		}
 
 		/**

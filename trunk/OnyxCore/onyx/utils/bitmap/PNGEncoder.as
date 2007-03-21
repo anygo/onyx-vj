@@ -210,7 +210,7 @@ package onyx.utils.bitmap {
 	                c = n;
 	                for (var k:uint = 0; k < 8; k++) {
 	                    if (c & 1) {
-	                        c = uint(uint(0xedb88320) ^ 
+	                        c = uint(uint(0xedb88240) ^ 
 	                            uint(c >>> 1));
 	                    } else {
 	                        c = uint(c >>> 1);

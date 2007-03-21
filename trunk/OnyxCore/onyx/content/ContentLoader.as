@@ -158,7 +158,6 @@ package onyx.content {
 					
 					break;
 					
-				// TBD: Multiple cameras should use the same content as well
 				case 'cam':
 				
 					var names:Array = Camera.names;

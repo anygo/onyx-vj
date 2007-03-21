@@ -30,8 +30,8 @@
  */
 package onyx.constants {
 
-	import flash.display.*;
+	import onyx.core.Tempo;
 	
-	public var BITMAP_HEIGHT:int = 240;
+	public const TEMPO:Tempo = new Tempo();
 
 }

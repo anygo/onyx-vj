@@ -32,6 +32,16 @@ package onyx.constants {
 
 	import flash.display.*;
 	
-	public var BITMAP_HEIGHT:int = 240;
+	import onyx.core.TempoBeat;
+	
+	public const TEMPO_BEATS:Array = [null, 
+		new TempoBeat('1/16', 1),
+		new TempoBeat('1/8', 2),
+		new TempoBeat('1/4', 4),
+		new TempoBeat('1/2', 8),
+		new TempoBeat('1', 16),
+		new TempoBeat('2', 32),
+		new TempoBeat('4', 64)
+	]
 
 }

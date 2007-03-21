@@ -33,9 +33,9 @@ package onyx.constants {
 	import flash.display.BlendMode;
 
 	public const BLEND_MODES:Array = [
-			BlendMode.NORMAL, BlendMode.OVERLAY, BlendMode.HARDLIGHT, BlendMode.MULTIPLY, BlendMode.SCREEN, BlendMode.ADD, BlendMode.SUBTRACT,
-			BlendMode.DIFFERENCE, BlendMode.LIGHTEN, BlendMode.DARKEN, BlendMode.INVERT
-			//, BlendMode.ALPHA, BlendMode.ERASE
+		BlendMode.NORMAL, BlendMode.OVERLAY, BlendMode.HARDLIGHT, BlendMode.MULTIPLY, BlendMode.SCREEN, BlendMode.ADD, BlendMode.SUBTRACT,
+		BlendMode.DIFFERENCE, BlendMode.LIGHTEN, BlendMode.DARKEN, BlendMode.INVERT
+		//, BlendMode.ALPHA, BlendMode.ERASE
 	];
 
 }

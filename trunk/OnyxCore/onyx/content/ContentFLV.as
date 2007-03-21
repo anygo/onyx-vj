@@ -36,12 +36,14 @@ package onyx.content {
 	import flash.events.NetStatusEvent;
 	import flash.media.Video;
 	
+	import onyx.constants.*;
 	import onyx.controls.Controls;
 	import onyx.core.*;
 	import onyx.layer.*;
 	import onyx.net.Connection;
 	import onyx.net.Stream;
 	import onyx.render.*;
+
 
 	[ExcludeClass]
 	public class ContentFLV extends Content {
@@ -81,7 +83,7 @@ package onyx.content {
 			
 			_totalTime	= stream.metadata.duration;
 			
-			_video		= new Video(320,240);
+			_video		= new Video(BITMAP_WIDTH,BITMAP_HEIGHT);
 			_video.attachNetStream(stream);
 			
 			super(layer, path, _video);

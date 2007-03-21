@@ -30,10 +30,14 @@
  */
 package onyx.states {
 	
+	import flash.events.EventDispatcher;
+	
+	[Event(name='complete', type='flash.events.Event')]
+	
 	/**
 	 * 	Base class for application states
 	 */
-	public class ApplicationState {
+	public class ApplicationState extends EventDispatcher {
 		
 		/**
 		 * 	Called when the application state is initialized

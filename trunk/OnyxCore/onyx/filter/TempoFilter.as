@@ -34,12 +34,15 @@ package onyx.filter {
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
 	
+	import onyx.constants.*;
 	import onyx.controls.*;
 	import onyx.core.Tempo;
 	import onyx.core.onyx_ns;
+	import onyx.events.ControlEvent;
 	import onyx.events.TempoEvent;
 	import onyx.tween.*;
 	import onyx.tween.easing.*;
+	import onyx.core.TempoBeat;
 	
 	use namespace onyx_ns;
 	
@@ -67,13 +70,17 @@ package onyx.filter {
 		/**
 		 * 	@private
 		 */
-		private var _snapTempo:Boolean				= true;
+		private var _snapTempo:TempoBeat;
+		
+		/**
+		 * 
+		 */
+		private var _snapBeat:int					= 4;
 		
 		/**
 		 * 	@private
 		 */
-		private var _snapControl:ControlBoolean		= new ControlBoolean('snapTempo', 'Use Tempo');
-
+		private var _snapControl:ControlRange		= new ControlRange('snapTempo', 'Snap Tempo', TEMPO_BEATS);
 		
 		/**
 		 * 	@private
@@ -92,18 +99,16 @@ package onyx.filter {
 			);
 			super.controls.addControl.apply(null, controls);
 			
-			var tempo:Tempo = Tempo.getInstance();
-			tempo.addEventListener(TempoEvent.TEMPO_ON, _onTempoEvent);
-			tempo.addEventListener(TempoEvent.TEMPO_OFF, _onTempoEvent);
+			TEMPO.controls.getControl('snapTempo').addEventListener(ControlEvent.CHANGE, _onTempoEvent);
 
-			// snapTempo = tempo.active;
+			snapTempo = TEMPO.snapTempo;
 		}
 		
 		/**
 		 * 	@private
 		 */
-		private function _onTempoEvent(event:TempoEvent):void {
-			snapTempo = event.type === TempoEvent.TEMPO_ON;
+		private function _onTempoEvent(event:ControlEvent):void {
+			snapTempo = event.value;
 		}
 		
 		/**
@@ -126,7 +131,7 @@ package onyx.filter {
 		/**
 		 * 	Whether or not the filter snaps to beat
 		 */
-		final public function set snapTempo(value:Boolean):void {
+		final public function set snapTempo(value:TempoBeat):void {
 			
 			// remove timer stuff
 			if (timer) {
@@ -136,11 +141,11 @@ package onyx.filter {
 			}
 			
 			// remove tempo stuff
-			var tempo:Tempo = Tempo.getInstance();
-			tempo.removeEventListener(TempoEvent.CLICK, onTempo);
+			TEMPO.removeEventListener(TempoEvent.CLICK, onTempo);
 			
 			// set value
-			_snapTempo = _snapControl.setValue(value);
+			_snapTempo	= _snapControl.setValue(value);
+			_snapBeat	= value.mod;
 			
 			// re-init
 			if (content) {
@@ -151,7 +156,14 @@ package onyx.filter {
 		/**
 		 * 
 		 */
-		final public function get snapTempo():Boolean {
+		final public function get nextDelay():int {
+			return _snapTempo ? (_snapBeat * TEMPO.tempo) : timer.delay;
+		}
+		
+		/**
+		 * 
+		 */
+		final public function get snapTempo():TempoBeat {
 			return _snapTempo;
 		}
 		
@@ -162,8 +174,7 @@ package onyx.filter {
 			
 			if (_snapTempo) {
 
-				var tempo:Tempo = Tempo.getInstance();
-				tempo.addEventListener(TempoEvent.CLICK, onTempo);
+				TEMPO.addEventListener(TempoEvent.CLICK, onTempo);
 				
 			} else {
 				
@@ -179,7 +190,9 @@ package onyx.filter {
 		 * 	@private
 		 */
 		protected function onTempo(event:TempoEvent):void {
-			onTrigger(event.beat, event);
+			if (event.beat % _snapBeat === 0) {
+				onTrigger(event.beat, event);
+			}
 		}
 		
 		/**
@@ -190,7 +203,7 @@ package onyx.filter {
 		}
 
 		/**
-		 * 
+		 * 	@private
 		 */
 		protected function onTrigger(beat:int, event:Event):void {
 			trace('BEAT');
@@ -210,10 +223,8 @@ package onyx.filter {
 				timer = null;
 			}
 			
-			var tempo:Tempo = Tempo.getInstance();
-			tempo.removeEventListener(TempoEvent.CLICK, onTempo);
-			tempo.removeEventListener(TempoEvent.TEMPO_ON, _onTempoEvent);
-			tempo.removeEventListener(TempoEvent.TEMPO_OFF, _onTempoEvent);
+			TEMPO.removeEventListener(TempoEvent.CLICK, onTempo);
+			TEMPO.controls.getControl('snapTempo').removeEventListener(ControlEvent.CHANGE, _onTempoEvent);
 			
 			_snapControl	= null;
 			_delayControl	= null;

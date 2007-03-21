@@ -141,7 +141,7 @@ package onyx.display {
 			_filters = new FilterArray(this);
 			
 			// set background color
-			super(new BitmapData(320, 240, false, _backgroundColor));
+			super(new BitmapData(BITMAP_WIDTH, BITMAP_HEIGHT, false, _backgroundColor));
 			
 			// add it to the displays index
 			_displays.push(this);
@@ -366,8 +366,8 @@ package onyx.display {
 		 */
 		public function set size(value:DisplaySize):void {
 			_size	= value;
-			scaleX	= value.scale;
-			scaleY	= value.scale;
+			scaleX	= value.scaleX;
+			scaleY	= value.scaleY;
 		}
 		
 		/**

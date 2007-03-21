@@ -29,6 +29,8 @@
  * 
  */
 package onyx.states {
+	import flash.events.Event;
+	
 	
 	/**
 	 * 	Manager class that loads and removes states
@@ -59,6 +61,9 @@ package onyx.states {
 			state.pause();
 			state.terminate();
 			_states.splice(_states.indexOf(state), 1);
+			
+			// dispatch an event
+			state.dispatchEvent(new Event(Event.COMPLETE));
 			
 		}
 		

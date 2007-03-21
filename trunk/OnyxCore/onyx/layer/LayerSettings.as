@@ -195,7 +195,7 @@ package onyx.layer {
 						var targetControl:Control = content.controls.getControl(control.name);
 						targetControl.value = control.value;
 					} catch (e:Error) {
-						Console.output(e.message);
+						Console.error(e.message);
 					}
 				}
 			}

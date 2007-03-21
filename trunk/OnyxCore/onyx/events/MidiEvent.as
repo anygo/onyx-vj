@@ -30,20 +30,19 @@
  */
  package onyx.events {
 
-	public class MidiEvent extends NthEvent
-	{
-		public static const NOTEON:String  = "noteon";
-		public static const NOTEOFF:String = "noteoff";
-		public static const CONTROLLER:String = "controller";
-		public static const PROGRAM:String = "program";
-		public static const PRESSURE:String = "pressure";
-		public static const PITCHBEND:String = "pitchbend";
-		public static const CHANNELPRESSURE:String = "CHANNELPRESSURE";
-		public static const REALTIME:String = "realtime";
-		public static const SYSEX:String = "sysex";
+	public class MidiEvent extends NthEvent {
+		
+		public static const NOTEON:String  			= "noteon";
+		public static const NOTEOFF:String 			= "noteoff";
+		public static const CONTROLLER:String		= "controller";
+		public static const PROGRAM:String			= "program";
+		public static const PRESSURE:String			= "pressure";
+		public static const PITCHBEND:String		= "pitchbend";
+		public static const CHANNELPRESSURE:String	= "CHANNELPRESSURE";
+		public static const REALTIME:String			= "realtime";
+		public static const SYSEX:String			= "sysex";
 
-		public function MidiEvent(t:String, x:XML)
-		{
+		public function MidiEvent(t:String, x:XML) {
 			super(t,x)
 		}
 		public function device():int {

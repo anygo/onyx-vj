@@ -105,7 +105,7 @@ package onyx.core {
 				
 				layer[args[1]] = args[2];
 			} catch (e:Error) {
-				Console.output(e.message);
+				Console.error(e.message);
 			}
 			
 		}

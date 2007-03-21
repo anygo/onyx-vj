@@ -564,7 +564,7 @@ package onyx.content {
 			var transform:RenderTransform = new RenderTransform();
 
 			// if rotation is 0, send a clipRect, otherwise, don't clip
-			var rect:Rectangle = (_rotation === 0) ? new Rectangle(0, 0, Math.max(320 / _scaleX, 320), Math.max(240 / _scaleY, 240)) : null;
+			var rect:Rectangle = (_rotation === 0) ? new Rectangle(0, 0, Math.max(BITMAP_WIDTH / _scaleX, BITMAP_WIDTH), Math.max(BITMAP_HEIGHT / _scaleY, BITMAP_HEIGHT)) : null;
 
 			transform.matrix			= _renderMatrix;
 			transform.rect				= rect;

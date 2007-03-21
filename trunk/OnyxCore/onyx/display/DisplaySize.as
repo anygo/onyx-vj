@@ -30,21 +30,26 @@
  */
 package onyx.display {
 	
+	import onyx.constants.*;
+	
 	public class DisplaySize {
 		
-		public var name:String;
-		public var scale:Number;
+		public var scaleX:Number;
+		public var scaleY:Number;
 		
-		public function DisplaySize(name:String, scale:Number):void {
-			this.name	= name;
-			this.scale	= scale;
+		/**
+		 * 	@constructor
+		 */
+		public function DisplaySize(scaleX:Number, scaleY:Number):void {
+			this.scaleX	= scaleX;
+			this.scaleY	= scaleY;
 		}
 		
 		/**
 		 * 
 		 */
 		public function toString():String {
-			return '[' + Math.floor(320 * scale) + 'x' + Math.floor(240 * scale) + ']';
+			return int(BITMAP_WIDTH * scaleX) + 'x' + int(BITMAP_HEIGHT * scaleY);
 		}
 	}
 }

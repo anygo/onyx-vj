@@ -32,8 +32,6 @@ package onyx.constants {
 
 	import flash.display.*;
 	
-	import onyx.core.onyx_ns;
-	
-	internal var BITMAP_WIDTH:int = 320;
+	public var BITMAP_WIDTH:int = 320;
 
 }

@@ -30,9 +30,9 @@
  */
  package onyx.events
 {
-	import flash.utils.Dictionary;
 	import flash.events.*;
 	import flash.net.XMLSocket;
+	import flash.utils.Dictionary;
 	
 	import onyx.core.Console;
 

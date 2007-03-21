@@ -33,6 +33,7 @@ package onyx.render {
 	import flash.display.*;
 	import flash.geom.*;
 	
+	import onyx.constants.*;
 	import onyx.content.ColorFilter;
 	import onyx.sound.SpectrumAnalysis;
 	
@@ -51,7 +52,7 @@ package onyx.render {
 			matrix.translate(ref.x, ref.y);
 
 			transform.matrix			= matrix;
-			transform.rect				= (ref.rotation === 0) ? new Rectangle(0, 0, Math.max(320 / ref.scaleX, 320), Math.max(240 / ref.scaleY, 240)) : null;
+			transform.rect				= (ref.rotation === 0) ? new Rectangle(0, 0, Math.max(BITMAP_WIDTH / ref.scaleX, BITMAP_WIDTH), Math.max(BITMAP_HEIGHT / ref.scaleY, BITMAP_HEIGHT)) : null;
 			transform.content			= ref;
 
 			return transform;

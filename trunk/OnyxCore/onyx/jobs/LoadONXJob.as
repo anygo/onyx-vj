@@ -131,7 +131,7 @@ package onyx.jobs {
 					}
 					
 				} catch (e:Error) {
-					Console.output(e.message)
+					Console.error(e.message)
 				}
 				
 

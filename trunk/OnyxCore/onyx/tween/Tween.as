@@ -39,10 +39,12 @@ package onyx.tween {
 	
 	use namespace onyx_ns;
 
+	[Event(name='complete', type='flash.events.Event')]
+
 	/**
 	 * 		Custom Tween Class
 	 */
-	public final class Tween {
+	public final class Tween extends EventDispatcher {
 		
 		/**
 		 * 	@private
@@ -132,7 +134,8 @@ package onyx.tween {
 			}
 			
 			if (curTime >= _ms) {
-				stop();
+				dispatchEvent(new Event(Event.COMPLETE));
+				dispose();
 			}
 		}
 		
@@ -141,6 +144,13 @@ package onyx.tween {
 		 */
 		public function stop():void {
 			dispose();
+		}
+		
+		/**
+		 * 
+		 */
+		override public function addEventListener(type:String, listener:Function, useCapture:Boolean=false, priority:int=0.0, useWeakReference:Boolean=false):void {
+			super.addEventListener(type, listener, useCapture, priority, true);
 		}
 
 		/**

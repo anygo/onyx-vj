@@ -46,7 +46,7 @@ package onyx.events {
 		/**
 		 * 	When the controls have updated
 		 */
-		public static const UPDATE:String = 'ce_up';
+		// public static const UPDATE:String = 'ce_up';
 		
 		/**
 		 * 	The value changed to
