@@ -36,6 +36,7 @@ package filters {
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	
+	import onyx.constants.*;
 	import onyx.controls.*;
 	import onyx.core.*;
 	import onyx.filter.*;
@@ -44,7 +45,7 @@ package filters {
 		
 		private var _amount:Number		= .25;
 		private var _greyscale:Boolean	= true;
-		private var _noise:BitmapData	= new BitmapData(320,240,false,0x000000);
+		private var _noise:BitmapData	= new BitmapData(BITMAP_WIDTH,BITMAP_HEIGHT,false,0x000000);
 		
 		public function NoiseFilter():void {
 			

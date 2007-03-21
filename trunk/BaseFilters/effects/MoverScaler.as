@@ -4,6 +4,7 @@ package effects {
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
 	
+	import onyx.constants.*;
 	import onyx.controls.*;
 	import onyx.core.Tempo;
 	import onyx.events.TempoEvent;
@@ -16,7 +17,7 @@ package effects {
 		public var mindelay:Number	= .4;
 		public var maxdelay:Number	= 1;
 		public var scaleMin:Number	= 1;
-		public var scaleMax:Number	= 1.3;
+		public var scaleMax:Number	= 1.5;
 		
 		public function MoverScaler():void {
 
@@ -25,7 +26,7 @@ package effects {
 				new ControlNumber('mindelay',	'Min Delay', .1, 50, .4),
 				new ControlNumber('maxdelay',	'Min Delay', .1, 50, 1),
 				new ControlNumber('scaleMin', 'scale min', 1, 4, 1),
-				new ControlNumber('scaleMax', 'scale max', 1, 4, 3)
+				new ControlNumber('scaleMax', 'scale max', 1, 4, 1.5)
 			);
 			
 		}
@@ -41,8 +42,8 @@ package effects {
 			
 			var scale:Number	= ((scaleMax - scaleMin) * Math.random()) + scaleMin;
 			var ratio:Number	= (scale - 1);
-			var x:int			= (scale - 1) * -320 * Math.random();
-			var y:int			= (scale - 1) * -240 * Math.random();
+			var x:int			= (scale - 1) * -BITMAP_WIDTH * Math.random();
+			var y:int			= (scale - 1) * -BITMAP_HEIGHT * Math.random();
 			
 			new Tween(
 				content, 

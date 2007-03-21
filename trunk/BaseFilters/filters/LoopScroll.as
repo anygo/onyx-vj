@@ -51,7 +51,7 @@ package filters {
 		
 		public function applyFilter(source:BitmapData):void {
 			
-			var x:int = _x % 320;
+			var x:int = _x % BITMAP_WIDTH;
 			
 			if (x > 0) {
 				

@@ -46,7 +46,7 @@ package effects {
 
 	public final class FrameRND extends TempoFilter {
 		
-		public var rndframe:Boolean = true;
+		public var rndframe:String = 'start';
 		
 		public var mindelay:Number	= .5;
 		public var maxdelay:Number	= 2;
@@ -63,10 +63,11 @@ package effects {
 				true,
 				new ControlNumber('mindelay',	'Min Delay', .1, 50, .5),
 				new ControlNumber('maxdelay',	'Min Delay', .1, 50, 2),
-				new ControlRange('rndframe',	'RND Frame', [true, false], 0),
+				new ControlRange('rndframe',	'RND Frame', ['off', 'start', 'end'], 0),
 				new ControlNumber('minframe',	'min framerate', .2, 8, .6),
 				new ControlNumber('maxframe',	'max framerate', .2, 8, 4),
-				new ControlRange('direction',	'direction',	['both', 'forward', 'reverse'], 0)
+				new ControlRange('direction',	'direction',	['both', 'forward', 'reverse'], 0),
+				new ControlBoolean('smooth',	'smooth')
 			)
 		}
 		
@@ -76,29 +77,39 @@ package effects {
 				delay = (((maxdelay - mindelay) * Math.random()) + mindelay) * 1000;
 			}
 			
-			if (rndframe) {
-				content.time = Math.random();
-			}
+			var nextDelay:int = this.nextDelay;
 			
-			var framerate:Number = (((maxframe - minframe) * Math.random()) + minframe);
-			switch (direction) {
-				case 'both':
-					framerate *= (Math.random() <= .5 ? 1 : -1)
+			switch (rndframe) {
+				case 'end':
+					var newtime:Number			= Math.random();
+					var timeToTraverse:Number	= content.totalTime * (newtime - content.time);
+					
+					new Tween(content, nextDelay, new TweenProperty('framerate', content.framerate, timeToTraverse / nextDelay));
+
 					break;
-				case 'reverse':
-					framerate *= -1;
+				case 'start':
+					content.time = Math.random();
 					break;
+				default:
+					var framerate:Number = (((maxframe - minframe) * Math.random()) + minframe);
+					switch (direction) {
+						case 'both':
+							framerate *= (Math.random() <= .5 ? 1 : -1)
+							break;
+						case 'reverse':
+							framerate *= -1;
+							break;
+					}
+					
+					if (smooth) {
+						if (Math.random() > .5) {
+							new Tween(content, 500, new TweenProperty('framerate', 0, 1));
+							return;
+						}
+					}
+					
+					content.framerate = framerate;
 			}
-			
-			if (smooth) {
-				if (Math.random() > .5) {
-					new Tween(content, 500, new TweenProperty('framerate', 0, 1));
-					return;
-				}
-			}
-			
-			content.framerate = framerate;
 		}
-		
 	}
 }

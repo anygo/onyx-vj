@@ -3,12 +3,13 @@ package visualizer {
 	import flash.display.BitmapData;
 	import flash.display.Shape;
 	
+	import onyx.constants.*;
 	import onyx.core.*;
 	import onyx.render.RenderTransform;
 	import onyx.sound.SpectrumAnalysis;
 	import onyx.sound.SpectrumAnalyzer;
 	import onyx.sound.Visualizer;
-	
+
 	public final class BasicVisualizer extends Visualizer {
 		
 		private var _shape:Shape = new Shape();
@@ -20,7 +21,7 @@ package visualizer {
 			
 			var transform:RenderTransform = RenderTransform.getTransform(_shape);
 		
-			var step:Number = 320 / 127;
+			var step:Number = BITMAP_WIDTH / 127;
 			
 			_shape.graphics.clear();
 			_shape.graphics.lineStyle(0, 0xFFFFFF);
