@@ -38,6 +38,7 @@ package {
 	
 	import geom.Circle;
 	
+	import onyx.constants.*;
 	import onyx.core.IDisposable;
 
 	[SWF(width='320', height='240', frameRate='24', backgroundColor='#FFFFFF')]
@@ -52,7 +53,7 @@ package {
 		
 		public function FunInTheSun():void {
 			
-			_bmp = new Bitmap(new BitmapData(320, 240, true, 0x00000000))
+			_bmp = new Bitmap(new BitmapData(BITMAP_WIDTH, BITMAP_HEIGHT, true, 0x00000000))
 			_bmp.smoothing = true;
 			
 			addChild(_bmp);

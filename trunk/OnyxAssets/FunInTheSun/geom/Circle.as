@@ -13,12 +13,13 @@ package geom {
 	import flash.text.TextField;
 	import flash.utils.Timer;
 	
+	import onyx.constants.*;
 	import onyx.core.IDisposable;
 
 	public final class Circle extends Sprite implements IDisposable {
 		
-		public static const STAGE_WIDTH:int		= 320;
-		public static const STAGE_HEIGHT:int	= 240;
+		public static const STAGE_WIDTH:int		= BITMAP_WIDTH;
+		public static const STAGE_HEIGHT:int	= BITMAP_HEIGHT;
 
 		public static var circles:Array			= [];
 		
