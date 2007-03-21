@@ -35,6 +35,7 @@ package {
 	import flash.filters.BlurFilter;
 	import flash.geom.*;
 	
+	import onyx.constants.*;
 	import onyx.content.*;
 	import onyx.controls.*;
 	import onyx.core.*;
@@ -50,7 +51,7 @@ package {
 		
 		public var color:uint	= 0xFFFFFF;
 		
-		private var _source:BitmapData		= new BitmapData(320,240,true, 0x00000000);
+		private var _source:BitmapData		= new BitmapData(BITMAP_WIDTH,BITMAP_HEIGHT,true, 0x00000000);
 		private var _controls:Controls;
 		
 		public function DrawingClip():void {
