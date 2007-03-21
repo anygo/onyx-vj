@@ -25,7 +25,7 @@ package {
 		/**
 		 * 
 		 */
-		public var maxframes:int		= 240;
+		public var maxframes:int		= BITMAP_HEIGHT;
 		
 		/**
 		 * 
@@ -54,7 +54,7 @@ package {
 			_controls = new Controls(this,
 				new ControlDisplay('layer', 'layer'),
 				new ControlBoolean('record', 'record', 1),
-				new ControlInt('maxframes', 'frames', 120, 640, 240)
+				new ControlInt('maxframes', 'frames', 120, 640, BITMAP_HEIGHT)
 			);
 			addChild(_bitmap);
 		}
