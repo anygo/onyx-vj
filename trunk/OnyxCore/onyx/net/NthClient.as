@@ -28,13 +28,14 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
- package onyx.events
+ package onyx.net
 {
 	import flash.events.*;
 	import flash.net.XMLSocket;
 	import flash.utils.Dictionary;
 	
 	import onyx.core.Console;
+	import onyx.events.*;
 
 	public class NthClient extends EventDispatcher
 	{
