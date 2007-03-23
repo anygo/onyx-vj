@@ -32,43 +32,96 @@ package ui.states {
 	
 	import flash.events.MouseEvent;
 	import flash.utils.Dictionary;
+	import flash.geom.ColorTransform;
 	
 	import onyx.constants.*;
 	import onyx.states.*;
+	import onyx.events.*;
+	import onyx.net.*;
+	import onyx.core.Console;
 	
 	import ui.controls.UIControl;
 	import ui.styles.*;
-	import flash.geom.ColorTransform;
+	import ui.controls.*;
+	import ui.core.MidiManager;
 
 	public final class MidiLearnState extends ApplicationState {
+		
+		private var _control:UIControl;
+		private var _client:NthClient;
 		
 		public function MidiLearnState():void {
 		}
 		
 		override public function initialize():void {
+			// Highlight all the controls
 			for (var i:Object in UIControl.controls) {
 				var control:UIControl = i as UIControl;
 				UIControl.controls[control] = control.transform.colorTransform;
 				control.transform.colorTransform = MIDI_HIGHLIGHT;
 			}
-			
 			STAGE.addEventListener(MouseEvent.MOUSE_DOWN, _onMouseDown, true, 9999);
 		}
 		
 		private function _onMouseDown(event:MouseEvent):void {
 			event.stopPropagation();
+			
+    		// Find which control we hit
+    		_control = null;
+			for (var i:Object in UIControl.controls) {
+				if ( i == event.target.parent ) {
+					_control = i as UIControl;
+					break;
+				}
+			}
+			// Unhighlight everything except that control
+			_unHighlight(_control);
+			if ( _control == null ) {
+				// Clicked outside any control - abort learning
+				StateManager.removeState(this);
+			} else {
+				_client = NthClient.getInstance();
+	    		_client.addEventListener(MidiEvent.NOTEON,_onNoteon);
+	    		_client.addEventListener(MidiEvent.CONTROLLER,_onController);
+	  		}
+		}
+		private function _onNoteon(e:MidiEvent):void {
+			if ( _control is ButtonClear ) {
+				MidiManager.registerNote(_control,e);
+			} else {
+				Console.output("You need to use a MIDI controller (not a note) for that!");
+			}
+			StateManager.removeState(this);
+		}
+		
+		private function _onController(e:MidiEvent):void {
+			if ( _control is SliderV ) {
+				MidiManager.registerController(_control,e);
+			} else {
+				Console.output("You need to use a MIDI note (not a controller) for that!");
+			}
 			StateManager.removeState(this);
 		}
 		
 		override public function terminate():void {
 			STAGE.removeEventListener(MouseEvent.MOUSE_DOWN, _onMouseDown, true);
+			if ( _client ) {
+				_client.removeEventListener(MidiEvent.NOTEON,_onNoteon);
+				_client.removeEventListener(MidiEvent.CONTROLLER,_onController);
+				_client = null;
+			}
+			_unHighlight();
+		}
 
+    	// Turn off the highlight on all the controls except ex
+		private function _unHighlight(ex:Object = null):void {
 			for (var i:Object in UIControl.controls) {
-				var control:UIControl = i as UIControl;
-				control.transform.colorTransform = UIControl.controls[control] || new ColorTransform();
-				UIControl.controls[control] = null;
+				if ( i != ex ) {
+					var control:UIControl = i as UIControl;
+					control.transform.colorTransform = UIControl.controls[control] || new ColorTransform();
+					UIControl.controls[control] = null;
+				}
 			}
 		}
-		
 	}
 }
