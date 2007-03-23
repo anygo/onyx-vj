@@ -32,21 +32,12 @@
 {
 	public class FingerEvent extends NthEvent
 	{
-		public static const DOWN:String  = "DOWN";
-		public static const UP:String = "UP";
-		public static const DRAG:String = "DRAG";
+		public static const DOWN:String  = "down";
+		public static const UP:String = "up";
+		public static const DRAG:String = "drag";
 
-		public function FingerEvent(x:XML)
+		public function FingerEvent(t:String, x:XML)
 		{
-			var t:String = x.localName();
-			if ( t == "finger_up" ) {
-				t = UP;
-			} else if ( t == "finger_down" ) {
-				t = DOWN;
-			} else if ( t == "finger_drag" ) {
-				t = DRAG;
-			}
-			// trace("FingerEvent t="+t);
 			super(t,x)
 		}
 		public override function toString():String {

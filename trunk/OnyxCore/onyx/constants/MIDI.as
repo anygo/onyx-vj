@@ -1,5 +1,5 @@
 /** 
- * Copyright (c) 2007, www.onyx-vj.com
+ * Copyright (c) 2003-2006, www.onyx-vj.com
  * All rights reserved.	
  * 
  * Redistribution and use in source and binary forms, with or without modification,
@@ -28,43 +28,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
- package onyx.events {
+package onyx.constants {
 
-	public class MidiEvent extends NthEvent {
-		
-		public static const NOTEON:String  			= "noteon";
-		public static const NOTEOFF:String 			= "noteoff";
-		public static const CONTROLLER:String		= "controller";
-		public static const PROGRAM:String			= "program";
-		public static const PRESSURE:String			= "pressure";
-		public static const PITCHBEND:String		= "pitchbend";
-		public static const CHANNELPRESSURE:String	= "channelpressure";
-		public static const REALTIME:String			= "realtime";
-		public static const SYSEX:String			= "sysex";
+	import onyx.core.Midi;
+	
+	public const MIDI:Midi = Midi.getInstance();
 
-		public function MidiEvent(t:String, x:XML):void {
-			super(t,x)
-		}
-		public function device():int {
-    		return xml.attribute("device");
-    	}
-    	public function pitch():int {
-    		return xml.attribute("pitch");
-    	}
-    	public function channel():int {
-    		return xml.attribute("channel");
-    	}
-    	public function velocity():int {
-    		return xml.attribute("velocity");
-    	}
-    	public function time():Number {
-    		return xml.attribute("time");
-    	}
-    	public function controller():int {
-    		return xml.attribute("controller");
-    	}
-    	public function value():int {
-    		return xml.attribute("value");
-    	}
-	}
 }

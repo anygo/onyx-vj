@@ -104,14 +104,16 @@
 	        // trace("xml name="+x.name()+" localName="+x.name().localName);
 	        if ( x.localName() == "event" ) {
 	        	var c:XMLList = x.children()
-	        	for each ( var i:XML in c ) {
-	        		var s:String = i.localName();
+	        	for each ( var x2:XML in c ) {
+	        		var s:String = x2.localName();
 	        		if ( s.search("finger_") == 0 ) {
-	        			var f:FingerEvent = new FingerEvent(i);
+	        			var f:FingerEvent = new FingerEvent(s.substr(7),x2);
 	        			updateFingers(f);
 	        			dispatchEvent(f);
+	        		} else if ( s.search("midi_") == 0 ) {
+	        			var m:MidiEvent = new MidiEvent(s.substr(5),x2);
+	        			dispatchEvent(m);
 	        		} else {
-	        			trace("Unrecognized event: "+s)
 	        		}
 	        	}
 	        }
