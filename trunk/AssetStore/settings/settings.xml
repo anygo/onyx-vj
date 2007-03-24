@@ -30,7 +30,7 @@
 		<window name="FILE BROWSER" enabled="true" x="6" y="318"/>
 		<window name="CONSOLE" enabled="true" x="6" y="582"/>
 		<window name="FILTERS" enabled="true" x="412" y="318"/>
-		<window name="SETTINGS" enabled="true" x="200" y="544"/>
+		<window name="TEMPO" enabled="true" x="200" y="544"/>
 		<window name="LAYERS" enabled="true" x="0" y="0"/>
 		<window name="MEMORY" enabled="false" x="200" y="200"/>
 		<window name="DISPLAY" enabled="true" x="412" y="500"/>
@@ -54,6 +54,19 @@
 		<SELECT_LAYER_2>51</SELECT_LAYER_2>
 		<SELECT_LAYER_3>52</SELECT_LAYER_3>
 		<SELECT_LAYER_4>53</SELECT_LAYER_4>
+
+		<ACTION_1>112</ACTION_1>
+		<ACTION_2>113</ACTION_2>
+		<ACTION_3>114</ACTION_3>
+		<ACTION_4>115</ACTION_4>
+		<ACTION_5>116</ACTION_5>
+		<ACTION_6>117</ACTION_6>
+		<ACTION_7>118</ACTION_7>
+		<ACTION_8>119</ACTION_8>
+		<ACTION_9>120</ACTION_9>
+		<ACTION_10>121</ACTION_10>
+		<ACTION_11>122</ACTION_11>
+		<ACTION_12>123</ACTION_12>
 	</keys>
 
 </settings>
