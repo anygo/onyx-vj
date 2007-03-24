@@ -38,13 +38,14 @@ package onyx.content {
 	import onyx.constants.*;
 	import onyx.controls.*;
 	import onyx.core.*;
+	import onyx.errors.*;
 	import onyx.events.FilterEvent;
 	import onyx.filter.*;
 	import onyx.layer.*;
 	import onyx.plugin.*;
+	import onyx.render.*;
 	import onyx.tween.*;
 	import onyx.utils.array.*;
-	import onyx.render.*;
 	
 	[Event(name="filter_applied",	type="onyx.events.FilterEvent")]
 	[Event(name="filter_removed",	type="onyx.events.FilterEvent")]
@@ -506,7 +507,7 @@ package onyx.content {
 		 * 	Sets filters
 		 */
 		public function set filters(value:Array):void {
-			throw new Error('set filters overridden, use addFilter, removeFilter');
+			throw INVALID_FILTER_OVERRIDE;
 		}
 		/**
 		 * 	Returns filters

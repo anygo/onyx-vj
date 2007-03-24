@@ -325,13 +325,6 @@ package onyx.content {
 		override public function removeFilter(filter:Filter):void {
 			newContent.removeFilter(filter);
 		}
-
-		/**
-		 * 
-		 */
-		override public function set filters(value:Array):void {
-			throw new Error('set filters overridden, use addFilter, removeFilter');
-		}
 		
 		/**
 		 * 	Returns filters

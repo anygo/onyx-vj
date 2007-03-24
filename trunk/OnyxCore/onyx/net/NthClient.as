@@ -28,37 +28,31 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
- package onyx.net
-{
-	import flash.events.*;
-	import flash.net.XMLSocket;
-	import flash.utils.Dictionary;
-	
-	import onyx.core.Console;
-	import onyx.events.*;
+ package onyx.net {
+ 	import flash.events.*;
+ 	import flash.net.XMLSocket;
+ 	import flash.utils.Dictionary;
+ 	
+ 	import onyx.core.Console;
+ 	import onyx.errors.INVALID_CLASS_CREATION;
+ 	import onyx.events.*;
 
-	public class NthClient extends EventDispatcher
-	{
+	public class NthClient extends EventDispatcher {
+		
 		private var _socket:XMLSocket;
 		private var _count:int = 0;
-		private static var instance:NthClient;
-		private static var creating:Boolean = false;
+		private static var instance:NthClient = new NthClient();
 		private static var fingers:Object = new Object();
 	
 		public function NthClient() {
-			if ( !creating ) {
-				throw new Error("Use NthClient.getInstance()!");
+			if ( instance ) {
+				throw INVALID_CLASS_CREATION;
 			}
 			_socket = new XMLSocket;
 			configureListeners();
 			_socket.connect("localhost", 1383);
 		}
 		public static function getInstance():NthClient {
-			if ( !instance ) {
-				creating = true;
-				instance = new NthClient();
-				creating = false;
-			}
 			return instance;
 		}
 		public function isConnected():Boolean {

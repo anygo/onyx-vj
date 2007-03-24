@@ -228,20 +228,15 @@ package onyx.display {
 			var currentLayer:ILayer	= event.currentTarget as ILayer;
 			var currentIndex:int	= currentLayer.index;
 
-			// only add it to the valid list if it's not already in the valid
-			if (_valid.indexOf(currentLayer) < 0) {
-					
-				for (var index:int = 0; index < _valid.length; index++) {
-					var layer:Layer = _valid[index];
-					if (currentLayer.index < layer.index) {
-						break;
-					}
+			for (var index:int = 0; index < _valid.length; index++) {
+				var layer:Layer = _valid[index];
+				if (currentLayer.index < layer.index) {
+					break;
 				}
-				
-				_valid.splice(index, 0, currentLayer);
-			} else {
-				throw new Error('rendering error, duplicate layers');
 			}
+			
+			_valid.splice(index, 0, currentLayer);
+
 		}
 		
 		/**

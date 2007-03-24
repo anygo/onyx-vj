@@ -31,6 +31,8 @@
 package onyx.net {
 	
 	import flash.net.NetConnection;
+	
+	import onyx.errors.*;
 
 	/**
 	 * 	Core NetConnection Class
@@ -47,7 +49,7 @@ package onyx.net {
 		 */
 		public function Connection():void {
 			if (DEFAULT_CONNECTION) {
-				throw new Error('error');
+				throw INVALID_CLASS_CREATION;
 			}
 			
 			connect(null);

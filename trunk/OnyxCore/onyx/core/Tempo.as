@@ -36,6 +36,7 @@ package onyx.core {
 	
 	import onyx.constants.*;
 	import onyx.controls.*;
+	import onyx.errors.*;
 	import onyx.events.TempoEvent;
 	
 	[Event(name='click', type='onyx.events.TempoEvent')]
@@ -92,7 +93,7 @@ package onyx.core {
 		 */
 		public function Tempo():void {
 			if (TEMPO) {
-				throw new Error('Singleton Error.');
+				throw INVALID_CLASS_CREATION;
 			} else {
 				_timer		= new Timer(5);
 				_controls	= new Controls(this,
