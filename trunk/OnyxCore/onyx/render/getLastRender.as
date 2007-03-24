@@ -32,10 +32,12 @@ package onyx.render {
 	
 	import flash.utils.*;
 	
+	import onyx.constants.*;
+	
 	/**
 	 * 	Gets object time
 	 */
-	public static function getLastRender(target:Object):int {
+	public function getLastRender(target:Object):int {
 		
 		var time:int		= _renderDict[target];
 		var now:int			= getTimer();
