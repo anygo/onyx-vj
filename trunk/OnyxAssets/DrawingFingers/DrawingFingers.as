@@ -30,22 +30,18 @@
  */
  package {
 	
-	import flash.display.BitmapData;
-	import flash.display.DisplayObjectContainer;
-	import flash.display.Sprite;
-	import flash.display.Stage;
-	import flash.geom.*;
-	import flash.filters.BlurFilter;
-	import flash.filters.ConvolutionFilter;
-	import flash.filters.ColorMatrixFilter;
+	import flash.display.*;
 	import flash.events.Event;
-
+	import flash.filters.*;
+	import flash.geom.*;
+	
 	import onyx.content.*;
 	import onyx.controls.*;
 	import onyx.core.*;
-	import onyx.plugin.*;
-	
 	import onyx.events.*;
+	import onyx.net.*;
+	import onyx.plugin.*;
+	import onyx.render.*;
 
 	/**
 	 * 	Drawing clip
