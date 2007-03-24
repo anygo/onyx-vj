@@ -40,6 +40,7 @@ package ui.controls {
 	
 	import ui.core.UIObject;
 	import ui.text.TextInput;
+	import onyx.controls.Control;
 	
 	public final class TextControlPopUp extends UIObject {
 
@@ -51,12 +52,12 @@ package ui.controls {
 		/**
 		 * 	@private
 		 */
-		private var _control:ControlString;
+		private var _control:Control;
 
 		/**
 		 * 	@constructor
 		 */
-		public function TextControlPopUp(parent:DisplayObjectContainer, width:int, height:int, text:String, control:ControlString = null):void {
+		public function TextControlPopUp(parent:DisplayObjectContainer, width:int, height:int, text:String, control:Control = null):void {
 			
 			if (parent) {
 				

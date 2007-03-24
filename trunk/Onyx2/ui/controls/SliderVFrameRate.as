@@ -33,6 +33,7 @@ package ui.controls {
 	import flash.events.MouseEvent;
 	
 	import onyx.controls.Control;
+	import onyx.controls.ControlNumber;
 	import onyx.events.ControlEvent;
 	
 	import ui.text.TextField;
@@ -45,7 +46,7 @@ package ui.controls {
 		/**
 		 * 	@constructor
 		 */
-		public function SliderVFrameRate(options:UIOptions, controlY:Control):void {
+		public function SliderVFrameRate(options:UIOptions, controlY:ControlNumber):void {
 			
 			super(options, controlY);
 			
@@ -55,7 +56,7 @@ package ui.controls {
 		 * 	@private
 		 */
 		override protected function _onControlChange(event:ControlEvent = null):void {
-			value = event ? event.value.toFixed(1) : (_controlY.value as Number).toFixed(1);
+			value = event ? event.value.toFixed(1) : (_control.value as Number).toFixed(1);
 		}
 		
 		/**

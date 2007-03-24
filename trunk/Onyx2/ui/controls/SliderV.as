@@ -47,11 +47,6 @@ package ui.controls {
 		/**
 		 * 	@private
 		 */
-		protected var _controlY:ControlNumber;
-		
-		/**
-		 * 	@private
-		 */
 		protected var _multiplier:Number;
 		
 		/**
@@ -87,9 +82,9 @@ package ui.controls {
 		/**
 		 * 	@constructor
 		 */
-		public function SliderV(options:UIOptions, controlY:Control):void {
+		public function SliderV(options:UIOptions, control:Control):void {
 
-			super(options, true, controlY.display);
+			super(options, control, true, control.display);
 			
 			var width:int			= options.width;
 			var height:int			= options.height;
@@ -97,8 +92,8 @@ package ui.controls {
 			var factor:Number		= 1;
 			var toFixed:Number		= 0;
 			
-			if (controlY.metadata) {
-				var metadata:Object = controlY.metadata;
+			if (control.metadata) {
+				var metadata:Object = control.metadata;
 				multiplier			= (metadata.multiplier is Number) ? metadata.multiplier : multiplier;
 				factor				= (metadata.factor is Number) ? metadata.factor : factor;
 				toFixed				= (metadata.toFixed is Number) ? metadata.toFixed : toFixed;
@@ -107,7 +102,6 @@ package ui.controls {
 			_button = new ButtonClear(width,	height);
 			_value	= new TextField(width + 3,	height, TEXT_DEFAULT_CENTER);
 
-			_controlY			= controlY as ControlNumber;
 			_multiplier			= multiplier;
 			_factor				= factor;
 			_toFixed			= toFixed;
@@ -124,10 +118,10 @@ package ui.controls {
 			addEventListener(MouseEvent.MOUSE_WHEEL,	_onMouseWheel);
 			
 			if (_toFixed > 0) {
-				_controlY.addEventListener(ControlEvent.CHANGE, _onControlChangeFixed);
+				_control.addEventListener(ControlEvent.CHANGE, _onControlChangeFixed);
 				_onControlChangeFixed();
 			} else {
-				_controlY.addEventListener(ControlEvent.CHANGE, _onControlChange);
+				_control.addEventListener(ControlEvent.CHANGE, _onControlChange);
 				_onControlChange();
 			}
 		}
@@ -136,14 +130,14 @@ package ui.controls {
 		 * 	@private
 		 */
 		protected function _onMouseWheel(event:MouseEvent):void {
-			_controlY.value = _controlY.value + ((event.delta * 3) / _multiplier);
+			_control.value = _control.value + ((event.delta * 3) / _multiplier);
 		}
 		
 		/**
 		 * 	@private
 		 */
 		protected function _onDoubleClick(event:MouseEvent):void {
-			_controlY.reset();
+			_control.reset();
 		}
 
 		/**
@@ -152,7 +146,7 @@ package ui.controls {
 		protected function _onMouseDown(event:MouseEvent):void {
 			
 			_mouseY = mouseY;
-			_tempY = _controlY.value * _multiplier;
+			_tempY = _control.value * _multiplier;
 			
 			stage.addEventListener(MouseEvent.MOUSE_MOVE, _onMouseMove);
 			stage.addEventListener(MouseEvent.MOUSE_UP, _onMouseUp);
@@ -166,7 +160,7 @@ package ui.controls {
 			
 			var diff:Number = (_mouseY - mouseY) / _factor;
 			
-			_controlY.value = (diff + _tempY) / _multiplier;
+			_control.value = (diff + _tempY) / _multiplier;
 			
 		}
 		
@@ -184,14 +178,14 @@ package ui.controls {
 		 * 	@private
 		 */
 		protected function _onControlChange(event:ControlEvent = null):void {
-			value	= String(Math.floor(((event) ? event.value : _controlY.value) * _multiplier));
+			value	= String(Math.floor(((event) ? event.value : _control.value) * _multiplier));
 		}
 		
 		/**
 		 * 	@private
 		 */
 		protected function _onControlChangeFixed(event:ControlEvent = null):void {
-			value	= String(Number(((event) ? event.value : _controlY.value) * _multiplier).toFixed(_toFixed));
+			value	= String(Number(((event) ? event.value : _control.value) * _multiplier).toFixed(_toFixed));
 		}
 		
 		/**
@@ -212,15 +206,14 @@ package ui.controls {
 			removeEventListener(MouseEvent.MOUSE_WHEEL,		_onMouseWheel);
 			
 			// remove listeners
-			_controlY.removeEventListener(ControlEvent.CHANGE, _onControlChange);
-			_controlY.removeEventListener(ControlEvent.CHANGE, _onControlChangeFixed);
+			_control.removeEventListener(ControlEvent.CHANGE, _onControlChange);
+			_control.removeEventListener(ControlEvent.CHANGE, _onControlChangeFixed);
 
 			// remove display objects
 
 			removeChild(_value);
 			removeChild(_button);
 			
-			_controlY = null;
 			_button = null;
 			_value = null;
 			

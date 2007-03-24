@@ -32,6 +32,7 @@ package ui.controls {
 	
 	import flash.display.*;
 	import flash.geom.ColorTransform;
+	import flash.utils.Dictionary;
 	
 	import onyx.controls.Control;
 	import onyx.core.IDisposable;
@@ -39,24 +40,34 @@ package ui.controls {
 	
 	import ui.core.UIObject;
 	import ui.text.TextField;
-	import flash.utils.Dictionary;
 
 	/**
-	 * 	Base UIControl class
+	 * 	Base UIControl class: This class is an UIObject that contains a parameterized control.
+	 * 
+	 * 	See onyx.controls.Control
 	 */
 	public class UIControl extends UIObject implements IDisposable {
 		
 		/**
-		 * 
+		 * 	Stores all available UIControls
 		 */
 		public static const controls:Dictionary	= new Dictionary(true);
 
 		/**
+		 * 	Stores the related core control
+		 */
+		protected var _control:Control;
+
+		/**
 		 * 	@constructor
 		 */
-		public function UIControl(options:UIOptions, movesToTop:Boolean = false, label:String = null):void {
+		public function UIControl(options:UIOptions, control:Control, movesToTop:Boolean = false, label:String = null):void {
 			
+			// store the UIControl so we can toggle affectable controls
 			controls[this] = null;
+
+			// store the control
+			_control = control;
 			
 			if (options) {
 			
@@ -70,6 +81,19 @@ package ui.controls {
 			}
 			
 			super(movesToTop);
+		}
+		
+		/**
+		 * 
+		 */
+		public function get control():Control {
+			return _control;
+		}
+		
+		/**
+		 * 
+		 */
+		override public function dispose():void {
 		}
 	}
 }

@@ -165,7 +165,7 @@ package ui.states {
 			ROOT.addChild(window);
 			
 			// add a display
-			var display:Display = Onyx.createDisplay(STAGE.stageWidth - 640, 0, 640 / BITMAP_WIDTH, 480 / BITMAP_HEIGHT, !SETTING_SUPPRESS_DISPLAYS);
+			var display:Display = Onyx.createDisplay(STAGE.stageWidth - 320, STAGE.stageHeight - 240, 320 / BITMAP_WIDTH, 240 / BITMAP_HEIGHT, !SETTING_SUPPRESS_DISPLAYS);
 			display.createLayers(5);
 
 			// now add all the windows

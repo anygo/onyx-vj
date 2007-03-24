@@ -48,7 +48,7 @@ package ui.window {
 			new WindowRegistration('CONSOLE',		ui.window.Console, 6, 582),
 			new WindowRegistration('FILTERS',		Filters, 412, 318),
 			new WindowRegistration('TRANSITIONS',	TransitionWindow, 6, 544),
-			new WindowRegistration('SETTINGS',		SettingsWindow, 200, 544),
+			new WindowRegistration('TEMPO',			TempoWindow, 200, 544),
 			new WindowRegistration('LAYERS',		LayerWindow, 0, 0),
 			new WindowRegistration('MEMORY',		MemoryWindow, 200,200, false),
 			new WindowRegistration('DISPLAY',		DisplayWindow, 412, 500),

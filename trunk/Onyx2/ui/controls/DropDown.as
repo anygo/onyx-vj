@@ -34,6 +34,7 @@ package ui.controls {
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
 	
+	import onyx.constants.POINT;
 	import onyx.controls.Control;
 	import onyx.controls.ControlRange;
 	import onyx.events.ControlEvent;
@@ -64,11 +65,6 @@ package ui.controls {
 		/**
 		 * 	@private
 		 */
-		private var _control:ControlRange;
-
-		/**
-		 * 	@private
-		 */
 		private var _index:int;
 
 		/**
@@ -94,15 +90,17 @@ package ui.controls {
 		/**
 		 * 	@constructor
 		 */
-		public function DropDown(options:UIOptions, range:Control):void {
+		public function DropDown(options:UIOptions, icontrol:Control):void {
+			
+			var control:ControlRange = icontrol as ControlRange;
 
-			var control:ControlRange = range as ControlRange;
+			// super!
+			super(options, control, true, control.display);
 			
-			super(options, true, control.display);
-			
+			// set width
 			_width = options.width;
-			
-			_control = control;
+
+			// listen for changes			
 			_control.addEventListener(ControlEvent.CHANGE, _onChanged);
 			
 			// assign the data provider
@@ -168,10 +166,13 @@ package ui.controls {
 		 */
 		private function _onPress(event:MouseEvent):void {
 			
-			_items = [];
-			_index = _data.indexOf(_control.value);
+			var control:ControlRange	= _control as ControlRange;
+
+			// create an items array
+			var items:Array				= [];
+			_index						= _data.indexOf(control.value);
 			
-			var local:Point = localToGlobal(new Point(0,0));
+			var local:Point = localToGlobal(POINT);
 			var start:int = Math.max(local.y - (_index * ITEM_HEIGHT), 0 - local.y) ;
 
 			graphics.lineStyle(0, LINE_DEFAULT, .5);
@@ -182,7 +183,7 @@ package ui.controls {
 			for (var count:int = 0; count < len; count++) {
 				
 				var item:Option	= new Option(
-					(_control.binding) ? (_data[count] ? _data[count][_control.binding] : 'None') : _data[count] || 'off', count, _width, _control.binding)
+					(control.binding) ? (_data[count] ? _data[count][control.binding] : 'None') : _data[count] || 'off', count, _width, control.binding)
 				;
 				
 				item.addEventListener(MouseEvent.MOUSE_OVER, _onRollOver);
@@ -191,10 +192,12 @@ package ui.controls {
 				item.y = start - local.y;
 				start += ITEM_HEIGHT;
 				
-				_items.push(item);
+				items.push(item);
 				addChild(item);
 
 			}
+			
+			_items = items;
 			
 			stage.addEventListener(MouseEvent.MOUSE_UP, _onRelease);
 		}
@@ -203,15 +206,19 @@ package ui.controls {
 		 * 	@private
 		 */
 		private function _onRelease(event:MouseEvent):void {
+
+			var control:ControlRange	= _control as ControlRange;
 			
 			graphics.clear();
 
 			if (_selectedIndex) {
-				_index = _selectedIndex.index;
 				
-				_control.value = _control.data[_index];
+				_index = _selectedIndex.index;
+				control.value = control.data[_index];
+				
 			}
 			
+			// kill all the items
 			for each (var item:Option in _items) {
 				item.removeEventListener(MouseEvent.MOUSE_OVER, _onRollOver);
 				item.removeEventListener(MouseEvent.MOUSE_OUT, _onRollOut);
@@ -240,14 +247,21 @@ package ui.controls {
 			option.draw(DROPDOWN_DEFAULT, _width);
 		}
 		
+		/**
+		 * 	Sets text to a value
+		 */
 		public function setText(value:*):void {
-
-			_label.text = (_control.binding && value) ? value[_control.binding] || 'None' : value || 'None';
+			var control:ControlRange	= _control as ControlRange;
+			_label.text = (control.binding && value) ? value[control.binding] || 'None' : value || 'None';
 
 		}
 		
+		/**
+		 * 	Dispose
+		 */
 		override public function dispose():void {
 			
+			// remove value listening
 			_control.removeEventListener(ControlEvent.CHANGE, _onChanged);
 			
 			// add listeners			
@@ -282,7 +296,7 @@ final class Option extends Sprite {
 		_label				= new TextField(width, 9);
 		_label.x			= 2;
 		_label.y			= 1;
-		_label.text			= text.toUpperCase();
+		_label.text			= text ? text.toUpperCase() : '';
 		
 		graphics.beginFill(DROPDOWN_DEFAULT);
 		graphics.drawRect(0, 0, width, DropDown.ITEM_HEIGHT);

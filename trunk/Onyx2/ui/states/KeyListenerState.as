@@ -40,6 +40,9 @@ package ui.states {
 	import ui.core.UIManager;
 	import ui.layer.UILayer;
 
+	/**
+	 * 
+	 */
 	public final class KeyListenerState extends ApplicationState {
 		
 		public static var SELECT_FILTER_UP:int		= 38;
@@ -56,6 +59,22 @@ package ui.states {
 		public static var SELECT_LAYER_3:int		= 52;
 		public static var SELECT_LAYER_4:int		= 53;
 		
+		public static var ACTION_1:int				= 112;
+		public static var ACTION_2:int				= 113;
+		public static var ACTION_3:int				= 114;
+		public static var ACTION_4:int				= 115;
+		public static var ACTION_5:int				= 116;
+		public static var ACTION_6:int				= 117;
+		public static var ACTION_7:int				= 118;
+		public static var ACTION_8:int				= 119;
+		public static var ACTION_9:int				= 120;
+		public static var ACTION_10:int				= 121;
+		public static var ACTION_11:int				= 122;
+		public static var ACTION_12:int				= 123;
+		
+		/**
+		 * 	Initialize
+		 */
 		override public function initialize():void {
 			
 			// listen for keys

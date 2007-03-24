@@ -47,11 +47,6 @@ package ui.controls {
 		/**
 		 * 	@private
 		 */
-		private var _control:Control;
-
-		/**
-		 * 	@private
-		 */
 		private var _value:Boolean;
 
 		/**
@@ -64,9 +59,7 @@ package ui.controls {
 		 */
 		public function CheckBox(options:UIOptions, control:Control):void {
 
-			_control = control;
-
-			super(options, true, control.display);
+			super(options, control, true, control.display);
 			
 			_value = control.value;
 
@@ -78,7 +71,7 @@ package ui.controls {
 
 			_onChanged();
 			
-			_control.addEventListener(ControlEvent.CHANGE, _onChanged);
+			control.addEventListener(ControlEvent.CHANGE, _onChanged);
 			
 			addEventListener(MouseEvent.MOUSE_DOWN, _onMouseDown);
 		}
@@ -87,7 +80,7 @@ package ui.controls {
 		 * 	@private
 		 */
 		private function _onMouseDown(event:MouseEvent):void {
-			_control.value = !_value;
+			control.value = !_value;
 		}
 		
 		/**
@@ -104,13 +97,12 @@ package ui.controls {
 		 */
 		override public function dispose():void {
 			
-			super.dispose();
-
-			_control.removeEventListener(ControlEvent.CHANGE, _onChanged);
-			_control = null;
+			control.removeEventListener(ControlEvent.CHANGE, _onChanged);
 			_label	= null;
 			
 			removeEventListener(MouseEvent.MOUSE_DOWN, _onMouseDown);
+
+			super.dispose();
 		}
 	}
 }

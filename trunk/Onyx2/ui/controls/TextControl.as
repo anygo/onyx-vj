@@ -45,11 +45,6 @@ package ui.controls {
 		/**
 		 * 	@private
 		 */
-		private var _control:ControlString;
-
-		/**
-		 * 	@private
-		 */
 		private var _label:TextField;
 		
 		/**
@@ -57,9 +52,7 @@ package ui.controls {
 		 */
 		public function TextControl(options:UIOptions, control:Control):void {
 			
-			super(options, true, control.display);
-
-			_control = control as ControlString;
+			super(options, control, true, control.display);
 			
 			_label = new TextField(options.width + 3, options.height, TEXT_DEFAULT_CENTER);
 			addChild(_label);

@@ -46,11 +46,6 @@ package ui.controls {
 		 * 	@private
 		 */
 		private static var _picker:Picker;
-		
-		/**
-		 * 	@private
-		 */
-		private var _control:ControlUInt;
 
 		/**
 		 * 	@private
@@ -72,9 +67,7 @@ package ui.controls {
 		 */		
 		public function ColorPicker(options:UIOptions, control:Control):void {
 			
-			super(options, true, control.display);
-			
-			_control = control as ControlUInt;
+			super(options, control, true, control.display);
 			
 			_draw(options.width, options.height);
 			
@@ -130,6 +123,7 @@ package ui.controls {
 			
 			transform.color = _picker.asset.bitmapData.getPixel(_lastX, _lastY);
 			
+			control as ControlUInt
 			_control.value = transform.color;
 			_preview.transform.colorTransform = transform;
 			

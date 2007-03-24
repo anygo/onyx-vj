@@ -75,7 +75,7 @@ package ui.controls {
 				invert		= (metadata.invert is Boolean) ? metadata.invert : invert;
 			}
 			
-			super(options, true, proxy.display);
+			super(options, control, true, proxy.display);
 
 			_button = new ButtonClear(width,	height);
 			_value	= new TextField(width + 3,	height,	TEXT_DEFAULT_CENTER);
