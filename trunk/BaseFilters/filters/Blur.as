@@ -78,7 +78,7 @@ package filters {
 		}
 		
 		public function applyFilter(bitmapData:BitmapData):void {
-			bitmapData.applyFilter(bitmapData, bitmapData.rect, new Point(0,0), _filter);
+			bitmapData.applyFilter(bitmapData, BITMAP_RECT, POINT, _filter);
 		}
 		
 		public function terminate():void {

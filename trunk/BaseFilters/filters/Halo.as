@@ -71,8 +71,8 @@ package filters {
 		
 		public function applyFilter(bitmapData:BitmapData):void {
 
-			_bmp.copyPixels(bitmapData, bitmapData.rect, POINT);
-			_bmp.applyFilter(bitmapData, bitmapData.rect, new Point(0,0), _filter);
+			_bmp.copyPixels(bitmapData, BITMAP_RECT, POINT);
+			_bmp.applyFilter(bitmapData, BITMAP_RECT, POINT, _filter);
 			
 			bitmapData.draw(_bmp, null, null, blendMode);
 		}

@@ -6,6 +6,7 @@ package filters {
 	import flash.geom.Rectangle;
 	import flash.utils.ByteArray;
 	
+	import onyx.constants.*;
 	import onyx.controls.*;
 	import onyx.core.*;
 	import onyx.filter.*;
@@ -23,7 +24,7 @@ package filters {
 		
 		public function applyFilter(bitmapData:BitmapData):void {
 			if (horiz) {
-				var rect:Rectangle = bitmapData.rect;
+				var rect:Rectangle = BITMAP_RECT.clone();
 				rect.width /= 2;
 	
 				var matrix:Matrix = new Matrix();

@@ -28,79 +28,27 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package filters {
+package macros {
 	
-	import flash.display.BitmapData;
-	import flash.events.*;
-	import flash.filters.*;
-	import flash.geom.*;
-	import flash.utils.Timer;
+	import onyx.display.Display;
+	import onyx.macro.*;
+	import onyx.layer.Layer;
 	
-	import onyx.constants.*;
-	import onyx.controls.*;
-	import onyx.core.*;
-	import onyx.filter.*;
-	import onyx.tween.*;
-	
-	use namespace onyx_ns;
+	public final class FrameRNDMacro extends Macro {
+		
+		public function FrameRNDMacro():void {
+		}
+		
+		override public function initialize():void {
+			var display:Display = Display.getDisplay(0);
 
-	/**
-	 * 	TBD: Turn this into a convolve filter
-	 */
-	public final class ConvolveFilter extends Filter implements IBitmapFilter {
-
-		/**
-		 * 
-		 */
-		private var __blurX:Control;
-		private var __blurY:Control;
-		private var _filter:BlurFilter					= new BlurFilter(4, 4);
-		
-		public function ConvolveFilter():void {
-
-			__blurX = new ControlInt('blurX', 'blurX', 0, 42, 4);
-			__blurY = new ControlInt('blurY', 'blurY', 0, 42, 4);
-			
-			super(
-				false,
-				new ControlProxy('blur', 'blur',
-					__blurX,
-					__blurY,
-					{ factor: 5, invert: true }
-				)
-			);
-		}
-		
-		public function applyFilter(bitmapData:BitmapData):void {
-			bitmapData.applyFilter(bitmapData, BITMAP_RECT, POINT, _filter);
-		}
-		
-		public function terminate():void {
-			_filter = null;
-		}
-		
-		public function set blurX(x:int):void {
-			_filter.blurX = __blurX.setValue(x);
-		}
-		
-		public function get blurX():int {
-			return _filter.blurX;
-		}
-		
-		public function set blurY(y:int):void {
-			_filter.blurY = __blurY.setValue(y);
-		}
-		
-		public function get blurY():int {
-			return _filter.blurY;
-		}
-		
-		public function get quality():int {
-			return _filter.quality;
-		}
-		
-		override public function dispose():void {
+			for each (var layer:Layer in display.layers) {
+			}
 
 		}
+		
+		override public function terminate():void {
+		}
+		
 	}
 }

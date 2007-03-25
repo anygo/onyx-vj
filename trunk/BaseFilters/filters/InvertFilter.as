@@ -28,7 +28,7 @@ package filters {
 		}
 		
 		public function applyFilter(bitmapData:BitmapData):void {
-			bitmapData.applyFilter(bitmapData, bitmapData.rect, POINT, new ColorMatrixFilter(_arr));
+			bitmapData.applyFilter(bitmapData, BITMAP_RECT, POINT, new ColorMatrixFilter(_arr));
 		}
 		
 	}

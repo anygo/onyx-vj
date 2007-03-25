@@ -113,7 +113,7 @@ package filters {
 			_source.draw(bitmapData, _matrix, _transform);
 			
 			// copy the pixels back to the original bitmap
-			bitmapData.copyPixels(_source, bitmapData.rect, POINT);
+			bitmapData.copyPixels(_source, BITMAP_RECT, POINT);
 			
 		}
 		

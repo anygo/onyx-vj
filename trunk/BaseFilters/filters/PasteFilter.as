@@ -33,7 +33,7 @@ package filters {
 		public function applyFilter(bitmapData:BitmapData):void {
 			
 			// _source.fillRect(_source.rect, 0x00000000);
-			_source.applyFilter(_source, _source.rect, new Point(0,0), new BlurFilter(4,4));
+			_source.applyFilter(_source, BITMAP_RECT, POINT, new BlurFilter(4,4));
 			
 			var transform:ColorTransform	= new ColorTransform(1,1,1,.2);
 			var orig:ColorTransform			= new ColorTransform(1,1,1,.8);

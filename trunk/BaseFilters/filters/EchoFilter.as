@@ -119,7 +119,7 @@ package filters {
 			}		
 	
 			// copy the pixels back to the original bitmap
-			bitmapData.copyPixels(_source, bitmapData.rect, POINT);
+			bitmapData.copyPixels(_source, BITMAP_RECT, POINT);
 		}
 		
 		override public function dispose():void {

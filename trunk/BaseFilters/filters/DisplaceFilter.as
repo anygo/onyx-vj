@@ -41,7 +41,7 @@ package filters
 		
 		public function applyFilter(source:BitmapData):void {
 			if (_filter) {
-				source.applyFilter(source, source.rect, POINT, _filter);
+				source.applyFilter(source, BITMAP_RECT, POINT, _filter);
 			}
 		}
 		
