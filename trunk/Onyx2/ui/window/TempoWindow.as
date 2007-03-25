@@ -66,6 +66,11 @@ package ui.window {
 		 * 	@private
 		 */
 		private var _midiButton:TextButton;
+
+		/**
+		 *  @private
+		 */
+		private var _midiListen:DropDown;
 		
 		/**
 		 * 	@private
@@ -109,11 +114,14 @@ package ui.window {
 			// controls for display
 			_controlXML				= new TextButton(options, 'save layers');
 			_saveButton				= new TextButton(options, 'save jpgs');
-			_midiButton				= new TextButton(options, 'midi learn');
 			
 			// tempo controls
 			_controlTempo			= new SliderV(options, TEMPO.controls.getControl('tempo'));
 			_controlActive			= new DropDown(options, TEMPO.controls.getControl('snapTempo'));
+			
+			// midi constrols
+			_midiButton				= new TextButton(options, 'midi learn');
+			_midiListen				= new DropDown(options, MIDI.controls.getControl('listen'));
 			
 			// add controls
 			addChildren(	
@@ -122,7 +130,8 @@ package ui.window {
 				_tapTempo,		118,	20,
 				_controlXML,	2,		40,
 				_saveButton,	2,		60,
-				_midiButton,	2,		80
+				_midiButton,	2,		80,
+				_midiListen,	60,		80
 			);
 
 			// start the timer
