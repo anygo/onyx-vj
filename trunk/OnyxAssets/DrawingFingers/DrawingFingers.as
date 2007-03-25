@@ -35,6 +35,7 @@
 	import flash.filters.*;
 	import flash.geom.*;
 	
+	import onyx.constants.*;
 	import onyx.content.*;
 	import onyx.controls.*;
 	import onyx.core.*;
@@ -50,7 +51,7 @@
 	[SWF(width='320', height='240', frameRate='24')]
 	public class DrawingFingers extends Sprite implements IRenderObject, IControlObject {
 		
-		private var _source:BitmapData		= new BitmapData(320,240,true, 0x00000000);
+		private var _source:BitmapData		= BASE_BITMAP();
 		private var _controls:Controls;
 		
 		public var color1:uint	= 0xFF0000;
