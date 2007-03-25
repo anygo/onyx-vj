@@ -38,6 +38,7 @@
 	import onyx.constants.*;
 	import onyx.content.*;
 	import onyx.controls.*;
+	import onyx.constants.*;
 	import onyx.core.*;
 	import onyx.events.*;
 	import onyx.net.*;
@@ -48,7 +49,6 @@
 	 * 	Drawing clip
 	 * 	Control click on a layer the preview box to send mouse events to this file
 	 */
-	[SWF(width='320', height='240', frameRate='24')]
 	public class DrawingFingers extends Sprite implements IRenderObject, IControlObject {
 		
 		private var _source:BitmapData		= BASE_BITMAP();
@@ -88,12 +88,8 @@
 			_client.addEventListener(FingerEvent.DOWN,onFingerDown);
     		_client.addEventListener(FingerEvent.UP,onFingerUp);
     		_client.addEventListener(FingerEvent.DRAG,onFingerDrag);
-    		_client.addEventListener(MidiEvent.NOTEON,onNoteon);
     	}
 		
-		public function onNoteon(m:MidiEvent):void {
-				trace("Got MIDI Noteon! pitch=",m.pitch());
-		}
     	public function onFingerDown(f:FingerEvent):void {
  	 		_draw(f);
     	}
@@ -105,8 +101,8 @@
 	   	}
 	
 		private function _draw(f:FingerEvent):void {
-			var x:int = 320 * f.x();
-			var y:int = 240 - 240 * f.y();
+			var x:int = BITMAP_WIDTH * f.x();
+			var y:int = BITMAP_HEIGHT - BITMAP_HEIGHT * f.y();
 			var r:Number = 20 * f.proximity();
 			if ( fingerstyle == 'FILLED' ) {
 				graphics.beginFill(color1,fingeralpha);
@@ -137,11 +133,8 @@
 			var t:RenderTransform = RenderTransform.getTransform(this);
 			t.content = _source;
 
-			// _source.scroll(2,1);
-			// _source.fillRect(_source.rect,0x66ff0000);
-		
-			_blur.blurX = blurX * 320 / 4;
-			_blur.blurY = blurY * 240 / 3;
+			_blur.blurX = blurX * BITMAP_WIDTH / 4;
+			_blur.blurY = blurY * BITMAP_HEIGHT / 3;
             _source.applyFilter(_source, _source.rect, new Point(  ), _blur);
             
             var f:Number;
