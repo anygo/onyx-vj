@@ -46,7 +46,7 @@ package onyx.core {
 		private var _listen:Boolean = false;
 		private var _controls:Controls;
 		private var _client:NthClient;
-		private var _map:Dictionary = new Dictionary();
+		private var _map:Dictionary;
 
 		public function Midi():void {
 			if ( !_creating ) {
@@ -56,6 +56,7 @@ package onyx.core {
 			_controls = new Controls(this,
 				new ControlRange('listen', 'midi control', BOOLEAN)
 				);
+			_map = new Dictionary();
 		}
 		public static function getInstance():Midi {
 			if ( !_instance ) {
@@ -92,20 +93,49 @@ package onyx.core {
 		
 		public function _onNoteon(e:MidiEvent):void {
 			trace("got NoteOn");
-			dispatchEvent(new Event(Event.CHANGE));
+			// dispatchEvent(new Event(Event.CHANGE));
 		}
+		
 		public function _onNoteoff(e:MidiEvent):void {
 			trace("got NoteOff");
-			dispatchEvent(new Event(Event.CHANGE));
+			// dispatchEvent(new Event(Event.CHANGE));
 		}
+		
 		public function _onProgram(e:MidiEvent):void {
 			trace("got Program");
-			dispatchEvent(new Event(Event.CHANGE));
+			// dispatchEvent(new Event(Event.CHANGE));
 		}
+		
 		public function _onController(e:MidiEvent):void {
-			trace("got Controller");
-			dispatchEvent(new Event(Event.CHANGE));
+			// dispatchEvent(new Event(Event.CHANGE));
+			for ( var co:Object in _map ) {
+				var c:Control = co as Control;
+				var o:Object = _map[c];
+				if (o.device == e.device() && o.channel == e.channel() && o.controller == e.controller() ) {
+					var f:Number = e.value() / 127.0;
+					if ( c is ControlNumber ) {
+						(c as ControlNumber).setAmount(f);
+					} else if ( c is ControlInt ) {
+						(c as ControlInt).setAmount(f);
+					} else {
+						trace("Don't know how to handle that type of control");
+					}
+				}
+			}
 		}
+		
+		public function registerController(ct:Control, e:MidiEvent):void {
+			_map[ct] = {device:e.device(), channel:e.channel(), controller:e.controller()};
+		}
+		
+		public function registerNote(ct:Control, e:MidiEvent):void {
+			_map[ct] = {device:e.device(), channel:e.channel(), pitch:e.pitch()};
+		}
+		
+		public function deregisterController(ct:Control):void {
+			delete _map[ct];
+		}
+		
 		public function dispose():void {
 		}
 		public function get controls():Controls {

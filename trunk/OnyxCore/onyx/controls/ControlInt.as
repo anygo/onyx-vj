@@ -76,5 +76,14 @@ package onyx.controls {
 			
 			return value;
 		}
+		
+		/**
+		 *  Set using an amount (from 0.0 to 1.0) within the min/max range.
+		 */
+		override public function setAmount(amount:Number):* {
+			var v:int = _min + (_max - _min) * amount;
+			setValue(v);
+			return v;
+		}
 	}
 }
