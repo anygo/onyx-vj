@@ -81,11 +81,11 @@ package onyx.controls {
 			return value;
 		}
 		
-		/**
-		 *  Set using an amount (from 0.0 to 1.0) within the min/max range.
-		 */
-		public function setAmount(i:Number):void {
-			this.value = _min + ((_max - _min) * i);
-		}
+ 		public function get min():* {
+ 			return _min
+ 		}
+ 		public function get max():* {
+ 			return _max
+ 		}
 	}
 }

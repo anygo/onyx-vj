@@ -79,44 +79,36 @@ package onyx.core {
 		}
 		public function start():void {
 			_client.addEventListener(MidiEvent.NOTEON, _onNoteon);
-			_client.addEventListener(MidiEvent.NOTEOFF, _onNoteoff);
 			_client.addEventListener(MidiEvent.PROGRAM, _onProgram);
 			_client.addEventListener(MidiEvent.CONTROLLER, _onController);
 		}
 		
 		public function stop():void {
 			_client.removeEventListener(MidiEvent.NOTEON, _onNoteon);
-			_client.removeEventListener(MidiEvent.NOTEOFF, _onNoteoff);
 			_client.removeEventListener(MidiEvent.PROGRAM, _onProgram);
 			_client.removeEventListener(MidiEvent.CONTROLLER, _onController);
 		}
 		
 		public function _onNoteon(e:MidiEvent):void {
-			trace("got NoteOn");
-			// dispatchEvent(new Event(Event.CHANGE));
-		}
-		
-		public function _onNoteoff(e:MidiEvent):void {
-			trace("got NoteOff");
-			// dispatchEvent(new Event(Event.CHANGE));
+			trace("Don't know how to handle noteon messages yet");
 		}
 		
 		public function _onProgram(e:MidiEvent):void {
-			trace("got Program");
-			// dispatchEvent(new Event(Event.CHANGE));
+			trace("Don't know how to handle program messages yet");
 		}
 		
 		public function _onController(e:MidiEvent):void {
-			// dispatchEvent(new Event(Event.CHANGE));
 			for ( var co:Object in _map ) {
 				var c:Control = co as Control;
 				var o:Object = _map[c];
 				if (o.device == e.device() && o.channel == e.channel() && o.controller == e.controller() ) {
 					var f:Number = e.value() / 127.0;
 					if ( c is ControlNumber ) {
-						(c as ControlNumber).setAmount(f);
+						var n:ControlNumber = c as ControlNumber;
+						n.value = n.min + (n.max - n.min) * f;
 					} else if ( c is ControlInt ) {
-						(c as ControlInt).setAmount(f);
+						var i:ControlInt = c as ControlInt;
+						i.value = i.min + (i.max - i.min) * f;
 					} else {
 						trace("Don't know how to handle that type of control");
 					}
