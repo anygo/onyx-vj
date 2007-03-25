@@ -15,6 +15,7 @@ Changes:
 - Addition of Tempo beats 1/16, 1/8, 1/4, 1/2, 1.  Can sync tempo to specific beats.
 - Changed the random property in the FrameRND to off/start/end -- setting it to end makes the framerate smooth towards a new random time
 - Display properties of saturation, threshold, contrast, and brightness can now be affected
+- Control Arrays can now change and will be dispatched to the UI
 
 Bug Fixes:
 
@@ -32,6 +33,7 @@ API Changes:
 - onyx.core.IRenderObject moved to onyx.render
 - onyx.core.settings removed, variables now live in onyx.settings.*
 - More performance tuning, bitmapdata.rect now changed to onyx.constants.BITMAP_RECT
+- Addition of ControlPlugin (for filters, transitions, macros, visualizers)
 
 Dev Notes:
 

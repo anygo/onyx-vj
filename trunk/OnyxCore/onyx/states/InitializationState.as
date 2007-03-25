@@ -134,7 +134,7 @@ package onyx.states {
 					for each (var plugin:Plugin in plugins) {
 						
 						Onyx.registerPlugin(plugin);
-						Console.output('REGISTERING ' + plugin.name.toUpperCase());
+						Console.output('REGISTERING ' + plugin.name);
 						
 					}
 				}

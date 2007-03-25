@@ -80,12 +80,12 @@ package onyx.content {
 		private var _framerate:Number						= 1;
 		
 		/**
-		 * 
+		 * 	@private
 		 */
 		private var _ratioX:Number							= 1;
 		
 		/**
-		 * 
+		 * 	@private
 		 */
 		private var _ratioY:Number							= 1;
 		
@@ -94,11 +94,6 @@ package onyx.content {
 		 * 	Stores last time the draw was executed
 		 */
 		private var _lastTime:uint;
-		
-		/**
-		 * 	@private
-		 */
-		private var _mc:MovieClip;
 
 		/**
 		 * 	@constructor
@@ -106,7 +101,6 @@ package onyx.content {
 		public function ContentMC(layer:Layer, path:String, loader:Loader):void {
 
 			_loader			= loader;
-			_mc				= loader.content as MovieClip;
 			
 			// sets the framerate based on the swf framerate
 			_framerate		= loader.contentLoaderInfo.frameRate / framerate;
@@ -121,45 +115,49 @@ package onyx.content {
 				_ratioY = BITMAP_HEIGHT / loader.contentLoaderInfo.height;
 			}
 			
-			super(layer, path, _mc);
+			super(layer, path, loader.content);
 		}
 
 		/**
 		 * 	Sets the time
 		 */
 		override public function set time(value:Number):void {
-			
-			_frame = _mc.totalFrames * value;
-			
+			var mc:MovieClip = super._content as MovieClip;
+			_frame = mc.totalFrames * value;
 		}
 		
 		/**
 		 * 	Gets the time
 		 */
 		override public function get time():Number {
-			return _frame / (_mc.totalFrames );
+			var mc:MovieClip = super._content as MovieClip;
+			return _frame / (mc.totalFrames );
 		}
 		
 		/**
 		 * 	Gets the total time
 		 */
 		override public function get totalTime():int {
-			return (_mc.totalFrames / _loader.contentLoaderInfo.frameRate) * 1000;
+			var mc:MovieClip = super._content as MovieClip;
+			return (mc.totalFrames / _loader.contentLoaderInfo.frameRate) * 1000;
 		}
 		
 		/**
 		 * 	Updates the bimap source
 		 */
 		override public function render():RenderTransform {
+
+			var mc:MovieClip = super._content as MovieClip;
 			
 			if (!_paused) {
-				
+
 				// get framerate
 				var time:int = 1000 / ((getTimer() - _lastTime)) || STAGE.frameRate;
 				
 				// add the framerate based off the last time
 				var frame:Number = _frame + ((STAGE.frameRate / time) * _framerate);
-				var totalFrames:int	= _mc.totalFrames;
+				var totalFrames:int	= mc.totalFrames;
+				
 				var loopEnd:int = totalFrames * _loopEnd;
 				var loopStart:int = totalFrames * _loopStart;
 				
@@ -175,7 +173,7 @@ package onyx.content {
 			_lastTime = getTimer();
 
 			// go to the right frame
-			_mc.gotoAndStop(Math.floor(_frame));
+			mc.gotoAndStop(Math.floor(_frame));
 
 			// render me baby					
 			return super.render();
@@ -239,19 +237,20 @@ package onyx.content {
 		 */
 		override public function dispose():void {
 
+			var mc:MovieClip = super._content as MovieClip;
+
 			// dispose
 			super.dispose();
 
 			// unregister
 			var value:Boolean = ContentLoader.unregister(_path);
 			
-			if (!value && _mc is IDisposable) {
-				(_mc as IDisposable).dispose();
+			if (!value && mc is IDisposable) {
+				(mc as IDisposable).dispose();
 			}
 			
 			// remove reference
 			_loader = null;
-			_mc		= null;
 		}
 		
 		/**

@@ -30,20 +30,14 @@
  */
 package onyx.content {
 	
-	import flash.display.BitmapData;
-	import flash.display.DisplayObject;
-	import flash.display.IBitmapDrawable;
+	import flash.display.*;
 	import flash.events.IEventDispatcher;
-	import flash.geom.Matrix;
-	import flash.geom.Rectangle;
-	import flash.geom.Transform;
+	import flash.geom.*;
 	
-	import onyx.controls.Controls;
-	import onyx.controls.IControlObject;
+	import onyx.controls.*;
 	import onyx.core.*;
-	import onyx.filter.Filter;
-	import onyx.filter.IFilterObject;
-	import onyx.render.IRenderObject;
+	import onyx.filter.*;
+	import onyx.render.*;
 
 	[Event(name="filter_applied",	type="onyx.events.FilterEvent")]
 	[Event(name="filter_removed",	type="onyx.events.FilterEvent")]

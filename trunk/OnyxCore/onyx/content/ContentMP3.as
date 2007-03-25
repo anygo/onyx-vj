@@ -79,17 +79,17 @@ package onyx.content {
 		/**
 		 * 	@private
 		 */
-		private var _plugin:Plugin;
-
-		/**
-		 * 	@private
-		 */
 		private var _visualizer:Visualizer;
 
 		/**
 		 * 	@constructor
 		 */
 		public function ContentMP3(layer:Layer, path:String, sound:Sound):void {
+			
+			// add a control for the visualizer
+			_controls = new Controls(this, 
+				new ControlPlugin('visualizer', 'Visualizer', ControlPlugin.VISUALIZERS)
+			);
 			
 			_sound = sound;
 			_length = Math.max(Math.floor(sound.length / 100) * 100, 0);
@@ -98,29 +98,30 @@ package onyx.content {
 			_loopEnd	= _length;
 			
 			super(layer, path, null);
-
-			// add a control for the visualizer
-			_controls = new Controls(this, 
-				new ControlRange('visualizer', 'Visualizer', Visualizer.visualizers, 0, 'name')
-			);
 		}
 
 		/**
 		 * 	Gets the visualizer
 		 */
-		public function get visualizer():Plugin {
-			return _plugin;
+		public function get visualizer():Visualizer {
+			return _visualizer;
 		}
 
 		/**
 		 * 	Sets the visualizer
 		 */
-		public function set visualizer(plugin:Plugin):void {
-			_plugin		= plugin;
-			if (plugin) {
-				_visualizer = plugin.getDefinition() as Visualizer;
+		public function set visualizer(obj:Visualizer):void {
+			_visualizer = obj;
+			
+			if (obj) {
+				if (obj.controls) {
+					_controls.concat.apply(_controls, obj.controls);
+				}
 			} else {
-				_visualizer = null;
+				if (_controls.length > 1) {
+					_controls.splice(1, _controls.length - 1);
+					_controls.dispatchEvent(new Event(Event.CHANGE));
+				}
 			}
 		}
 		

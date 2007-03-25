@@ -30,9 +30,7 @@
  */
 package onyx.plugin {
 
-	import onyx.core.IDisposable;
-	import onyx.core.PluginBase;
-	import onyx.core.onyx_ns;
+	import onyx.core.*;
 	import onyx.utils.array.swap;
 	
 	use namespace onyx_ns;
@@ -48,12 +46,14 @@ package onyx.plugin {
 		public var name:String;
 		
 		/**
+		 * 	@private
 		 * 	Class definition for the object
 		 */
 		onyx_ns var _definition:Class;
 		
 		/**
-		 * 
+		 * 	@private
+		 * 	The parent global array used by Onyx to get filter indices
 		 */
 		onyx_ns var _parent:Array;
 		
@@ -63,7 +63,8 @@ package onyx.plugin {
 		public var description:String;
 		
 		/**
-		 * 
+		 * 	@private
+		 * 	Store metadata about the plugin
 		 */
 		private var metadata:Object;
 		
@@ -82,8 +83,9 @@ package onyx.plugin {
 		 * 	Returns a new object based on the plugin definition
 		 */
 		public function getDefinition():PluginBase {
-			var obj:PluginBase = new _definition() as PluginBase;
-			obj._name = name;
+			var obj:PluginBase	= new _definition() as PluginBase;
+			obj._plugin			= this;
+			obj._name			= name;
 			
 			return obj;
 		}

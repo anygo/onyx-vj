@@ -41,12 +41,7 @@ package onyx.events {
 		/**
 		 * 	Changed
 		 */
-		public static const CHANGE:String = 'ce_ch';
-		
-		/**
-		 * 	When the controls have updated
-		 */
-		// public static const UPDATE:String = 'ce_up';
+		public static const CHANGE:String	= 'ce_ch';
 		
 		/**
 		 * 	The value changed to
@@ -56,11 +51,11 @@ package onyx.events {
 		/**
 		 * 	Dispatched when a control has changed
 		 */
-		public function ControlEvent(v:*, type:String = null):void {
+		public function ControlEvent(v:*):void {
 			
 			value = v;
 			
-			super(type || CHANGE);
+			super(CHANGE);
 		}
 		
 		/**
@@ -71,7 +66,5 @@ package onyx.events {
 			event.value = value;
 			return event;
 		}
-
-		
 	}
 }

@@ -51,7 +51,7 @@ package onyx.sound {
 		/**
 		 * 	@private
 		 */
-		private static var _visualizers:Array		= [null];
+		onyx_ns static var _visualizers:Array		= [];
 		
 		/**
 		 * 	Registers a plugin

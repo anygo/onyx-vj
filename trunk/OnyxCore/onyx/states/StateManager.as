@@ -29,8 +29,8 @@
  * 
  */
 package onyx.states {
-	import flash.events.Event;
 	
+	import flash.events.Event;
 	
 	/**
 	 * 	Manager class that loads and removes states

@@ -173,7 +173,7 @@ package onyx.filter {
 		}
 		
 		/**
-		 * 
+		 * 	Loads xml
 		 */
 		public function loadXML(xml:XMLList):void {
 			

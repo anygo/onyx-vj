@@ -32,8 +32,8 @@ package onyx.events {
 	
 	import flash.events.Event;
 	
-	import onyx.transition.Transition;
 	import onyx.content.Content;
+	import onyx.transition.Transition;
 
 	/**
 	 * 	Dispatched from a ContentTransition when a transition has finished

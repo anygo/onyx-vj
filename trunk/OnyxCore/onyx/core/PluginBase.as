@@ -33,6 +33,7 @@ package onyx.core {
 	import flash.events.EventDispatcher;
 	
 	import onyx.controls.*;
+	import onyx.plugin.Plugin;
 	
 	use namespace onyx_ns;
 
@@ -45,6 +46,11 @@ package onyx.core {
 		 * 	@private
 		 */
 		onyx_ns var _name:String;
+		
+		/**
+		 * 
+		 */
+		onyx_ns var _plugin:Plugin;
 		
 		/**
 		 * 	@private
@@ -77,7 +83,8 @@ package onyx.core {
 		onyx_ns function clean():void {
 			if (_controls) {
 				_controls.dispose();
-				_controls = null;
+				_controls	= null;
+				_plugin		= null;
 			}
 		}
 	}

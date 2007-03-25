@@ -60,7 +60,7 @@ package onyx.transition {
 		/**
 		 * 	@private
 		 */
-		private static var _transitions:Array		= [];
+		onyx_ns static var _transitions:Array		= [];
 		
 		/**
 		 * 	Registers a plugin

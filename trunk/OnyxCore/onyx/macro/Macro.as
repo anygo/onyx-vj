@@ -51,7 +51,7 @@ package onyx.macro {
 		/**
 		 * 	@private
 		 */
-		private static var _macros:Array		= [];
+		onyx_ns static var _macros:Array		= [];
 		
 		/**
 		 * 	Registers a plugin

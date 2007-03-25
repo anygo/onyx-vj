@@ -31,19 +31,26 @@
 package onyx.controls {
 	
 	import flash.events.EventDispatcher;
+	import flash.events.IEventDispatcher;
 	import flash.utils.Dictionary;
 	
 	import onyx.core.onyx_ns;
 	import onyx.utils.string.parseBoolean;
+	import flash.events.Event;
 	
 	use namespace onyx_ns;
 
-	dynamic public class Controls extends Array {
+	dynamic public class Controls extends Array implements IEventDispatcher {
 		
 		/**
 		 * 	@private
 		 */
-		private var _definitions:Dictionary = new Dictionary(true);
+		private var _definitions:Dictionary		= new Dictionary(true);
+		
+		/**
+		 * 	@private
+		 */
+		private var _dispatcher:EventDispatcher	= new EventDispatcher();
 		
 		/**
 		 * 	@private
@@ -58,6 +65,42 @@ package onyx.controls {
 			_target = target;
 			
 			addControl.apply(this, controls);
+		}
+		
+		/**
+		 * 	
+		 */
+		public function addEventListener(type:String, method:Function, useCapture:Boolean = false, priority:int = 0, weak:Boolean = false):void {
+			_dispatcher.addEventListener(type, method, useCapture, priority, true);
+		}
+		
+		/**
+		 * 
+		 */
+		public function removeEventListener(type:String, listener:Function, useCapture:Boolean = false):void {
+			_dispatcher.removeEventListener(type, listener, useCapture);
+		}
+		
+		
+		/**
+		 * 
+		 */
+		public function hasEventListener(type:String):Boolean {
+			return _dispatcher.hasEventListener(type);
+		}
+		
+		/**
+		 * 	Dispatch event
+		 */
+		public function dispatchEvent(event:Event):Boolean {
+			return _dispatcher.dispatchEvent(event);
+		}
+		
+		/**
+		 * 
+		 */
+		public function willTrigger(type:String):Boolean{
+			return _dispatcher.willTrigger(type);
 		}
 		
 		/**
@@ -120,7 +163,7 @@ package onyx.controls {
 		}
 		
 		/**
-		 * 
+		 * 	Loads from xml
 		 */
 		public function loadXML(xml:XML):void {
 			
@@ -152,6 +195,17 @@ package onyx.controls {
 			}
 		}
 
+		/**
+		 * 
+		 */
+		AS3 override function concat(...args):Array {
+			
+			super.push.apply(super, args);
+			_dispatcher.dispatchEvent(new Event(Event.CHANGE));
+			
+			return null;
+		}
+		
 		/**
 		 * 	Destroys
 		 */

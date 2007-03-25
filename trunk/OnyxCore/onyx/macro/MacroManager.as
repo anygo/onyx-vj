@@ -28,18 +28,61 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package onyx.scratch {
+package onyx.macro{
 	
-	import onyx.core.PluginBase;
-
+	import flash.events.Event;
+	
 	/**
-	 * 	Scratch type
+	 * 	Manager class that loads and removes macros
 	 */
-	public class Scratch extends PluginBase {
+	public final class MacroManager {
+		
+		/**
+		 * 	@private
+		 * 	Stores macros	
+		 */
+		private static var _macros:Array			= [];
 
-		public function Scratch(... controls:Array):void {
-			super.controls.addControl.apply(null, controls);
+		/**
+		 * 	Loads an application macro
+		 */
+		public static function loadMacro(macro:Macro):void {
+
+			_macros.push(macro);
+			macro.initialize();
+
 		}
-
+		
+		/**
+		 * 	Removes an application macro
+		 */
+		public static function removeMacro(macro:Macro):void {
+			
+			// destroy
+			macro.terminate();
+			
+			// remove macro
+			_macros.splice(_macros.indexOf(macro), 1);
+			
+			// dispatch an event
+			macro.dispatchEvent(new Event(Event.COMPLETE));
+			
+		}
+		
+		/**
+		 * 	Returns macro matches
+		 */
+		public static function getmacros(type:Class):Array {
+			
+			var matches:Array = [];
+			
+			for each (var macro:Macro in _macros) {
+				if (macro is type) {
+					matches.push(type);
+				}
+			}
+			
+			return matches;
+		}
 	}
 }

@@ -57,7 +57,7 @@ package onyx.filter {
 		/**
 		 * 	@private
 		 */
-		private static var _filters:Array		= [];
+		onyx_ns static var _filters:Array		= [];
 		
 		/**
 		 * 	Registers a plugin
@@ -82,6 +82,23 @@ package onyx.filter {
 		 */
 		public static function get filters():Array {
 			return _filters.concat();
+		}
+		
+		/**
+		 * 	Gets content's filters of a certain type
+		 */
+		public static function getFilters(content:IContent, plugin:Plugin):Array {
+			var filters:Array = content.filters;
+			var matches:Array = [];
+			
+			for each (var filter:Filter in filters) {
+				if (filter is plugin._definition) {
+					matches = matches;
+					matches.push(filter);
+				}
+			}
+			
+			return matches;
 		}
 
 		/**

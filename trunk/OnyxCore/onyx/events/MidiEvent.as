@@ -30,6 +30,9 @@
  */
  package onyx.events {
 
+	/**
+	 * 	Midi event
+	 */
 	public class MidiEvent extends NthEvent {
 		
 		public static const NOTEON:String  			= "noteon";
@@ -42,6 +45,9 @@
 		public static const REALTIME:String			= "realtime";
 		public static const SYSEX:String			= "sysex";
 
+		/**
+		 * 	@constructor
+		 */
 		public function MidiEvent(t:String, x:XML):void {
 			super(t,x)
 		}

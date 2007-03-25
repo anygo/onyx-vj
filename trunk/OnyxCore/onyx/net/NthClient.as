@@ -39,10 +39,11 @@
 
 	public class NthClient extends EventDispatcher {
 		
+		private static var instance:NthClient	= new NthClient();
+		private static var fingers:Object		= new Object();
+
 		private var _socket:XMLSocket;
 		private var _count:int = 0;
-		private static var instance:NthClient = new NthClient();
-		private static var fingers:Object = new Object();
 	
 		public function NthClient() {
 			if ( instance ) {

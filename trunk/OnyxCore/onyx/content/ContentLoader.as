@@ -319,12 +319,12 @@ package onyx.content {
 			if (event is ErrorEvent) {
 				dispatchEvent(event);
 			} else {
-				var dispatch:LayerContentEvent = new LayerContentEvent(Event.COMPLETE);
-				dispatch.contentType	= contentType;
-				dispatch.reference		= reference;
-				dispatch.settings		= _settings;
-				dispatch.transition 	= _transition;
-				dispatch.path			= _path;
+				var dispatch:LayerContentEvent	= new LayerContentEvent(Event.COMPLETE);
+				dispatch.contentType			= contentType;
+				dispatch.reference				= reference;
+				dispatch.settings				= _settings;
+				dispatch.transition 			= _transition;
+				dispatch.path					= _path;
 				dispatchEvent(dispatch);
 			}
 		}
