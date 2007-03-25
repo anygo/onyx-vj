@@ -64,9 +64,6 @@ package ui.window {
 			super(null, 286, BITMAP_HEIGHT);
 			
 			_display	= new UIDisplay(Display.getDisplay(0));
-			
-			_display.x	= 96;
-			_display.y	= 102;
 
 //			_display.x	= 4;
 //			_display.y	= 57;

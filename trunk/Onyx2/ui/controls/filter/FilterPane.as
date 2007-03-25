@@ -118,7 +118,7 @@ package ui.controls.filter {
 		}
 		
 		/**
-		 * 
+		 * 	Gets the control related to the filter
 		 */
 		public function getFilter(filter:Filter):LayerFilter {
 			return _dict[filter];
@@ -134,7 +134,7 @@ package ui.controls.filter {
 		}
 
 		/**
-		 * 
+		 * 	Mutes a filter
 		 */
 		public function mute(filter:Filter):void {
 			var layerFilter:LayerFilter = _dict[filter];

@@ -38,8 +38,7 @@ package ui.core {
 	import flash.events.MouseEvent;
 	import flash.events.TimerEvent;
 	import flash.geom.ColorTransform;
-	import flash.utils.Timer;
-	import flash.utils.getTimer;
+	import flash.utils.*;
 	
 	import onyx.core.IDisposable;
 	import onyx.tween.easing.Back;

@@ -67,6 +67,7 @@ package ui.controls.page {
 		 * 	
 		 */
 		public function removeControls():void {
+			
 			for each (var uicontrol:UIControl in _controls) {
 				uicontrol.dispose();
 			}

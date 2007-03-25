@@ -43,6 +43,7 @@ package ui.states {
 	import onyx.utils.string.parseBoolean;
 	
 	import ui.window.WindowRegistration;
+	import flash.geom.Rectangle;
 
 	/**
 	 * 	Load settings
@@ -96,8 +97,9 @@ package ui.states {
 			
 			// set default core settings
 			if (xml.core.bitmapData) {
-				BITMAP_WIDTH = xml.core.bitmapData.@width;
-				BITMAP_HEIGHT = xml.core.bitmapData.@height;
+				BITMAP_WIDTH	= xml.core.bitmapData.@width;
+				BITMAP_HEIGHT	= xml.core.bitmapData.@height;
+				BITMAP_RECT		= new Rectangle(0, 0, BITMAP_WIDTH, BITMAP_HEIGHT);
 			}
 			
 			// set blend modes

@@ -94,6 +94,9 @@ package ui.controls {
 		 * 
 		 */
 		override public function dispose():void {
+			super.dispose();
+			_control = null;
+			delete controls[this];
 		}
 	}
 }

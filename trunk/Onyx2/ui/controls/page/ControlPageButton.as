@@ -34,15 +34,24 @@ package ui.controls.page {
 	
 	import ui.controls.ButtonClear;
 
+	/**
+	 * 	Page tab
+	 */
 	public final class ControlPageButton extends SimpleButton {
 		
+		/**
+		 * 	Stores index of the button
+		 */
 		public var index:int
 
+		/**
+		 * 	@constructor
+		 */
 		final public function ControlPageButton(index:int):void {
 			
-			this.index = index;
+			this.index		= index;
 
-			hitTestState = new HitState(34, 14);
+			hitTestState	= new HitState(34, 14);
 			
 		}
 		

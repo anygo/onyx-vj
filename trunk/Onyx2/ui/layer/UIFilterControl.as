@@ -33,12 +33,13 @@ package ui.layer {
 	import flash.events.MouseEvent;
 	
 	import onyx.events.FilterEvent;
-	import onyx.filter.Filter;
-	import onyx.filter.IFilterObject;
+	import onyx.filter.*;
 	
 	import ui.controls.filter.*;
 	import ui.controls.page.*;
 	import ui.core.UIObject;
+	import flash.geom.ColorTransform;
+	import flash.display.Sprite;
 
 	public class UIFilterControl extends UIObject {
 		
@@ -68,6 +69,11 @@ package ui.layer {
 		protected var controlTabs:ControlPageSelected		= new ControlPageSelected();
 		
 		/**
+		 * 	@private
+		 */
+		protected var tabContainer:Sprite						= new Sprite();
+		
+		/**
 		 * 
 		 */
 		protected var pages:Array;
@@ -75,15 +81,12 @@ package ui.layer {
 		/**
 		 * 	@constructor
 		 */
-		public function UIFilterControl(target:IFilterObject, tabOffset:int, ... pages:Array):void {
+		public function UIFilterControl(target:IFilterObject, xOffset:int, yOffset:int, ... pages:Array):void {
 
 			// move to top
 			super(true);
 			
 			this.pages = pages || [];
-			
-			// create buttons for pages
-			_registerPages();
 			
 			// listen for events
 			_target = target;
@@ -92,14 +95,19 @@ package ui.layer {
 			_target.addEventListener(FilterEvent.FILTER_MOVED, _onFilterMove);
 			_target.addEventListener(FilterEvent.FILTER_MUTED, _onFilterMute);
 			
-			// set offset
-			controlTabs.offsetX = tabOffset;
-			controlTabs.x		= tabOffset;
+			// set location
+			tabContainer.x				= xOffset;
+			tabContainer.y				= yOffset;
+			tabContainer.mouseChildren	= true;
+			tabContainer.mouseEnabled	= false;
 			
 			// add filter objects
 			addChild(filterPane);
 			addChild(controlPage);
-			addChild(controlTabs);
+			tabContainer.addChild(controlTabs);
+			
+			// create buttons for pages
+			_registerPages();
 			
 			// select page
 			selectPage(0);
@@ -128,7 +136,7 @@ package ui.layer {
 				
 				controlPage.addControls(page.controls);
 				controlTabs.text	= page.name;
-				controlTabs.x		= index * 35 + controlTabs.offsetX;
+				controlTabs.x		= index * 35;
 				
 				selectedPage = index;
 			}
@@ -151,10 +159,9 @@ package ui.layer {
 				var page:LayerPage = pages[count];
 
 				var button:ControlPageButton = new ControlPageButton(count);
-				button.x		= count * 35 + controlTabs.offsetX;
-				button.y		= 169;
+				button.x		= (count * 35);
 
-				addChild(button);
+				tabContainer.addChild(button);
 	
 				button.addEventListener(MouseEvent.MOUSE_DOWN, _onPageSelect);
 			}

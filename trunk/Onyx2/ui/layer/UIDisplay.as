@@ -30,22 +30,25 @@
  */
 package ui.layer {
 	
+	import flash.geom.ColorTransform;
+	
+	import onyx.controls.*;
 	import onyx.display.Display;
 	import onyx.events.FilterEvent;
 	import onyx.filter.Filter;
 	
 	import ui.assets.AssetDisplay;
-	import ui.controls.UIControl;
+	import ui.controls.*;
 	import ui.controls.page.*;
 	import ui.core.*;
 	import ui.styles.*;
 	import ui.window.*;
-	import onyx.controls.Controls;
+	import flash.display.Bitmap;
 
 	/**
 	 * 	Display Control
 	 */
-	public final class UIDisplay extends UIFilterControl implements IFilterDrop {
+	public final class UIDisplay extends UIFilterControl implements IFilterDrop, IControlObject {
 		
 		/**
 		 * 	@private
@@ -58,9 +61,23 @@ package ui.layer {
 		private var _background:AssetDisplay			= new AssetDisplay();
 		
 		/**
+		 * 
+		 */
+		private var _localControls:Controls;
+		
+		/**
+		 * 
+		 */
+		private var _preview:Bitmap;
+		
+		/**
 		 * 	@constructor
 		 */
 		public function UIDisplay(display:Display):void {
+			
+			_localControls = new Controls(this,
+				new ControlBoolean('preview', 'show prev')
+			);
 			
 			var controls:Controls = display.controls;
 
@@ -68,13 +85,19 @@ package ui.layer {
 			super(
 				display,
 				88,
+				0,
 				new LayerPage('DISPLAY',
 					controls.getControl('position'),
 					controls.getControl('size'),
 					controls.getControl('backgroundColor'),
-					controls.getControl('visible')
+					controls.getControl('visible'),
+					controls.getControl('threshold'),
+					controls.getControl('brightness'),
+					controls.getControl('contrast'),
+					controls.getControl('saturation'),
+					_localControls.getControl('preview')
 				),
-				new LayerPage('FILTERS'),
+				new LayerPage('FILTER'),
 				new LayerPage('CUSTOM')
 			);
 
@@ -87,14 +110,51 @@ package ui.layer {
 			// order
 			controlPage.x = 91;
 			controlPage.y = 25;
-			controlTabs.x = 88;
 			filterPane.x = 4;
 			filterPane.y = 4;
 
+			// change tab color
 			controlTabs.transform.colorTransform = LAYER_HIGHLIGHT;
 			
 			// add background
 			addChildAt(_background, 0);
+			
+			// tbd: clean up tabs
+			addChild(tabContainer);
+		}
+		
+		/**
+		 * 
+		 */
+		public function set preview(value:Boolean):void {
+			if (value) {
+				
+				_preview = new Bitmap();
+				_preview.x = 200;
+				_preview.y = -60;
+				
+				_preview.bitmapData = _display.rendered;
+				
+				addChild(_preview);
+				
+			} else if (_preview) {
+				removeChild(_preview);
+				_preview = null;
+			}
+		}
+		
+		/**
+		 * 	Returns whether the Preview window is being used
+		 */
+		public function get preview():Boolean {
+			return _preview !== null
+		}
+		
+		/**
+		 * 
+		 */
+		public function get controls():Controls {
+			return _localControls;
 		}
 	}
 }

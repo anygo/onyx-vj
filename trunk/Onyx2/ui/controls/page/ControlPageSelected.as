@@ -41,7 +41,7 @@ package ui.controls.page {
 		/**
 		 * 	Store the tab
 		 */
-		public var background:AssetLayerTab = new AssetLayerTab();
+		private var background:AssetLayerTab = new AssetLayerTab();
 
 		/**
 		 * 	@private
@@ -49,14 +49,12 @@ package ui.controls.page {
 		private var _label:TextField		= new TextField(36, 10, TEXT_DEFAULT_CENTER);
 		
 		/**
-		 * 	offset the tabs
-		 */
-		public var offsetX:int;
-		
-		/**
 		 * 	@constructor
 		 */
 		public function ControlPageSelected():void {
+			
+			mouseEnabled = false;
+			mouseChildren = false;
 
 			addChild(background);
 			addChild(_label);
@@ -64,6 +62,9 @@ package ui.controls.page {
 			_label.y	= 3;
 		}
 		
+		/**
+		 * 	Set the display value
+		 */
 		public function set text(value:String):void {
 			_label.text = value;
 		}

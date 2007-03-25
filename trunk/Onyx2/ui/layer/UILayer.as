@@ -182,8 +182,9 @@ package ui.layer {
 			
 			// register for filter drops
 			super(
-				layer, 
+				layer,
 				0,
+				169,
 				new LayerPage('BASIC',	props.position,
 										props.alpha,
 										props.scale,
@@ -197,7 +198,7 @@ package ui.layer {
 										props.framerate,
 										props.visible
 				),
-				new LayerPage('FILTERS'),
+				new LayerPage('FILTER'),
 				new LayerPage('CUSTOM')
 			);
 			
@@ -389,7 +390,7 @@ package ui.layer {
 				_btnCopy,															171,		154,
 				_btnDelete,															180,		154,
 				
-				controlTabs,														0,			169,
+				tabContainer,														0,			169,
 				
 				_loopStart,															10,			138,
 				_loopEnd,															184,		138
