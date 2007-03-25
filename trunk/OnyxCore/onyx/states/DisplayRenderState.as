@@ -33,29 +33,49 @@ package onyx.states {
 	import flash.events.Event;
 	
 	import onyx.constants.*;
-	import onyx.display.Display;
-	import onyx.display.IDisplay;
+	import onyx.display.*;
 	
+	/**
+	 * 	Orders a display to render
+	 */
 	public final class DisplayRenderState extends ApplicationState {
 
+		/**
+		 * 	@private
+		 */
 		private var display:IDisplay;
 		
+		/**
+		 * 	@constructor
+		 */
 		public function DisplayRenderState(display:Display):void {
 			this.display = display;
 		}
 		
+		/**
+		 * 	Initialize
+		 */
 		override public function initialize():void {
-			STAGE.addEventListener(Event.ENTER_FRAME, _frame);
+			STAGE.addEventListener(Event.ENTER_FRAME, _frame, false, -1000);
 		}
 		
+		/**
+		 * 	Render
+		 */
 		private function _frame(event:Event):void {
 			display.render();
 		}
 		
+		/**
+		 * 	Pauses state
+		 */
 		override public function pause():void {
 			STAGE.removeEventListener(Event.ENTER_FRAME, _frame);
 		}
 		
+		/**
+		 * 	Terminates state
+		 */
 		override public function terminate():void {
 			display = null;
 		}

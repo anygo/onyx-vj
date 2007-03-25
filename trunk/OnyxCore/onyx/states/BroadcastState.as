@@ -30,14 +30,15 @@
  */
 package onyx.states {
 	
+	import flash.display.BitmapData;
 	import flash.events.Event;
+	import flash.utils.ByteArray;
 	
+	import onyx.constants.*;
 	import onyx.core.*;
 	import onyx.display.*;
 	import onyx.events.RenderEvent;
 	import onyx.net.LocalHost;
-	import flash.display.BitmapData;
-	import flash.utils.ByteArray;
 	
 	/**
 	 * 	Broadcast
@@ -81,7 +82,7 @@ package onyx.states {
 		private function _onDisplayRender(event:Event):void {
 			var display:Display = event.currentTarget as Display;
 			var bmp:BitmapData	= display.bitmapData;
-			var bytes:ByteArray	= bmp.getPixels(bmp.rect);
+			var bytes:ByteArray	= bmp.getPixels(BITMAP_RECT);
 			
 			// conn.send('update', bytes);
 		}

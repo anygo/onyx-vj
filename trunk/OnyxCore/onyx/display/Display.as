@@ -64,17 +64,10 @@ package onyx.display {
 		 * 	@private
 		 * 
 		 */
-		private static var _displays:Array		= [];
+		onyx_ns static var _displays:Array		= [];
 		
 		/**
-		 * 
-		 */
-		public static function get displays():Array {
-			return _displays;
-		}
-		
-		/**
-		 * 
+		 * 	Gets display
 		 */
 		public static function getDisplay(index:int):Display {
 			return _displays[index];
@@ -140,14 +133,9 @@ package onyx.display {
 			// create new filter array
 			_filters = new FilterArray(this);
 			
-			// set background color
-			super(new BitmapData(BITMAP_WIDTH, BITMAP_HEIGHT, false, _backgroundColor));
-			
-			// add it to the displays index
-			_displays.push(this);
-			
-			// set controls
-			_controls = new Controls(this,
+			// create new properties
+			_controls = new LayerProperties(this);
+			_controls.addControl(
 				new ControlProxy(
 					'position', 'position',
 					__x,
@@ -161,11 +149,17 @@ package onyx.display {
 					'size', 'size', DISPLAY_SIZES
 				),
 				__visible
-			);
+			)
+			
+			// set background color
+			super(new BitmapData(BITMAP_WIDTH, BITMAP_HEIGHT, false, _backgroundColor));
+			
+			// add it to the displays index
+			_displays.push(this);
 			
 			// hide/show mouse when over the display
-			addEventListener(MouseEvent.MOUSE_OVER, _onMouseOver);
-			addEventListener(MouseEvent.MOUSE_OUT, _onMouseOut);
+			//addEventListener(MouseEvent.MOUSE_OVER, _onMouseOver, true);
+			//addEventListener(MouseEvent.MOUSE_OUT, _onMouseOut, true);
 
 			// load the rendering state
 			StateManager.loadState(new DisplayRenderState(this));
@@ -174,18 +168,18 @@ package onyx.display {
 		/**
 		 * 	@private
 		 * 	Make sure the mouse is gone when we roll over it
-		 */
 		private function _onMouseOver(event:MouseEvent):void {
 			Mouse.hide();
 		}
+		 */
 		
 		/**
 		 * 	@private
 		 * 	Make sure the mouse comes back when we roll over it
-		 */
 		private function _onMouseOut(event:MouseEvent):void {
 			Mouse.show();
 		}
+		 */
 		
 		/**
 		 * 	Returns the number of layers
@@ -610,8 +604,10 @@ package onyx.display {
 		 */
 		public function render():RenderTransform {
 			
+			super.bitmapData.lock();
+		
 			// fill the display
-			super.bitmapData.fillRect(super.bitmapData.rect, _backgroundColor);
+			super.bitmapData.fillRect(BITMAP_RECT, _backgroundColor);
 			
 			// loop and render
 			// TBD: raise the framerate of the root movie, and do calculation to render different content on different frames
@@ -636,7 +632,10 @@ package onyx.display {
 			}
 			
 			// apply threshold, etc
-			super.bitmapData.applyFilter(super.bitmapData, super.bitmapData.rect, POINT, _filter.filter);
+			super.bitmapData.applyFilter(super.bitmapData, BITMAP_RECT, POINT, _filter.filter);
+			
+			// unlock
+			super.bitmapData.unlock();
 			
 			// dispatch a render event
 			dispatchEvent(new RenderEvent());

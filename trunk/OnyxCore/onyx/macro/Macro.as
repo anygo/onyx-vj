@@ -28,37 +28,72 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package onyx.controls {
+package onyx.macro {
 	
-	import onyx.core.Onyx;
-	import onyx.core.onyx_ns;
-	import onyx.display.Display;
-	import onyx.events.ControlEvent;
-	import onyx.layer.ILayer;
-	import onyx.layer.Layer;
+	import flash.utils.Dictionary;
+	
+	import onyx.core.*;
+	import onyx.plugin.*;
 	
 	use namespace onyx_ns;
-	
+
 	/**
-	 * 	Layer Control
+	 * 
 	 */
-	public final class ControlDisplay extends ControlRange {
+	public class Macro extends PluginBase {
+
+		/**
+		 * 	@private
+		 * 	Stores definitions
+		 */
+		private static var _definition:Object	= new Object();
+		
+		/**
+		 * 	@private
+		 */
+		private static var _macros:Array		= [];
+		
+		/**
+		 * 	Registers a plugin
+		 */
+		onyx_ns static function registerPlugin(plugin:Plugin, index:int = -1):void {
+			if (!_definition[plugin.name]) {
+				_definition[plugin.name] = plugin;
+				plugin._parent = _macros;
+				_macros.splice(index || _macros.length - 1, 0, plugin);
+			}
+		}
+
+		/**
+		 * 	Returns a definition
+		 */
+		public static function getDefinition(name:String):Plugin {
+			return _definition[name];
+		}
+		
+		/**
+		 * 	Returns a list of plugins of all filters registered
+		 */
+		public static function get macros():Array {
+			return _macros.concat();
+		}
 		
 		/**
 		 * 	@constructor
 		 */
-		public function ControlDisplay(name:String, displayName:String):void {
-			
-			super(name, displayName, Display._displays);
-
+		public function Macro():void {
 		}
 		
 		/**
 		 * 
 		 */
-		override public function set value(v:*):void {
-			_target[name] = v;
-			dispatchEvent(new ControlEvent(v));
+		public function initialize():void {
+		}
+		
+		/**
+		 * 
+		 */
+		public function terminate():void {
 		}
 	}
 }

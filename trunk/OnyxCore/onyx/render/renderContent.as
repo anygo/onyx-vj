@@ -45,13 +45,13 @@ package onyx.render {
 		var rect:Rectangle = transform.rect;
 		
 		// fill our source with nothing
-		source.fillRect(source.rect, 0x00000000);
+		source.fillRect(BITMAP_RECT, 0x00000000);
 		
 		// draw our content
 		source.draw(content, matrix, filter, null, rect);
 
 		// apply the color filter to the source
-		source.applyFilter(source, source.rect, POINT, filter.filter);
+		source.applyFilter(source, BITMAP_RECT, POINT, filter.filter);
 		
 	}
 

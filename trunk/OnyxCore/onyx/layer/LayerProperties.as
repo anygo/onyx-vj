@@ -31,11 +31,13 @@
 package onyx.layer {
 	
 	import onyx.constants.*;
-	import onyx.controls.*;;
+	import onyx.content.IContent;
+	import onyx.controls.*;
+	;
 	/**
 	 * 	Stores property names for layers
 	 */
-	dynamic public final class LayerProperties extends Controls {
+	public final class LayerProperties extends Controls {
 		
 		// display properties
 		public static const ALPHA:String		= 'alpha';
@@ -130,9 +132,9 @@ package onyx.layer {
 		/**
 		 * 	@constructor
 		 */
-		public function LayerProperties(layer:ILayer):void {
+		public function LayerProperties(content:IContent):void {
 			
-			super(layer);
+			super(content);
 			
 			super.addControl(
 				alpha,

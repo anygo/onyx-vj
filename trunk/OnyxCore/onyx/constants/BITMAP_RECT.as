@@ -28,37 +28,11 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package onyx.controls {
-	
-	import onyx.core.Onyx;
-	import onyx.core.onyx_ns;
-	import onyx.display.Display;
-	import onyx.events.ControlEvent;
-	import onyx.layer.ILayer;
-	import onyx.layer.Layer;
-	
-	use namespace onyx_ns;
-	
-	/**
-	 * 	Layer Control
-	 */
-	public final class ControlDisplay extends ControlRange {
-		
-		/**
-		 * 	@constructor
-		 */
-		public function ControlDisplay(name:String, displayName:String):void {
-			
-			super(name, displayName, Display._displays);
+package onyx.constants {
 
-		}
-		
-		/**
-		 * 
-		 */
-		override public function set value(v:*):void {
-			_target[name] = v;
-			dispatchEvent(new ControlEvent(v));
-		}
-	}
+	import flash.display.*;
+	import flash.geom.Rectangle;
+	
+	public var BITMAP_RECT:Rectangle = new Rectangle(0,0,320,240);
+
 }

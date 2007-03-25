@@ -58,8 +58,13 @@ package onyx.states {
 		 */
 		public static function removeState(state:ApplicationState):void {
 			
+			// pause
 			state.pause();
+			
+			// destroy
 			state.terminate();
+			
+			// remove state
 			_states.splice(_states.indexOf(state), 1);
 			
 			// dispatch an event
@@ -71,12 +76,15 @@ package onyx.states {
 		 * 	Returns state matches
 		 */
 		public static function getStates(type:Class):Array {
+			
 			var matches:Array = [];
+			
 			for each (var state:ApplicationState in _states) {
 				if (state is type) {
 					matches.push(type);
 				}
 			}
+			
 			return matches;
 		}
 		
@@ -84,6 +92,9 @@ package onyx.states {
 		 * 	Pauses all states (unimplemented)
 		 */
 		public static function pauseStates():void {
+			for each (var state:ApplicationState in _states) {
+				state.pause();
+			}
 		}
 	}
 }

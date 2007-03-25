@@ -30,11 +30,12 @@
  */
 package onyx.states {
 
+	import flash.display.BitmapData;
 	import flash.events.Event;
 	
+	import onyx.constants.*;
 	import onyx.display.Display;
 	import onyx.net.LocalClient;
-	import flash.display.BitmapData;
 	
 	/**
 	 * 	Broadcast
@@ -72,7 +73,7 @@ package onyx.states {
 			if (conn.bytes) {
 				conn.bytes.position = 0;
 				var bmp:BitmapData = display.bitmapData;
-				bmp.setPixels(bmp.rect, conn.bytes);
+				bmp.setPixels(BITMAP_RECT, conn.bytes);
 			}
 		}
 		

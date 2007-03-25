@@ -43,13 +43,13 @@ package onyx.render {
 	public function renderFilters(source:BitmapData, rendered:BitmapData, filters:FilterArray):void {
 		
 		// copy to the rendered bitmap
-		rendered.copyPixels(source, source.rect, POINT);
+		rendered.copyPixels(source, BITMAP_RECT, POINT);
 		
 		// render filters
 		filters.render(source);
 		
 		// copy pixels to the rendered bitmap
-		rendered.copyPixels(source, source.rect, POINT);
+		rendered.copyPixels(source, BITMAP_RECT, POINT);
 
 	}	
 }

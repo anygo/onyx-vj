@@ -145,7 +145,10 @@ package onyx.filter {
 			
 			// set value
 			_snapTempo	= _snapControl.setValue(value);
-			_snapBeat	= value.mod;
+			
+			if (value) {
+				_snapBeat	= value.mod;
+			}
 			
 			// re-init
 			if (content) {

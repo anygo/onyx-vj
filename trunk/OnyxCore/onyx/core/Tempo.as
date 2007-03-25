@@ -30,8 +30,7 @@
  */
 package onyx.core {
 	
-	import flash.events.EventDispatcher;
-	import flash.events.TimerEvent;
+	import flash.events.*;
 	import flash.utils.*;
 	
 	import onyx.constants.*;
@@ -98,9 +97,10 @@ package onyx.core {
 				_timer		= new Timer(5);
 				_controls	= new Controls(this,
 					new ControlRange('snapTempo', 'snapTempo', TEMPO_BEATS),
-					new ControlInt('tempo', 'tempo', 40, 1000, 125)
+					new ControlInt('tempo', 'tempo', 40, 1000, _tempo)
 				);
 			}
+			_timer.addEventListener(TimerEvent.TIMER, _onTimer);
 		}
 		
 		/**
@@ -108,6 +108,7 @@ package onyx.core {
 		 */
 		public function set snapTempo(value:TempoBeat):void {
 			_snapTempo = value;
+			trace(value);
 			if (value) {
 				start();
 			} else {
@@ -127,7 +128,6 @@ package onyx.core {
 		 */
 		public function start():void {
 			_timer.start();
-			_timer.addEventListener(TimerEvent.TIMER, _onTimer);
 			_last = getTimer();
 			_step = 0;
 			dispatchEvent(new TempoEvent(0));
@@ -138,7 +138,6 @@ package onyx.core {
 		 */
 		public function stop():void {
 			_timer.stop();
-			_timer.removeEventListener(TimerEvent.TIMER, _onTimer);
 		}
 		
 		/**

@@ -43,6 +43,7 @@ package onyx.core {
 	import onyx.file.*;
 	import onyx.filter.*;
 	import onyx.layer.*;
+	import onyx.macro.*;
 	import onyx.plugin.*;
 	import onyx.sound.*;
 	import onyx.states.*;
@@ -135,6 +136,9 @@ package onyx.core {
 					
 					Visualizer.registerPlugin(plugin);
 					
+				} else if (object is Macro) {
+					
+					Macro.registerPlugin(plugin);
 				}
 				
 				// destroy the object

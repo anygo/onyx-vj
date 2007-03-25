@@ -144,7 +144,7 @@ package onyx.content {
 				var old:Number = 1 + _contrast;
 				var v:Number = 1 + c;
 			
-				var mat:Array = [	v - old,0,0,0, (128*(1-v)) - (128*(1-old)),
+				var mat:Array = [v - old,0,0,0, (128*(1-v)) - (128*(1-old)),
 								0,v - old,0,0, (128*(1-v)) - (128*(1-old)),
 								0,0,v - old,0, (128*(1-v)) - (128*(1-old)),
 								0,0,0,0,0];

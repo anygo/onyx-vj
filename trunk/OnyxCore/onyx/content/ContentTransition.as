@@ -36,7 +36,7 @@ package onyx.content {
 	import flash.geom.*;
 	import flash.utils.getTimer;
 	
-	import onyx.constants.POINT;
+	import onyx.constants.*;
 	import onyx.controls.*;
 	import onyx.core.*;
 	import onyx.events.FilterEvent;
@@ -45,8 +45,7 @@ package onyx.content {
 	import onyx.layer.Layer;
 	import onyx.layer.LayerProperties;
 	import onyx.render.*;
-	import onyx.transition.IBitmapTransition;
-	import onyx.transition.Transition;
+	import onyx.transition.*;
 	
 	use namespace onyx_ns;
 	
@@ -153,7 +152,7 @@ package onyx.content {
 				
 				_transition.apply(ratio);
 
-				_source.copyPixels(oldContent.rendered, _source.rect, POINT);
+				_source.copyPixels(oldContent.rendered, BITMAP_RECT, POINT);
 				_source.draw(newContent.rendered);
 
 			}

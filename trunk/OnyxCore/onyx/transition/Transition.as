@@ -30,20 +30,16 @@
  */
 package onyx.transition {
 
-	import flash.display.Bitmap;
-	import flash.display.BitmapData;
+	import flash.display.*;
 	import flash.events.EventDispatcher;
-	import flash.geom.ColorTransform;
-	import flash.geom.Matrix;
-	import flash.geom.Point;
-	import flash.utils.Timer;
-	import flash.utils.getTimer;
+	import flash.geom.*;
+	import flash.utils.*;
 	
+	import onyx.constants.*;
 	import onyx.content.Content;
 	import onyx.content.IContent;
 	import onyx.controls.*;
 	import onyx.core.*;
-	import onyx.constants.*;
 	import onyx.events.TransitionEvent;
 	import onyx.plugin.Plugin;
 	import onyx.tween.easing.Linear;

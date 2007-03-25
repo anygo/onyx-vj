@@ -71,19 +71,10 @@ package onyx.controls {
 		}
 		
 		override public function setValue(v:*):* {
-			var value:Number = Math.min(Math.max(v, _min), _max);
+			var value:int = Math.min(Math.max(v, _min), _max);
 			dispatchEvent(new ControlEvent(value));
 			
 			return value;
-		}
-		
-		/**
-		 *  Set using an amount (from 0.0 to 1.0) within the min/max range.
-		 */
-		override public function setAmount(amount:Number):* {
-			var v:int = _min + (_max - _min) * amount;
-			setValue(v);
-			return v;
 		}
 	}
 }
