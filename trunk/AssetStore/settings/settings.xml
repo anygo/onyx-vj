@@ -35,6 +35,7 @@
 		<window name="MEMORY" enabled="false" x="200" y="200"/>
 		<window name="DISPLAY" enabled="true" x="508" y="602"/>
 		<window name="KEY MAPPING" enabled="false" x="6" y="544"/>
+		<window name="MACROS" enabled="false" x="615" y="320"/>
 	</windows>
 	
 	<!-- KEY MAPPING -->
@@ -68,5 +69,12 @@
 		<ACTION_11>122</ACTION_11>
 		<ACTION_12>123</ACTION_12>
 	</keys>
+	
+	<!-- MACRO MAPPING -->
+	<actions>
+		<ACTION_1>
+			<macro id="FrameRND Macro" />
+		</ACTION_1>
+	</actions>
 
 </settings>
