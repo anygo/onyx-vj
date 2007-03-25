@@ -25,7 +25,7 @@ package {
 		/**
 		 * 
 		 */
-		public var maxframes:int		= BITMAP_HEIGHT;
+		public var maxframes:int		= 100;
 		
 		/**
 		 * 
@@ -40,7 +40,7 @@ package {
 		/**
 		 * 	@private
 		 */
-		private var _layer:IDisplay		= Display.displays[0];
+		private var _layer:IDisplay		= Display.getDisplay(0);
 		
 		/**
 		 * 	@private
