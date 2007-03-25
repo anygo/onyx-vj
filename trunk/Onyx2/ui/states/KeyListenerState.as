@@ -39,6 +39,7 @@ package ui.states {
 	
 	import ui.core.UIManager;
 	import ui.layer.UILayer;
+	import onyx.macro.Macro;
 
 	/**
 	 * 
@@ -71,6 +72,19 @@ package ui.states {
 		public static var ACTION_10:int				= 121;
 		public static var ACTION_11:int				= 122;
 		public static var ACTION_12:int				= 123;
+		
+		public static var ACTION_MACRO_1:Macro;
+		public static var ACTION_MACRO_2:Macro;
+		public static var ACTION_MACRO_3:Macro;
+		public static var ACTION_MACRO_4:Macro;
+		public static var ACTION_MACRO_5:Macro;
+		public static var ACTION_MACRO_6:Macro;
+		public static var ACTION_MACRO_7:Macro;
+		public static var ACTION_MACRO_8:Macro;
+		public static var ACTION_MACRO_9:Macro;
+		public static var ACTION_MACRO_10:Macro;
+		public static var ACTION_MACRO_11:Macro;
+		public static var ACTION_MACRO_12:Macro;
 		
 		/**
 		 * 	Initialize
@@ -160,6 +174,12 @@ package ui.states {
 					}
 					
 					break;
+				case ACTION_1:
+					if (ACTION_MACRO_1) {
+						// trace('ys');
+					}
+					break;
+					
 				default:
 					// trace(event.keyCode);
 					// break;

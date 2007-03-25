@@ -316,10 +316,11 @@ final class Option extends Sprite {
 	
 	public function dispose():void {
 		
-		parent.removeChild(this);
-		removeChild(_label);
-		_label = null;
-		
+		if (parent) {
+			parent.removeChild(this);
+			removeChild(_label);
+			_label = null;
+		}
 	}
 	
 }

@@ -45,6 +45,7 @@ package ui.window {
 	import ui.layer.UILayer;
 	import ui.policy.*;
 	import ui.styles.*;
+	import ui.layer.UIDisplay;
 	
 	/**
 	 * 	Filters Window
@@ -195,7 +196,7 @@ package ui.window {
 			
 			(object as DisplayObject).transform.colorTransform = DEFAULT;
 			
-			if (event.ctrlKey) {
+			if (event.ctrlKey && (!object is UIDisplay)) {
 
 				_applyToAll(plugin);
 

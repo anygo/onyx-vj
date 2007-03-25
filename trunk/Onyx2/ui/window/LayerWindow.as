@@ -41,7 +41,7 @@ package ui.window {
 	import ui.styles.MENU_OPTIONS;
 	
 	/**
-	 * 	Layer Window
+	 * 	Layer Container - stores layer objects
 	 */
 	public final class LayerWindow extends Window {
 		

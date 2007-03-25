@@ -31,6 +31,7 @@
 package ui.window {
 	
 	import onyx.controls.ControlInt;
+	import onyx.controls.ControlPlugin;
 	import onyx.controls.ControlRange;
 	import onyx.controls.Controls;
 	import onyx.controls.IControlObject;
@@ -40,8 +41,6 @@ package ui.window {
 	import onyx.plugin.Plugin;
 	import onyx.transition.Transition;
 	
-	import ui.controls.DropDown;
-	import ui.controls.SliderV;
 	import ui.controls.*;
 	import ui.core.UIManager;
 	import ui.styles.UI_OPTIONS;
@@ -56,7 +55,7 @@ package ui.window {
 		/**
 		 * 	Stores current transition plugin to use
 		 */		
-		public var plugin:Plugin;
+		private var _transition:Transition;
 		
 		/**
 		 * 	@private
@@ -71,23 +70,10 @@ package ui.window {
 
 			// position and create			
 			super('TRANSITIONS', 190, 34);
-			
-			// add a default plugin
-			var plugin:Plugin = Transition.transitions[0];
-			
-			if (plugin) {
-				this.plugin = plugin;
-				UIManager.transition = plugin.getDefinition() as Transition;
-				UIManager.transition.duration = 2000;
-			}
-
-			// grab data, create a "none" object
-			var data:Array = Transition.transitions;
-			data.unshift(null);
-			
+		
 			// init controls
 			_controls = new Controls(this,
-				new ControlRange('transition', 'Layer Transition', data, 0, 'name'),
+				new ControlPlugin('transition', 'Layer Transition', ControlPlugin.TRANSITIONS),
 				new ControlInt('duration', 'Duration', 1, 20, 3, { factor: 10 })
 			);
 			
@@ -99,12 +85,10 @@ package ui.window {
 			dropdown.y = 20;
 			
 			var slider:SliderV		= new SliderV(UI_OPTIONS, _controls.getControl('duration'));
-			
-			addChild(slider);
-			
 			slider.x				= 110;
 			slider.y				= 20;
-
+			
+			addChild(slider);
 			addChild(dropdown);
 		}
 		
@@ -119,7 +103,7 @@ package ui.window {
 		 * 
 		 */
 		public function get duration():int {
-			return (UIManager.transition) ? UIManager.transition.duration / 1000 : 0;
+			return (UIManager.transition) ? UIManager.transition.duration / 1000 : 2;
 		}
 		
 		
@@ -131,26 +115,26 @@ package ui.window {
 		}
 		
 		/**
-		 * 
+		 * 	Sets the transition
 		 */
-		public function set transition(value:Plugin):void {
+		public function set transition(value:Transition):void {
 			
-			plugin = value;
+			_transition = value;
 
 			// valid
 			if (value)  {
-				var transition:Transition = value.getDefinition() as Transition;
-				transition.duration = duration * 1000;
-	
-				UIManager.transition = transition;
+
+				value.duration			= duration * 1000;
+				UIManager.transition	= value;
+
 			}
 		}
 		
 		/**
 		 * 
 		 */
-		public function get transition():Plugin {
-			return plugin;
+		public function get transition():Transition {
+			return _transition;
 		}
 		
 	}

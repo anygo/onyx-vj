@@ -28,26 +28,52 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package ui.styles {
+package ui.window {
 	
-	import flash.utils.*;
+	import flash.events.MouseEvent;
 	
 	import onyx.controls.*;
+	import onyx.macro.*;
+	import onyx.plugin.Plugin;
 	
-	import ui.controls.*;
+	/**
+	 * 	Macro window
+	 */
+	public final class MacroWindow extends Window implements IControlObject {
+		
+		private var _controls:Controls;
+		private var _action1:Plugin;
+		
+		/**
+		 * 	@constructor
+		 */
+		public function MacroWindow():void {
+			
+			_controls = new Controls(this,
+				new ControlRange('action1', 'action1', Macro.macros, 0)
+			);
+			
+			super('MACROS', 192, 200);
+		}
+		
+		/**
+		 * 
+		 */
+		public function get action1():Plugin {
+			return _action1;
+		}
+		
+		
+		/**
+		 * 
+		 */
+		public function set action1(value:Plugin):void {
+			_action1 = value;
+		}
 
-	public const CONTROL_MAP:Object = {};
-
-	CONTROL_MAP['onyx.controls::ControlNumber']		= SliderV;
-	CONTROL_MAP['onyx.controls::ControlInt']		= SliderV;
-	CONTROL_MAP['onyx.controls::ControlProxy']		= SliderV2;
-	CONTROL_MAP['onyx.controls::ControlRange']		= DropDown;
-	CONTROL_MAP['onyx.controls::ControlLayer']		= DropDown;
-	CONTROL_MAP['onyx.controls::ControlDisplay']	= DropDown;
-	CONTROL_MAP['onyx.controls::ControlColor']		= ColorPicker;
-	CONTROL_MAP['onyx.controls::ControlToggle']		= CheckBox;
-	CONTROL_MAP['onyx.controls::ControlString']		= TextControl;
-	CONTROL_MAP['onyx.controls::ControlBoolean']	= DropDown;
-	CONTROL_MAP['onyx.controls::ControlPlugin']		= DropDown;
-
+		public function get controls():Controls {
+			return _controls;
+		}
+		
+	}
 }

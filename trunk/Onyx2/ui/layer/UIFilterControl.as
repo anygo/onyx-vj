@@ -30,7 +30,9 @@
  */
 package ui.layer {
 	
+	import flash.display.Sprite;
 	import flash.events.MouseEvent;
+	import flash.geom.ColorTransform;
 	
 	import onyx.events.FilterEvent;
 	import onyx.filter.*;
@@ -38,8 +40,7 @@ package ui.layer {
 	import ui.controls.filter.*;
 	import ui.controls.page.*;
 	import ui.core.UIObject;
-	import flash.geom.ColorTransform;
-	import flash.display.Sprite;
+	import ui.window.*;
 
 	public class UIFilterControl extends UIObject {
 		
@@ -111,6 +112,9 @@ package ui.layer {
 			
 			// select page
 			selectPage(0);
+			
+			// register this as a drop target for filters
+			Filters.registerTarget(this);
 		}
 		
 		/**

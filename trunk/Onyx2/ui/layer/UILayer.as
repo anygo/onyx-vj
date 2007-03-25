@@ -202,9 +202,6 @@ package ui.layer {
 				new LayerPage('CUSTOM')
 			);
 			
-			// register this as a drop target for filters
-			Filters.registerTarget(this);
-			
 			// store layer
 			_layer = layer;
 

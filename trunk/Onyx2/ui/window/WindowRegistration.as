@@ -52,7 +52,8 @@ package ui.window {
 			new WindowRegistration('LAYERS',		LayerWindow, 0, 0),
 			new WindowRegistration('MEMORY',		MemoryWindow, 200,200, false),
 			new WindowRegistration('DISPLAY',		DisplayWindow, 412, 500),
-			new WindowRegistration('KEY MAPPING',	KeysWindow, 6, 544, false)
+			new WindowRegistration('KEY MAPPING',	KeysWindow, 6, 544, false),
+			new WindowRegistration('MACROS',		MacroWindow, 649, 324, false)
 		);
 		
 		/**

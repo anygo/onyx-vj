@@ -30,6 +30,7 @@
  */
 package ui.controls.page {
 	
+	import flash.events.Event;
 	import flash.utils.*;
 	
 	import onyx.controls.*;
@@ -56,6 +57,12 @@ package ui.controls.page {
 		private var _controls:Array		= [];
 		
 		/**
+		 * 	@private
+		 * 	If the controls passed in is a control array, listen for updates
+		 */
+		private var _ref:Controls;
+		
+		/**
 		 * 	@constructor
 		 */		
 		public function ControlPage():void {
@@ -72,18 +79,37 @@ package ui.controls.page {
 				uicontrol.dispose();
 			}
 			_controls = [];
+			
+			if (_ref) {
+				_ref.removeEventListener(Event.CHANGE, _onUpdate);
+				_ref = null;
+			}
 		}
 		
 		/**
-		 * 	
+		 * 	@private
+		 */
+		private function _onUpdate(event:Event):void {
+			addControls(_ref);
+		}
+		
+		/**
+		 * 	Add controls
 		 */
 		public function addControls(controls:Array):void {
 			
 			var uicontrol:UIControl, x:int = 0, y:int = 0;
+			
 			var options:UIOptions	= DEFAULT;
-			var width:int = 65;
+			var width:int			= 65;
+			var ref:Controls		= controls as Controls;
 			
 			removeControls();
+			
+			if (ref){ 
+				_ref = ref;
+				_ref.addEventListener(Event.CHANGE, _onUpdate);
+			}
 
 			for each (var control:Control in controls) {
 				
@@ -92,14 +118,6 @@ package ui.controls.page {
 				var def:String		= getQualifiedClassName(control);
 				var metadata:Object = control.metadata || {};
 				var uiClass:Class	= CONTROL_MAP[def];
-				
-				if (!uiClass && control is ControlNumber) {
-					if (metadata.display === 'frame') {
-						uiClass = SliderVFrameRate;
-					} else {
-						uiClass = SliderV;
-					}
-				}
 				
 				if (uiClass) {
 					uicontrol = new uiClass(options, control);
@@ -120,5 +138,10 @@ package ui.controls.page {
 				}				
 			}
 		}
+		
+		/**
+		 * 	@private
+		 */
+		
 	}
 }

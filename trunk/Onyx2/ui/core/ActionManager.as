@@ -28,26 +28,24 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package ui.styles {
+package ui.core {
 	
-	import flash.utils.*;
+	import flash.utils.Dictionary;
 	
-	import onyx.controls.*;
+	import onyx.macro.Macro;
 	
-	import ui.controls.*;
-
-	public const CONTROL_MAP:Object = {};
-
-	CONTROL_MAP['onyx.controls::ControlNumber']		= SliderV;
-	CONTROL_MAP['onyx.controls::ControlInt']		= SliderV;
-	CONTROL_MAP['onyx.controls::ControlProxy']		= SliderV2;
-	CONTROL_MAP['onyx.controls::ControlRange']		= DropDown;
-	CONTROL_MAP['onyx.controls::ControlLayer']		= DropDown;
-	CONTROL_MAP['onyx.controls::ControlDisplay']	= DropDown;
-	CONTROL_MAP['onyx.controls::ControlColor']		= ColorPicker;
-	CONTROL_MAP['onyx.controls::ControlToggle']		= CheckBox;
-	CONTROL_MAP['onyx.controls::ControlString']		= TextControl;
-	CONTROL_MAP['onyx.controls::ControlBoolean']	= DropDown;
-	CONTROL_MAP['onyx.controls::ControlPlugin']		= DropDown;
-
+	public final class ActionManager {
+		
+		private static var _dict:Dictionary = new Dictionary(true);
+		
+		public static function register(id:int, macro:Macro):void {
+			_dict[id] = macro;
+		}
+		
+		public static function execute(id:int):void {
+			var macro:Macro = _dict[id];
+			if (macro) {
+			}
+		}
+	}
 }

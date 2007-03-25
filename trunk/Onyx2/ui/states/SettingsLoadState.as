@@ -32,18 +32,19 @@ package ui.states {
 	
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
+	import flash.geom.Rectangle;
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
 	
 	import onyx.constants.*;
 	import onyx.core.Console;
 	import onyx.filter.Filter;
+	import onyx.macro.*;
 	import onyx.plugin.Plugin;
 	import onyx.states.*;
 	import onyx.utils.string.parseBoolean;
 	
 	import ui.window.WindowRegistration;
-	import flash.geom.Rectangle;
 
 	/**
 	 * 	Load settings
@@ -104,10 +105,13 @@ package ui.states {
 			
 			// set blend modes
 			if (xml.core.blendModes) {
+				
+				// remove all previous blend modes
 				while (BLEND_MODES.length) {
 					BLEND_MODES.pop();
 				}
 				
+				// make new blend modes
 				for each (var mode:XML in xml.core.blendModes.*) {
 					BLEND_MODES.push(String(mode.name()));
 				}
@@ -122,6 +126,7 @@ package ui.states {
 			// stored keys
 			if (xml.keys) {
 				
+				// map keys
 				for each (var key:XML in xml.keys.*) {
 					try {
 						KeyListenerState[key.name()] = key;
@@ -142,7 +147,10 @@ package ui.states {
 					}
 				}
 			}
-
+			
+			// map macros
+			KeyListenerState.ACTION_MACRO_1 = (Macro.macros[0] as Plugin).getDefinition() as Macro;
+			
 			// kill myself
 			StateManager.removeState(this);
 		}
