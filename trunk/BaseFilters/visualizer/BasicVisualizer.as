@@ -9,12 +9,17 @@ package visualizer {
 	import onyx.sound.SpectrumAnalysis;
 	import onyx.sound.SpectrumAnalyzer;
 	import onyx.sound.Visualizer;
+	import onyx.controls.ControlInt;
 
 	public final class BasicVisualizer extends Visualizer {
 		
-		private var _shape:Shape = new Shape();
+		public var height:int		= 200;
+		private var _shape:Shape	= new Shape();
 		
 		public function BasicVisualizer():void {
+			super(
+				new ControlInt('height', 'height', 100, 300, height)
+			)
 		}
 		
 		override public function render():RenderTransform {
@@ -27,10 +32,10 @@ package visualizer {
 			_shape.graphics.lineStyle(0, 0xFFFFFF);
 			
 			var analysis:Array = SpectrumAnalyzer.spectrum.analysis;
-			_shape.graphics.moveTo(0,100 + (analysis[0] * 200));
+			_shape.graphics.moveTo(0,100 + (analysis[0] * height));
 
 			for (var count:int = 1; count < analysis.length; count++) {
-				_shape.graphics.lineTo(count * step, 100 + (analysis[count] * 200));
+				_shape.graphics.lineTo(count * step, 100 + (analysis[count] * height));
 			}
 			
 			return transform;

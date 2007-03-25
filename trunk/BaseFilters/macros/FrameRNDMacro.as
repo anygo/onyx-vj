@@ -30,19 +30,24 @@
  */
 package macros {
 	
+	import effects.FrameRND;
+	
 	import onyx.display.Display;
-	import onyx.macro.*;
+	import onyx.filter.Filter;
 	import onyx.layer.Layer;
+	import onyx.macro.*;
+	import onyx.plugin.Plugin;
 	
 	public final class FrameRNDMacro extends Macro {
 		
-		public function FrameRNDMacro():void {
-		}
-		
 		override public function initialize():void {
+			
 			var display:Display = Display.getDisplay(0);
+			var plugin:Plugin	= Filter.getDefinition('FrameRND');
+			var filter:Filter	= plugin.getDefinition() as Filter;
 
 			for each (var layer:Layer in display.layers) {
+				layer.addFilter(filter.clone());
 			}
 
 		}

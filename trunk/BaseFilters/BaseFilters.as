@@ -71,7 +71,7 @@ package {
 				new Plugin('Frame Random', 			FrameRND,		'Randomizes Frame Rates'),
 				new Plugin('MoveScale Effect', 		MoverScaler,	'Moves and Scales Object'),
 				new Plugin('Threshold Gate', 		ThreshGate,		'Randomly Threshold'),
-				new Plugin('Macro 1',				FrameRNDMacro,	'Macro 1'),
+				new Plugin('FrameRND Macro',		FrameRNDMacro,	'Adds FrameRND and MoveScaler to all'),
 //				new Plugin('Matrix Effect',			MatrixEffect,	'Matrix Effect'),
 //				new Plugin('Bleed Filter',			PasteFilter,	'Bleed Filter'),
 				new Plugin('Blur Transition',		BlurTransition, 'Blurs the loaded layer'),
