@@ -33,6 +33,6 @@ package onyx.constants {
 	import flash.display.*;
 	import flash.geom.Rectangle;
 	
-	public var BITMAP_RECT:Rectangle = new Rectangle(0,0,320,240);
+	public var BITMAP_RECT:Rectangle = new Rectangle(0,0,BITMAP_WIDTH,BITMAP_HEIGHT);
 
 }
