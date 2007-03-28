@@ -37,12 +37,13 @@ package ui.states {
 	import flash.net.URLRequest;
 	
 	import onyx.constants.*;
-	import onyx.core.Console;
+	import onyx.core.*;
 	import onyx.filter.Filter;
 	import onyx.macro.*;
 	import onyx.plugin.Plugin;
 	import onyx.states.*;
 	import onyx.utils.string.parseBoolean;
+	import onyx.midi.Midi;
 	
 	import ui.window.WindowRegistration;
 
@@ -146,6 +147,11 @@ package ui.states {
 						reg.enabled = parseBoolean(windowXML.@enabled);
 					}
 				}
+			}
+			
+			// see if MIDI should be listening by default
+			if ( xml.core.midi ) {
+				Midi.getInstance().listen = parseBoolean(xml.core.midi.@listen);
 			}
 			
 			// map macros

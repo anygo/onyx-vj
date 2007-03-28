@@ -38,6 +38,7 @@ package ui.states {
 	import onyx.display.*;
 	import onyx.events.*;
 	import onyx.states.*;
+	import onyx.midi.Midi;
 	
 	import ui.assets.*;
 	import ui.core.*;
@@ -167,12 +168,14 @@ package ui.states {
 			// add a display
 			var display:Display = Onyx.createDisplay(STAGE.stageWidth - 320, STAGE.stageHeight - 240, 320 / BITMAP_WIDTH, 240 / BITMAP_HEIGHT, !SETTING_SUPPRESS_DISPLAYS);
 			display.createLayers(5);
-
+			
 			// now add all the windows
 			window.createButtons();
 
 			// create all windows
 			WindowRegistration.createWindows();
+			
+			Midi.getInstance().registerLayers(display.layers);
 
 			// remove references
 			_states = null;

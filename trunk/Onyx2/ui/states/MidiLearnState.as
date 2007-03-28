@@ -44,11 +44,12 @@ package ui.states {
 	import ui.controls.UIControl;
 	import ui.styles.*;
 	import ui.controls.*;
+	import onyx.midi.Midi;
 
 	public final class MidiLearnState extends ApplicationState {
 		
 		private var _control:UIControl;
-		private var _client:NthClient;
+		private var _client:NthEventClient;
 		private var _midi:Midi;
 		
 		/**
@@ -95,7 +96,7 @@ package ui.states {
 				StateManager.removeState(this);
 			} else {
 				// Wait for a MIDI noteon or controller event
-				_client = NthClient.getInstance();
+				_client = NthEventClient.getInstance();
 	    		_client.addEventListener(MidiEvent.NOTEON,_onNoteon);
 	    		_client.addEventListener(MidiEvent.CONTROLLER,_onController);
 	  		}

@@ -40,7 +40,8 @@ package ui.window {
 	import onyx.controls.*;
 	import onyx.core.*;
 	import onyx.display.*;
-	import onyx.events.TempoEvent;
+	import onyx.events.*;
+	import onyx.net.*;
 	import onyx.file.FileBrowser;
 	import onyx.jobs.*;
 	import onyx.states.StateManager;
@@ -234,7 +235,23 @@ package ui.window {
 			
 			FileBrowser.save('test.mix', bytes, _onFileSaved);
 			
+			_writeFile("video/mixes/newmix.xml",bytes);
+
 			event.stopPropagation();
+		}
+		
+		private function _writeFile(fname:String, bytes:ByteArray):void {
+			var fileclient:NthFileClient = new NthFileClient();
+		   	fileclient.writeFileBytes(fname,bytes);
+		   	fileclient.addEventListener(NthFileEvent.DONE,_onFileWritten);
+		}
+		
+		private function _onFileWritten(e:NthFileEvent):void {
+			if ( e.error ) {
+				onyx.core.Console.output("Error writing file, path=",e.path," error=",e.error);
+			} else {
+				onyx.core.Console.output("Successfully wrote file, path=",e.path);
+			}
 		}
 		
 		private function _onFileSaved():void {
