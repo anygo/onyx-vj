@@ -47,6 +47,7 @@ package onyx.display {
 		function get backgroundColor():uint;
 		
 		function loadXML(xml:XML):void;
+		function loadMidiXML():void;
 
 	}
 }

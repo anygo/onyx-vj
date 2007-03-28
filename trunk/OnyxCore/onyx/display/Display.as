@@ -50,6 +50,7 @@ package onyx.display {
 	import onyx.states.*;
 	import onyx.transition.*;
 	import onyx.utils.array.*;
+	import onyx.midi.Midi;
 	
 	use namespace onyx_ns;
 	
@@ -124,6 +125,16 @@ package onyx.display {
 		 * 
 		 */
 		onyx_ns var _valid:Array		= [];
+		
+		/**
+		 *
+		 */
+		private var _midi:Midi = Midi.getInstance();
+		
+		/**
+		 * 
+		 */
+		private var _xml:XML;
 		
 		/**
 		 * 	@constructor
@@ -715,6 +726,74 @@ package onyx.display {
 		}
 		
 		/**
+		 *  Get name of layer containing a particular control.
+		 *  Currently, names are just the layer index, but it might
+		 *  be nice for layer names to be more persistent when they're moved.
+		 *  This is used when saving MIDI controller assignments.
+		 */
+		public function getNameOfControl(control:Control):String {
+			var c:Control;
+			for ( var i:int=0; i<_layers.length; i++ ) {
+				var layer:Layer = _layers[i];
+				var layerName:String = i.toString();
+				// Why doesn't layer.properties.indexOf(control) work for this??
+				for each (var c2:Control in layer.properties) {
+					if ( c2 == control ) {
+						return layerName+"."+control.name;
+					}
+				}
+				for each (var f:Filter in layer.filters) {
+					if (f.controls.indexOf(control) >= 0) {
+						return layerName+"."+f.name+"."+control.name;
+					}
+				}
+			}
+			return null;
+		}
+		
+		/**
+		 * 
+		 */
+		 public function getControlByName(fullControlName:String):Control {
+		 	// All control names start with a layer name
+		 	var i:int = fullControlName.indexOf(".");
+		 	if ( i < 0 ) {
+		 		throw Error("getControlByName needs a fullControlName with a '.'");
+		 	}
+	 		var controlName:String;
+		 	var layerName:String = fullControlName.substring(0,i);
+		 	var postLayer:String = fullControlName.substring(i+1);
+		 	var c:Control;
+		 	
+		 	// Get the layer it's referring to -
+		 	// Currently layer names are just integers
+		 	var layer:Layer = _layers[int(layerName)];
+		 	i = postLayer.indexOf(".");
+		 	if ( i < 0 ) {
+		 		// It's layer control, look for a control with that name
+		 		controlName = postLayer;
+				for each (c in layer.properties) {
+					if ( c.name == controlName ) {
+						return c;
+					}
+				}
+		 	} else {
+		 		// It's a filter control
+		 		var filterName:String = postLayer.substring(0,i);
+		 		controlName = postLayer.substring(i+1);
+				for each (var f:Filter in layer.filters) {
+					if ( f.name == filterName ) {
+						for each (c in f.controls) {
+							if ( c.name == controlName )
+								return c;
+						}
+					}
+				}
+			}
+			return null;
+		}
+		
+		/**
 		 * 	Returns the display as xml
 		 */
 		public function toXML():XML {
@@ -749,6 +828,9 @@ package onyx.display {
 				}
 			}
 			
+			// add MIDI controls
+			display.appendChild(_midi.toXML());
+			
 			return xml;
 		}
 		
@@ -763,6 +845,19 @@ package onyx.display {
 			if (xml.filters) {
 				_filters.loadXML(xml.filters);
 			}
+			// Save it so loadMidiXML can use it
+			_xml = xml;
+		}
+		
+		/**
+		 * 	Loads MIDI settings from xml (needs to be done
+		 *  after the layers and their filters get loaded, so
+		 *  that Controls are present)
+		 */
+		public function loadMidiXML():void {
+			if (_xml.midi) {
+				_midi.loadXML(_xml.midi);
+			}	
 		}
 		
 		/**

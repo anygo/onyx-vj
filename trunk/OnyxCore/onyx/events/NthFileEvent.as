@@ -1,5 +1,5 @@
 /** 
- * Copyright (c) 2003-2006, www.onyx-vj.com
+ * Copyright (c) 2007, www.onyx-vj.com
  * All rights reserved.	
  * 
  * Redistribution and use in source and binary forms, with or without modification,
@@ -28,10 +28,22 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package onyx.constants {
-
-	import onyx.midi.Midi;
+ package onyx.events
+{
+	import onyx.file.*;
 	
-	public const MIDI:Midi = Midi.getInstance();
+	public class NthFileEvent extends NthEvent
+	{
+		public static const DONE:String		= 'done';
 
+		public var error:String;
+		public var path:String;
+		public var fileData:String;
+		public var folderList:FolderList;
+
+		public function NthFileEvent(t:String, x:XML)
+		{
+			super(t,x)
+		}
+	}
 }

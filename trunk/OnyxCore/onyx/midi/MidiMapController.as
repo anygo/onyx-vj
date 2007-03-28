@@ -1,5 +1,5 @@
 /** 
- * Copyright (c) 2003-2006, www.onyx-vj.com
+ * Copyright (c) 2007, www.onyx-vj.com
  * All rights reserved.	
  * 
  * Redistribution and use in source and binary forms, with or without modification,
@@ -28,10 +28,26 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package onyx.constants {
-
-	import onyx.midi.Midi;
+package onyx.midi {
 	
-	public const MIDI:Midi = Midi.getInstance();
+	import onyx.controls.Control;
+	import onyx.events.MidiEvent;
+	
+	public class MidiMapController extends MidiMap {
+		
+		public var controller:int;
+		public var channel:int;
 
+		public function MidiMapController(di:int, ch:int, ci:int, c:Control = null):void {
+			super(di,c);
+			controller = ci;
+			channel = ch;
+		}
+		
+		override public function matchesEvent(e:MidiEvent):Boolean {
+			return ( e.deviceIndex() == deviceIndex
+				&& e.channel() == channel
+				&& e.controller() == controller );
+		}
+	}
 }

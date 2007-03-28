@@ -704,6 +704,13 @@ package onyx.layer {
 		 * 	Returns xml representation of the layer
 		 */
 		public function toXML():XML {
+			// var props:XML = <properties2/>;
+			// for each (var c:Control in _properties ) {
+			// 	var cx:XML = c.toXML();
+			// 	props.appendChild( cx ) ;
+			// }
+			// var props3:XML = _properties.toXML();
+			
 			var xml:XML = 
 				<layer path={path}>
 					<properties>
@@ -726,7 +733,7 @@ package onyx.layer {
 						<loopEnd>{loopEnd.toFixed(3)}</loopEnd>
 					</properties>
 				</layer>;
-				
+
 			xml.appendChild(_content.filters.toXML());
 				
 			return xml;

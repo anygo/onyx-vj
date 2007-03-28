@@ -32,6 +32,7 @@ package onyx.jobs {
 
 	import flash.events.*;
 	import flash.net.*;
+	import flash.utils.Timer;
 	
 	import onyx.core.*;
 	import onyx.display.Display;
@@ -128,6 +129,13 @@ package onyx.jobs {
 								break;
 							}
 						}
+						
+						// Need to load the MIDI stuff, but after the other stuff gets loaded.
+						// This is a hack - there should be some way of calling it
+						// exactly when everything about the display is loaded.
+						var _timer:Timer = new Timer(2000,1);
+						_timer.addEventListener(TimerEvent.TIMER, _onTimer);
+						_timer.start();
 					}
 					
 				} catch (e:Error) {
@@ -145,6 +153,12 @@ package onyx.jobs {
 			}
 		}
 		
+		private function _onTimer(event:TimerEvent):void {
+			var timer:Timer = event.currentTarget as Timer;
+			timer.removeEventListener(TimerEvent.TIMER, _onTimer);
+			var display:Display = Display.getDisplay(0);
+			display.loadMidiXML();
+		}		
 		/**
 		 * 
 		 */
@@ -154,7 +168,7 @@ package onyx.jobs {
 				
 				var layer:Layer				= job.layer;
 				var settings:LayerSettings	= job.settings;
-
+	
 				layer.load(settings.path, settings);
 
 			}

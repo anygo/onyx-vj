@@ -30,111 +30,67 @@
  */
  package onyx.net {
  	import flash.events.*;
- 	import flash.net.XMLSocket;
+ 	import flash.net.*;
  	import flash.utils.Dictionary;
  	
  	import onyx.core.Console;
  	import onyx.errors.INVALID_CLASS_CREATION;
  	import onyx.events.*;
-
-	public class NthClient extends EventDispatcher {
+ 	
+	public class NthClient extends XMLSocket {
 		
-		private static var instance:NthClient	= new NthClient();
-		private static var fingers:Object		= new Object();
+	 	static private var warned:Boolean = false;
+	 	static public var working:Boolean = false;
 
-		private var _socket:XMLSocket;
-		private var _count:int = 0;
+		protected var _count:int = 0;
 	
-		public function NthClient() {
-			if ( instance ) {
-				throw INVALID_CLASS_CREATION;
-			}
-			_socket = new XMLSocket;
-			configureListeners();
-			_socket.connect("localhost", 1383);
-		}
-		public static function getInstance():NthClient {
-			return instance;
-		}
-		public function isConnected():Boolean {
-			return _socket.connected;
+		protected function isConnected():Boolean {
+			return this.connected;
 		}
 		
-		private function configureListeners():void {
-	        _socket.addEventListener(Event.CLOSE, closeHandler);
-	        _socket.addEventListener(Event.CONNECT, connectHandler);
-	        _socket.addEventListener(DataEvent.DATA, dataHandler);
-	        _socket.addEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
-	        _socket.addEventListener(ProgressEvent.PROGRESS, progressHandler);
-	        _socket.addEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler);
+		protected function configureListeners():void {
+	        this.addEventListener(Event.CLOSE, closeHandler);
+	        this.addEventListener(Event.CONNECT, connectHandler);
+	        this.addEventListener(DataEvent.DATA, dataHandler);
+	        this.addEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
+	        this.addEventListener(ProgressEvent.PROGRESS, progressHandler);
+	        this.addEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler);
 	    }
-	    private function closeHandler(event:Event):void {
-	        trace("closeHandler: " + event);
-	        dispatchEvent(new Event(Event.CLOSE));
+	    
+	    protected function closeHandler(event:Event):void {
 	        removeListeners();
 	    }
-	    private function removeListeners():void {	        
-	    	_socket.removeEventListener(Event.CLOSE, closeHandler);
-	        _socket.removeEventListener(Event.CONNECT, connectHandler);
-	        _socket.removeEventListener(DataEvent.DATA, dataHandler);
-	        _socket.removeEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
-	        _socket.removeEventListener(ProgressEvent.PROGRESS, progressHandler);
-	        _socket.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler);
-	    }
-	
-	    private function connectHandler(event:Event):void {
-	    	// trace("connected Event="+event);
-	    	dispatchEvent(new Event(Event.CONNECT));
-	        // socket.send('<connect uri="example.com/pie" user="tjt" />')
-	        requestNextEvent();
+	    
+	    protected function removeListeners():void {	        
+	    	this.removeEventListener(Event.CLOSE, closeHandler);
+	        this.removeEventListener(Event.CONNECT, connectHandler);
+	        this.removeEventListener(DataEvent.DATA, dataHandler);
+	        this.removeEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
+	        this.removeEventListener(ProgressEvent.PROGRESS, progressHandler);
+	        this.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler);
 	    }
 	    
-	    protected function requestNextEvent():void {
-	     	_socket.send("<next_event/>");
-	    }
-	
-		private function dataHandler(event:DataEvent):void {
-			// trace("data="+event.data);
-	        var x:XML = new XML(event.data);
-	        // trace("xml name="+x.name()+" localName="+x.name().localName);
-	        if ( x.localName() == "event" ) {
-	        	var c:XMLList = x.children()
-	        	for each ( var x2:XML in c ) {
-	        		var s:String = x2.localName();
-	        		if ( s.search("finger_") == 0 ) {
-	        			var f:FingerEvent = new FingerEvent(s.substr(7),x2);
-	        			updateFingers(f);
-	        			dispatchEvent(f);
-	        		} else if ( s.search("midi_") == 0 ) {
-	        			var m:MidiEvent = new MidiEvent(s.substr(5),x2);
-	        			dispatchEvent(m);
-	        		} else {
-	        		}
-	        	}
-	        }
-	       	requestNextEvent();
-	    }
-
-	    private function updateFingers(f:FingerEvent):void {
-				fingers[f.fingerUID()] = new FingerState(f);
+		protected function connectHandler(event:Event):void {
+			working = true;
 	    }
 	    
-	    public function getFingerStates():Object {
-			return fingers;
-	    }
+		protected function dataHandler(event:DataEvent):void {
+		}
 
-	    private function ioErrorHandler(event:IOErrorEvent):void {
-	        trace("ioErrorHandler: " + event);
-	        if ( ! _socket.connected ) {
+	    protected function ioErrorHandler(event:IOErrorEvent):void {
+	        if ( ! this.connected && warned == false ) {
 	        	Console.output("You need to start the NthEvent server...");
-	        }
+	        	warned = true;	// so we only do it once
+	        } else {
+		        trace("ioErrorHandler: " + event);
+		    }
 	    }
 	
-	    private function progressHandler(event:ProgressEvent):void {
+	    protected function progressHandler(event:ProgressEvent):void {
 	        trace("progressHandler loaded:" + event.bytesLoaded + " total: " + event.bytesTotal);
 	    }
 	
-	    private function securityErrorHandler(event:SecurityErrorEvent):void {
+	    protected function securityErrorHandler(event:SecurityErrorEvent):void {
 	        trace("securityErrorHandler: " + event);
 	    }
 	}

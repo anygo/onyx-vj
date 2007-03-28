@@ -51,8 +51,8 @@
 		public function MidiEvent(t:String, x:XML):void {
 			super(t,x)
 		}
-		public function device():int {
-    		return xml.attribute("device");
+		public function deviceIndex():int {
+    		return xml.attribute("devindex");
     	}
     	public function pitch():int {
     		return xml.attribute("pitch");
