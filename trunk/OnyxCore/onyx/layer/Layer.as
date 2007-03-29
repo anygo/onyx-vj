@@ -735,7 +735,11 @@ package onyx.layer {
 				</layer>;
 
 			xml.appendChild(_content.filters.toXML());
-				
+			
+			if ( _content.controls ) {
+				xml.appendChild(_content.controls.toXML());
+			}
+
 			return xml;
 		}
 		

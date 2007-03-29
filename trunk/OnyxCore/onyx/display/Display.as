@@ -747,6 +747,14 @@ package onyx.display {
 						return layerName+"."+f.name+"."+control.name;
 					}
 				}
+				if (layer._content!=null && layer._content.controls!=null) {
+					trace("getNameofControl sees _content.controls");
+					for each (var c3:Control in layer._content.controls) {
+						if ( c3 == control ) {
+							return layerName+".content."+control.name;
+						}
+					}
+				}
 			}
 			return null;
 		}
@@ -781,11 +789,18 @@ package onyx.display {
 		 		// It's a filter control
 		 		var filterName:String = postLayer.substring(0,i);
 		 		controlName = postLayer.substring(i+1);
-				for each (var f:Filter in layer.filters) {
-					if ( f.name == filterName ) {
-						for each (c in f.controls) {
-							if ( c.name == controlName )
-								return c;
+		 		if (filterName == "content") {
+					for each (c in layer._content.controls) {
+						if ( c.name == controlName )
+							return c;
+					}
+		 		} else {
+					for each (var f:Filter in layer.filters) {
+						if ( f.name == filterName ) {
+							for each (c in f.controls) {
+								if ( c.name == controlName )
+									return c;
+							}
 						}
 					}
 				}

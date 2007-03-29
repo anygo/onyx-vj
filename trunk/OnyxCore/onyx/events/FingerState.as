@@ -49,7 +49,7 @@
 			y = f.y();
 		}
 		public function toString():String {
-			return "FingerState(deviceIndex="+deviceIndex+",fingerIndex="+fingerIndex+",isDown="+isDown+",x="+x+",y="+y+")";
+			return "FingerState(deviceIndex="+deviceIndex+",fingerIndex="+fingerIndex+",isDown="+isDown+",x="+x+",y="+y+",prox="+proximity+")";
 		}
 	}
 }
