@@ -733,26 +733,41 @@ package onyx.display {
 		 */
 		public function getNameOfControl(control:Control):String {
 			var c:Control;
+			var f:Filter;
 			for ( var i:int=0; i<_layers.length; i++ ) {
 				var layer:Layer = _layers[i];
-				var layerName:String = i.toString();
+				// The layer name is "layer" plus the layer index
+				var layerName:String = "layer" + i.toString();
 				// Why doesn't layer.properties.indexOf(control) work for this??
-				for each (var c2:Control in layer.properties) {
-					if ( c2 == control ) {
+				for each (c in layer.properties) {
+					if ( c == control ) {
 						return layerName+"."+control.name;
 					}
 				}
-				for each (var f:Filter in layer.filters) {
+				for each (f in layer.filters) {
 					if (f.controls.indexOf(control) >= 0) {
 						return layerName+"."+f.name+"."+control.name;
 					}
 				}
 				if (layer._content!=null && layer._content.controls!=null) {
-					trace("getNameofControl sees _content.controls");
-					for each (var c3:Control in layer._content.controls) {
-						if ( c3 == control ) {
+					for each (c in layer._content.controls) {
+						if ( c == control ) {
 							return layerName+".content."+control.name;
 						}
+					}
+				}
+			}
+			// If it wasn't in one of the layers, then it's got
+			// to be a control on the display
+			for each (c in _controls) {
+				if ( c == control ) {
+					return "display."+control.name;
+				}
+			}
+			for each (f in _filters) {
+				for each (c in f.controls) {
+					if ( c == control ) {
+						return "display."+f.name+"."+control.name;
 					}
 				}
 			}
@@ -769,13 +784,44 @@ package onyx.display {
 		 		throw Error("getControlByName needs a fullControlName with a '.'");
 		 	}
 	 		var controlName:String;
+		 	var filterName:String;
+		 	var f:Filter;
 		 	var layerName:String = fullControlName.substring(0,i);
 		 	var postLayer:String = fullControlName.substring(i+1);
 		 	var c:Control;
 		 	
+		 	if (layerName == "display") {
+			 	i = postLayer.indexOf(".");
+			 	if (i>=0) {
+			 		// If there's another dot, then it's a display filter control
+			 		filterName = postLayer.substring(0,i);
+			 		controlName = postLayer.substring(i+1);
+					for each (f in _filters) {
+						if ( f.name == filterName ) {
+							for each (c in f.controls) {
+								if ( c.name == controlName )
+									return c;
+							}
+						}
+					}
+			 	} else {
+			 		// It's a display control
+			 		controlName = postLayer;
+					for each (c in _controls) {
+						if ( c.name == controlName )
+							return c;
+					}
+				}
+				return null;
+		 	}
 		 	// Get the layer it's referring to -
-		 	// Currently layer names are just integers
-		 	var layer:Layer = _layers[int(layerName)];
+		 	// Currently layer names are just "layer" plus the index
+		 	if ( ! (layerName.search("layer") == 0) ) {
+		 		trace("Unrecognized layer name in control name: ",layerName);
+		 		return null;
+		 	}
+		 	// The layer name is "layer" followed by an integer
+		 	var layer:Layer = _layers[int(layerName.substr(5))];
 		 	i = postLayer.indexOf(".");
 		 	if ( i < 0 ) {
 		 		// It's layer control, look for a control with that name
@@ -787,7 +833,7 @@ package onyx.display {
 				}
 		 	} else {
 		 		// It's a filter control
-		 		var filterName:String = postLayer.substring(0,i);
+		 		filterName = postLayer.substring(0,i);
 		 		controlName = postLayer.substring(i+1);
 		 		if (filterName == "content") {
 					for each (c in layer._content.controls) {
@@ -795,7 +841,7 @@ package onyx.display {
 							return c;
 					}
 		 		} else {
-					for each (var f:Filter in layer.filters) {
+					for each (f in layer.filters) {
 						if ( f.name == filterName ) {
 							for each (c in f.controls) {
 								if ( c.name == controlName )
