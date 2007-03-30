@@ -45,6 +45,7 @@ package ui.states {
 	import ui.styles.*;
 	import ui.controls.*;
 	import onyx.midi.Midi;
+	import onyx.controls.ControlRange;
 
 	public final class MidiLearnState extends ApplicationState {
 		
@@ -97,25 +98,26 @@ package ui.states {
 			} else {
 				// Wait for a MIDI noteon or controller event
 				_client = NthEventClient.getInstance();
-	    		_client.addEventListener(MidiEvent.NOTEON,_onNoteon);
+	    		_client.addEventListener(MidiEvent.NOTEON,_onNoteonoff);
+	    		_client.addEventListener(MidiEvent.NOTEOFF,_onNoteonoff);
 	    		_client.addEventListener(MidiEvent.CONTROLLER,_onController);
 	  		}
 		}
 		
-		private function _onNoteon(e:MidiEvent):void {
-			if ( _control is ButtonClear ) {
+		private function _onNoteonoff(e:MidiEvent):void {
+			if ( _control is ButtonControl ) {
 				_midi.registerNote(_control.control,e);
 			} else {
-				Console.output("You need to use a MIDI controller (not a note) for that!");
+				Console.output("You need to map a MIDI controller to that control!");
 			}
 			StateManager.removeState(this);
 		}
 		
 		private function _onController(e:MidiEvent):void {
-			if ( _control is SliderV ) {
+			if ( _control is SliderV || _control is DropDown || _control is ButtonControl ) {
 				_midi.registerController(_control.control,e);
 			} else {
-				Console.output("You need to use a MIDI note (not a controller) for that!");
+				Console.output("That control can't be mapped!");
 			}
 			StateManager.removeState(this);
 		}
@@ -127,7 +129,8 @@ package ui.states {
 			
 			STAGE.removeEventListener(MouseEvent.MOUSE_DOWN, _onControlSelect, true);
 	   		if ( _client ) {
-				_client.removeEventListener(MidiEvent.NOTEON,_onNoteon);
+				_client.removeEventListener(MidiEvent.NOTEON,_onNoteonoff);
+				_client.removeEventListener(MidiEvent.NOTEOFF,_onNoteonoff);
 	   			_client.removeEventListener(MidiEvent.CONTROLLER,_onController);
 	   		}
 	   		_unHighlight();
