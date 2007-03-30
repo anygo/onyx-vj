@@ -36,23 +36,19 @@ package onyx.controls {
 	
 	public final class ControlExecute extends Control {
 		
-		public function ControlExecute(name:String, display:String):void {
+		public function ControlExecute(name:String, display:String = null):void {
 			
 			super(name, display);
-			
 		}
 		
-		override public function get value():* {
-			return null;
-		}
-		
-		override public function setValue(i:*):* {
-			if (super._target[name] is Function && i is Array) {
+		public function execute():void {
+			if (super._target[name] is Function) {
 				var fn:Function = super._target[name];
-				return fn.apply(super._target, i);
+				fn.apply(super._target);
+			} else {
+				throw "ControlExecute error - the value of '"+name+"' in '"+_target+"' needs to be a Function!";
 			}
-			return null;
 		}
-
+		
 	}
 }

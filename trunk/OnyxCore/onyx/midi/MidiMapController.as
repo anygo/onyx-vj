@@ -37,17 +37,20 @@ package onyx.midi {
 		
 		public var controller:int;
 		public var channel:int;
+		public var value:int;
 
-		public function MidiMapController(di:int, ch:int, ci:int, c:Control = null):void {
+		public function MidiMapController(di:int, ch:int, ci:int, v:int, c:Control = null):void {
 			super(di,c);
 			controller = ci;
 			channel = ch;
+			value = v;
 		}
 		
 		override public function matchesEvent(e:MidiEvent):Boolean {
-			return ( e.deviceIndex() == deviceIndex
+			var matches:Boolean = ( e.deviceIndex() == deviceIndex
 				&& e.channel() == channel
 				&& e.controller() == controller );
+			return (value<0) ? matches : (matches && e.value() == value);
 		}
 	}
 }

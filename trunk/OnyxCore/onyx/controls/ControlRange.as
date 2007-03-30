@@ -51,6 +51,16 @@ package onyx.controls {
 		private var _defaultvalue:uint;
 		
 		/**
+		 *  @private
+		 */
+		 private var _min:int;
+		 
+		/**
+		 *  @private
+		 */
+		 private var _max:int;
+		
+		/**
 		 * 	The property name to bind to when displaying
 		 */
 		public var binding:String;
@@ -63,6 +73,8 @@ package onyx.controls {
 			this.binding  		= binding;			
 			this._data			= data;
 			this._defaultvalue	= defaultvalue;
+			this._min = 0;
+			this._max = data.length - 1;
 			
 			super(name, display, options);
 		}
@@ -88,6 +100,20 @@ package onyx.controls {
 		public function get data():Array {
 			return _data;
 		}
+		
+		/**
+		 * 
+		 */
+ 		public function get min():* {
+ 			return _min
+ 		}
+ 		
+		/**
+		 * 
+		 */
+ 		public function get max():* {
+ 			return _max
+ 		}
 	}
 	
 }

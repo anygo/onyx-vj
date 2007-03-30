@@ -193,7 +193,9 @@ package onyx.layer {
 				for each (var control:Control in controls) {
 					try {
 						var targetControl:Control = content.controls.getControl(control.name);
-						targetControl.value = control.value;
+						if ( ! (targetControl is ControlExecute) ) {
+							targetControl.value = control.value;
+						}
 					} catch (e:Error) {
 						Console.error(e.message);
 					}

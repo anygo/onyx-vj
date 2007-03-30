@@ -42,7 +42,7 @@ package onyx.midi {
 	import onyx.display.Display;
 	import onyx.layer.*;
  	import onyx.errors.INVALID_CLASS_CREATION;
-	
+ 	
 	public class Midi extends EventDispatcher implements IControlObject {
 		
 		private static var _instance:Midi;
@@ -120,17 +120,15 @@ package onyx.midi {
 		}
 		
 		public function start():void {
-			_client.addEventListener(MidiEvent.NOTEON, _onNoteon);
+			_client.addEventListener(MidiEvent.NOTEON, _onNoteonoff);
+			_client.addEventListener(MidiEvent.NOTEOFF, _onNoteonoff);
 			_client.addEventListener(MidiEvent.CONTROLLER, _onController);
 		}
 		
 		public function stop():void {
-			_client.removeEventListener(MidiEvent.NOTEON, _onNoteon);
+			_client.removeEventListener(MidiEvent.NOTEON, _onNoteonoff);
+			_client.removeEventListener(MidiEvent.NOTEOFF, _onNoteonoff);
 			_client.removeEventListener(MidiEvent.CONTROLLER, _onController);
-		}
-		
-		public function _onNoteon(e:MidiEvent):void {
-			trace("Don't know how to handle noteon messages yet");
 		}
 		
 		private function _removeMapForControl(c:Control):void {
@@ -147,7 +145,7 @@ package onyx.midi {
 		public function _onController(e:MidiEvent):void {
 			for each (var m:MidiMap in _map) {
 				if ( m is MidiMapController ) {
-					if ( ! m.matchesEvent(e) && m.control != null ) {
+					if ( ! m.matchesEvent(e) || m.control == null ) {
 						continue;
 					}
 					var f:Number = e.value() / 127.0;
@@ -158,13 +156,37 @@ package onyx.midi {
 					} else if ( c is ControlInt ) {
 						var ci:ControlInt = c as ControlInt;
 						ci.value = ci.min + (ci.max - ci.min) * f;
+					} else if ( c is ControlRange ) {
+						var cd:ControlRange = c as ControlRange;
+						var i:int = int(Math.round(cd.min + (cd.max - cd.min) * f));
+						cd.value = cd.data[i];
+					} else if ( c is ControlExecute ) {
+						// For MIDI controllers attached to an execute control (i.e. 
+						// a pushbutton), it will only fire if the controller matches
+						// the exact control value that was learned.
+						var ce:ControlExecute = c as ControlExecute;
+						ce.execute();
 					} else {
-						trace("Don't know how to handle that type of control");
+						throw "MidiMapController doesn't know how to handle that type of control";
 					}
-				} else if ( m is MidiMapNote ) {
-					trace("MidiMapNote is not handled yet");
-				} else {
-					trace("Don't know how to handle that type of MidiMap");
+				}
+			}
+		}
+		
+		public function _onNoteonoff(e:MidiEvent):void {
+			for each (var m:MidiMap in _map) {
+				if ( m is MidiMapNote ) {
+					if ( ! m.matchesEvent(e) || m.control == null ) {
+						continue;
+					}
+					var f:Number = e.value() / 127.0;
+					var c:Control = m.control;
+					if ( c is ControlExecute ) {
+						var ce:ControlExecute = c as ControlExecute;
+						ce.execute();
+					} else {
+						throw "MidiMapNote doesn't know how to handle that type of control";
+					}
 				}
 			}
 		}
@@ -173,21 +195,21 @@ package onyx.midi {
 		 *  public
 		 */
 		public function registerController(c:Control, e:MidiEvent):void {
-			var m:MidiMap = new MidiMapController(
-				e.deviceIndex(), e.channel(), e.controller(), c);
-			_registerMap(c,m);
+			var m:MidiMapController = new MidiMapController(
+				e.deviceIndex(), e.channel(), e.controller(),
+				(c is ControlExecute) ? e.value() : -1,
+				c);
+			_registerMap(m,c);
 		}
 		
 		public function registerNote(c:Control, e:MidiEvent):void {
-			var m:MidiMap = new MidiMapNote(
-				e.deviceIndex(), e.channel(), e.pitch(), c);
-			_registerMap(c,m);
-		}
-		public function deregisterController(c:Control):void {
-			_removeMapForControl(c);
+			var m:MidiMapNote = new MidiMapNote(
+				e.deviceIndex(), e.channel(), e.pitch(), e.type==MidiEvent.NOTEON, c);
+			_registerMap(m,c);
 		}
 		
 		public function dispose():void {
+			stop();
 		}
 		
 		public function get controls():Controls {
@@ -210,6 +232,7 @@ package onyx.midi {
 								<channel>{mc.channel}</channel>
 								<controller>{mc.controller}</controller>
 								<control>{fullControlname}</control>
+								<value>{mc.value}</value>
 								</mapcontroller> );
 				} else if ( m is MidiMapNote ) {
 					var mn:MidiMapNote = m as MidiMapNote;
@@ -218,6 +241,7 @@ package onyx.midi {
 								<channel>{mn.channel}</channel>
 								<pitch>{mn.pitch}</pitch>
 								<control>{fullControlname}</control>
+								<noteon>{mn.noteon}</noteon>
 								</mapnote> );
 				}
 			}
@@ -225,23 +249,32 @@ package onyx.midi {
 		}
 		
 		public function loadXML(xml:XMLList):void {
-			var display:Display = Display.getDisplay(0);
-			for each (var xm:XML in xml.mapcontroller) {
-				var deviceIndex:int = xm.deviceIndex;
-				var c:Control = display.getControlByName(xm.control);
-				if ( c == null ) {
-					trace("Unable to find control=",xm.control);
-					continue;
-				}
-				var m:MidiMap = new MidiMapController(
-					xm.deviceIndex, xm.channel, xm.controller, c);
-				_registerMap(c,m);
+			var xm:XML;
+			for each (xm in xml.mapcontroller) {
+				var mc:MidiMapController = new MidiMapController(
+					xm.deviceIndex, xm.channel, xm.controller, xm.value);
+				_registerMapByName(mc,xm.control);
+			}
+			for each (xm in xml.mapnote) {
+				var mn:MidiMapNote = new MidiMapNote(
+					xm.deviceIndex, xm.channel, xm.pitch, xm.noteon);
+				_registerMapByName(mn,xm.control);
 			}
 		}
 		
-		private function _registerMap(c:Control, m:MidiMap):void {
+		private function _registerMap(m:MidiMap, c:Control):void {
 			_removeMapForControl(c);
+			m.control = c;
 			_map.push(m);
+		}
+		
+		private function _registerMapByName(m:MidiMap, controlName:String):void {
+			var display:Display = Display.getDisplay(0);
+			var c:Control = display.getControlByName(controlName);
+			if ( c == null ) {
+				throw "Unable to find control="+controlName;
+			}
+			_registerMap(m,c);
 		}
 	}
 }

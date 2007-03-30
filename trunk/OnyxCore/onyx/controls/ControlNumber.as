@@ -81,9 +81,16 @@ package onyx.controls {
 			return value;
 		}
 		
+		/**
+		 * 
+		 */
  		public function get min():* {
  			return _min
  		}
+ 		
+		/**
+		 * 
+		 */
  		public function get max():* {
  			return _max
  		}
