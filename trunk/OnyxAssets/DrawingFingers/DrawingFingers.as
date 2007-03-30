@@ -44,6 +44,7 @@
 	import onyx.net.*;
 	import onyx.plugin.*;
 	import onyx.render.*;
+	import onyx.utils.*;
 
 	/**
 	 * 	Drawing clip
@@ -54,7 +55,12 @@
 		private var _source:BitmapData		= BASE_BITMAP();
 		private var _controls:Controls;
 		
-		public var color1:uint	= 0xFF0000;
+		public var hue1:Number = 0.0;
+		public var hue2:Number = 0.0;
+		public var luminance1:Number = 0.5;
+		public var luminance2:Number = 0.5;
+		public var saturation1:Number = 1.0;
+		public var saturation2:Number = 1.0;
 		public var fingeralpha:Number = 0.2;
 		public var fingeraspect:Number = 1;
 		public var blurX:Number = 0;
@@ -63,18 +69,20 @@
 		public var fingerstyle:String = 'FILLED';
 		public var fingerround:int;
 		public var fade:Number = 0.1;
-
-		private static var _client:NthClient;
+		
+		private static var _client:NthEventClient;
 		
 		public const SHAPES:Array = ['CIRCLE', 'RECT', 'ROUNDRECT', 'ELLIPSE'];
 		public const STYLES:Array = ['FILLED', 'OUTLINE'];
 					
 		private var _blur:BlurFilter = new BlurFilter(  );
+		private var _changed:Boolean = false;
 	
 		public function DrawingFingers():void {
 			
 			_controls = new Controls(this, 
-				new ControlColor('color1','color1'),
+				new ControlNumber('hue1','hue1',	0,	360,	0, { multiplier: 1 } ),
+				new ControlNumber('hue2','hue2',	0,	360,	0, { multiplier: 1 } ),
 				new ControlNumber('fingeralpha','alpha',	0,	1,	0.2),
 				new ControlRange('fingershape','shape',	SHAPES,	0),
 				new ControlRange('fingerstyle','style', STYLES, 0),
@@ -82,32 +90,60 @@
 				new ControlInt('fingerround', 'round', 0, 50, 10, { factor: 10 }),
 				new ControlNumber('blurX','blurX', 0, 1, 0),
 				new ControlNumber('blurY','blurY', 0, 1, 0),
-				new ControlNumber('fade','fade', 0, 1, 0.1)
+				new ControlNumber('fade','fade', 0, 1, 0.1),
+				new ControlExecute('clear','clear')
 			);
-			_client = NthClient.getInstance();
+			_client = NthEventClient.getInstance();
 			_client.addEventListener(FingerEvent.DOWN,onFingerDown);
     		_client.addEventListener(FingerEvent.UP,onFingerUp);
     		_client.addEventListener(FingerEvent.DRAG,onFingerDrag);
+    		
+			addEventListener(Event.ENTER_FRAME, _ent);
+    	}
+    	
+		public function clear():void {
+			graphics.beginFill(0x000000,1.0);
+			graphics.drawRect(0,0,BITMAP_WIDTH,BITMAP_HEIGHT);
+			graphics.endFill();
+		}
+    	
+    	private function _ent(e:Event):void {
+    		if ( ! _changed )
+    			return
+    		// trace("drawing, e=",e);
+    		var d:Object = _client.getFingerStates();
+    		for each ( var x:Object in d ) {
+    			var f:FingerState = x as FingerState;
+    			_draw(f);
+    		}
+    		_changed = false;
     	}
 		
     	public function onFingerDown(f:FingerEvent):void {
- 	 		_draw(f);
+    		_changed = true;
+ 	 		// _draw(f);
     	}
     	public function onFingerUp(f:FingerEvent):void {
-    		;
+    		_changed = true;
     	}
     	public function onFingerDrag(f:FingerEvent):void {
-  	 		_draw(f);
+    		_changed = true;
+  	 		// _draw(f);
 	   	}
 	
-		private function _draw(f:FingerEvent):void {
-			var x:int = BITMAP_WIDTH * f.x();
-			var y:int = BITMAP_HEIGHT - BITMAP_HEIGHT * f.y();
-			var r:Number = 20 * f.proximity();
+		private function _draw(f:FingerState):void {
+			var x:int = BITMAP_WIDTH * f.x;
+			var y:int = BITMAP_HEIGHT - BITMAP_HEIGHT * f.y;
+			var r:Number = 20 * f.proximity;
+			
+			var color1:HLS = new HLS(hue1,luminance1,saturation1);
+			var color2:HLS = new HLS(hue2,luminance2,saturation2);
+			
+			var color:uint =  ((f.deviceIndex % 2)==0) ? color1.rgb : color2.rgb;
 			if ( fingerstyle == 'FILLED' ) {
-				graphics.beginFill(color1,fingeralpha);
+				graphics.beginFill(color,fingeralpha);
 			} else {
-				graphics.lineStyle(1,color1,fingeralpha);
+				graphics.lineStyle(1,color,fingeralpha);
 			}
 			var a1:Number = r;
 			var a2:Number = r * fingeraspect;
@@ -132,10 +168,12 @@
 			
 			var t:RenderTransform = RenderTransform.getTransform(this);
 			t.content = _source;
-
-			_blur.blurX = blurX * BITMAP_WIDTH / 4;
-			_blur.blurY = blurY * BITMAP_HEIGHT / 3;
-            _source.applyFilter(_source, _source.rect, new Point(  ), _blur);
+			
+			if ( blurX > 0 || blurY > 0 ) {
+				_blur.blurX = blurX * BITMAP_WIDTH / 4;
+				_blur.blurY = blurY * BITMAP_HEIGHT / 3;
+	            _source.applyFilter(_source, _source.rect, new Point(  ), _blur);
+			}
             
             var f:Number;
             if ( fade == 1.0 ) {
