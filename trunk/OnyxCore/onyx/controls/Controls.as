@@ -108,6 +108,7 @@ package onyx.controls {
 		 */
 		public function addControl(... controls:Array):void {
 			
+			// loop through and add them controls
 			for each (var control:Control in controls) {
 				
 				control.target = _target;

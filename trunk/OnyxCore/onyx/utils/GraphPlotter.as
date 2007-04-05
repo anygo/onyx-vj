@@ -30,8 +30,7 @@
  */
 package onyx.utils {
 	
-	import flash.display.Shape;
-	import flash.display.Sprite;
+	import flash.display.*;
 	import flash.events.Event;
 	import flash.system.System;
 	import flash.text.TextField;
@@ -91,9 +90,19 @@ package onyx.utils {
 		private var _maxText:TextField	= new TextField();
 		
 		/**
+		 * 	@private
+		 */
+		private var _init:Boolean		= false;
+		
+		/**
+		 * 
+		 */
+		private var _firstVal:int		= getTimer();
+		
+		/**
 		 * 	@constructor
 		 */
-		public function GraphPlotter(initValue:Number, width:int = 200, height:int = 188, color:uint = 0xFFFF00):void {
+		public function GraphPlotter(initValue:Number = 0, color:uint = 0xFFFF00, labelOffsetX:int = 0, width:int = 200, height:int = 188):void {
 
 			_width	= width;
 			_height = height;
@@ -106,8 +115,9 @@ package onyx.utils {
 			_minText.y			= height - 20;
 			_minText.selectable = _maxText.selectable = false;
 			_minText.textColor	= _maxText.textColor = color;
+			_minText.x = _maxText.x = labelOffsetX;
 
-			var x:Number = getTimer() / STAGE.frameRate;
+			var x:Number = 0;
 			var y:Number = initValue;
 			
 			_calc(x, y);
@@ -123,6 +133,7 @@ package onyx.utils {
 		
 		/**
 		 * 	@private
+		 * 	Calculates minimum and maximum values
 		 */
 		private function _calc(x:Number, y:Number):void {
 			maxY = (y > maxY) ? y : maxY;
@@ -135,11 +146,11 @@ package onyx.utils {
 		}
 		
 		/**
-		 * 
+		 * 	Registers a value to plot
 		 */
 		public function register(value:Number):void {
 			
-			var x:Number = getTimer() / STAGE.frameRate;
+			var x:Number = (getTimer() - _firstVal) / STAGE.frameRate;
 			var y:Number = value;
 			
 			_calc(x, y);
@@ -149,7 +160,7 @@ package onyx.utils {
 			
 			// get ratio
 			var ratioY:Number			= _height / (maxY - minY);
-			_graph.y						= (maxY * ratioY);
+			_graph.y					= (maxY * ratioY);
 
 			_graph.scaleY				= -ratioY;
 			_graph.scaleX				= _width / maxX;

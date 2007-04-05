@@ -156,6 +156,7 @@ package onyx.jobs {
 		private function _onTimer(event:TimerEvent):void {
 			var timer:Timer = event.currentTarget as Timer;
 			timer.removeEventListener(TimerEvent.TIMER, _onTimer);
+			
 			var display:Display = Display.getDisplay(0);
 			display.loadMidiXML();
 		}		
