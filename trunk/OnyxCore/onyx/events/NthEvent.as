@@ -34,11 +34,8 @@
 
 	public class NthEvent extends Event
 	{    
-		public var xml:XML;
-			
-		public function NthEvent(t:String, x:XML) {
+		public function NthEvent(t:String) {
 			super(t);
-			xml = x;
      	}
 	}
 }

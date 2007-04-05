@@ -31,7 +31,7 @@
  package onyx.net {
  	import flash.events.*;
  	import flash.net.XMLSocket;
- 	import flash.utils.Dictionary;
+ 	import flash.utils.*;
  	
  	import onyx.core.Console;
  	import onyx.errors.INVALID_CLASS_CREATION;
@@ -42,6 +42,11 @@
 		private static var instance:NthEventClient	= new NthEventClient();
 		private static var fingers:Object		= new Object();
 		
+		private var _timer:Timer;
+		private var _myConnected:Boolean = false;
+		private var _connections:int = 0;
+		private var _attempts:int = 0;
+		
 		public function NthEventClient() {
 			// We only want one of these to be active - it sits waiting for
 			// the next event from the NthServer, and as soon as an event comes in,
@@ -50,6 +55,11 @@
 				throw INVALID_CLASS_CREATION;
 			}
 			configureListeners();
+			_tryConnect();
+		}
+		
+		private function _tryConnect():void {
+	    	_attempts += 1;
 			this.connect("localhost", 1383);
 		}
 		
@@ -58,6 +68,9 @@
 		}
 		
 	    override protected function connectHandler(event:Event):void {
+        	Console.output("NthEvent server is connected...");
+        	_myConnected = true;
+        	_connections += 1;
 	        requestNextEvent();
 	    }
 	    
@@ -68,15 +81,16 @@
 		override protected function dataHandler(event:DataEvent):void {
 	        var x:XML = new XML(event.data);
 	        if ( x.localName() == "event" ) {
+	        	var tm:Number = x.attribute("time");
 	        	var c:XMLList = x.children()
 	        	for each ( var x2:XML in c ) {
 	        		var s:String = x2.localName();
 	        		if ( s.search("finger_") == 0 ) {
-	        			var f:FingerEvent = new FingerEvent(s.substr(7),x2);
+	        			var f:FingerEvent = new FingerEvent(s.substr(7),tm,x2);
 	        			updateFingers(f);
 	        			dispatchEvent(f);
 	        		} else if ( s.search("midi_") == 0 ) {
-	        			var m:MidiEvent = new MidiEvent(s.substr(5),x2);
+	        			var m:MidiEvent = new MidiEvent(s.substr(5),tm,x2);
 	        			dispatchEvent(m);
 	        		}
 	        	}
@@ -84,10 +98,37 @@
 	       	requestNextEvent();
 	    }
 	    
-	    override protected function closeHandler(event:Event):void {
-        	Console.output("NthEvent server has been disconnected...");
-	        super.closeHandler(event);
+		override protected function closeHandler(event:Event):void {
+			Console.output("NthEvent server has been disconnected...");
+			_myConnected = false;
+			_scheduleReconnect();
+		}
+	     
+		private function _scheduleReconnect():void {
+			// trace("NthClient - scheduling a reconnect");
+			_timer = new Timer(1000,1);
+			_timer.addEventListener(TimerEvent.TIMER, _tryReconnect);
+			_timer.start();
+			// super.closeHandler(event);
 	    }
+	    
+		override protected function ioErrorHandler(event:IOErrorEvent):void {
+			trace("ioErrorHandler in NthEventClient! e=",event);
+	    	if ( ! this._myConnected ) {
+				if ( _connections == 0 && _attempts <= 1 ) {
+					Console.output("Unable to connect to NthEvent server, is it running?");
+				}
+	  			_scheduleReconnect();  		
+	    	}
+		}
+	    
+	    private function _tryReconnect(event:Event): void {
+			_timer.removeEventListener(TimerEvent.TIMER, _tryReconnect);
+			_timer.stop();
+			_timer = null;
+	    	_tryConnect();
+	    }
+	    
 
 	    private function updateFingers(f:FingerEvent):void {
 				fingers[f.fingerUID()] = new FingerState(f);

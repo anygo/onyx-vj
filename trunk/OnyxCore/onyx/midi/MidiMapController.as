@@ -47,10 +47,10 @@ package onyx.midi {
 		}
 		
 		override public function matchesEvent(e:MidiEvent):Boolean {
-			var matches:Boolean = ( e.deviceIndex() == deviceIndex
-				&& e.channel() == channel
-				&& e.controller() == controller );
-			return (value<0) ? matches : (matches && e.value() == value);
+			var matches:Boolean = ( e.deviceIndex == deviceIndex
+				&& e.channel == channel
+				&& e.controller == controller );
+			return (value<0) ? matches : (matches && e.value == value);
 		}
 	}
 }

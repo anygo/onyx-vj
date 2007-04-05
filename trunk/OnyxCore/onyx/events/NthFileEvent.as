@@ -40,10 +40,13 @@
 		public var path:String;
 		public var fileData:String;
 		public var folderList:FolderList;
+		
+		private var _xml:XML;
 
 		public function NthFileEvent(t:String, x:XML)
 		{
-			super(t,x)
+			_xml = x;
+			super(t)
 		}
 	}
 }

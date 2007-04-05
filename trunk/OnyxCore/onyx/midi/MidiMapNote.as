@@ -47,9 +47,9 @@ package onyx.midi {
 		}
 		
 		override public function matchesEvent(e:MidiEvent):Boolean {
-			var matched:Boolean = ( e.deviceIndex() == deviceIndex
-				&& e.channel() == channel
-				&& e.pitch() == pitch );
+			var matched:Boolean = ( e.deviceIndex == deviceIndex
+				&& e.channel == channel
+				&& e.pitch == pitch );
 			return ( noteon==true && e.type==MidiEvent.NOTEON )
 				|| ( noteon==false && e.type==MidiEvent.NOTEOFF);
 		}

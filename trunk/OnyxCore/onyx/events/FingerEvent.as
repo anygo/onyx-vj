@@ -35,35 +35,30 @@
 		public static const DOWN:String  = "down";
 		public static const UP:String = "up";
 		public static const DRAG:String = "drag";
+		
+		public var time:Number;
+		public var deviceIndex:uint;
+		public var fingerIndex:uint;
+		public var x:Number;
+		public var y:Number;
+		public var proximity:Number;
 
-		public function FingerEvent(t:String, x:XML)
+		public function FingerEvent(t:String, tm:Number, xml:XML)
 		{
-			super(t,x)
+			time = tm;
+			deviceIndex = xml.attribute("devindex");
+			fingerIndex = xml.attribute("finger");
+			proximity = xml.attribute("prox");
+   			x = xml.attribute("x");
+    		y = xml.attribute("y");
+			super(t)
 		}
 		public override function toString():String {
-			return "FingerEvent[type="+this.type+" dev="+deviceIndex()+" fing="+fingerIndex()+"]";
+			return "FingerEvent[time="+this.time+" type="+this.type+" dev="+deviceIndex+" fing="+fingerIndex+"]";
 		}
 		public function fingerUID():String {
 			// Returns unique id string across all devices
-			return "d"+xml.attribute("devindex")+"_f"+xml.attribute("finger");
+			return "d"+deviceIndex+"_f"+fingerIndex;
 		}
-		public function deviceIndex():int {
-    		return xml.attribute("devindex");
-    	}
-    	public function x():Number {
-    		return xml.attribute("x");
-    	}
-    	public function y():Number {
-    		return xml.attribute("y");
-    	}
-    	public function fingerIndex():int {
-    		return xml.attribute("finger");
-    	}
-    	public function proximity():Number {
-    		return xml.attribute("prox");
-    	}
-    	public function time():Number {
-    		return xml.attribute("time");
-    	}
 	}
 }

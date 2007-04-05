@@ -30,10 +30,14 @@
  */
  package onyx.events
 {
+	import onyx.constants.*;
+	import flash.display.DisplayObject;
+	
 	public class FingerState 
 	{
-		public var deviceIndex:int;
-		public var fingerIndex:int;
+		public var deviceIndex:uint;
+		public var fingerIndex:uint;
+		public var fingerUID:String;
 		public var isDown:Boolean;
 		public var x:Number;
 		public var y:Number;
@@ -41,12 +45,13 @@
 		
 		public function FingerState(f:FingerEvent)
 		{
-			deviceIndex = f.deviceIndex();
-			fingerIndex = f.fingerIndex();
+			deviceIndex = f.deviceIndex;
+			fingerIndex = f.fingerIndex;
+			fingerUID = f.fingerUID();
 			isDown = (f.type == FingerEvent.DOWN || f.type == FingerEvent.DRAG);
-			proximity = f.proximity();
-			x = f.x();
-			y = f.y();
+			proximity = f.proximity;
+			x = f.x * BITMAP_WIDTH;
+			y = BITMAP_HEIGHT - f.y * BITMAP_HEIGHT;
 		}
 		public function toString():String {
 			return "FingerState(deviceIndex="+deviceIndex+",fingerIndex="+fingerIndex+",isDown="+isDown+",x="+x+",y="+y+",prox="+proximity+")";

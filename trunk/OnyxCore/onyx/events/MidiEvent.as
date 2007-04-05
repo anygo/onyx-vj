@@ -44,33 +44,32 @@
 		public static const CHANNELPRESSURE:String	= "channelpressure";
 		public static const REALTIME:String			= "realtime";
 		public static const SYSEX:String			= "sysex";
+		
+		public var time:Number;
+		public var deviceIndex:uint;
+		public var channel:uint;
+		public var pitch:uint;
+		public var velocity:uint;
+		public var controller:uint;
+		public var value:uint;
 
 		/**
 		 * 	@constructor
 		 */
-		public function MidiEvent(t:String, x:XML):void {
-			super(t,x)
+		public function MidiEvent(t:String, tm:Number, x:XML):void {
+			time = tm;
+			deviceIndex = x.attribute("devindex");
+			channel = x.attribute("channel");
+			if ( t == NOTEON || t == NOTEOFF ) {
+				velocity = x.attribute("velocity");
+				pitch = x.attribute("pitch");
+			} else if ( t == CONTROLLER ) {
+				controller = x.attribute("controller");
+				value = x.attribute("value");
+			} else if ( t == PROGRAM ) {
+				value = x.attribute("value");
+			}
+			super(t)
 		}
-		public function deviceIndex():int {
-    		return xml.attribute("devindex");
-    	}
-    	public function pitch():int {
-    		return xml.attribute("pitch");
-    	}
-    	public function channel():int {
-    		return xml.attribute("channel");
-    	}
-    	public function velocity():int {
-    		return xml.attribute("velocity");
-    	}
-    	public function time():Number {
-    		return xml.attribute("time");
-    	}
-    	public function controller():int {
-    		return xml.attribute("controller");
-    	}
-    	public function value():int {
-    		return xml.attribute("value");
-    	}
 	}
 }

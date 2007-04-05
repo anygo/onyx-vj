@@ -148,7 +148,7 @@ package onyx.midi {
 					if ( ! m.matchesEvent(e) || m.control == null ) {
 						continue;
 					}
-					var f:Number = e.value() / 127.0;
+					var f:Number = e.value / 127.0;
 					var c:Control = m.control;
 					if ( c is ControlNumber ) {
 						var cn:ControlNumber = c as ControlNumber;
@@ -179,7 +179,7 @@ package onyx.midi {
 					if ( ! m.matchesEvent(e) || m.control == null ) {
 						continue;
 					}
-					var f:Number = e.value() / 127.0;
+					var f:Number = e.value / 127.0;
 					var c:Control = m.control;
 					if ( c is ControlExecute ) {
 						var ce:ControlExecute = c as ControlExecute;
@@ -196,15 +196,15 @@ package onyx.midi {
 		 */
 		public function registerController(c:Control, e:MidiEvent):void {
 			var m:MidiMapController = new MidiMapController(
-				e.deviceIndex(), e.channel(), e.controller(),
-				(c is ControlExecute) ? e.value() : -1,
+				e.deviceIndex, e.channel, e.controller,
+				(c is ControlExecute) ? e.value : -1,
 				c);
 			_registerMap(m,c);
 		}
 		
 		public function registerNote(c:Control, e:MidiEvent):void {
 			var m:MidiMapNote = new MidiMapNote(
-				e.deviceIndex(), e.channel(), e.pitch(), e.type==MidiEvent.NOTEON, c);
+				e.deviceIndex, e.channel, e.pitch, e.type==MidiEvent.NOTEON, c);
 			_registerMap(m,c);
 		}
 		

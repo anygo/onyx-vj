@@ -32,6 +32,7 @@
  	import flash.events.*;
  	import flash.net.*;
  	import flash.utils.Dictionary;
+ 	import flash.utils.Timer;
  	
  	import onyx.core.Console;
  	import onyx.errors.INVALID_CLASS_CREATION;
@@ -40,10 +41,7 @@
 	public class NthClient extends XMLSocket {
 		
 	 	static private var warned:Boolean = false;
-	 	static public var working:Boolean = false;
 
-		protected var _count:int = 0;
-	
 		protected function isConnected():Boolean {
 			return this.connected;
 		}
@@ -58,7 +56,7 @@
 	    }
 	    
 	    protected function closeHandler(event:Event):void {
-	        removeListeners();
+			// removeListeners();
 	    }
 	    
 	    protected function removeListeners():void {	        
@@ -71,7 +69,6 @@
 	    }
 	    
 		protected function connectHandler(event:Event):void {
-			working = true;
 	    }
 	    
 		protected function dataHandler(event:DataEvent):void {
