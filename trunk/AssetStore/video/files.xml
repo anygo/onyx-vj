@@ -1,72 +1,13 @@
-<response>
-	<query path="video/">
-
-		<!-- FOR WEB
-
-		<file name="swf/andrew.swf" thumb="swf/thumbs/andrew.png"/>
-		<file name="flv/film1.flv" thumb="swf/thumbs/film1.png"/>
-		<file name="flv/iconrobot.flv" thumb="swf/thumbs/iconrobot.png"/>
-		<file name="flv/jesse_solvent.flv" thumb="swf/thumbs/jesse_solvent.png"/>
-		<file name="flv/jesse_takeoff.flv" thumb="swf/thumbs/jesse_takeoff.png"/>
-		<file name="flv/onyx.flv" thumb="swf/thumbs/onyx.png"/>
-		<file name="flv/papercut.flv" thumb="swf/thumbs/papercut.png"/>
-		<file name="flv/rich_converse.flv" thumb="swf/thumbs/rich_converse.png"/>
-		<file name="flv/speedcar.flv" thumb="swf/thumbs/speedcar.png"/>
-		<file name="flv/tokyo1.flv" thumb="swf/thumbs/Japones_Tokyo.png"/>
-
-		<file name="flv/mix1.xml" thumb="flv/thumbs/mix1.jpg"/>
-		<file name="flv/mix2.xml" thumb="flv/thumbs/mix2.jpg"/>
-		<file name="flv/mix3.xml" thumb="flv/thumbs/mix3.jpg"/>
-		<file name="flv/mix4.xml" thumb="flv/thumbs/mix4.jpg"/>
-		
-		-->
-
-		<file name="flv/tokyo2.flv" thumb="swf/thumbs/Tokyo_3D_2.png"/>
-		
-		<folder name="mixes/" />
-		<folder name="f8/" />
-		<folder name="movies/" />
-
-		<file name="swf_custom/DCClassTest.swf" thumb="swf_custom/thumbs/OnyxText.png" />
-
-		<file name="swf/AfterEffects.swf" thumb="swf/thumbs/AfterEffects.png"/>
-		<file name="swf/andrew.swf" thumb="swf/thumbs/andrew.png"/>
-		<file name="swf/as3_f16_01.swf" thumb="swf/thumbs/as3_f16_01.png"/>
-		<file name="swf/as3_f16_02.swf" thumb="swf/thumbs/as3_f16_02.png"/>
-		<file name="swf/as3_modestream.swf" thumb="swf/thumbs/as3_modestream.png"/>
-		<file name="swf/as3_schematics.swf" thumb="swf/thumbs/as3_schematics.png"/>
-		<file name="swf/as3_traceralle.swf" thumb="swf/thumbs/as3_traceralle.png"/>
-		<file name="swf/as3_water.swf" thumb="swf/thumbs/as3_water.png"/>
-		<file name="swf/film1.swf" thumb="swf/thumbs/film1.png"/>
-		<file name="swf/Geometrics.swf" thumb="swf/thumbs/Geometrics.png"/>
-		<file name="swf/goldengate_threshold.swf" thumb="swf/thumbs/goldengate_threshold.png"/>
-		<file name="swf/IconRobot.swf" thumb="swf/thumbs/IconRobot.png"/>
-		<file name="swf/Japones_Tokyo.swf" thumb="swf/thumbs/Japones_Tokyo.png"/>
-		<file name="swf/jesse_podtest.swf" thumb="swf/thumbs/jesse_podtest.png"/>
-		<file name="swf/jesse_rhodes_yarn.swf" thumb="swf/thumbs/jesse_rhodes_yarn.png"/>
-		<file name="swf/jesse_solvent.swf" thumb="swf/thumbs/jesse_solvent.png"/>
-		<file name="swf/jesse_takeoff.swf" thumb="swf/thumbs/jesse_takeoff.png"/>
-		<file name="swf/josh_doors.swf" thumb="swf/thumbs/josh_doors.png"/>
-		<file name="swf/LightShow.swf" thumb="swf/thumbs/LightShow.png"/>
-		<file name="swf/maredsous.swf" thumb="swf/thumbs/maredsous.png"/>
-		<file name="swf/onyx.swf" thumb="swf/thumbs/onyx.png"/>
-		<file name="swf/papercut.swf" thumb="swf/thumbs/papercut.png"/>
-		<file name="swf/Railway.swf" thumb="swf/thumbs/Railway.png"/>
-		<file name="swf/rich_converse.swf" thumb="swf/thumbs/rich_converse.png"/>
-		<file name="swf/rich_moog.swf" thumb="swf/thumbs/rich_moog.png"/>
-		<file name="swf/soluna.swf" thumb="swf/thumbs/soluna.png"/>
-		<file name="swf/SpeedCar.swf" thumb="swf/thumbs/SpeedCar.png"/>
-		<file name="swf/Tokyo_3D_2.swf" thumb="swf/thumbs/Tokyo_3D_2.png"/>
-		<file name="swf/Velky_Kychac.swf" thumb="swf/thumbs/Velky_Kychac.png"/>
-
-		<file name="swf_custom/LoopMachine.swf" thumb="swf_custom/thumbs/ScreenShare.png" />
-		<file name="swf_custom/FunInTheSun.swf" thumb="swf_custom/thumbs/FunInTheSun.png" />
-		<file name="swf_custom/LayerCopy.swf" thumb="swf_custom/thumbs/FunInTheSun.png" />
-		<file name="swf_custom/DrawingClip.swf" thumb="swf_custom/thumbs/DrawingClip.png" />
-		<file name="swf_custom/DrawingFingers.swf" thumb="swf_custom/thumbs/DrawingFingers.png" />
-		<file name="swf_custom/OnyxText.swf" thumb="swf_custom/thumbs/OnyxText.png" />
-		<file name="swf_custom/Screenshare.swf" thumb="swf_custom/thumbs/ScreenShare.png" />
-		<file name="swf_custom/PerlinNoise.swf" thumb="swf_custom/thumbs/ScreenShare.png" />
-
-	</query>
-</response>
+<doc>
+  <query path="video/">
+    <folder name="mixes/"/>
+    <folder name="asian/"/>
+    <folder name="days/"/>
+    <folder name="mute/"/>
+    <folder name="quay/"/>
+    <folder name="swf/"/>
+    <folder name="swf_custom/"/>
+    <folder name="vector/"/>
+    <file name="pvptest.swf" thumb="swf/thumbs/AfterEffects.png"/>
+  </query>
+</doc>
