@@ -38,9 +38,9 @@ package onyx.midi {
 		public var deviceIndex:int;
 		public var control:Control;
 
-		public function MidiMap(di:int, c:Control):void {
+		public function MidiMap(di:int):void {
 			deviceIndex = di;
-			control = c;
+			control = null;
 		}
 		
 		public function matchesEvent(e:MidiEvent):Boolean {

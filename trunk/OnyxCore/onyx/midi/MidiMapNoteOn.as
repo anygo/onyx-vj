@@ -28,42 +28,33 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
- package onyx.events {
- 	import onyx.midi.*;
-
-	/**
-	 * 	Midi event
-	 */
-	public class MidiEvent extends NthEvent {
+package onyx.midi {
+	
+	import onyx.controls.Control;
+	import onyx.events.MidiEvent;
+	
+	public class MidiMapNoteOn extends MidiMap {
 		
-		public var time:Number;
-		public var deviceIndex:uint;
-		public var midimsg:MidiMsg;
+		public var note:MidiNoteOn;
 
-		/**
-		 * 	@constructor
-		 */
-		public function MidiEvent(t:String, tm:Number, x:XML):void {
-			time = tm;
-			deviceIndex = x.attribute("devindex");
-			var channel:uint = x.attribute("channel");
-			if ( t == MidiMsg.NOTEON ) {
-				midimsg = new MidiNoteOn(channel,
-							x.attribute("pitch"),
-							x.attribute("velocity"));
-			} else if ( t == MidiMsg.NOTEOFF ) {
-				midimsg = new MidiNoteOff(channel,
-							x.attribute("pitch"),
-							x.attribute("velocity"));
-			} else if ( t == MidiMsg.CONTROLLER ) {
-				midimsg = new MidiController(channel,
-							x.attribute("controller"),
-							x.attribute("value"));
-			} else if ( t == MidiMsg.PROGRAM ) {
-				midimsg = new MidiProgram(channel,
-							x.attribute("value"));
+		public function MidiMapNoteOn(di:int, n:MidiNoteOn):void {
+			super(di);
+			note = n;
+		}
+		
+		public static function fromXML(x:XML):MidiMapNoteOn {
+			return new MidiMapNoteOn(x.deviceIndex, MidiNoteOn.fromXML(x));
+		}
+		
+		override public function matchesEvent(e:MidiEvent):Boolean {
+			if ( e.deviceIndex != deviceIndex ) {
+				return false;
 			}
-			super(t)
+			var n:MidiNoteOn = e.midimsg as MidiNoteOn;
+			if ( n == null || n.channel != note.channel || n.pitch != note.pitch ) {
+				return false
+			}
+			return true;
 		}
 	}
 }

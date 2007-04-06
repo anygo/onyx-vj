@@ -28,42 +28,15 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
- package onyx.events {
- 	import onyx.midi.*;
-
-	/**
-	 * 	Midi event
-	 */
-	public class MidiEvent extends NthEvent {
+package onyx.midi {
+	
+	public class MidiChanMsg extends MidiMsg {
 		
-		public var time:Number;
-		public var deviceIndex:uint;
-		public var midimsg:MidiMsg;
+		public var channel:uint;
 
-		/**
-		 * 	@constructor
-		 */
-		public function MidiEvent(t:String, tm:Number, x:XML):void {
-			time = tm;
-			deviceIndex = x.attribute("devindex");
-			var channel:uint = x.attribute("channel");
-			if ( t == MidiMsg.NOTEON ) {
-				midimsg = new MidiNoteOn(channel,
-							x.attribute("pitch"),
-							x.attribute("velocity"));
-			} else if ( t == MidiMsg.NOTEOFF ) {
-				midimsg = new MidiNoteOff(channel,
-							x.attribute("pitch"),
-							x.attribute("velocity"));
-			} else if ( t == MidiMsg.CONTROLLER ) {
-				midimsg = new MidiController(channel,
-							x.attribute("controller"),
-							x.attribute("value"));
-			} else if ( t == MidiMsg.PROGRAM ) {
-				midimsg = new MidiProgram(channel,
-							x.attribute("value"));
-			}
-			super(t)
+		public function MidiChanMsg(t:String, ch:uint) {
+			super(t);
+			channel = ch;
 		}
 	}
 }

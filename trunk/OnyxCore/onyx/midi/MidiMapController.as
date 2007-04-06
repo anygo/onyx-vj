@@ -38,19 +38,28 @@ package onyx.midi {
 		public var controller:int;
 		public var channel:int;
 		public var value:int;
+		public var anyvalue:Boolean;
 
-		public function MidiMapController(di:int, ch:int, ci:int, v:int, c:Control = null):void {
-			super(di,c);
-			controller = ci;
-			channel = ch;
-			value = v;
+		public function MidiMapController(di:int, any:Boolean, mc:MidiController):void {
+			super(di);
+			controller = mc.controller;
+			channel = mc.channel;
+			value = mc.value;
+			anyvalue = any;
+		}
+		
+		public static function fromXML(xm:XML):MidiMapController {
+			return new MidiMapController(xm.deviceIndex, (xm.anyvalue=="true"), MidiController.fromXML(xm));
 		}
 		
 		override public function matchesEvent(e:MidiEvent):Boolean {
-			var matches:Boolean = ( e.deviceIndex == deviceIndex
-				&& e.channel == channel
-				&& e.controller == controller );
-			return (value<0) ? matches : (matches && e.value == value);
+			if ( e.deviceIndex != deviceIndex ) {
+				return false;
+			}
+			var m:MidiController = e.midimsg as MidiController;
+			var matches:Boolean = ( m.channel == channel
+				&& m.controller == controller );
+			return anyvalue ? matches : (matches && m.value == value);
 		}
 	}
 }

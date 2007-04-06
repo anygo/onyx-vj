@@ -30,28 +30,18 @@
  */
 package onyx.midi {
 	
-	import onyx.controls.Control;
-	import onyx.events.MidiEvent;
-	
-	public class MidiMapNote extends MidiMap {
+	public class MidiNoteOff extends MidiChanMsg {
 		
-		public var pitch:int;
-		public var channel:int;
-		public var noteon:Boolean;	// if false, map is assigned to noteoff
+		public var pitch:uint;
+		public var velocity:uint;
 
-		public function MidiMapNote(di:int, ch:int, p:int, n:Boolean, c:Control = null):void {
-			super(di,c);
-			pitch = pitch;
-			channel = ch;
-			noteon = n;
+		public function MidiNoteOff(ch:uint, p:uint, v:uint) {
+			super(MidiMsg.NOTEOFF,ch);
+			pitch = p;
+			velocity = v;
 		}
-		
-		override public function matchesEvent(e:MidiEvent):Boolean {
-			var matched:Boolean = ( e.deviceIndex == deviceIndex
-				&& e.channel == channel
-				&& e.pitch == pitch );
-			return ( noteon==true && e.type==MidiEvent.NOTEON )
-				|| ( noteon==false && e.type==MidiEvent.NOTEOFF);
+		public static function fromXML(xm:XML):MidiNoteOff{
+			return new MidiNoteOff(xm.channel,xm.pitch,xm.velocity);
 		}
 	}
 }

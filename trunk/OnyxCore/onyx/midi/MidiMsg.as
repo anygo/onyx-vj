@@ -28,42 +28,27 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
- package onyx.events {
- 	import onyx.midi.*;
-
-	/**
-	 * 	Midi event
-	 */
-	public class MidiEvent extends NthEvent {
+package onyx.midi {
+	
+	public class MidiMsg {
 		
-		public var time:Number;
-		public var deviceIndex:uint;
-		public var midimsg:MidiMsg;
-
-		/**
-		 * 	@constructor
-		 */
-		public function MidiEvent(t:String, tm:Number, x:XML):void {
-			time = tm;
-			deviceIndex = x.attribute("devindex");
-			var channel:uint = x.attribute("channel");
-			if ( t == MidiMsg.NOTEON ) {
-				midimsg = new MidiNoteOn(channel,
-							x.attribute("pitch"),
-							x.attribute("velocity"));
-			} else if ( t == MidiMsg.NOTEOFF ) {
-				midimsg = new MidiNoteOff(channel,
-							x.attribute("pitch"),
-							x.attribute("velocity"));
-			} else if ( t == MidiMsg.CONTROLLER ) {
-				midimsg = new MidiController(channel,
-							x.attribute("controller"),
-							x.attribute("value"));
-			} else if ( t == MidiMsg.PROGRAM ) {
-				midimsg = new MidiProgram(channel,
-							x.attribute("value"));
-			}
-			super(t)
+		public static const NOTEON:String  			= "noteon";
+		public static const NOTEOFF:String 			= "noteoff";
+		public static const CONTROLLER:String		= "controller";
+		public static const PROGRAM:String			= "program";
+		public static const PRESSURE:String			= "pressure";
+		public static const PITCHBEND:String		= "pitchbend";
+		public static const CHANNELPRESSURE:String	= "channelpressure";
+		public static const REALTIME:String			= "realtime";
+		public static const SYSEX:String			= "sysex";
+		
+		public var type:String;
+		
+		public function MidiMsg(t:String) {
+			type = t;
+		}
+		public function toXML():XML {
+			return <midi_unimplemented type={type} />;
 		}
 	}
 }

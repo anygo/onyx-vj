@@ -28,25 +28,21 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
- package onyx.events
-{
-	import onyx.file.*;
+package onyx.midi {
 	
-	public class NthFileEvent extends NthEvent
-	{
-		public static const DONE:String		= 'done';
-
-		public var error:String;
-		public var path:String;
-		public var fileData:String;
-		public var folderList:FolderList;
+	public class MidiController extends MidiChanMsg {
 		
-		private var _xml:XML;
+		public var controller:uint;
+		public var value:uint;
 
-		public function NthFileEvent(t:String, x:XML)
-		{
-			_xml = x;
-			super(t)
+		public function MidiController(ch:uint, c:uint, v:uint) {
+			super(MidiMsg.CONTROLLER,ch);
+			controller = c;
+			value = v;
+		}
+		
+		public static function fromXML(xm:XML):MidiController {
+			return new MidiController(xm.channel,xm.controller,xm.value);
 		}
 	}
 }

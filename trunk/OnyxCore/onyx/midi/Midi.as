@@ -120,15 +120,15 @@ package onyx.midi {
 		}
 		
 		public function start():void {
-			_client.addEventListener(MidiEvent.NOTEON, _onNoteonoff);
-			_client.addEventListener(MidiEvent.NOTEOFF, _onNoteonoff);
-			_client.addEventListener(MidiEvent.CONTROLLER, _onController);
+			_client.addEventListener(MidiMsg.NOTEON, _onNoteonoff);
+			_client.addEventListener(MidiMsg.NOTEOFF, _onNoteonoff);
+			_client.addEventListener(MidiMsg.CONTROLLER, _onController);
 		}
 		
 		public function stop():void {
-			_client.removeEventListener(MidiEvent.NOTEON, _onNoteonoff);
-			_client.removeEventListener(MidiEvent.NOTEOFF, _onNoteonoff);
-			_client.removeEventListener(MidiEvent.CONTROLLER, _onController);
+			_client.removeEventListener(MidiMsg.NOTEON, _onNoteonoff);
+			_client.removeEventListener(MidiMsg.NOTEOFF, _onNoteonoff);
+			_client.removeEventListener(MidiMsg.CONTROLLER, _onController);
 		}
 		
 		private function _removeMapForControl(c:Control):void {
@@ -148,7 +148,8 @@ package onyx.midi {
 					if ( ! m.matchesEvent(e) || m.control == null ) {
 						continue;
 					}
-					var f:Number = e.value / 127.0;
+					var mc:MidiController = e.midimsg as MidiController;
+					var f:Number = mc.value / 127.0;
 					var c:Control = m.control;
 					if ( c is ControlNumber ) {
 						var cn:ControlNumber = c as ControlNumber;
@@ -174,12 +175,12 @@ package onyx.midi {
 		}
 		
 		public function _onNoteonoff(e:MidiEvent):void {
+			var noteoff:MidiNoteOff = e.midimsg as MidiNoteOff;
 			for each (var m:MidiMap in _map) {
-				if ( m is MidiMapNote ) {
+				if ( m is MidiMapNoteOff ) {
 					if ( ! m.matchesEvent(e) || m.control == null ) {
 						continue;
 					}
-					var f:Number = e.value / 127.0;
 					var c:Control = m.control;
 					if ( c is ControlExecute ) {
 						var ce:ControlExecute = c as ControlExecute;
@@ -195,17 +196,24 @@ package onyx.midi {
 		 *  public
 		 */
 		public function registerController(c:Control, e:MidiEvent):void {
+			var any:Boolean = true;
+			// If we're registering something that is triggered,
+			// we don't want to match *any* controller messages, we
+			// just want to match the exact value of this one.
+			if ( c is ControlExecute ) {
+				any = false;
+			}
 			var m:MidiMapController = new MidiMapController(
-				e.deviceIndex, e.channel, e.controller,
-				(c is ControlExecute) ? e.value : -1,
-				c);
-			_registerMap(m,c);
+				e.deviceIndex, any, e.midimsg as MidiController);
+			_registerMap(c,m);
 		}
 		
-		public function registerNote(c:Control, e:MidiEvent):void {
-			var m:MidiMapNote = new MidiMapNote(
-				e.deviceIndex, e.channel, e.pitch, e.type==MidiEvent.NOTEON, c);
-			_registerMap(m,c);
+		public function registerNoteOn(c:Control, di:uint, n:MidiNoteOn):void {
+			_registerMap(c,new MidiMapNoteOn(di, n));
+		}
+		
+		public function registerNoteOff(c:Control, di:uint, n:MidiNoteOff):void {
+			_registerMap(c,new MidiMapNoteOff(di, n));
 		}
 		
 		public function dispose():void {
@@ -228,53 +236,60 @@ package onyx.midi {
 				if ( m is MidiMapController ) {
 					var mc:MidiMapController = m as MidiMapController;
 					x.appendChild( <mapcontroller>
+								<control>{fullControlname}</control>
 								<deviceIndex>{mc.deviceIndex}</deviceIndex>
 								<channel>{mc.channel}</channel>
 								<controller>{mc.controller}</controller>
-								<control>{fullControlname}</control>
 								<value>{mc.value}</value>
+								<anyvalue>{mc.anyvalue}</anyvalue>
 								</mapcontroller> );
-				} else if ( m is MidiMapNote ) {
-					var mn:MidiMapNote = m as MidiMapNote;
-					x.appendChild( <mapnote>
-								<deviceIndex>{mn.deviceIndex}</deviceIndex>
-								<channel>{mn.channel}</channel>
-								<pitch>{mn.pitch}</pitch>
+				} else if ( m is MidiMapNoteOn ) {
+					var mon:MidiMapNoteOn = m as MidiMapNoteOn;
+					x.appendChild( <mapnoteon>
 								<control>{fullControlname}</control>
-								<noteon>{mn.noteon}</noteon>
-								</mapnote> );
+								<deviceIndex>{mon.deviceIndex}</deviceIndex>
+								<channel>{mon.note.channel}</channel>
+								<pitch>{mon.note.pitch}</pitch>
+								</mapnoteon> );
+				} else if ( m is MidiMapNoteOff) {
+					var moff:MidiMapNoteOff = m as MidiMapNoteOff;
+					x.appendChild( <mapnoteoff>
+								<deviceIndex>{moff.deviceIndex}</deviceIndex>
+								<channel>{moff.note.channel}</channel>
+								<pitch>{moff.note.pitch}</pitch>
+								<control>{fullControlname}</control>
+								</mapnoteoff> );
 				}
 			}
 			return x;
 		}
 		
 		public function loadXML(xml:XMLList):void {
-			var xm:XML;
-			for each (xm in xml.mapcontroller) {
-				var mc:MidiMapController = new MidiMapController(
-					xm.deviceIndex, xm.channel, xm.controller, xm.value);
-				_registerMapByName(mc,xm.control);
+			var x:XML;
+			for each (x in xml.mapcontroller) {
+				_registerMapByName(x.control,MidiMapController.fromXML(x));
 			}
-			for each (xm in xml.mapnote) {
-				var mn:MidiMapNote = new MidiMapNote(
-					xm.deviceIndex, xm.channel, xm.pitch, xm.noteon);
-				_registerMapByName(mn,xm.control);
+			for each (x in xml.mapnoteon) {
+				_registerMapByName(x.control,MidiMapNoteOn.fromXML(x));
+			}
+			for each (x in xml.mapnoteoff) {
+				_registerMapByName(x.control,MidiMapNoteOff.fromXML(x));
 			}
 		}
 		
-		private function _registerMap(m:MidiMap, c:Control):void {
+		private function _registerMap(c:Control, m:MidiMap):void {
 			_removeMapForControl(c);
 			m.control = c;
 			_map.push(m);
 		}
 		
-		private function _registerMapByName(m:MidiMap, controlName:String):void {
+		private function _registerMapByName(controlName: String, m:MidiMap):void {
 			var display:Display = Display.getDisplay(0);
 			var c:Control = display.getControlByName(controlName);
 			if ( c == null ) {
 				throw "Unable to find control="+controlName;
 			}
-			_registerMap(m,c);
+			_registerMap(c,m);
 		}
 	}
 }

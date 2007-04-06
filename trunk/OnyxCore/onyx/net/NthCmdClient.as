@@ -37,15 +37,39 @@
  	import onyx.errors.*;
  	import onyx.events.*;
  	import onyx.file.*;
+ 	import onyx.midi.*;
 
-	public class NthFileClient extends NthClient {
+	public class NthCmdClient extends NthPersistentClient {
 		
+		private static var instance:NthCmdClient = new NthCmdClient();
 		private var _tosend:String;
 		private var _path:String;
 
-		public function NthFileClient() {
-			configureListeners();
-			this.connect("localhost", 1383);
+		public function NthCmdClient() {
+			super();
+			if ( instance ) {
+				throw INVALID_CLASS_CREATION;
+			}
+		}
+		
+		public static function getInstance():NthCmdClient {
+			return instance;
+		}
+		
+		public function listMidiInputs():void {
+	     	_sendXML("<list_midi_inputs/>");
+		}
+		
+		public function listMidiOutput():void {
+	     	_sendXML("<list_midi_outputs/>");
+		}
+		
+		public function writeMidi(m:MidiMsg, deviceIndex:int = -1):void {
+			var x:XML = m.toXML()
+			// Ideally, this should add a 'deviceindex=#' attribute when
+			// deviceIndex is specified.
+	     	var s:String = "<write_midi>"+x.toXMLString()+"</write_midi>";
+	     	_sendXML(s);
 		}
 		
 		public function readFile(path:String):void {
@@ -83,14 +107,21 @@
 		}
 		
 	    override protected function connectHandler(event:Event):void {
+	    	super.connectHandler(event);
+	    	Console.output("NthCmdClient is connected to NthServer...");
 	    	if ( _tosend != null ) {
 		     	this.send(_tosend);
 		    }
 	    }
 	    
+		override protected function closeHandler(event:Event):void {
+			Console.output("NthCmdClient has been disconnected...");
+			super.closeHandler(event);
+		}
+
 		override protected function dataHandler(event:DataEvent):void {
 			
-			var client:NthFileClient = event.currentTarget as NthFileClient;
+			var client:NthCmdClient = event.currentTarget as NthCmdClient;
 			var path:String = client._path;
 			
 	        var x:XML = new XML(event.data);
@@ -98,20 +129,36 @@
 	       	// A read_file will produce <file_contents>
 	       	// A write_file will produce an <ok>
 	       	// A list_dir will produce a <directory>
+	       	// A write_midi will produce an <ok>
 	       	// An error will produce a <error>
 	       	
-        	var e:NthFileEvent = new NthFileEvent(NthFileEvent.DONE,x);
-        	e.path = path;
-        	
+	        var e:NthCmdEvent;
+	        var fe:NthFileEvent;
+	        
 	        if ( x.localName() == "error" ) {
+	        	e = new NthCmdEvent(NthCmdEvent.DONE);
 	        	e.error = x.toString();
 	        	dispatchEvent(e);
 	        	return;
 	        }
 	        
+	        if ( x.localName() == "ok" ) {
+	        	e = new NthCmdEvent(NthCmdEvent.DONE);
+	        	dispatchEvent(e);
+	        	return;
+	        }
+	        
 	        if ( x.localName() == "file_contents" ) {
-				e.fileData = unescape(x.toString());
-	        } else if ( x.localName() == "directory" ) {
+	        	fe = new NthFileEvent(NthCmdEvent.DONE,x);
+	        	fe.path = path;
+				fe.fileData = unescape(x.toString());
+	        	dispatchEvent(fe);
+				return;
+	        }
+	        
+	        if ( x.localName() == "directory" ) {
+	        	fe = new NthFileEvent(NthCmdEvent.DONE,x);
+	        	fe.path = path;
 				// create the Folder
 				var list:FolderList = new FolderList(path);
 				for each (var f:XML in x.*) {
@@ -127,9 +174,14 @@
 						list.folders.push(new Folder(name));
 					}
 				}
-				e.folderList = list;
+				fe.folderList = list;
+				dispatchEvent(fe);
+				return;
 			}
-			dispatchEvent(e);
+			
+        	e = new NthCmdEvent(NthCmdEvent.DONE);
+	       	e.error = "Unknown NthCmdClient response: "+x.localName();
+	       	dispatchEvent(e);
 	    }
 	}
 }
