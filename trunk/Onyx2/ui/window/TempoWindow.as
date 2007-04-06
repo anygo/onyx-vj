@@ -99,6 +99,11 @@ package ui.window {
 		private var _samples:Array			= [0];
 		
 		/**
+		 * 	@private
+		 */
+		private var _fname:String;
+		
+		/**
 		 * 	@constructor
 		 */
 		public function TempoWindow():void {
@@ -241,16 +246,19 @@ package ui.window {
 		}
 		
 		private function _writeFile(fname:String, bytes:ByteArray):void {
-			var fileclient:NthFileClient = new NthFileClient();
-		   	fileclient.writeFileBytes(fname,bytes);
-		   	fileclient.addEventListener(NthFileEvent.DONE,_onFileWritten);
+			var cmdclient:NthCmdClient = NthCmdClient.getInstance();
+			_fname = fname;
+		   	cmdclient.writeFileBytes(_fname,bytes);
+		   	cmdclient.addEventListener(NthCmdEvent.DONE,_onFileWritten);
 		}
 		
-		private function _onFileWritten(e:NthFileEvent):void {
+		private function _onFileWritten(e:NthCmdEvent):void {
 			if ( e.error ) {
-				onyx.core.Console.output("Error writing file, path=",e.path," error=",e.error);
+				onyx.core.Console.output("Error writing file, error=",e.error);
+			} else if ( e.type != NthCmdEvent.DONE ) {
+				trace("Unexpected NthCmdEvent type in onFileWritten");
 			} else {
-				onyx.core.Console.output("Successfully wrote file, path=",e.path);
+				onyx.core.Console.output("Successfully wrote file: ",_fname);
 			}
 		}
 		

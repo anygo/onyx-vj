@@ -43,7 +43,7 @@ package ui.controls.page {
 	/**
 	 * 	The pages
 	 */
-	public final class ControlPage extends UIObject {
+	public final class ControlPage extends ScrollPane {
 		
 		/**
 		 * 	@private
@@ -66,7 +66,8 @@ package ui.controls.page {
 		 * 	@constructor
 		 */		
 		public function ControlPage():void {
-			super(true);
+			super(100,120);		// controls size of ScrollPane
+			// super(true); 	// this was present before, to set movesToTop in UIObject - is it still important?
 			mouseEnabled = false;
 		}
 		
@@ -76,6 +77,8 @@ package ui.controls.page {
 		public function removeControls():void {
 			
 			for each (var uicontrol:UIControl in _controls) {
+				removeChild(uicontrol);		// for scrolling to work
+				reset();					// for scrolling to work
 				uicontrol.dispose();
 			}
 			_controls = [];
@@ -100,6 +103,10 @@ package ui.controls.page {
 			
 			var uicontrol:UIControl, x:int = 0, y:int = 0;
 			
+			y = 5;	// Shouldn't be necessary, but after making
+					// ControlPage extend ScrollPane, the text of
+					// the first controls get cut off unless I do this.
+				
 			var options:UIOptions	= DEFAULT;
 			var width:int			= 65;
 			var ref:Controls		= controls as Controls;

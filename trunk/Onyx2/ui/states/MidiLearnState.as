@@ -44,7 +44,7 @@ package ui.states {
 	import ui.controls.UIControl;
 	import ui.styles.*;
 	import ui.controls.*;
-	import onyx.midi.Midi;
+	import onyx.midi.*;
 	import onyx.controls.ControlRange;
 
 	public final class MidiLearnState extends ApplicationState {
@@ -98,15 +98,24 @@ package ui.states {
 			} else {
 				// Wait for a MIDI noteon or controller event
 				_client = NthEventClient.getInstance();
-	    		_client.addEventListener(MidiEvent.NOTEON,_onNoteonoff);
-	    		_client.addEventListener(MidiEvent.NOTEOFF,_onNoteonoff);
-	    		_client.addEventListener(MidiEvent.CONTROLLER,_onController);
+	    		_client.addEventListener(MidiMsg.NOTEON,_onNoteOn);
+	    		_client.addEventListener(MidiMsg.NOTEOFF,_onNoteOff);
+	    		_client.addEventListener(MidiMsg.CONTROLLER,_onController);
 	  		}
 		}
 		
-		private function _onNoteonoff(e:MidiEvent):void {
+		private function _onNoteOn(e:MidiEvent):void {
 			if ( _control is ButtonControl ) {
-				_midi.registerNote(_control.control,e);
+				_midi.registerNoteOn(_control.control,e.deviceIndex,e.midimsg as MidiNoteOn);
+			} else {
+				Console.output("You need to map a MIDI controller to that control!");
+			}
+			StateManager.removeState(this);
+		}
+		
+		private function _onNoteOff(e:MidiEvent):void {
+			if ( _control is ButtonControl ) {
+				_midi.registerNoteOff(_control.control,e.deviceIndex,e.midimsg as MidiNoteOff);
 			} else {
 				Console.output("You need to map a MIDI controller to that control!");
 			}
@@ -129,9 +138,9 @@ package ui.states {
 			
 			STAGE.removeEventListener(MouseEvent.MOUSE_DOWN, _onControlSelect, true);
 	   		if ( _client ) {
-				_client.removeEventListener(MidiEvent.NOTEON,_onNoteonoff);
-				_client.removeEventListener(MidiEvent.NOTEOFF,_onNoteonoff);
-	   			_client.removeEventListener(MidiEvent.CONTROLLER,_onController);
+				_client.removeEventListener(MidiMsg.NOTEON,_onNoteOn);
+				_client.removeEventListener(MidiMsg.NOTEOFF,_onNoteOff);
+	   			_client.removeEventListener(MidiMsg.CONTROLLER,_onController);
 	   		}
 	   		_unHighlight();
 		}
