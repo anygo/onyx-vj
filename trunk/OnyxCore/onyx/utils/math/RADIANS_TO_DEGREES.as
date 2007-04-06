@@ -28,10 +28,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package onyx.utils.array {
+package onyx.utils.math {
 	
 	/**
 	 * 	Number to Radians
 	 */
-	public const DEGREES_TO_RADIANS:Number = 180 / Math.PI;
+	public const RADIANS_TO_DEGREES:Number = 180 / Math.PI;
 }

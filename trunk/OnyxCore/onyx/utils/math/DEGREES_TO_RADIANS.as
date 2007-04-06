@@ -28,7 +28,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package onyx.utils.array {
+package onyx.utils.math {
 	
 	/**
 	 * 	Number to Radians
