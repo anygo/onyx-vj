@@ -38,19 +38,19 @@ package onyx.file.nth {
 	
 	import onyx.core.Console;
 	import onyx.file.*;
-	import onyx.net.NthFileClient;
+	import onyx.net.NthCmdClient;
 	import onyx.events.*;
 	
 	public final class NthQuery extends FileQuery {
 		
-		private var _fileclient:NthFileClient;
+		private var _fileclient:NthCmdClient;
 		
 		/**
 		 * 	@constructor
 		 */
 		public function NthQuery(folder:String, callback:Function):void {
 			super(folder, callback);
-			_fileclient = new NthFileClient();
+			_fileclient = NthCmdClient.getInstance();
 		}
 		
 		/**
@@ -61,7 +61,7 @@ package onyx.file.nth {
 			super.filter = filter;
 			
 			_fileclient.listDir(path);
-			_fileclient.addEventListener(NthFileEvent.DONE, _onLoadHandler);
+			_fileclient.addEventListener(NthCmdEvent.DONE, _onLoadHandler);
 		}
 		
 		/**
@@ -108,15 +108,19 @@ package onyx.file.nth {
 		/**
 		 * 	@private
 		 */
-		private function _onLoadHandler(event:NthFileEvent):void {
+		private function _onLoadHandler(event:NthCmdEvent):void {
 			
 			// var loader:URLLoader = event.currentTarget as URLLoader;
-			_fileclient.removeEventListener(NthFileEvent.DONE, _onLoadHandler);
+			_fileclient.removeEventListener(NthCmdEvent.DONE, _onLoadHandler);
 	
 			// error			
 			if (!(event is ErrorEvent)) {
-				folderList = event.folderList;
-				_processThumbs(folderList);
+				if (!(event is NthFileEvent)) {
+					trace("Unexpected type of NthCmdEvent in _onLoadHandler");
+				} else {
+					folderList = (event as NthFileEvent).folderList;
+					_processThumbs(folderList);
+				}
 			}
 			
 			dispatchEvent(new Event(Event.COMPLETE));
