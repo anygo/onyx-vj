@@ -112,19 +112,31 @@ package onyx.file {
 		 * 	Saves a bytearray to the filesystem
 		 */
 		public static function save(path:String, bytes:ByteArray, callback:Function):void {
+			
 			var query:FileQuery = _adapter.save(path, callback);
+			
+			// listen for a save
 			query.addEventListener(Event.COMPLETE, _onSaveHandler);
+			
+			// save
 			query.save(bytes);
+			
 		}
 		
 		/**
 		 * 	@private
 		 */
 		private static function _onSaveHandler(event:Event):void {
-			var query:FileQuery = event.currentTarget as FileQuery;
-			var fn:Function = query.callback;
-			fn.apply(null);
 			
+			var query:FileQuery = event.currentTarget as FileQuery;
+			
+			// remove listener
+			query.removeEventListener(Event.COMPLETE, _onSaveHandler);
+
+			// execute the callback			
+			query.callback(query);
+			
+			// destroy the query
 			query.dispose();
 		}
 		

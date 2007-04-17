@@ -25,6 +25,7 @@ Bug Fixes:
 - Fixed a bug where the loop start and end points were not dispatching changes to the UI
 - Fixed a bug where tempo was getting out of sync after a little while
 - Fixed a bug where the display window tabs were not clickable
+- Fixed a bug where extra controls in filters / custom controls would not scroll correctly
 
 API Changes:
 

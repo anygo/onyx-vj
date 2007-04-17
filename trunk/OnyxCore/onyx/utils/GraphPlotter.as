@@ -95,7 +95,7 @@ package onyx.utils {
 		private var _init:Boolean		= false;
 		
 		/**
-		 * 
+		 * 	@private
 		 */
 		private var _firstVal:int		= getTimer();
 		
@@ -115,7 +115,7 @@ package onyx.utils {
 			_minText.y			= height - 20;
 			_minText.selectable = _maxText.selectable = false;
 			_minText.textColor	= _maxText.textColor = color;
-			_minText.x = _maxText.x = labelOffsetX;
+			_minText.x			= _maxText.x = labelOffsetX;
 
 			var x:Number = 0;
 			var y:Number = initValue;

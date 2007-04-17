@@ -108,7 +108,7 @@ package onyx.core {
 		 */
 		public function set snapTempo(value:TempoBeat):void {
 			_snapTempo = value;
-			trace(value);
+
 			if (value) {
 				start();
 			} else {

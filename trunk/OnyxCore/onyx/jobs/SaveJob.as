@@ -30,34 +30,62 @@
  */
 package onyx.jobs {
 	
+	import flash.display.BitmapData;
 	import flash.events.Event;
 	
 	import onyx.display.IDisplay;
 	import onyx.events.RenderEvent;
-	import onyx.file.FileBrowser;
-	import onyx.utils.bitmap.PNGEncoder;
-	import flash.display.BitmapData;
-	import onyx.utils.bitmap.JPGEncoder;
+	import onyx.file.*;
+	import onyx.utils.bitmap.*;
 	
+	[Event(name='start', type='flash.events.Event')]
+	
+	/**
+	 * 	Saves a display's output for n frames
+	 */
 	public final class SaveJob extends Job {
 		
+		/**
+		 * 	@private
+		 */
 		private var _maxFrames:int;
+
+		/**
+		 * 	@private
+		 */
 		private var _currentFrame:int;
+
+		/**
+		 * 	@private
+		 */
 		private var _display:IDisplay;
+
+		/**
+		 * 	@private
+		 */
 		private var _frames:Array		= [];
 		
+		/**
+		 * 	@constructor
+		 */
 		public function SaveJob(display:IDisplay, frames:int):void {
+			
 			_display	= display;
-			_maxFrames		= frames;
+			_maxFrames	= frames;
 			
 			_display.addEventListener(RenderEvent.RENDER, _onRender);
 		}
 		
+		/**
+		 * 	@private
+		 */
 		private function _onRender(event:Event):void {
 			
 			if (_currentFrame >= _maxFrames) {
+				
 				_display.removeEventListener(RenderEvent.RENDER, _onRender);
 				save();
+				
 				return;
 			}
 			
@@ -66,20 +94,46 @@ package onyx.jobs {
 			_currentFrame++;
 		}
 		
+		/**
+		 * 	@private
+		 */
 		private function save():void {
 			
 			var encoder:JPGEncoder = new JPGEncoder();
 			
+			_currentFrame = 0;
+			
+			// loop through the frames and save them
 			for (var count:int = 0; count < _frames.length; count++) {
+				
+				// get bitmap reference
 				var bmp:BitmapData = _frames[count];
+
+				// save
 				FileBrowser.save(count + '.jpg', encoder.encode(bmp), _onSave);
+
+				// destroy the bitmap
 				bmp.dispose();
 			}
+			
+			terminate();
+		}
+
+		/**
+		 * 	@private
+		 */
+		private function _onSave(query:FileQuery):void {
 		}
 		
-		private function _onSave():void {
-			trace('frame saved');
+		/**
+		 * 
+		 */
+		override public function terminate():void {
+			
+			_display.removeEventListener(RenderEvent.RENDER, _onRender);
+			_display = null;
+			
+			super.terminate();
 		}
-		
 	}
 }

@@ -31,8 +31,8 @@
 package onyx.filter {
 
 	import flash.display.BitmapData;
-	import flash.geom.Matrix;
-	import flash.geom.Rectangle;
+	import flash.events.IEventDispatcher;
+	import flash.geom.*;
 	
 	import onyx.constants.*;
 	import onyx.content.IContent;
@@ -41,7 +41,6 @@ package onyx.filter {
 	import onyx.plugin.*;
 	import onyx.tween.*;
 	import onyx.utils.array.*;
-	import flash.events.IEventDispatcher;
 	
 	use namespace onyx_ns;
 	

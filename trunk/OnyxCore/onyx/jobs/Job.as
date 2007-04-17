@@ -30,10 +30,16 @@
  */
 package onyx.jobs {
 	
+	import flash.events.EventDispatcher;
+	import flash.events.Event;
+	
+	[Event(name='complete', type='flash.events.Event')]
+	[Event(name='progress', type='flash.events.ProgressEvent')]
+	
 	/**
 	 * 	Base class for application states
 	 */
-	public class Job {
+	public class Job extends EventDispatcher {
 		
 		/**
 		 * 	Boolean whether the job will override another job that the target has
@@ -50,6 +56,7 @@ package onyx.jobs {
 		 * 	Called when the application state is removed
 		 */
 		public function terminate():void {
+			dispatchEvent(new Event(Event.COMPLETE));
 		}
 		
 	}
