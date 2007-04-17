@@ -35,6 +35,8 @@ package {
 	import flash.system.Security;
 	import flash.ui.*;
 	
+	import onyx.constants.*;
+	import onyx.controls.*;
 	import onyx.file.http.HTTPAdapter;
 	import onyx.states.BroadcastState;
 	import onyx.utils.array.*;
@@ -42,11 +44,9 @@ package {
 	import ui.assets.AssetLayerTab;
 	import ui.core.UIManager;
 	import ui.core.UIObject;
-	import ui.states.KeyListenerState;
-	import ui.states.SettingsLoadState;
+	import ui.states.*;
 	
 	[SWF(width="1024", height="768", backgroundColor="#141515", frameRate='24')]
-	[ExcludeClass]
 	public class Onyx2 extends UIObject {
 		
 		/**
@@ -54,10 +54,12 @@ package {
 		 */
 		public function Onyx2():void {
 			
+			var stage:Stage = this.stage;
+			
 			// no scale please thanks
-			stage.align = StageAlign.TOP_LEFT;
+			stage.align		= StageAlign.TOP_LEFT;
 			stage.scaleMode = StageScaleMode.NO_SCALE;
-			stage.quality = StageQuality.LOW;
+			stage.quality	= StageQuality.LOW;
 			
 			// hide context menu
 			var menu:ContextMenu = new ContextMenu();

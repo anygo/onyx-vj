@@ -34,12 +34,13 @@ package ui.controls.layer {
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	
-	import onyx.controls.Control;
+	import onyx.constants.*;
+	import onyx.controls.*;
 	import onyx.events.ControlEvent;
 	
-	import ui.core.UIManager;
 	import ui.assets.AssetLeftArrow;
 	import ui.controls.UIControl;
+	import ui.core.UIManager;
 	import ui.layer.UILayer;
 
 	public final class LoopStart extends Sprite {
@@ -72,8 +73,8 @@ package ui.controls.layer {
 		 * 	@private
 		 */
 		private function _onMarkerDown(event:MouseEvent):void {
-			stage.addEventListener(MouseEvent.MOUSE_MOVE, _onMarkerMove);
-			stage.addEventListener(MouseEvent.MOUSE_UP, _onMarkerUp);
+			STAGE.addEventListener(MouseEvent.MOUSE_MOVE, _onMarkerMove);
+			STAGE.addEventListener(MouseEvent.MOUSE_UP, _onMarkerUp);
 			_onMarkerMove(event);
 		}
 
@@ -88,8 +89,8 @@ package ui.controls.layer {
 		 * 	@private
 		 */
 		private function _onMarkerUp(event:MouseEvent):void {
-			stage.removeEventListener(MouseEvent.MOUSE_MOVE, _onMarkerMove);
-			stage.removeEventListener(MouseEvent.MOUSE_UP, _onMarkerUp);
+			STAGE.removeEventListener(MouseEvent.MOUSE_MOVE, _onMarkerMove);
+			STAGE.removeEventListener(MouseEvent.MOUSE_UP, _onMarkerUp);
 		}
 		
 		/**

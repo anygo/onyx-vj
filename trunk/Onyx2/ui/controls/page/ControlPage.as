@@ -30,7 +30,7 @@
  */
 package ui.controls.page {
 	
-	import flash.events.Event;
+	import flash.events.*;
 	import flash.utils.*;
 	
 	import onyx.controls.*;
@@ -66,23 +66,29 @@ package ui.controls.page {
 		 * 	@constructor
 		 */		
 		public function ControlPage():void {
+			
 			super(100,120);		// controls size of ScrollPane
 			// super(true); 	// this was present before, to set movesToTop in UIObject - is it still important?
+			
 			mouseEnabled = false;
+			
 		}
 		
 		/**
-		 * 	
+		 * 	Removes all the controls from the page
 		 */
 		public function removeControls():void {
 			
+			// remove alls controls
 			for each (var uicontrol:UIControl in _controls) {
 				removeChild(uicontrol);		// for scrolling to work
 				reset();					// for scrolling to work
 				uicontrol.dispose();
 			}
+			
 			_controls = [];
 			
+			// if it's a control array, remove listeners
 			if (_ref) {
 				_ref.removeEventListener(Event.CHANGE, _onUpdate);
 				_ref = null;
@@ -91,6 +97,7 @@ package ui.controls.page {
 		
 		/**
 		 * 	@private
+		 * 	When the control is updated
 		 */
 		private function _onUpdate(event:Event):void {
 			addControls(_ref);
@@ -101,11 +108,7 @@ package ui.controls.page {
 		 */
 		public function addControls(controls:Array):void {
 			
-			var uicontrol:UIControl, x:int = 0, y:int = 0;
-			
-			y = 5;	// Shouldn't be necessary, but after making
-					// ControlPage extend ScrollPane, the text of
-					// the first controls get cut off unless I do this.
+			var uicontrol:UIControl, x:int = 0, y:int = 8;
 				
 			var options:UIOptions	= DEFAULT;
 			var width:int			= 65;

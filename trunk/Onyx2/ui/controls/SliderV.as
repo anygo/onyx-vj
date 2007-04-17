@@ -32,8 +32,8 @@ package ui.controls {
 	
 	import flash.events.MouseEvent;
 	
-	import onyx.controls.Control;
-	import onyx.controls.ControlNumber;
+	import onyx.constants.*;
+	import onyx.controls.*;
 	import onyx.events.ControlEvent;
 	
 	import ui.styles.*;
@@ -148,8 +148,8 @@ package ui.controls {
 			_mouseY = mouseY;
 			_tempY = _control.value * _multiplier;
 			
-			stage.addEventListener(MouseEvent.MOUSE_MOVE, _onMouseMove);
-			stage.addEventListener(MouseEvent.MOUSE_UP, _onMouseUp);
+			STAGE.addEventListener(MouseEvent.MOUSE_MOVE, _onMouseMove);
+			STAGE.addEventListener(MouseEvent.MOUSE_UP, _onMouseUp);
 
 		}
 		
@@ -169,8 +169,8 @@ package ui.controls {
 		 */
 		protected function _onMouseUp(event:MouseEvent):void {
 
-			stage.removeEventListener(MouseEvent.MOUSE_MOVE, _onMouseMove);
-			stage.removeEventListener(MouseEvent.MOUSE_UP, _onMouseUp);
+			STAGE.removeEventListener(MouseEvent.MOUSE_MOVE, _onMouseMove);
+			STAGE.removeEventListener(MouseEvent.MOUSE_UP, _onMouseUp);
 
 		}
 		

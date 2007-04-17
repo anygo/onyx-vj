@@ -34,8 +34,8 @@ package ui.controls {
 	import flash.events.MouseEvent;
 	import flash.geom.ColorTransform;
 	
-	import onyx.controls.Control;
-	import onyx.controls.ControlUInt;
+	import onyx.constants.*;
+	import onyx.controls.*;
 	
 	import ui.assets.AssetColorPicker;
 	import ui.core.UIObject;
@@ -101,8 +101,8 @@ package ui.controls {
 			
 			addChild(_picker);
 			
-			stage.addEventListener(MouseEvent.MOUSE_MOVE, _onMouseMove);
-			stage.addEventListener(MouseEvent.MOUSE_UP, _onMouseUp);
+			STAGE.addEventListener(MouseEvent.MOUSE_MOVE, _onMouseMove);
+			STAGE.addEventListener(MouseEvent.MOUSE_UP, _onMouseUp);
 			
 			_onMouseMove(event);
 
@@ -136,8 +136,8 @@ package ui.controls {
 
 			removeChild(_picker);
 			
-			stage.removeEventListener(MouseEvent.MOUSE_MOVE, _onMouseMove);
-			stage.removeEventListener(MouseEvent.MOUSE_UP, _onMouseUp);
+			STAGE.removeEventListener(MouseEvent.MOUSE_MOVE, _onMouseMove);
+			STAGE.removeEventListener(MouseEvent.MOUSE_UP, _onMouseUp);
 			
 		}
 		

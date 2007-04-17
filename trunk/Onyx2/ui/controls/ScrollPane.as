@@ -35,6 +35,8 @@ package ui.controls {
 	import flash.events.MouseEvent;
 	import flash.geom.Rectangle;
 	
+	import onyx.constants.*;
+	import onyx.controls.*;
 	import onyx.core.IDisposable;
 	
 	import ui.core.UIObject;
@@ -89,7 +91,7 @@ package ui.controls {
 			addEventListener(MouseEvent.MOUSE_OVER, _onMouseOver);
 			
 			// set the scroll 
-			scrollRect = new Rectangle(0, 0, width, height);
+			super.scrollRect = new Rectangle(0, 0, width, height);
 			
 			// check for label
 			if (label) {
@@ -242,9 +244,19 @@ package ui.controls {
 		 * 	@private
 		 */
 		private function _destroyScrollBar():void {
+			
+			// remove listener
 			_scrollY.removeEventListener(MouseEvent.MOUSE_DOWN, _onScrollPress);
+			
+			// remove the scroll bar
 			super.removeChild(_scrollY);
+			
+			// remove reference
 			_scrollY = null;
+			
+			// set the holder to default
+			_holder.y = 0;
+			
 		}
 		
 		/**
@@ -254,8 +266,8 @@ package ui.controls {
 		private function _onScrollPress(event:MouseEvent):void {
 			var scrollbar:ScrollBar = event.currentTarget as ScrollBar;
 			
-			stage.addEventListener(MouseEvent.MOUSE_MOVE, _onScrollMove);
-			stage.addEventListener(MouseEvent.MOUSE_UP, _onScrollUp);
+			STAGE.addEventListener(MouseEvent.MOUSE_MOVE, _onScrollMove);
+			STAGE.addEventListener(MouseEvent.MOUSE_UP, _onScrollUp);
 			
 			_clickY = mouseY - _scrollY.y;
 			
@@ -289,8 +301,8 @@ package ui.controls {
 		 * 	Handler when a scroll bar is moved
 		 */
 		private function _onScrollUp(event:MouseEvent):void {
-			stage.removeEventListener(MouseEvent.MOUSE_MOVE, _onScrollMove);
-			stage.removeEventListener(MouseEvent.MOUSE_UP, _onScrollUp);
+			STAGE.removeEventListener(MouseEvent.MOUSE_MOVE, _onScrollMove);
+			STAGE.removeEventListener(MouseEvent.MOUSE_UP, _onScrollUp);
 		}
 		
 		/**
@@ -299,7 +311,6 @@ package ui.controls {
 		public function reset():void {
 			_holder.y = 0;
 		}
-
 		
 		/**
 		 * 	Disposes

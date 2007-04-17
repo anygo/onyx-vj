@@ -34,6 +34,9 @@ package ui.core {
 	import flash.events.MouseEvent;
 	import flash.geom.ColorTransform;
 	
+	import onyx.constants.*;
+	import onyx.controls.*;
+	
 	import ui.events.DragEvent;
 	import ui.styles.*;
 	
@@ -106,8 +109,8 @@ package ui.core {
 			_offsetY = origin.mouseY;
 			
 			// we want the event to happen everywhere
-			origin.stage.addEventListener(MouseEvent.MOUSE_MOVE, _onObjectFirstMove);
-			origin.stage.addEventListener(MouseEvent.MOUSE_UP, _onObjectUp);
+			STAGE.addEventListener(MouseEvent.MOUSE_MOVE, _onObjectFirstMove);
+			STAGE.addEventListener(MouseEvent.MOUSE_UP, _onObjectUp);
 			
 		}
 		
@@ -122,15 +125,15 @@ package ui.core {
 			_dragTarget = new Bitmap(bmp);
 			
 			// place it
-			_dragTarget.x = _origin.stage.mouseX - _offsetX;
-			_dragTarget.y = _origin.stage.mouseY - _offsetY;
+			_dragTarget.x = STAGE.mouseX - _offsetX;
+			_dragTarget.y = STAGE.mouseY - _offsetY;
 			
 			// add to stage
-			_origin.stage.addChild(_dragTarget);
+			STAGE.addChild(_dragTarget);
 
 			// set listeners for the dragged bitmap			
-			_origin.stage.removeEventListener(MouseEvent.MOUSE_MOVE, _onObjectFirstMove);
-			_origin.stage.addEventListener(MouseEvent.MOUSE_MOVE, _onObjectMove);
+			STAGE.removeEventListener(MouseEvent.MOUSE_MOVE, _onObjectFirstMove);
+			STAGE.addEventListener(MouseEvent.MOUSE_MOVE, _onObjectMove);
 			
 			// in each target, we're going to look for rollover, rollout events
 			for each (var target:DisplayObject in _targets) {
@@ -158,12 +161,12 @@ package ui.core {
 		private static function _onObjectUp(event:MouseEvent):void {
 			
 			// remove the event listeners
-			_origin.stage.removeEventListener(MouseEvent.MOUSE_MOVE, _onObjectFirstMove);
-			_origin.stage.removeEventListener(MouseEvent.MOUSE_MOVE, _onObjectMove);
-			_origin.stage.removeEventListener(MouseEvent.MOUSE_UP, _onObjectUp);
+			STAGE.removeEventListener(MouseEvent.MOUSE_MOVE, _onObjectFirstMove);
+			STAGE.removeEventListener(MouseEvent.MOUSE_MOVE, _onObjectMove);
+			STAGE.removeEventListener(MouseEvent.MOUSE_UP, _onObjectUp);
 
 			if (_dragTarget != null) {
-				_dragTarget.stage.removeChild(_dragTarget);
+				STAGE.removeChild(_dragTarget);
 				_dragTarget.bitmapData.dispose();
 			}
 			

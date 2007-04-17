@@ -207,7 +207,7 @@ package ui.window {
 		 * 
 		 */
 		private function _onSaveDown(event:MouseEvent):void {
-			new SaveJob(Display.getDisplay(0), 100);
+			var job:Job = new SaveJob(Display.getDisplay(0), 100);
 		}
 		
 		/**

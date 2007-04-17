@@ -34,7 +34,9 @@ package ui.window {
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.system.System;
+	import flash.utils.*;
 	
+	import onyx.constants.*;
 	import onyx.utils.GraphPlotter;
 	
 	import ui.text.TextField;
@@ -50,26 +52,42 @@ package ui.window {
 		private var _memory:GraphPlotter	= new GraphPlotter(System.totalMemory / 1024);
 		
 		/**
+		 * 	@private
+		 */
+		private var _fps:GraphPlotter		= new GraphPlotter(0, 0xFFFFFF, 50);
+		
+		/**
+		 * 	@private
+		 */
+		private var _last:int				= getTimer();
+		
+		/**
 		 * 	@constructor
 		 */
 		public function MemoryWindow():void {
 			
 			super('MEMORY', 200,200);
 
-			_memory.y = 12;
+			_memory.y	= 12;
+			_fps.y		= 12;
+			
+			addChild(_fps);
 			addChild(_memory);
 			
 			draggable = true;
 			
+			// start listening
 			addEventListener(Event.ENTER_FRAME, _onFrame);
-
 		}
 		
 		/**
 		 * 	@private
 		 */
 		private function _onFrame(event:Event):void {
+			_fps.register((1000 / (getTimer() - _last)));
+
 			_memory.register(System.totalMemory / 1024);
+			_last = getTimer();
 		}
 		
 		/**
@@ -82,6 +100,7 @@ package ui.window {
 			super.dispose();
 
 			_memory = null;
+			_fps	= null;
 		}
 	}
 }

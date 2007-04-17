@@ -30,13 +30,12 @@
  */
 package ui.controls {
 	
-	import flash.display.Shape;
+	import flash.display.*;
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
 	
-	import onyx.constants.POINT;
-	import onyx.controls.Control;
-	import onyx.controls.ControlRange;
+	import onyx.constants.*;
+	import onyx.controls.*;
 	import onyx.events.ControlEvent;
 	
 	import ui.styles.*;
@@ -48,9 +47,14 @@ package ui.controls {
 	public final class DropDown extends UIControl {
 		
 		/**
+		 * 	@private
+		 */
+		private static const CONTAINER:Sprite	= new Sprite();
+		
+		/**
 		 * 	Option heights
 		 */
-		public static const ITEM_HEIGHT:int	= 12;
+		public static const ITEM_HEIGHT:int		= 12;
 
 		/**
 		 * 	@private
@@ -172,14 +176,12 @@ package ui.controls {
 			var items:Array				= [];
 			_index						= _data.indexOf(control.value);
 			
-			var local:Point = localToGlobal(POINT);
+			var local:Point = super.localToGlobal(POINT);
 			var start:int = Math.max(local.y - (_index * ITEM_HEIGHT), 0 - local.y) ;
 
-			graphics.lineStyle(0, LINE_DEFAULT, .5);
-			graphics.drawRect(-1, start - local.y - 1, _width + 1, _data.length * ITEM_HEIGHT + 2);
-			
 			var len:int = _data.length;
 			
+			// loop through data and create the options
 			for (var count:int = 0; count < len; count++) {
 				
 				var item:Option	= new Option(
@@ -193,13 +195,31 @@ package ui.controls {
 				start += ITEM_HEIGHT;
 				
 				items.push(item);
-				addChild(item);
+				
+				// add it
+				var gr:Graphics = CONTAINER.graphics;
+				
+				gr.clear();
+				gr.lineStyle(0, LINE_DEFAULT, .5);
+				gr.drawRect(-1, -1, _width + 1, _data.length * ITEM_HEIGHT + 2);
+				
+				CONTAINER.x = local.x;
+				CONTAINER.y = local.y;
+				CONTAINER.addChild(item);
 
 			}
 			
+			// add the container to the stage
+			STAGE.addChild(CONTAINER);
+			
+			// store all the items
 			_items = items;
 			
-			stage.addEventListener(MouseEvent.MOUSE_UP, _onRelease);
+			// listen for a mouse release
+			STAGE.addEventListener(MouseEvent.MOUSE_UP, _onRelease);
+			
+			// stop propagation
+			event.stopPropagation();
 		}
 		
 		/**
@@ -208,11 +228,10 @@ package ui.controls {
 		private function _onRelease(event:MouseEvent):void {
 
 			var control:ControlRange	= _control as ControlRange;
-			
-			graphics.clear();
 
+			// if a valid index, set the value
 			if (_selectedIndex) {
-				
+
 				_index = _selectedIndex.index;
 				control.value = control.data[_index];
 				
@@ -225,8 +244,16 @@ package ui.controls {
 				item.dispose();
 			}
 			
+			// remove references
 			_selectedIndex = null;
 			_items = null;
+			
+			// check to see if the container is added, if it is, remove it
+			if (CONTAINER.parent) {
+				
+				// remove the container
+				STAGE.removeChild(CONTAINER);
+			}
 		}
 
 		/**
@@ -285,6 +312,9 @@ import ui.styles.*;
 
 final class Option extends Sprite {
 	
+	/**
+	 * 	@private
+	 */
 	private var _label:TextField;
 
 	public var index:int;
@@ -305,6 +335,9 @@ final class Option extends Sprite {
 		addChild(_label);
 	}
 	
+	/**
+	 * 	Draw
+	 */
 	public function draw(color:int, width:int):void {
 		graphics.clear();
 		
@@ -313,9 +346,13 @@ final class Option extends Sprite {
 		graphics.endFill();
 
 	}
-	
+
+	/**
+	 * 	Dispose
+	 */	
 	public function dispose():void {
 		
+		// remove
 		if (parent) {
 			parent.removeChild(this);
 			removeChild(_label);

@@ -30,13 +30,13 @@
  */
 package ui.core {
 
-	import flash.display.DisplayObject;
-	import flash.display.Sprite;
-	import flash.display.Stage;
-	import flash.events.MouseEvent;
-	import flash.events.TimerEvent;
-	import flash.utils.Dictionary;
-	import flash.utils.Timer;
+	import flash.display.*;
+	import flash.events.*;
+	import flash.utils.*;
+	
+	import onyx.constants.*;
+	import onyx.controls.*;
+
 	
 	/**
 	 * 	Handles tooltips
@@ -132,11 +132,11 @@ package ui.core {
 				if (!toolTip) {
 					toolTip = new ToolTip();
 				}
-				toolTip.x = stage.mouseX + 4;
-				toolTip.y = stage.mouseY - 4;
+				toolTip.x = STAGE.mouseX + 4;
+				toolTip.y = STAGE.mouseY - 4;
 				toolTip.text = (_dict[_lastObject] as String).toUpperCase();
 				
-				stage.addChild(toolTip);
+				STAGE.addChild(toolTip);
 			}
 		}
 		

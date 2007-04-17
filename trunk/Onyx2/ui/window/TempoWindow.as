@@ -41,9 +41,9 @@ package ui.window {
 	import onyx.core.*;
 	import onyx.display.*;
 	import onyx.events.*;
-	import onyx.net.*;
 	import onyx.file.FileBrowser;
 	import onyx.jobs.*;
+	import onyx.net.*;
 	import onyx.states.StateManager;
 	
 	import ui.controls.*;
@@ -108,6 +108,7 @@ package ui.window {
 		 */
 		public function TempoWindow():void {
 			
+			// super!
 			super('TEMPO', 202, 100);
 			
 			var display:IDisplay	= Display.getDisplay(0);
@@ -206,10 +207,10 @@ package ui.window {
 		}
 		
 		/**
-		 * 
+		 * 	@private
 		 */
 		private function _onSaveDown(event:MouseEvent):void {
-			new SaveJob(Display.getDisplay(0), 100);
+			var job:SaveJob = new SaveJob(Display.getDisplay(0), 2);
 		}
 		
 		/**
@@ -245,6 +246,9 @@ package ui.window {
 			event.stopPropagation();
 		}
 		
+		/**
+		 * 	@private
+		 */
 		private function _writeFile(fname:String, bytes:ByteArray):void {
 			var cmdclient:NthCmdClient = NthCmdClient.getInstance();
 			_fname = fname;

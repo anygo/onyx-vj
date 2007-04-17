@@ -121,7 +121,11 @@ package ui.states {
 			// re-order the filters based on settings
 			for each (var filter:XML in xml.filters.order.filter) {
 				var plugin:Plugin = Filter.getDefinition(filter.@name);
-				plugin.index = filter.@index;
+				
+				// make sure the plugin exists
+				if (plugin) {
+					plugin.index = filter.@index;
+				}
 			}
 			
 			// stored keys
@@ -153,9 +157,14 @@ package ui.states {
 			if ( xml.core.midi ) {
 				Midi.getInstance().listen = parseBoolean(xml.core.midi.@listen);
 			}
+
+			var macro:Plugin = Macro.macros[0] as Plugin;
+			if (macro) {
+				
+				// map macros
+				KeyListenerState.ACTION_MACRO_1 = macro.getDefinition() as Macro;
 			
-			// map macros
-			KeyListenerState.ACTION_MACRO_1 = (Macro.macros[0] as Plugin).getDefinition() as Macro;
+			}
 			
 			// kill myself
 			StateManager.removeState(this);

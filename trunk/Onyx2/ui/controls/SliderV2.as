@@ -32,6 +32,7 @@ package ui.controls {
 	
 	import flash.events.MouseEvent;
 	
+	import onyx.constants.*;
 	import onyx.controls.*;
 	import onyx.events.ControlEvent;
 	import onyx.net.Stream;
@@ -121,8 +122,8 @@ package ui.controls {
 			_tempY = (_controlY.value * _multiplier);
 			_tempX = (_controlX.value * _multiplier);
 			
-			stage.addEventListener(MouseEvent.MOUSE_MOVE, _onMouseMoveNormal);
-			stage.addEventListener(MouseEvent.MOUSE_UP, _onMouseUp);
+			STAGE.addEventListener(MouseEvent.MOUSE_MOVE, _onMouseMoveNormal);
+			STAGE.addEventListener(MouseEvent.MOUSE_UP, _onMouseUp);
 			
 		}
 		
@@ -155,8 +156,8 @@ package ui.controls {
 			_tempY = (_controlY.value * _multiplier);
 			_tempX = (_controlX.value * _multiplier);
 			
-			stage.addEventListener(MouseEvent.MOUSE_MOVE, _onMouseMoveInvert);
-			stage.addEventListener(MouseEvent.MOUSE_UP, _onMouseUp);
+			STAGE.addEventListener(MouseEvent.MOUSE_MOVE, _onMouseMoveInvert);
+			STAGE.addEventListener(MouseEvent.MOUSE_UP, _onMouseUp);
 
 		}
 		
@@ -181,9 +182,9 @@ package ui.controls {
 		 * 	@private
 		 */
 		private function _onMouseUp(event:MouseEvent):void {
-			stage.removeEventListener(MouseEvent.MOUSE_MOVE, _onMouseMoveInvert);
-			stage.removeEventListener(MouseEvent.MOUSE_MOVE, _onMouseMoveNormal);
-			stage.removeEventListener(MouseEvent.MOUSE_UP, _onMouseUp);
+			STAGE.removeEventListener(MouseEvent.MOUSE_MOVE, _onMouseMoveInvert);
+			STAGE.removeEventListener(MouseEvent.MOUSE_MOVE, _onMouseMoveNormal);
+			STAGE.removeEventListener(MouseEvent.MOUSE_UP, _onMouseUp);
 		}
 		
 		/**

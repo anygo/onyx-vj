@@ -36,11 +36,11 @@ package ui.controls {
 	import flash.events.MouseEvent;
 	import flash.geom.Rectangle;
 	
-	import onyx.controls.ControlString;
+	import onyx.constants.*;
+	import onyx.controls.*;
 	
 	import ui.core.UIObject;
 	import ui.text.TextInput;
-	import onyx.controls.Control;
 	
 	public final class TextControlPopUp extends UIObject {
 
@@ -66,9 +66,9 @@ package ui.controls {
 				var bounds:Rectangle	= parent.getBounds(parent.stage);
 				x						= bounds.x;
 				y						= bounds.y;
-				parent.stage.addChildAt(this, parent.stage.numChildren);
 				
-				stage.addEventListener(MouseEvent.MOUSE_DOWN, _captureMouse);
+				STAGE.addChildAt(this, STAGE.numChildren);
+				STAGE.addEventListener(MouseEvent.MOUSE_DOWN, _captureMouse);
 
 				displayBackground(width, height);
 				
@@ -92,15 +92,15 @@ package ui.controls {
 		 */
 		private function _captureMouse(event:MouseEvent):void {
 			
-			if (!hitTestPoint(stage.mouseX, stage.mouseY)) {
+			if (!hitTestPoint(STAGE.mouseX, STAGE.mouseY)) {
 				
 				if (_control) {
 					_control.value = _input.text;
 					_control = null;
 				}
 				
-				stage.removeEventListener(MouseEvent.MOUSE_DOWN, _captureMouse, false);
-				stage.removeChild(this);
+				STAGE.removeEventListener(MouseEvent.MOUSE_DOWN, _captureMouse, false);
+				STAGE.removeChild(this);
 				
 				dispose();
 			}

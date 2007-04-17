@@ -125,8 +125,8 @@ package ui.states {
 		private function _onItemAdded(event:Event):void {
 			
 			var stage:DisplayObjectContainer = ROOT;
-			stage.setChildIndex(_image, stage.numChildren - 2);
-			stage.setChildIndex(_label, stage.numChildren - 1);
+			STAGE.setChildIndex(_image, STAGE.numChildren - 2);
+			STAGE.setChildIndex(_label, STAGE.numChildren - 1);
 			
 		}
 

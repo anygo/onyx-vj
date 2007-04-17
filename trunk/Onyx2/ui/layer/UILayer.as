@@ -375,23 +375,29 @@ package ui.layer {
 				_assetLayer,														0,			0,
 				_preview,															1,			1,
 				_filename,															3,			3,
-				controlPage,														3,			192,
+				controlPage,														3,			184,
 
 				new DropDown(dropOptions, props.blendMode),							4,			153,
-				_assetScrub,										 		SCRUB_LEFT,			139,
-				_btnScrub,															1,			139,
-				filterPane,														111,		186,
+				filterPane,															111,		186,
 
 				_btnUp,																153,		154,
 				_btnDown,															162,		154,
 				_btnCopy,															171,		154,
 				_btnDelete,															180,		154,
 				
-				tabContainer,														0,			169,
+				tabContainer,														0,			169
 				
-				_loopStart,															10,			138,
-				_loopEnd,															184,		138
 			);
+
+			// set default locations for the ui objects that get moved / removed
+			_assetScrub.x	= SCRUB_LEFT;
+			_assetScrub.y	= 138;
+			_btnScrub.x		= 1;
+			_btnScrub.y		= 139;
+			_loopStart.x	= 10;
+			_loopStart.y	= 138;
+			_loopEnd.x		= 184;
+			_loopEnd.y		= 138;
 			
 		}
 		
@@ -430,6 +436,26 @@ package ui.layer {
 			
 			// frame listener
 			addEventListener(Event.ENTER_FRAME, _updatePlayheadHandler);
+			
+			// if it has time, add the ui controls for time
+			if (_layer.totalTime > 1) {
+				
+				// add time controls
+				super.addChild(_assetScrub);
+				super.addChild(_btnScrub);
+				super.addChild(_loopStart);
+				super.addChild(_loopEnd);
+				
+			} else {
+				
+				// check to see if added already
+				if (_assetScrub.parent) {
+					super.removeChild(_assetScrub);
+					super.removeChild(_btnScrub);
+					super.removeChild(_loopStart);
+					super.removeChild(_loopEnd);
+				}
+			}
 		}
 		
 		/**
@@ -468,8 +494,9 @@ package ui.layer {
 		 */		
 		private function _onScrubPress(event:MouseEvent):void {
 			
-			stage.addEventListener(MouseEvent.MOUSE_MOVE, _onScrubMove);
-			stage.addEventListener(MouseEvent.MOUSE_UP, _onScrubUp);
+			STAGE.addEventListener(MouseEvent.MOUSE_MOVE, _onScrubMove);
+			STAGE.addEventListener(MouseEvent.MOUSE_UP, _onScrubUp);
+			
 			removeEventListener(Event.ENTER_FRAME, _updatePlayheadHandler);
 			
 			_layer.pause(true);
@@ -497,8 +524,8 @@ package ui.layer {
 			// add our events back			
 			addEventListener(Event.ENTER_FRAME, _updatePlayheadHandler);
 			
-			stage.removeEventListener(MouseEvent.MOUSE_MOVE, _onScrubMove);
-			stage.removeEventListener(MouseEvent.MOUSE_UP, _onScrubUp);
+			STAGE.removeEventListener(MouseEvent.MOUSE_MOVE, _onScrubMove);
+			STAGE.removeEventListener(MouseEvent.MOUSE_UP, _onScrubUp);
 			
 			_layer.pause(false);
 
