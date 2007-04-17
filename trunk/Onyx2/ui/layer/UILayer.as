@@ -473,7 +473,16 @@ package ui.layer {
 			_filename.text = '';
 			_assetScrub.x = SCRUB_LEFT;
 			
+			// remove scrub listener
 			removeEventListener(Event.ENTER_FRAME, _updatePlayheadHandler);
+			
+			// remove time controls if they're added
+			if (_assetScrub.parent) {
+				super.removeChild(_assetScrub);
+				super.removeChild(_btnScrub);
+				super.removeChild(_loopStart);
+				super.removeChild(_loopEnd);
+			}
 		}
 		
 		/**
