@@ -41,6 +41,9 @@ package filters {
 	import onyx.core.*;
 	import onyx.filter.*;
 
+	/**
+	 * 	Noise filter
+	 */
 	public final class NoiseFilter extends Filter implements IBitmapFilter {
 		
 		private var _amount:Number		= .25;

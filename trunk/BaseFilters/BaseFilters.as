@@ -48,6 +48,9 @@ package {
 	
 	public class BaseFilters extends Sprite implements IPluginLoader {
 
+		/**
+		 * 	Returns an array of plugins for onyx to load
+		 */
 		public function get plugins():Array {
 			return [
 				new Plugin('Mirror Filter', MirrorFilter, 'Mirror Filter'),
@@ -75,7 +78,7 @@ package {
 //				new Plugin('Matrix Effect',			MatrixEffect,	'Matrix Effect'),
 //				new Plugin('Bleed Filter',			PasteFilter,	'Bleed Filter'),
 				new Plugin('Blur Transition',		BlurTransition, 'Blurs the loaded layer'),
-//				new Plugin('Dissolve Transition',	DissolveTransition, 'Dissolves the loaded layer'),
+				new Plugin('Dissolve Transition',	DissolveTransition, 'Dissolves the loaded layer'),
 				new Plugin('Basic',					BasicVisualizer, 'Visualizer'),
 //				new Plugin('Burst Echo',			BurstEcho,		'Burst Echo'),
 				new Plugin('Invert',				InvertFilter,	'Invert'),

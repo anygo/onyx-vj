@@ -40,6 +40,9 @@ package macros {
 	
 	public final class FrameRNDMacro extends Macro {
 		
+		/**
+		 * 
+		 */
 		override public function initialize():void {
 			
 			var display:Display = Display.getDisplay(0);
@@ -52,6 +55,9 @@ package macros {
 
 		}
 		
+		/**
+		 * 	Terminates
+		 */
 		override public function terminate():void {
 		}
 		
