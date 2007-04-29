@@ -47,11 +47,6 @@ package ui.controls {
 	public final class DropDown extends UIControl {
 		
 		/**
-		 * 	@private
-		 */
-		private static const CONTAINER:Sprite	= new Sprite();
-		
-		/**
 		 * 	Option heights
 		 */
 		public static const ITEM_HEIGHT:int		= 12;
@@ -203,14 +198,8 @@ package ui.controls {
 				gr.lineStyle(0, LINE_DEFAULT, .5);
 				gr.drawRect(-1, -1, _width + 1, _data.length * ITEM_HEIGHT + 2);
 				
-				CONTAINER.x = local.x;
-				CONTAINER.y = local.y;
-				CONTAINER.addChild(item);
-
+				CONTAINER.display(this, item);
 			}
-			
-			// add the container to the stage
-			STAGE.addChild(CONTAINER);
 			
 			// store all the items
 			_items = items;
@@ -248,12 +237,8 @@ package ui.controls {
 			_selectedIndex = null;
 			_items = null;
 			
-			// check to see if the container is added, if it is, remove it
-			if (CONTAINER.parent) {
-				
-				// remove the container
-				STAGE.removeChild(CONTAINER);
-			}
+			// remove the popup
+			CONTAINER.remove();
 		}
 
 		/**

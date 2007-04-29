@@ -292,7 +292,7 @@ package ui.window {
 		
 		/**
 		 * 	@private
-		 *  drag functions
+		 *  Drag functions
 		 */
 		private function _onDragDrop(event:DragEvent):void {
 			var uilayer:UILayer = event.currentTarget as UILayer

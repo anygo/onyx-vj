@@ -42,9 +42,5 @@ package ui.assets {
 	]
 	[ExcludeClass]
 	public final class PixelFont extends Font {
-		
-		public function PixelFont():void {
-		}
-
 	}
 }

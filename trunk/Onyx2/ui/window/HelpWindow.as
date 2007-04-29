@@ -33,6 +33,9 @@ package ui.window {
 	import ui.styles.*;
 	import ui.text.TextField;
 	
+	/**
+	 * 	Help Window (used online)
+	 */
 	public final class HelpWindow extends Window {
 		
 		private var _text:TextField	= new TextField(390, 190, TEXT_ARIAL);

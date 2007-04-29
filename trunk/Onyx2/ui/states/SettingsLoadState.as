@@ -40,10 +40,10 @@ package ui.states {
 	import onyx.core.*;
 	import onyx.filter.Filter;
 	import onyx.macro.*;
+	import onyx.midi.Midi;
 	import onyx.plugin.Plugin;
 	import onyx.states.*;
 	import onyx.utils.string.parseBoolean;
-	import onyx.midi.Midi;
 	
 	import ui.window.WindowRegistration;
 
@@ -97,42 +97,66 @@ package ui.states {
 		 */
 		private function parse(xml:XML):void {
 			
+			var core:XMLList	= xml.core;
+			var list:XMLList;
+			
 			// set default core settings
-			if (xml.core.bitmapData) {
-				BITMAP_WIDTH	= xml.core.bitmapData.@width;
-				BITMAP_HEIGHT	= xml.core.bitmapData.@height;
-				BITMAP_RECT		= new Rectangle(0, 0, BITMAP_WIDTH, BITMAP_HEIGHT);
+			if (core.hasOwnProperty('render')) {
+				
+				list = core.render;
+				
+				if (list.hasOwnProperty('bitmapData')) {
+					BITMAP_WIDTH	= list.bitmapData.width;
+					BITMAP_HEIGHT	= list.bitmapData.height;
+					BITMAP_RECT		= new Rectangle(0, 0, BITMAP_WIDTH, BITMAP_HEIGHT);
+				}
 			}
 			
-			// set blend modes
-			if (xml.core.blendModes) {
+			// see if MIDI should be listening by default
+			// if (core.hasOwnProperty('midi')) {
+			// 	MIDI.listen = parseBoolean(core.midi.enabled);
+			// }
+
+			// add custom order for blendmodes
+			if (core.hasOwnProperty('blendModes')) {
 				
+				list = core.blendModes;
+
 				// remove all previous blend modes
 				while (BLEND_MODES.length) {
 					BLEND_MODES.pop();
 				}
 				
 				// make new blend modes
-				for each (var mode:XML in xml.core.blendModes.*) {
+				for each (var mode:XML in list.*) {
 					BLEND_MODES.push(String(mode.name()));
 				}
+				
 			}
 			
 			// re-order the filters based on settings
-			for each (var filter:XML in xml.filters.order.filter) {
-				var plugin:Plugin = Filter.getDefinition(filter.@name);
+			if (xml.hasOwnProperty('filters')) {
 				
-				// make sure the plugin exists
-				if (plugin) {
-					plugin.index = filter.@index;
+				list = xml.filters.order.filter;
+				
+				for each (var filter:XML in list.*) {
+					var plugin:Plugin = Filter.getDefinition(filter.@name);
+					
+					// make sure the plugin exists
+					if (plugin) {
+						plugin.index = filter.@index;
+					}
 				}
+				
 			}
 			
 			// stored keys
-			if (xml.keys) {
+			if (xml.hasOwnProperty('keys')) {
+				
+				list = xml.keys;
 				
 				// map keys
-				for each (var key:XML in xml.keys.*) {
+				for each (var key:XML in list.*) {
 					try {
 						KeyListenerState[key.name()] = key;
 					} catch (e:Error) {
@@ -142,8 +166,11 @@ package ui.states {
 			}
 			
 			// set window locations / enabled
-			if (xml.windows) {
-				for each (var windowXML:XML in xml.windows.*) {
+			if (xml.hasOwnProperty('windows')) {
+				
+				list = xml.windows;
+				
+				for each (var windowXML:XML in list.*) {
 					var reg:WindowRegistration = WindowRegistration.getWindow(windowXML.@name);
 					if (reg) {
 						reg.x		= windowXML.@x;
@@ -151,26 +178,19 @@ package ui.states {
 						reg.enabled = parseBoolean(windowXML.@enabled);
 					}
 				}
-			}
-			
-			// see if MIDI should be listening by default
-			if ( xml.core.midi ) {
-				Midi.getInstance().listen = parseBoolean(xml.core.midi.@listen);
+				
 			}
 
 			var macro:Plugin = Macro.macros[0] as Plugin;
 			if (macro) {
 				
 				// map macros
-				KeyListenerState.ACTION_MACRO_1 = macro.getDefinition() as Macro;
+				// KeyListenerState.ACTION_MACRO_1 = macro.getDefinition() as Macro;
 			
 			}
 			
 			// kill myself
 			StateManager.removeState(this);
-		}
-		
-		override public function terminate():void {
 		}
 	}
 }

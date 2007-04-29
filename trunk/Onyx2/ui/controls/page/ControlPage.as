@@ -68,8 +68,8 @@ package ui.controls.page {
 		public function ControlPage():void {
 			
 			super(100,120);		// controls size of ScrollPane
-			// super(true); 	// this was present before, to set movesToTop in UIObject - is it still important?
 			
+			// set mouseenabled
 			mouseEnabled = false;
 			
 		}
@@ -116,42 +116,40 @@ package ui.controls.page {
 			
 			removeControls();
 			
+			// if it's a Controls array, listen for changes
 			if (ref){ 
 				_ref = ref;
 				_ref.addEventListener(Event.CHANGE, _onUpdate);
 			}
 
+			// now create a uicontrol based on each control
 			for each (var control:Control in controls) {
 				
-				uicontrol = null;
-				
-				var def:String		= getQualifiedClassName(control);
-				var metadata:Object = control.metadata || {};
-				var uiClass:Class	= CONTROL_MAP[def];
+				var uiClass:Class		= CONTROL_MAP[control.reflect()];
 				
 				if (uiClass) {
-					uicontrol = new uiClass(options, control);
 
-					uicontrol.x = metadata.x || x;
-					uicontrol.y = metadata.y || y;
+					uicontrol	= new uiClass(options, control);
 					
+					// position the control
+					uicontrol.x = x;
+					uicontrol.y = y;
+					
+					// save the control
 					_controls.push(uicontrol);
 					
 					x += options.width + 3;
 					
+					// check width, respotion based on it
 					if (x > width) {
 						x = 0;
 						y += options.height + 10;
 					}
 					
+					// add it
 					addChild(uicontrol);
 				}				
 			}
-		}
-		
-		/**
-		 * 	@private
-		 */
-		
+		}		
 	}
 }

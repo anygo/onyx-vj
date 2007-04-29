@@ -68,7 +68,7 @@ package ui.policy {
 		}
 		
 		/**
-		 * 
+		 * 	@private
 		 */
 		private function _onAdded(event:Event):void {
 
@@ -86,7 +86,7 @@ package ui.policy {
 		
 		
 		/**
-		 * 
+		 * 	@private
 		 */
 		private function _onRemoved(event:Event):void {
 

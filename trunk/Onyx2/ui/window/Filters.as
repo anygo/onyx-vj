@@ -132,6 +132,7 @@ package ui.window {
 
 		/**
 		 * 	@private
+		 * 	Clear all controls
 		 */
 		private function _clearControls():void {
 			
@@ -146,6 +147,7 @@ package ui.window {
 		
 		/**
 		 * 	@private
+		 * 	Double Click
 		 */
 		private function _onDoubleClick(event:MouseEvent):void {
 			
@@ -162,6 +164,7 @@ package ui.window {
 		
 		/**
 		 * 	@private
+		 * 	Mouse Down
 		 */
 		private function _onMouseDown(event:MouseEvent):void {
 			
@@ -172,6 +175,7 @@ package ui.window {
 		
 		/**
 		 * 	@private
+		 * 	Drag Over
 		 */
 		private function _onDragOver(event:DragEvent):void {
 			var obj:UIObject = event.currentTarget as UIObject;
@@ -188,6 +192,7 @@ package ui.window {
 		
 		/**
 		 * 	@private
+		 * 	Drag Handler
 		 */
 		private function _onDragDrop(event:DragEvent):void {
 			var object:IFilterDrop		= event.currentTarget as IFilterDrop;
@@ -195,13 +200,15 @@ package ui.window {
 			var plugin:Plugin			= origin.filter;
 			
 			(object as DisplayObject).transform.colorTransform = DEFAULT;
-			
-			if (event.ctrlKey && (!object is UIDisplay)) {
+
+			// if ctrl key is down, apply to all layers
+			if (event.ctrlKey && !(object is UIDisplay)) {
 
 				_applyToAll(plugin);
 
 			} else {
 				
+				// just add the filter to the related object
 				object.addFilter(plugin.getDefinition() as Filter);
 				
 			}
@@ -209,8 +216,10 @@ package ui.window {
 		
 		/**
 		 * 	@private
+		 * 	Apply to all layers
 		 */
 		private function _applyToAll(plugin:Plugin):void {
+			
 			var layers:Array = UILayer.layers;
 			for each (var layer:UILayer in layers) {
 				layer.addFilter(plugin.getDefinition() as Filter);

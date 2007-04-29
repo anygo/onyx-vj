@@ -36,29 +36,22 @@ package ui.states {
 	import flash.utils.Dictionary;
 	
 	import onyx.constants.*;
-	import onyx.states.*;
-	import onyx.events.*;
-	import onyx.net.*;
+	import onyx.controls.*;
 	import onyx.core.*;
-	
-	import ui.controls.UIControl;
-	import ui.styles.*;
-	import ui.controls.*;
+	import onyx.events.*;
 	import onyx.midi.*;
-	import onyx.controls.ControlRange;
+	import onyx.net.*;
+	import onyx.states.*;
+	
+	import ui.controls.*;
+	import ui.styles.*;
 
 	public final class MidiLearnState extends ApplicationState {
 		
-		private var _control:UIControl;
-		private var _client:NthEventClient;
-		private var _midi:Midi;
-		
 		/**
-		 * 	@constructor
+		 * 	@private
 		 */
-		public function MidiLearnState():void {
-			_midi = Midi.getInstance();
-		}
+		private var _control:UIControl;
 		
 		/**
 		 * 	initialize
@@ -79,52 +72,69 @@ package ui.states {
 		 */
 		private function _onControlSelect(event:MouseEvent):void {
 			
+			trace(event.currentTarget);
+			
 			var objects:Array		= STAGE.getObjectsUnderPoint(new Point(STAGE.mouseX, STAGE.mouseY));
 			
-			// loop for UIControls
+			// look for UIControls
 			_control = null;
+			
 			for each (var object:DisplayObject in objects) {
 				_control = object.parent as UIControl;
 				if (_control) {
 					break;
 				}
 			}
+			
+			// stop propagation
 			event.stopPropagation();
 			
-			_unHighlight(_control); // Unhighlight everything except selected control
+			// Unhighlight everything except selected control
+			_unHighlight(_control);
+			
 			if ( _control == null ) {
+				
 				// Clicked outside any control - abort learning
 				StateManager.removeState(this);
 			} else {
+
 				// Wait for a MIDI noteon or controller event
-				_client = NthEventClient.getInstance();
-	    		_client.addEventListener(MidiMsg.NOTEON,_onNoteOn);
-	    		_client.addEventListener(MidiMsg.NOTEOFF,_onNoteOff);
-	    		_client.addEventListener(MidiMsg.CONTROLLER,_onController);
+	    		MIDI.addEventListener(MidiMsg.NOTEON,_onNoteOn);
+	    		MIDI.addEventListener(MidiMsg.NOTEOFF,_onNoteOff);
+	    		MIDI.addEventListener(MidiMsg.CONTROLLER,_onController);
 	  		}
 		}
 		
+		/**
+		 * 	@private
+		 */
 		private function _onNoteOn(e:MidiEvent):void {
 			if ( _control is ButtonControl ) {
-				_midi.registerNoteOn(_control.control,e.deviceIndex,e.midimsg as MidiNoteOn);
+				MIDI.registerNoteOn(_control.control,e.deviceIndex,e.midimsg as MidiNoteOn);
 			} else {
 				Console.output("You need to map a MIDI controller to that control!");
 			}
 			StateManager.removeState(this);
 		}
 		
+		/**
+		 * 	@private
+		 */
 		private function _onNoteOff(e:MidiEvent):void {
 			if ( _control is ButtonControl ) {
-				_midi.registerNoteOff(_control.control,e.deviceIndex,e.midimsg as MidiNoteOff);
+				MIDI.registerNoteOff(_control.control,e.deviceIndex,e.midimsg as MidiNoteOff);
 			} else {
 				Console.output("You need to map a MIDI controller to that control!");
 			}
 			StateManager.removeState(this);
 		}
 		
+		/**
+		 * 	@private
+		 */
 		private function _onController(e:MidiEvent):void {
 			if ( _control is SliderV || _control is DropDown || _control is ButtonControl ) {
-				_midi.registerController(_control.control,e);
+				MIDI.registerController(_control.control,e);
 			} else {
 				Console.output("That control can't be mapped!");
 			}
@@ -137,18 +147,20 @@ package ui.states {
 		override public function terminate():void {
 			
 			STAGE.removeEventListener(MouseEvent.MOUSE_DOWN, _onControlSelect, true);
-	   		if ( _client ) {
-				_client.removeEventListener(MidiMsg.NOTEON,_onNoteOn);
-				_client.removeEventListener(MidiMsg.NOTEOFF,_onNoteOff);
-	   			_client.removeEventListener(MidiMsg.CONTROLLER,_onController);
-	   		}
+			
+			MIDI.removeEventListener(MidiMsg.NOTEON,_onNoteOn);
+			MIDI.removeEventListener(MidiMsg.NOTEOFF,_onNoteOff);
+   			MIDI.removeEventListener(MidiMsg.CONTROLLER,_onController);
+
 	   		_unHighlight();
 		}
 
-    	// Turn off the highlight on all the controls except ex
-		private function _unHighlight(ex:Object = null):void {
+    	/**
+    	 * 	@private
+    	 */
+		private function _unHighlight(exclude:Object = null):void {
 			for (var i:Object in UIControl.controls) {
-				if ( i != ex ) {
+				if ( i != exclude ) {
 					var control:UIControl = i as UIControl;
 					control.transform.colorTransform = UIControl.controls[control] || new ColorTransform();
 					UIControl.controls[control] = null;

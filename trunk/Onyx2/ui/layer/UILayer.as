@@ -141,16 +141,16 @@ package ui.layer {
 		private var _monitor:Boolean						= false;
 
 		/** @private **/
-		private var _btnUp:ButtonClear						= new ButtonClear(10, 10);
-
-		/** @private **/
-		private var _btnDown:ButtonClear					= new ButtonClear(10, 10);
-
-		/** @private **/
 		private var _btnCopy:ButtonClear					= new ButtonClear(10, 10);
 
 		/** @private **/
 		private var _btnDelete:ButtonClear					= new ButtonClear(10, 10);
+		
+		/** @private **/
+		private var _btnMute:ButtonClear					= new ButtonClear(10, 10);
+		
+		/** @private **/
+		private var _eyeIcon:Bitmap							= new AssetEyeIcon();
 		
 		/** @private **/
 		private var _loopStart:LoopStart;
@@ -195,8 +195,7 @@ package ui.layer {
 										props.saturation,
 										props.color,
 										props.threshold,
-										props.framerate,
-										props.visible
+										props.framerate
 				),
 				new LayerPage('FILTER'),
 				new LayerPage('CUSTOM')
@@ -230,7 +229,7 @@ package ui.layer {
 		 * 	Overrides the layer colortransform
 		 */
 		override public function get transform():Transform {
-			var mtransform:MultiTransform = new MultiTransform(this, _assetLayer, controlTabs);
+			var mtransform:MultiTransform = new MultiTransform(this, _assetLayer, controlTabs, _eyeIcon);
 			return mtransform;
 		}
 		
@@ -255,15 +254,7 @@ package ui.layer {
 				// this listens for selecting the layer
 				addEventListener(MouseEvent.MOUSE_DOWN, _onMouseDown);
 	
-				// set enabled
-				_btnUp.doubleClickEnabled = true;
-				_btnDown.doubleClickEnabled = true;	
-	
 				// buttons
-				_btnUp.addEventListener(MouseEvent.CLICK, _onButtonPress);
-				_btnDown.addEventListener(MouseEvent.CLICK, _onButtonPress);
-				_btnUp.addEventListener(MouseEvent.DOUBLE_CLICK, _onButtonPress);
-				_btnDown.addEventListener(MouseEvent.DOUBLE_CLICK, _onButtonPress);
 				_btnCopy.addEventListener(MouseEvent.MOUSE_DOWN, _onButtonPress);
 				_btnDelete.addEventListener(MouseEvent.MOUSE_DOWN, _onButtonPress);
 	
@@ -285,15 +276,7 @@ package ui.layer {
 				// this listens for selecting the layer
 				removeEventListener(MouseEvent.MOUSE_DOWN,				_onMouseDown);
 	
-				// set enabled
-				_btnUp.doubleClickEnabled	= false;
-				_btnDown.doubleClickEnabled = false;	
-	
 				// buttons
-				_btnUp.removeEventListener(MouseEvent.CLICK,			_onButtonPress);
-				_btnDown.removeEventListener(MouseEvent.CLICK,			_onButtonPress);
-				_btnUp.removeEventListener(MouseEvent.DOUBLE_CLICK,		_onButtonPress);
-				_btnDown.removeEventListener(MouseEvent.DOUBLE_CLICK,	_onButtonPress);
 				_btnCopy.removeEventListener(MouseEvent.MOUSE_DOWN,		_onButtonPress);
 				_btnDelete.removeEventListener(MouseEvent.MOUSE_DOWN,	_onButtonPress);
 	
@@ -320,12 +303,6 @@ package ui.layer {
 		private function _onButtonPress(event:MouseEvent):void {
 			
 			switch (event.currentTarget) {
-				case _btnUp:
-					_layer.moveLayer(index-1);
-					break;
-				case _btnDown:
-					_layer.moveLayer(index+1);
-					break;
 				case _btnCopy:
 					_layer.copyLayer();
 					break;
@@ -380,10 +357,10 @@ package ui.layer {
 				new DropDown(dropOptions, props.blendMode),							4,			153,
 				filterPane,															111,		186,
 
-				_btnUp,																153,		154,
-				_btnDown,															162,		154,
-				_btnCopy,															171,		154,
-				_btnDelete,															180,		154,
+				_eyeIcon,															158,		156,
+				_btnMute,															157,		154,
+				_btnCopy,															169,		154,
+				_btnDelete,															181,		154,
 				
 				tabContainer,														0,			169
 				

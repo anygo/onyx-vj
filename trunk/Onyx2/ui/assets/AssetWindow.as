@@ -28,35 +28,35 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package ui.text {
+package ui.assets {
 	
-	import flash.text.*;
-	
-	import ui.styles.TEXT_DEFAULT;
-	
-	/**
-	 * 	Default TextField
-	 */
-	public class TextField extends flash.text.TextField {
+	import flash.display.Shape;
+	import flash.geom.*;
+
+	public final class AssetWindow extends Shape {
 		
+		/**
+		 * 	@private
+		 */
+		private static const RECT:Rectangle = new Rectangle(20,20,76,76);
+
 		/**
 		 * 	@constructor
 		 */
-		public function TextField(width:int, height:int, format:TextFormat = null):void {
+		public function AssetWindow():void {
 			
-			super.selectable		= false;
-			super.defaultTextFormat	= format || TEXT_DEFAULT;
-			super.width				= width;
-			super.height			= height;
-			super.antiAliasType		= AntiAliasType.NORMAL;
-
-		}
-		
-		/**
-		 * 	Gets alignment
-		 */
-		public function get align():String {
-			return defaultTextFormat.align;
+			graphics.lineStyle(0, 0x384754, 1, true);
+	
+			graphics.beginFill(0x252e34);
+			graphics.drawRoundRectComplex(0,10,100,90,0,0,2,2);
+			graphics.endFill();
+			
+			graphics.beginFill(0x000000);
+			graphics.drawRoundRectComplex(0,0,100,10,2,2,0,0);
+			graphics.endFill();
+	
+			scale9Grid = RECT;
+	
 		}
 	}
 }

@@ -40,6 +40,9 @@ package ui.controls {
 	import ui.styles.*;
 	import ui.text.TextField;
 	
+	/**
+	 * 	Relates to ControlExecute
+	 */
 	public final class ButtonControl extends UIControl {
 		
 		/**
@@ -53,7 +56,7 @@ package ui.controls {
 		public function ButtonControl(options:UIOptions, control:Control):void {
 			
 			super(options, control, true, control.display);
-			
+
 			_label = new TextField(options.width + 3, options.height, TEXT_DEFAULT_CENTER);
 			addChild(_label);
 			

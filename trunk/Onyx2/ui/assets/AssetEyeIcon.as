@@ -28,35 +28,11 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package ui.text {
-	
-	import flash.text.*;
-	
-	import ui.styles.TEXT_DEFAULT;
-	
-	/**
-	 * 	Default TextField
-	 */
-	public class TextField extends flash.text.TextField {
-		
-		/**
-		 * 	@constructor
-		 */
-		public function TextField(width:int, height:int, format:TextFormat = null):void {
-			
-			super.selectable		= false;
-			super.defaultTextFormat	= format || TEXT_DEFAULT;
-			super.width				= width;
-			super.height			= height;
-			super.antiAliasType		= AntiAliasType.NORMAL;
+package ui.assets
+{
+	import flash.display.Bitmap;
 
-		}
-		
-		/**
-		 * 	Gets alignment
-		 */
-		public function get align():String {
-			return defaultTextFormat.align;
-		}
+	[Embed(source="/ui/assets/img/eye_icon.png")]
+	public final class AssetEyeIcon extends Bitmap {
 	}
 }

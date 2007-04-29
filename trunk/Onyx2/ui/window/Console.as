@@ -30,16 +30,13 @@
  */
 package ui.window {
 	
-	import flash.events.KeyboardEvent;
-	import flash.events.MouseEvent;
+	import flash.events.*;
 	
-	import onyx.core.Command;
-	import onyx.core.Console;
-	import onyx.core.onyx_ns;
-	import onyx.events.ConsoleEvent;
+	import onyx.core.*;
+	import onyx.events.*;
 	
-	import ui.text.TextField;
-	import ui.text.TextInput;
+	import ui.policy.*;
+	import ui.text.*;
 	
 	use namespace onyx_ns;
 	
@@ -84,6 +81,7 @@ package ui.window {
 		
 		/**
 		 * 	@private
+		 * 	Handler when onyx console outputs a message
 		 */
 		private function _onConsole(event:ConsoleEvent):void {
 			
@@ -93,6 +91,7 @@ package ui.window {
 		
 		/**
 		 * 	@private
+		 * 	Draw
 		 */
 		private function _draw():void {
 
@@ -118,6 +117,7 @@ package ui.window {
 		
 		/**
 		 * 	@private
+		 * 	Handler for when a key is pressed
 		 */
 		private function _onKeyDown(event:KeyboardEvent):void {
 			switch (event.keyCode) {

@@ -99,13 +99,16 @@ package ui.controls {
 			_picker.x	= -_lastX + mouseX;
 			_picker.y	= -_lastY + mouseY;
 			
-			addChild(_picker);
+			// add to the root outside container so it doesn't clip
+			CONTAINER.display(this, _picker);
 			
 			STAGE.addEventListener(MouseEvent.MOUSE_MOVE, _onMouseMove);
 			STAGE.addEventListener(MouseEvent.MOUSE_UP, _onMouseUp);
 			
 			_onMouseMove(event);
 
+			// prevent event propagation
+			event.stopPropagation();
 		}
 
 		/**
@@ -134,7 +137,7 @@ package ui.controls {
 		 */
 		public function _onMouseUp(event:MouseEvent):void {
 
-			removeChild(_picker);
+			CONTAINER.remove();
 			
 			STAGE.removeEventListener(MouseEvent.MOUSE_MOVE, _onMouseMove);
 			STAGE.removeEventListener(MouseEvent.MOUSE_UP, _onMouseUp);

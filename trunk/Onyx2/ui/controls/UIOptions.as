@@ -38,6 +38,9 @@ package ui.controls {
 		public var height:int;
 		public var label:Boolean;
 		
+		/**
+		 * 	@constructor
+		 */
 		public function UIOptions(background:Boolean = true, label:Boolean = true, labelAlign:String = 'center', width:int = 44, height:int = 10):void {
 			this.label = label;
 			this.labelAlign = labelAlign;

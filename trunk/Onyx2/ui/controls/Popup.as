@@ -28,35 +28,55 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package ui.text {
+package ui.controls {
 	
-	import flash.text.*;
+	import flash.display.*;
+	import flash.text.TextFormatAlign;
 	
-	import ui.styles.TEXT_DEFAULT;
+	import onyx.constants.*;
 	
+	import ui.assets.AssetWindow;
+	import ui.core.UIObject;
+	import ui.styles.*;
+	import ui.text.TextField;
+
 	/**
-	 * 	Default TextField
+	 * 	Popup class
 	 */
-	public class TextField extends flash.text.TextField {
+	public final class Popup extends UIObject {
+		
+		/**
+		 * 	@private
+		 */
+		private var _text:TextField;
 		
 		/**
 		 * 	@constructor
 		 */
-		public function TextField(width:int, height:int, format:TextFormat = null):void {
-			
-			super.selectable		= false;
-			super.defaultTextFormat	= format || TEXT_DEFAULT;
-			super.width				= width;
-			super.height			= height;
-			super.antiAliasType		= AntiAliasType.NORMAL;
+		public function Popup(width:int, height:int, text:String):void {
 
-		}
+			// add the background
+			var sprite:DisplayObject = addChild(new AssetWindow());
+			sprite.width	= width;
+			sprite.height	= height;
+
+			// add the textfield
+			_text			= new TextField(width, height, TEXT_DEFAULT_CENTER);
+			_text.multiline	= true;
+			_text.wordWrap	= true;
+			_text.text		= text;
+			_text.y			= 14;
+			
+			// add it
+			addChild(_text);
+		}	
 		
-		/**
-		 * 	Gets alignment
-		 */
-		public function get align():String {
-			return defaultTextFormat.align;
+		public function addToStage(add:Boolean = true):void {
+			// add or remove from stage?
+			(add) ? STAGE.addChild(this) : STAGE.removeChild(this);
+			
+			x = STAGE.stageWidth / 2 - (this.width / 2);
+			y = STAGE.stageHeight / 2 - (this.height / 2);
 		}
 	}
 }

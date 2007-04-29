@@ -37,18 +37,20 @@ package ui.styles {
 	import ui.controls.*;
 
 	public const CONTROL_MAP:Object = {};
-
-	CONTROL_MAP['onyx.controls::ControlNumber']		= SliderV;
-	CONTROL_MAP['onyx.controls::ControlInt']		= SliderV;
-	CONTROL_MAP['onyx.controls::ControlProxy']		= SliderV2;
-	CONTROL_MAP['onyx.controls::ControlRange']		= DropDown;
-	CONTROL_MAP['onyx.controls::ControlLayer']		= DropDown;
-	CONTROL_MAP['onyx.controls::ControlDisplay']	= DropDown;
-	CONTROL_MAP['onyx.controls::ControlColor']		= ColorPicker;
-	CONTROL_MAP['onyx.controls::ControlToggle']		= CheckBox;
-	CONTROL_MAP['onyx.controls::ControlString']		= TextControl;
-	CONTROL_MAP['onyx.controls::ControlBoolean']	= DropDown;
-	CONTROL_MAP['onyx.controls::ControlPlugin']		= DropDown;
-	CONTROL_MAP['onyx.controls::ControlExecute']	= ButtonControl;
+	
+	CONTROL_MAP[ControlBoolean]		= DropDown;
+	CONTROL_MAP[ControlColor]		= ColorPicker;
+	CONTROL_MAP[ControlDirectory]	= DropDown;
+	CONTROL_MAP[ControlDisplay]		= DropDown;
+	CONTROL_MAP[ControlExecute]		= ButtonControl;
+	CONTROL_MAP[ControlFrameRate]	= SliderVFrameRate;
+	CONTROL_MAP[ControlInt]			= SliderV;
+	CONTROL_MAP[ControlLayer]		= DropDown;
+	CONTROL_MAP[ControlNumber]		= SliderV;
+	CONTROL_MAP[ControlPlugin]		= DropDown;
+	CONTROL_MAP[ControlProxy]		= SliderV2;
+	CONTROL_MAP[ControlRange]		= DropDown;
+	CONTROL_MAP[ControlString]		= TextControl;
+	CONTROL_MAP[ControlUInt]		= SliderV;
 
 }

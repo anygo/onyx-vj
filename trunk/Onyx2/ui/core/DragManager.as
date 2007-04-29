@@ -111,7 +111,41 @@ package ui.core {
 			// we want the event to happen everywhere
 			STAGE.addEventListener(MouseEvent.MOUSE_MOVE, _onObjectFirstMove);
 			STAGE.addEventListener(MouseEvent.MOUSE_UP, _onObjectUp);
+
+		}
+		
+		/**
+		 * 	Enables a UIObject to be dragged
+		 */
+		public static function setDraggable(uiobject:UIObject, enable:Boolean = true):void {
+			if (enable) {
+				uiobject.addEventListener(MouseEvent.MOUSE_DOWN, _dragMouseDown, false, 0, true);
+			} else {
+				uiobject.removeEventListener(MouseEvent.MOUSE_DOWN, _dragMouseDown);
+			}
+		}
+		
+		/**
+		 * 	@private
+		 */
+		private static function _dragMouseDown(event:MouseEvent):void {
+			var target:UIObject = event.currentTarget as UIObject;
 			
+			/* check to see if thet mouse is hitting the title bar */
+			if (target.mouseY < 13) {
+				target.startDrag();
+				target.addEventListener(MouseEvent.MOUSE_UP, _dragMouseUp, false, 0, true);
+			}
+		}
+		
+		/**
+		 * 	@private
+		 */
+		private static function _dragMouseUp(event:MouseEvent):void {
+			var target:UIObject = event.currentTarget as UIObject;
+			
+			target.stopDrag();
+			target.removeEventListener(MouseEvent.MOUSE_UP, _dragMouseUp);
 		}
 		
 		/**

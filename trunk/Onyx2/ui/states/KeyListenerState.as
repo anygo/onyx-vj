@@ -33,58 +33,90 @@ package ui.states {
 	import flash.display.Stage;
 	import flash.events.KeyboardEvent;
 	import flash.ui.Keyboard;
+	import flash.utils.*;
 	
 	import onyx.constants.ROOT;
+	import onyx.macro.Macro;
 	import onyx.states.ApplicationState;
 	
+	import ui.core.KeyDefinition;
 	import ui.core.UIManager;
 	import ui.layer.UILayer;
-	import onyx.macro.Macro;
 
 	/**
-	 * 
+	 * 	Listens for keyboard events
 	 */
 	public final class KeyListenerState extends ApplicationState {
 		
-		public static var SELECT_FILTER_UP:int		= 38;
-		public static var SELECT_FILTER_DOWN:int	= 40;
+		/**
+		 * 	Stores all the key definitions
+		 */
+		public const definitions:Array		= [
+			new KeyDefinition('SELECT_FILTER_UP', 'Select the previous filter in the current layer'),
+			new KeyDefinition('SELECT_FILTER_DOWN', 'Select the next filter in the current layer'),
+			new KeyDefinition('SELECT_LAYER_PREV', 'Select the previous layer'),
+			new KeyDefinition('SELECT_LAYER_NEXT', 'Select the next layer'),
+			new KeyDefinition('SELECT_PAGE_0', 'Select the basic controls page of all layers'),
+			new KeyDefinition('SELECT_PAGE_1', 'Select the filters control page of all layers'),
+			new KeyDefinition('SELECT_PAGE_2', 'Select the custom filters control page of all layers'),
+			new KeyDefinition('SELECT_LAYER_0', 'Select layer 0'),
+			new KeyDefinition('SELECT_LAYER_1', 'Select layer 1'),
+			new KeyDefinition('SELECT_LAYER_2', 'Select layer 2'),
+			new KeyDefinition('SELECT_LAYER_3', 'Select layer 3'),
+			new KeyDefinition('SELECT_LAYER_4', 'Select layer 4'),
+			new KeyDefinition('ACTION_1', 'Executes Macro 1'),
+			new KeyDefinition('ACTION_2', 'Executes Macro 2'),
+			new KeyDefinition('ACTION_3', 'Executes Macro 3'),
+			new KeyDefinition('ACTION_4', 'Executes Macro 4'),
+			new KeyDefinition('ACTION_5', 'Executes Macro 5'),
+			new KeyDefinition('ACTION_6', 'Executes Macro 6'),
+			new KeyDefinition('ACTION_7', 'Executes Macro 7'),
+			new KeyDefinition('ACTION_8', 'Executes Macro 8'),
+			new KeyDefinition('ACTION_9', 'Executes Macro 9'),
+			new KeyDefinition('ACTION_10', 'Executes Macro 10'),
+			new KeyDefinition('ACTION_11', 'Executes Macro 11'),
+			new KeyDefinition('ACTION_12', 'Executes Macro 12')
+		]
 		
-		public static var SELECT_LAYER_PREV:int		= 37;
-		public static var SELECT_LAYER_NEXT:int		= 39;
-		public static var SELECT_PAGE_0:int			= 81;
-		public static var SELECT_PAGE_1:int			= 87;
-		public static var SELECT_PAGE_2:int			= 69;
-		public static var SELECT_LAYER_0:int		= 49;
-		public static var SELECT_LAYER_1:int		= 50;
-		public static var SELECT_LAYER_2:int		= 51;
-		public static var SELECT_LAYER_3:int		= 52;
-		public static var SELECT_LAYER_4:int		= 53;
+		public var SELECT_FILTER_UP:int		= 38;
+		public var SELECT_FILTER_DOWN:int	= 40;
 		
-		public static var ACTION_1:int				= 112;
-		public static var ACTION_2:int				= 113;
-		public static var ACTION_3:int				= 114;
-		public static var ACTION_4:int				= 115;
-		public static var ACTION_5:int				= 116;
-		public static var ACTION_6:int				= 117;
-		public static var ACTION_7:int				= 118;
-		public static var ACTION_8:int				= 119;
-		public static var ACTION_9:int				= 120;
-		public static var ACTION_10:int				= 121;
-		public static var ACTION_11:int				= 122;
-		public static var ACTION_12:int				= 123;
+		public var SELECT_LAYER_PREV:int		= 37;
+		public var SELECT_LAYER_NEXT:int		= 39;
+		public var SELECT_PAGE_0:int			= 81;
+		public var SELECT_PAGE_1:int			= 87;
+		public var SELECT_PAGE_2:int			= 69;
+		public var SELECT_LAYER_0:int			= 49;
+		public var SELECT_LAYER_1:int			= 50;
+		public var SELECT_LAYER_2:int			= 51;
+		public var SELECT_LAYER_3:int			= 52;
+		public var SELECT_LAYER_4:int			= 53;
 		
-		public static var ACTION_MACRO_1:Macro;
-		public static var ACTION_MACRO_2:Macro;
-		public static var ACTION_MACRO_3:Macro;
-		public static var ACTION_MACRO_4:Macro;
-		public static var ACTION_MACRO_5:Macro;
-		public static var ACTION_MACRO_6:Macro;
-		public static var ACTION_MACRO_7:Macro;
-		public static var ACTION_MACRO_8:Macro;
-		public static var ACTION_MACRO_9:Macro;
-		public static var ACTION_MACRO_10:Macro;
-		public static var ACTION_MACRO_11:Macro;
-		public static var ACTION_MACRO_12:Macro;
+		public var ACTION_1:int					= 112;
+		public var ACTION_2:int					= 113;
+		public var ACTION_3:int					= 114;
+		public var ACTION_4:int					= 115;
+		public var ACTION_5:int					= 116;
+		public var ACTION_6:int					= 117;
+		public var ACTION_7:int					= 118;
+		public var ACTION_8:int					= 119;
+		public var ACTION_9:int					= 120;
+		public var ACTION_10:int				= 121;
+		public var ACTION_11:int				= 122;
+		public var ACTION_12:int				= 123;
+		
+		public var ACTION_MACRO_1:Macro;
+		public var ACTION_MACRO_2:Macro;
+		public var ACTION_MACRO_3:Macro;
+		public var ACTION_MACRO_4:Macro;
+		public var ACTION_MACRO_5:Macro;
+		public var ACTION_MACRO_6:Macro;
+		public var ACTION_MACRO_7:Macro;
+		public var ACTION_MACRO_8:Macro;
+		public var ACTION_MACRO_9:Macro;
+		public var ACTION_MACRO_10:Macro;
+		public var ACTION_MACRO_11:Macro;
+		public var ACTION_MACRO_12:Macro;
 		
 		/**
 		 * 	Initialize
@@ -102,6 +134,7 @@ package ui.states {
 
 			// remove listener
 			ROOT.removeEventListener(KeyboardEvent.KEY_DOWN, _onKeyPress);
+			
 		}
 		
 		/**
@@ -113,7 +146,7 @@ package ui.states {
 		/**
 		 * 	@private
 		 */
-		private static function _onKeyPress(event:KeyboardEvent):void {
+		private function _onKeyPress(event:KeyboardEvent):void {
 			
 			var layer:UILayer;
 			

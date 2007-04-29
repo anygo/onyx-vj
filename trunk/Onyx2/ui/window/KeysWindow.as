@@ -30,23 +30,41 @@
  */
 package ui.window {
 	
-	import onyx.controls.ControlInt;
-	import onyx.controls.ControlRange;
-	import onyx.controls.Controls;
-	import onyx.controls.IControlObject;
-	import onyx.core.Onyx;
-	import onyx.events.TransitionEvent;
-	import onyx.layer.Layer;
-	import onyx.plugin.Plugin;
-	import onyx.transition.Transition;
+	import flash.events.*;
+	import flash.ui.*;
 	
-	import ui.controls.DropDown;
-	import ui.controls.SliderV;
+	import onyx.states.*;
+	import onyx.utils.string.*;
+	
 	import ui.controls.*;
+	import ui.core.DragManager;
+	import ui.core.KeyDefinition;
 	import ui.core.UIManager;
+	import ui.policy.*;
+	import ui.states.KeyLearnState;
+	import ui.states.KeyListenerState;
 	import ui.styles.UI_OPTIONS;
+	import ui.text.TextField;
 	
+	/**
+	 * 	Key Mapping Window
+	 */
 	public final class KeysWindow extends Window {
+
+		/**
+		 * 	@private
+		 */
+		private var _text:TextField	= new TextField(195, 187);
+		
+		/**
+		 * 	@private
+		 */
+		private var _state:KeyListenerState;
+		
+		/**
+		 * 	@private
+		 */
+		private var _lookup:Object	= {};
 
 		/**
 		 * 	@Constructor
@@ -54,9 +72,112 @@ package ui.window {
 		public function KeysWindow():void {
 
 			// position and create			
-			super('KEY MAPPING', 190, 34);
+			super('KEY MAPPING', 200, 200);
 			
+			DragManager.setDraggable(this);
+			
+			// add the textfield
+			_text.x = 4;
+			_text.y = 14;
+			addChild(_text);
+
+			// add a text scroll policy
+			Policy.addPolicy(_text, new TextScrollPolicy());
+			
+			// listen for clicks
+			_text.addEventListener(TextEvent.LINK, _onClick);
+
+			// check for application state			
+			var states:Array = StateManager.getStates(KeyListenerState);
+			if (states.length === 1) {
+				_state = states[0];
+				
+				_initText();
+			}
 		}
 		
+		/**
+		 * 	@private
+		 */
+		private function _onClick(event:TextEvent):void {
+			
+			var definition:KeyDefinition = _lookup[event.text];
+			var state:KeyLearnState = new KeyLearnState(definition, _state);
+			state.addEventListener(Event.COMPLETE, _onLearnComplete);
+
+			// load the key learn state
+			StateManager.loadState(state);
+		}
+		
+		/**
+		 * 	@private
+		 * 	Handler for when the application state is complete
+		 */
+		private function _onLearnComplete(event:Event):void {
+			var state:KeyLearnState = event.currentTarget as KeyLearnState;
+			state.removeEventListener(Event.COMPLETE, _onLearnComplete);
+			
+			_initText();
+		}
+		
+		/**
+		 * 	@private
+		 */
+		private function _initText():void {
+			
+			var htmlText:String = '';
+			
+			for each (var def:KeyDefinition in _state.definitions) {
+				var prop:String = def.prop;
+				
+				_lookup[def.prop] = def;
+				
+				htmlText += '<a href="event:' + prop + '">' + prop;
+				htmlText += repeatString('\t', Math.max(10 - Math.floor(prop.length / 4), 0));
+				htmlText += getKeyName(_state[prop]) + '</a>\n';
+			}
+			
+			_text.htmlText = htmlText;
+		}
+		
+		/**
+		 * 	@private
+		 * 	Returns the string representation of a keyboard item
+		 */
+		private function getKeyName(value:int):String {
+			switch (value) {
+				case Keyboard.UP:
+					return 'UP';
+				case Keyboard.DOWN:
+					return 'DOWN';
+				case Keyboard.LEFT:
+					return 'LEFT';
+				case Keyboard.RIGHT:
+					return 'RIGHT';
+				case Keyboard.F1:
+				case Keyboard.F2:
+				case Keyboard.F3:
+				case Keyboard.F4:
+				case Keyboard.F5:
+				case Keyboard.F6:
+				case Keyboard.F7:
+				case Keyboard.F8:
+				case Keyboard.F9:
+				case Keyboard.F10:
+				case Keyboard.F11:
+				case Keyboard.F12:
+					return 'F' + (value - 111);
+				case Keyboard.BACKSPACE:
+					return 'BACKSPACE';
+				case Keyboard.CAPS_LOCK:
+					return 'CAPSLOCK';
+				case Keyboard.DELETE:
+					return 'DEL';
+				case Keyboard.HOME:
+					return 'HOME';
+				default:
+					return String.fromCharCode(value);
+			}
+		}
 	}
 }

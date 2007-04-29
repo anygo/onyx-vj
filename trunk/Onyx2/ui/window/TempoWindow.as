@@ -41,7 +41,7 @@ package ui.window {
 	import onyx.core.*;
 	import onyx.display.*;
 	import onyx.events.*;
-	import onyx.file.FileBrowser;
+	import onyx.file.*;
 	import onyx.jobs.*;
 	import onyx.net.*;
 	import onyx.states.StateManager;
@@ -62,16 +62,6 @@ package ui.window {
 		 * 	@private
 		 */
 		private var _controlXML:TextButton;
-
-		/**
-		 * 	@private
-		 */
-		private var _midiButton:TextButton;
-
-		/**
-		 *  @private
-		 */
-		private var _midiListen:DropDown;
 		
 		/**
 		 * 	@private
@@ -126,19 +116,13 @@ package ui.window {
 			_controlTempo			= new SliderV(options, TEMPO.controls.getControl('tempo'));
 			_controlActive			= new DropDown(options, TEMPO.controls.getControl('snapTempo'));
 			
-			// midi constrols
-			_midiButton				= new TextButton(options, 'midi learn');
-			_midiListen				= new DropDown(options, MIDI.controls.getControl('listen'));
-			
 			// add controls
 			addChildren(	
 				_controlActive,	2,		20,
 				_controlTempo,	60,		20,
 				_tapTempo,		118,	20,
 				_controlXML,	2,		40,
-				_saveButton,	2,		60,
-				_midiButton,	2,		80,
-				_midiListen,	60,		80
+				_saveButton,	2,		60
 			);
 
 			// start the timer
@@ -150,7 +134,6 @@ package ui.window {
 			// xml
 			_controlXML.addEventListener(MouseEvent.MOUSE_DOWN, _onMouseDown);
 			_saveButton.addEventListener(MouseEvent.MOUSE_DOWN, _onSaveDown);
-			_midiButton.addEventListener(MouseEvent.MOUSE_DOWN, _onMidiDown);
 			
 		}
 
@@ -266,8 +249,8 @@ package ui.window {
 			}
 		}
 		
-		private function _onFileSaved():void {
-			trace('saved');
+		private function _onFileSaved(query:FileQuery):void {
+			trace('saved: ' + query.path);
 		}
 	}
 }

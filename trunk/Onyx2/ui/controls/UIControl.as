@@ -47,6 +47,11 @@ package ui.controls {
 	 * 	See onyx.controls.Control
 	 */
 	public class UIControl extends UIObject implements IDisposable {
+
+		/**
+		 * 	@private
+		 */
+		protected static const CONTAINER:UnClippedContainer	= new UnClippedContainer();
 		
 		/**
 		 * 	Stores all available UIControls

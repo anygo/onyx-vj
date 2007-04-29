@@ -31,9 +31,11 @@
 package ui.core {
 	
 	import flash.display.DisplayObject;
-	import flash.geom.ColorTransform;
-	import flash.geom.Transform;
+	import flash.geom.*;
 
+	/**
+	 * 	Transforms multiple objects
+	 */
 	public final class MultiTransform extends Transform {
 		
 		/**

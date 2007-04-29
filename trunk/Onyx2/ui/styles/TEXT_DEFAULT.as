@@ -40,5 +40,5 @@ package ui.styles {
 	
 	TEXT_DEFAULT.letterSpacing	= .05;
 	TEXT_DEFAULT.leading		= 3;
-	
+
 }

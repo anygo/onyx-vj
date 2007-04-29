@@ -28,35 +28,17 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package ui.text {
+package ui.core {
 	
-	import flash.text.*;
-	
-	import ui.styles.TEXT_DEFAULT;
-	
-	/**
-	 * 	Default TextField
-	 */
-	public class TextField extends flash.text.TextField {
-		
-		/**
-		 * 	@constructor
-		 */
-		public function TextField(width:int, height:int, format:TextFormat = null):void {
-			
-			super.selectable		= false;
-			super.defaultTextFormat	= format || TEXT_DEFAULT;
-			super.width				= width;
-			super.height			= height;
-			super.antiAliasType		= AntiAliasType.NORMAL;
+	public final class KeyDefinition {
 
-		}
+		public var prop:String;
+		public var desc:String;
 		
-		/**
-		 * 	Gets alignment
-		 */
-		public function get align():String {
-			return defaultTextFormat.align;
+		public function KeyDefinition(prop:String, desc:String):void {
+			this.prop = prop;
+			this.desc = desc;
 		}
+
 	}
 }

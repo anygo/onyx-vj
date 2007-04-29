@@ -28,71 +28,82 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package ui.window {
+package ui.policy {
 	
+	import flash.display.DisplayObjectContainer;
 	import flash.events.*;
-	import flash.geom.*;
-	import flash.text.TextFieldAutoSize;
 	
-	import onyx.plugin.Plugin;
-	
-	import ui.assets.AssetWindow;
-	import ui.core.UIObject;
-	import ui.text.*;
+	import ui.controls.ScrollBar;
+	import ui.text.TextField;
 	
 	/**
-	 * 	Window
+	 * 	Scroll policy
 	 */
-	internal class Window extends UIObject {
+	public final class TextScrollPolicy extends Policy {
 		
 		/**
 		 * 	@private
 		 */
-		private var _title:TextField			= new TextField(80, 16);
+		private var _scrollBar:ScrollBar;
 		
 		/**
 		 * 	@private
 		 */
-		private var _background:AssetWindow		= new AssetWindow();
+		private var _target:TextField;
 		
 		/**
-		 * 	@constructor
+		 * 	Initialize
 		 */
-		public function Window(text:String, width:int, height:int):void {
+		override public function initialize(target:IEventDispatcher):void {
+			_target = target as TextField;
+			target.addEventListener(Event.SCROLL, _onScroll, false, 0, true);
+		}
+		
+		/**
+		 * 	@private
+		 * 	Handler for when a scroll event is fired from the textfield
+		 */
+		private function _onScroll(event:Event):void {
+			var target:TextField				= event.currentTarget as TextField;
+			var parent:DisplayObjectContainer	= target.parent;
 			
-			if (text) {
+			// check for scrollbar first
+			if (!_scrollBar) {
+
+				_scrollBar = new ScrollBar();
+				_scrollBar.x = target.x + target.width - _scrollBar.width;
+				_scrollBar.addEventListener(MouseEvent.MOUSE_DOWN, _onScrollPress);
 				
-				_title.autoSize			= TextFieldAutoSize.LEFT;
-				_title.x				= 2;
-				_title.y				= 1;
-				_title.text				= text;
-				
-				addChildAt(_background, 0);
-				addChild(_title);
-				
-				_background.width	= width;
-				_background.height	= height;
-				
+				// add the scrollbar
+				parent.addChild(_scrollBar);
+
+				// listen for the textfield removal, if so, remove the scrollbar too
+				target.addEventListener(Event.REMOVED_FROM_STAGE, _onRemoved, false, 0, true);
 			}
 			
-			this.x = x;
-			this.y = y;
-			
-			super(true);	
+//			_scrollBar.scaleY	= target.target.maxScrollV;
+			_scrollBar.y = target.y;
 		}
 		
 		/**
-		 * 	Sets title
+		 * 	@private
 		 */
-		public function set title(t:String):void {
-			_title.text = t;
+		private function _onScrollPress(event:MouseEvent):void {
+			trace(event);
 		}
-
+		
 		/**
-		 * 	Returns title
+		 * 
 		 */
-		public function get title():String {
-			return _title.text;
+		private function _onRemoved(event:Event):void {
+			_scrollBar.parent.removeChild(_scrollBar);
+		}
+		
+		/**
+		 * 	Removes the listener
+		 */
+		override public function terminate(target:IEventDispatcher):void {
+			target.removeEventListener(Event.SCROLL, _onScroll);
 		}
 		
 	}

@@ -39,7 +39,7 @@ package ui.controls {
 	 * 	Clear Button
 	 */
 	public final class ButtonClear extends SimpleButton {
-
+		
 		/**
 		 * 	@constructor
 		 */

@@ -39,6 +39,7 @@ package ui.window {
 	import onyx.constants.*;
 	import onyx.utils.GraphPlotter;
 	
+	import ui.core.DragManager;
 	import ui.text.TextField;
 	
 	/**
@@ -74,7 +75,7 @@ package ui.window {
 			addChild(_fps);
 			addChild(_memory);
 			
-			draggable = true;
+			DragManager.setDraggable(this);
 			
 			// start listening
 			addEventListener(Event.ENTER_FRAME, _onFrame);

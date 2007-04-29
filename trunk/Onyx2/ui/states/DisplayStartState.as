@@ -175,7 +175,8 @@ package ui.states {
 			// create all windows
 			WindowRegistration.createWindows();
 			
-			Midi.getInstance().registerLayers(display.layers);
+			// TBD -- midi should automatically listen to layer creations / deletions?
+			MIDI.registerLayers(display.layers);
 
 			// remove references
 			_states = null;

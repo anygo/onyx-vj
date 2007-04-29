@@ -110,6 +110,7 @@ package ui.controls {
 		override public function addChild(child:DisplayObject):DisplayObject {
 			var child:DisplayObject = _holder.addChild(child);
 			_calculateAdd();
+			
 			return child;
 		}
 		
@@ -328,25 +329,4 @@ package ui.controls {
 			super.dispose();
 		}		
 	}
-}
-
-import flash.display.Sprite;
-import flash.events.MouseEvent;
-
-/**
- * 	Scroll bars
- */
-final class ScrollBar extends Sprite {
-
-	/**
-	 * 	@constructor
-	 */	
-	public function ScrollBar():void {
-		graphics.beginFill(0x929ea7);
-		graphics.drawRect(0,0,6,100);
-		graphics.endFill();
-		
-		cacheAsBitmap = true;
-	}
-	
 }
