@@ -92,6 +92,19 @@ package onyx.core {
 				}
 			}
 		}
+		
+		/**
+		 * 	Traces an stack trace
+		 */
+		public static function outputStack():void {
+			
+			trace('output stack');
+			try {
+				throw(new Error('stack trace'));
+			} catch (e:Error) {
+				trace(e.getStackTrace());
+			}
+		}
 
 	}
 }

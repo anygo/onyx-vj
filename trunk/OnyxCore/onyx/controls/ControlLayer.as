@@ -54,13 +54,22 @@ package onyx.controls {
 			super(name, displayName, (display) ? display._valid : []);
 
 		}
-		
+
 		/**
 		 * 
 		 */
 		override public function set value(v:*):void {
 			_target[name] = v;
 			dispatchEvent(new ControlEvent(v));
+		}
+		
+		
+ 		
+		/**
+		 * 	Faster reflection method (rather than using getDefinition)
+		 */
+		override public function reflect():Class {
+			return ControlLayer;
 		}
 	}
 }

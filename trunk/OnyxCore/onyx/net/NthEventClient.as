@@ -29,6 +29,7 @@
  * 
  */
  package onyx.net {
+ 	
  	import flash.events.*;
  	import flash.net.XMLSocket;
  	import flash.utils.*;
@@ -36,14 +37,30 @@
  	import onyx.core.Console;
  	import onyx.errors.INVALID_CLASS_CREATION;
  	import onyx.events.*;
+ 	import onyx.midi.IMidiDispatcher;
 
-	public class NthEventClient extends NthPersistentClient {
+	/**
+	 * 	NthEvent Client - passes midi events over to MIDI
+	 */
+	public class NthEventClient extends NthPersistentClient implements IMidiDispatcher {
 		
-		private static var instance:NthEventClient	= new NthEventClient();
+		/**
+		 * 	@private
+		 */
+		private static const instance:NthEventClient	= new NthEventClient();
+
+		/**
+		 * 	@private
+		 */
 		private static var fingers:Object		= new Object();
-		
+
+		/**
+		 * 	@constructor
+		 */
 		public function NthEventClient() {
+			
 			super();
+
 			// We only want one of these to be active - it sits waiting for
 			// the next event from the NthServer, and as soon as an event comes in,
 			// it requests the next one.

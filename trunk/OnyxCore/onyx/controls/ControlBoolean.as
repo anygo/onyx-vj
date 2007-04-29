@@ -36,6 +36,9 @@ package onyx.controls {
 	
 	use namespace onyx_ns;
 
+	/**
+	 * 	Stores values of true/false
+	 */
 	public final class ControlBoolean extends ControlRange {
 		
 		/**
@@ -45,6 +48,13 @@ package onyx.controls {
 
 			super(name, display, BOOLEAN, defaultvalue, binding, options);
 
+		}
+
+		/**
+		 * 	Faster reflection method (rather than using getDefinition)
+		 */
+		override public function reflect():Class {
+			return ControlBoolean;
 		}
 	}
 }

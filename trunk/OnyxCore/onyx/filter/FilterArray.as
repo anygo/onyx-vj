@@ -138,7 +138,7 @@ package onyx.filter {
 		/**
 		 * 	Clear filters
 		 */
-		public function clear(content:IContent):void {
+		public function clear():void {
 			while (super.length) {
 				removeFilter(this[0]);
 			}

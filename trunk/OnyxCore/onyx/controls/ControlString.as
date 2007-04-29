@@ -42,6 +42,12 @@ package onyx.controls{
 			super(name, display, metadata);
 		}
 		
+		/**
+		 * 	Faster reflection method (rather than using getDefinition)
+		 */
+		override public function reflect():Class {
+			return ControlString;
+		}
 		
 	}
 }

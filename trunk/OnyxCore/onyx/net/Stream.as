@@ -72,6 +72,7 @@ package onyx.net {
 		 * 	When metadata is returned, dispatch an event.complete event
 		 */
 		public function onMetaData(info:Object):void {
+			
 			metadata = info;
 			
 			// dispatch an event complete for a stream metadata event
@@ -83,7 +84,11 @@ package onyx.net {
 		 * 	play Status
 		 */
 		public function onPlayStatus(info:Object):void {
-			dispatchEvent(new NetStatusEvent(NetStatusEvent.NET_STATUS, { code: info }));
+			
+			// dispatch a client-side net status event
+			dispatchEvent(
+				new NetStatusEvent(NetStatusEvent.NET_STATUS, { code: info })
+			);
 		}
 
 	}

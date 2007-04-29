@@ -40,7 +40,7 @@ package onyx.utils {
 	import onyx.core.IDisposable;
 	
 	/**
-	 * 	Displays memory consumption over time
+	 * 	Displays a graph over time
 	 */
 	public final class GraphPlotter extends Sprite implements IDisposable {
 		
@@ -136,13 +136,13 @@ package onyx.utils {
 		 * 	Calculates minimum and maximum values
 		 */
 		private function _calc(x:Number, y:Number):void {
-			maxY = (y > maxY) ? y : maxY;
-			minY = (y < minY) ? y : minY;
-			maxX = (x > maxX) ? x : maxX;
-			minX = (x < minX) ? x : minX;
+			maxY = Math.max(y, maxY);
+			minY = Math.min(y, minY);
+			maxX = Math.max(x, maxX);
+			minX = Math.min(x, minX);
 			
-			_minText.text = minY.toString();
-			_maxText.text = maxY.toString();
+			_minText.text = minY.toFixed(2);
+			_maxText.text = maxY.toFixed(2);
 		}
 		
 		/**
@@ -153,6 +153,7 @@ package onyx.utils {
 			var x:Number = (getTimer() - _firstVal) / STAGE.frameRate;
 			var y:Number = value;
 			
+			// calculate the x / y
 			_calc(x, y);
 
 			// draw

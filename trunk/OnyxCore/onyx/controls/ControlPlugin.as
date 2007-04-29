@@ -11,6 +11,9 @@ package onyx.controls {
 	
 	use namespace onyx_ns;
 	
+	/**
+	 * 	Returns plugins based on type passed in
+	 */
 	public final class ControlPlugin extends ControlRange {
 		
 		/**
@@ -85,5 +88,11 @@ package onyx.controls {
 			return <{name}>{_target[name].toString()}</{name}>;
 		}
 		
+		/**
+		 * 	Faster reflection method (rather than using getDefinition)
+		 */
+		override public function reflect():Class {
+			return ControlPlugin;
+		}
 	}
 }

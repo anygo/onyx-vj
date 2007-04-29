@@ -37,8 +37,14 @@ package onyx.controls {
 	 */
 	public final class ControlValue extends Control {
 		
+		/**
+		 * 	@private
+		 */
 		private var _value:*;
 		
+		/**
+		 * 	@constructor
+		 */
 		public function ControlValue(property:String, value:*):void {
 			_value = value;
 			super(property);

@@ -30,10 +30,23 @@
  */
 package onyx.controls {
 	
+	/**
+	 * 	Control Directory
+	 */
 	public final class ControlDirectory extends Control {
 		
+		/**
+		 * 	@constructor
+		 */
 		public function ControlDirectory():void {
 			super(null, null);
+		}
+		
+		/**
+		 * 	Fast reflection method
+		 */
+		override public function reflect():Class {
+			return ControlDirectory;
 		}
 		
 	}

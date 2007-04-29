@@ -114,6 +114,12 @@ package onyx.controls {
  		public function get max():* {
  			return _max
  		}
+ 		
+		/**
+		 * 	Faster reflection method (rather than using getDefinition)
+		 */
+		override public function reflect():Class {
+			return ControlRange;
+		}
 	}
-	
 }

@@ -35,6 +35,9 @@ package onyx.controls {
 
 	use namespace onyx_ns;
 	
+	/**
+	 * 	Int control
+	 */
 	public final class ControlInt extends ControlNumber {
 		
 		/**
@@ -75,6 +78,13 @@ package onyx.controls {
 			dispatchEvent(new ControlEvent(value));
 			
 			return value;
+		}
+ 		
+		/**
+		 * 	Faster reflection method (rather than using getDefinition)
+		 */
+		override public function reflect():Class {
+			return ControlInt;
 		}
 	}
 }

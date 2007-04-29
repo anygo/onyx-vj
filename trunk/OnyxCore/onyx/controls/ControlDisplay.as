@@ -60,5 +60,13 @@ package onyx.controls {
 			_target[name] = v;
 			dispatchEvent(new ControlEvent(v));
 		}
+		
+ 		
+		/**
+		 * 	Faster reflection method (rather than using getDefinition)
+		 */
+		override public function reflect():Class {
+			return ControlDisplay;
+		}
 	}
 }

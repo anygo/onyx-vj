@@ -29,6 +29,7 @@
  * 
  */
  package onyx.net {
+ 	
  	import flash.events.*;
  	import flash.net.XMLSocket;
  	import flash.utils.*;
@@ -39,12 +40,29 @@
  	import onyx.file.*;
  	import onyx.midi.*;
 
+	/**
+	 * 
+	 */
 	public class NthCmdClient extends NthPersistentClient {
 		
-		private static var instance:NthCmdClient = new NthCmdClient();
+		/**
+		 * 	@private
+		 */
+		private static const instance:NthCmdClient = new NthCmdClient();
+
+		/**
+		 * 	@private
+		 */
 		private var _tosend:String;
+
+		/**
+		 * 	@private
+		 */
 		private var _path:String;
 
+		/**
+		 * 	@constructor
+		 */
 		public function NthCmdClient() {
 			super();
 			if ( instance ) {
@@ -99,7 +117,7 @@
 		}
 		
 		private function _sendXML(s:String):void {
-			if ( isConnected() ) {
+			if ( connected ) {
 		     	this.send(s);
 			} else {
 				_tosend = s;

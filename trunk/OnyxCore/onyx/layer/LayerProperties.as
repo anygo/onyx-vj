@@ -98,9 +98,8 @@ package onyx.layer {
 		public var y:Control			=	new ControlNumber(
 												LayerProperties.Y,	'y',	-5000,	5000,	0
 											);
-		public var framerate:Control	=	new ControlNumber(
-												LayerProperties.FRAMERATE,				'play rate', 	-20,	20, 1,
-												{ display: 'frame', factor: 6, multiplier: 10 }
+		public var framerate:Control	=	new ControlFrameRate(
+												LayerProperties.FRAMERATE, 'play rate'
 											);
 		public var loopStart:Control	=	new ControlNumber(
 												LayerProperties.LOOPSTART,				'loop',			0,		1,	0

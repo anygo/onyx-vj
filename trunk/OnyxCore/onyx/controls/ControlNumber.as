@@ -35,17 +35,39 @@ package onyx.controls {
 	
 	use namespace onyx_ns;
 	
+	/**
+	 * 	Number Control
+	 */
 	public class ControlNumber extends Control {
 
+		/**
+		 * 	Default Factor
+		 */
 		public static const FACTOR:Object		= { multiplier: int(100) };
 		
+		/**
+		 * 	@private
+		 */
 		private var _min:Number;
+
+		/**
+		 * 	@private
+		 */
 		private var _max:Number;
 		
+		/**
+		 * 	@private
+		 */
 		protected var _defaultValue:Number;
 		
+		/**
+		 * 	Multiplier
+		 */
 		public var multiplier:Number;
 		
+		/**
+		 * 	@constructor
+		 */
 		public function ControlNumber(name:String, display:String, min:Number, max:Number, defaultvalue:Number, options:Object = null):void {
 			
 			_min = min;
@@ -82,17 +104,25 @@ package onyx.controls {
 		}
 		
 		/**
-		 * 
+		 * 	Returns min value
 		 */
  		public function get min():* {
  			return _min
  		}
  		
 		/**
-		 * 
+		 * 	Returns max value
 		 */
  		public function get max():* {
  			return _max
  		}
+ 		
+ 		
+		/**
+		 * 	Faster reflection method (rather than using getDefinition)
+		 */
+		override public function reflect():Class {
+			return ControlNumber;
+		}
 	}
 }

@@ -127,11 +127,6 @@ package onyx.display {
 		onyx_ns var _valid:Array		= [];
 		
 		/**
-		 *
-		 */
-		private var _midi:Midi = Midi.getInstance();
-		
-		/**
 		 * 
 		 */
 		private var _xml:XML;
@@ -890,7 +885,7 @@ package onyx.display {
 			}
 			
 			// add MIDI controls
-			display.appendChild(_midi.toXML());
+			display.appendChild(MIDI.toXML());
 			
 			return xml;
 		}
@@ -899,9 +894,13 @@ package onyx.display {
 		 * 	Loads settings from xml
 		 */
 		public function loadXML(xml:XML):void {
+			
 			if (xml.backgroundColor) {
 				backgroundColor = xml.backgroundColor;
 			}
+			
+			// remove filters
+			_filters.clear();
 			
 			if (xml.filters) {
 				_filters.loadXML(xml.filters);
@@ -917,7 +916,7 @@ package onyx.display {
 		 */
 		public function loadMidiXML():void {
 			if (_xml.midi) {
-				_midi.loadXML(_xml.midi);
+				MIDI.loadXML(_xml.midi);
 			}	
 		}
 		

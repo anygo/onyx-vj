@@ -1,0 +1,10 @@
+There are a couple things to know before you throw yourself into the project, certain non-standard design patterns have been
+implemented to improve performance, but they shouldn't impact your development too much.  I will list them below and give examples 
+as well.
+
+Certain Singletons have been set up as "constants" in the onyx.constants package.
+
+STAGE:Stage		A reference to the onyx stage.  This was implemented to improve performance by reducing the DisplayObject.stage 
+				get call.  A number of Singletons have been implemented in this way -- we found that by reducing the amount of
+				object look-ups and doing direct package look-ups, we were able to save about 1-2 milliseconds per frame of 
+				execution time.

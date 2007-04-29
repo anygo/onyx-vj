@@ -44,6 +44,7 @@ package onyx.core {
 	import onyx.filter.*;
 	import onyx.layer.*;
 	import onyx.macro.*;
+	import onyx.midi.*;
 	import onyx.plugin.*;
 	import onyx.sound.*;
 	import onyx.states.*;
@@ -111,38 +112,49 @@ package onyx.core {
 		/**
 		 * 	Registers plug-ins
 		 */
-		public static function registerPlugin(plugin:Plugin):void {
+		public static function registerPlugin(registration:Object):void {
 			
-			if (plugin._definition) {
+			// check if the passed in object is a midi master or a plugin
+			if (registration is Plugin) {
 				
-				// make sure it's uppercase
-				plugin.name = plugin.name.toUpperCase();
-
-				var object:IDisposable = plugin.getDefinition() as IDisposable;
+				var plugin:Plugin = registration as Plugin;
 				
-				// test the type of object
-				if (object is Filter) {
+				if (plugin._definition) {
 					
-					Filter.registerPlugin(plugin);
-					plugin.registerData('bitmap', object is IBitmapFilter);
+					// make sure it's uppercase
+					plugin.name = plugin.name.toUpperCase();
+	
+					var object:IDisposable = plugin.getDefinition() as IDisposable;
 					
-				// register transition
-				} else if (object is Transition) {
+					// test the type of object
+					if (object is Filter) {
+						
+						Filter.registerPlugin(plugin);
+						plugin.registerData('bitmap', object is IBitmapFilter);
+						
+					// register transition
+					} else if (object is Transition) {
+						
+						Transition.registerPlugin(plugin);
+	
+					// register visualizer
+					} else if (object is Visualizer) {
+						
+						Visualizer.registerPlugin(plugin);
+						
+					} else if (object is Macro) {
+						
+						Macro.registerPlugin(plugin);
+					}
 					
-					Transition.registerPlugin(plugin);
-
-				// register visualizer
-				} else if (object is Visualizer) {
+					// destroy the object
+					object.dispose();
 					
-					Visualizer.registerPlugin(plugin);
-					
-				} else if (object is Macro) {
-					
-					Macro.registerPlugin(plugin);
+					// output a message
+					Console.output('REGISTERING ' + plugin.name);
 				}
-				
-				// destroy the object
-				object.dispose();
+			} else if (registration is IMidiDispatcher) {
+				Midi.registerMidiMaster(registration as IMidiDispatcher);
 			}
 		}
 

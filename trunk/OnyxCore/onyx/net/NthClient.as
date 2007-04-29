@@ -29,22 +29,31 @@
  * 
  */
  package onyx.net {
+ 	
  	import flash.events.*;
  	import flash.net.*;
- 	import flash.utils.Dictionary;
- 	import flash.utils.Timer;
+ 	import flash.utils.*;
  	
  	import onyx.core.Console;
- 	import onyx.errors.INVALID_CLASS_CREATION;
+ 	import onyx.errors.*;
  	import onyx.events.*;
+ 	import onyx.midi.IMidiDispatcher;
  	
-	public class NthClient extends XMLSocket {
+ 	/**
+ 	 * 
+ 	 */
+	public class NthClient extends XMLSocket implements IMidiDispatcher {
 		
+		/**
+		 * 	@private
+		 */
 	 	static private var warned:Boolean = false;
-
-		protected function isConnected():Boolean {
-			return this.connected;
-		}
+	 	
+	 	/**
+	 	 * 	@constructor
+	 	 */
+	 	public function NthClient():void {
+	 	}
 		
 		protected function configureListeners():void {
 	        this.addEventListener(Event.CLOSE, closeHandler);
@@ -75,7 +84,7 @@
 		}
 
 	    protected function ioErrorHandler(event:IOErrorEvent):void {
-	        if ( ! this.connected && warned == false ) {
+	        if (! this.connected && !warned) {
 	        	Console.output("You need to start the NthEvent server...");
 	        	warned = true;	// so we only do it once
 	        } else {

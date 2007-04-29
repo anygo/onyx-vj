@@ -131,10 +131,9 @@ package onyx.states {
 					
 					var plugins:Array = pluginSWF.plugins;
 					
-					for each (var plugin:Plugin in plugins) {
+					for each (var plugin:Object in plugins) {
 						
 						Onyx.registerPlugin(plugin);
-						Console.output('REGISTERING ' + plugin.name);
 						
 					}
 				}

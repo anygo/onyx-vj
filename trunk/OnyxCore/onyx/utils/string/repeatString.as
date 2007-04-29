@@ -28,72 +28,19 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package onyx.macro {
-	
-	import flash.utils.Dictionary;
-	
-	import onyx.core.*;
-	import onyx.plugin.*;
-	
-	use namespace onyx_ns;
+package onyx.utils.string {
 
 	/**
-	 * 
+	 * 	Returns a filename without it's extension
 	 */
-	public class Macro extends PluginBase {
-
-		/**
-		 * 	@private
-		 * 	Stores definitions
-		 */
-		private static var _definition:Object	= new Object();
+	public function repeatString(string:String, length:int):String {
 		
-		/**
-		 * 	@private
-		 */
-		onyx_ns static var _macros:Array		= [];
+		var output:String = string;
 		
-		/**
-		 * 	Registers a plugin
-		 */
-		onyx_ns static function registerPlugin(plugin:Plugin, index:int = -1):void {
-			if (!_definition[plugin.name]) {
-				_definition[plugin.name] = plugin;
-				plugin._parent = _macros;
-				_macros.splice(index || _macros.length - 1, 0, plugin);
-			}
+		while (--length) {
+			output += string;
 		}
 
-		/**
-		 * 	Returns a definition
-		 */
-		public static function getDefinition(name:String):Plugin {
-			return _definition[name];
-		}
-		
-		/**
-		 * 	Returns a list of plugins of all filters registered
-		 */
-		public static function get macros():Array {
-			return _macros.concat();
-		}
-		
-		/**
-		 * 	@constructor
-		 */
-		public function Macro():void {
-		}
-		
-		/**
-		 * 	Initializes the macro
-		 */
-		public function initialize():void {
-		}
-		
-		/**
-		 * 	Terminates the macro
-		 */
-		public function terminate():void {
-		}
+		return output;
 	}
 }

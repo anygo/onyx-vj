@@ -81,7 +81,7 @@ package onyx.states {
 			
 			for each (var state:ApplicationState in _states) {
 				if (state is type) {
-					matches.push(type);
+					matches.push(state);
 				}
 			}
 			

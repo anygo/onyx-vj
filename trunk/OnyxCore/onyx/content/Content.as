@@ -494,16 +494,6 @@ package onyx.content {
 		}
 		
 		/**
-		 * 	@private
-		 * 	Clears all the filters
-		 */
-		internal function clearFilters():void {
-			
-			_filters.clear(this);
-			
-		}
-		
-		/**
 		 * 	Sets filters
 		 */
 		public function set filters(value:Array):void {
@@ -770,14 +760,13 @@ package onyx.content {
 			__blendMode		= null;
 			
 			// kill all filters
-			clearFilters();
+			_filters.clear();
 
 			// dispose
 			_source.dispose();
 			_rendered.dispose();
 			
 			// clear references
-
 			_source = null;
 			_rendered = null;
 			_content = null;

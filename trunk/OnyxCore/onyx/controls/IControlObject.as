@@ -32,6 +32,9 @@ package onyx.controls{
 	
 	import onyx.core.IDisposable;
 	
+	/**
+	 * 	This object has controls
+	 */
 	public interface IControlObject extends IDisposable {
 		
 		function get controls():Controls;

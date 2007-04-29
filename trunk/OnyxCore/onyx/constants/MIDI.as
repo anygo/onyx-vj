@@ -32,6 +32,6 @@ package onyx.constants {
 
 	import onyx.midi.Midi;
 	
-	public const MIDI:Midi = Midi.getInstance();
+	public const MIDI:Midi = new Midi();
 
 }

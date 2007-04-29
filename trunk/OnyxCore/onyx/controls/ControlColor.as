@@ -30,10 +30,23 @@
  */
 package onyx.controls {
 	
+	/**
+	 * 
+	 */
 	public final class ControlColor extends ControlUInt {
 		
+		/**
+		 * 	@constructor
+		 */
 		public function ControlColor(property:String, display:String, options:Object = null):void {
 			super(property, display, options);
+		}
+		
+		/**
+		 * 	Faster reflection method (rather than using getDefinition)
+		 */
+		override public function reflect():Class {
+			return ControlColor;
 		}
 
 	}

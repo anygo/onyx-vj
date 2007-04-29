@@ -62,6 +62,9 @@ package onyx.controls {
 			super(property, displayName, metadata);
 		}
 		
+		/**
+		 * 
+		 */
 		override public function setValue(v:*):* {
 			if (v is Array) {
 				controlX.value = v[0];
@@ -69,25 +72,44 @@ package onyx.controls {
 			}
 		}
 		
+		/**
+		 * 
+		 */
 		override public function set value(v:*):void {
 			setValue(v);
 		}
 		
+		/**
+		 * 
+		 */
 		override public function get value():* {
 			return [controlX.value, controlY.value];
 		}
 
+		/**
+		 * 
+		 */
 		override public function set target(value:IControlObject):void {
 			controlY.target = value;
 			controlX.target = value;
 		}
 		
+		/**
+		 * 
+		 */
 		override public function toXML():XML {
 			var xml:XML = <{name}></{name}>;
 			xml.appendChild(controlX.toXML());
 			xml.appendChild(controlY.toXML());
 
 			return xml;
+		}
+		
+		/**
+		 * 	Faster reflection method (rather than using getDefinition)
+		 */
+		override public function reflect():Class {
+			return ControlProxy;
 		}
 	}
 }

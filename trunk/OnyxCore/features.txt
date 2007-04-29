@@ -3,7 +3,7 @@
 
 Changes:
 
-- Addition of Windowing Buttons
+- Addition of Windowing Buttons (click to open/close windows)
 - Ability to save certain settings (blend mode order, window locations, filter orders, key mapping)
 - All tempo filters can be turned on or off through a global setting (if they do not use tempo, they'll be timer based)
 - Mix files can now save display background color and filters, as well as the xml format version
@@ -26,6 +26,7 @@ Bug Fixes:
 - Fixed a bug where tempo was getting out of sync after a little while
 - Fixed a bug where the display window tabs were not clickable
 - Fixed a bug where extra controls in filters / custom controls would not scroll correctly
+- Fixed a bug where StateManager was returning class definitions, rather than the application state
 
 API Changes:
 
@@ -47,3 +48,4 @@ Dev Notes:
 Bugs:
 
 - performance error by setting threshold > 0 and then contrast < 0.  Onyx Hangs (looks like a bad color matrix)
+X clipping bug on colorpicker

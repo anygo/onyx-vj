@@ -29,17 +29,32 @@
  * 
  */
 package onyx.controls {
-	
-	public final class ControlToggle extends Control {
+
+	/**
+	 * 	Frame rate control
+	 */	
+	public final class ControlFrameRate extends ControlNumber {
 		
-		public function ControlToggle(name:String, display:String = null, metadata:Object = null):void {
-			super(name, display, metadata);
+		/**
+		 * 	@private
+		 */
+		private static const META_DATA:Object	= { factor: 6, multiplier: 10 };
+		
+		/**
+		 * 	@constructor
+		 */
+		public function ControlFrameRate(name:String, display:String):void {
+			
+			super(name, display, -20, 20, 1, META_DATA);
+
 		}
 		
-		override public function set value(i:*):void {
-			var val:* = (i == 'false') ? false : i;
-			super.value = val;
+ 		
+		/**
+		 * 	Faster reflection method (rather than using getDefinition)
+		 */
+		override public function reflect():Class {
+			return ControlFrameRate;
 		}
 	}
-	
 }

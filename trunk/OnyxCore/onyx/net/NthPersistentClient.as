@@ -39,21 +39,47 @@
 
 	public class NthPersistentClient extends NthClient {
 		
+		/**
+		 * 	@private
+		 */
 		private static var fingers:Object		= new Object();
 		
+		/**
+		 * 	@private
+		 */
 		private var _timer:Timer;
+
+		/**
+		 * 	@private
+		 */
 		private var _myConnected:Boolean = false;
+
+		/**
+		 * 	@private
+		 */
 		private var _connections:int = 0;
+
+		/**
+		 * 	@private
+		 */
 		private var _attempts:int = 0;
 		
-		public function NthPersistentClient() {
+		/**
+		 * 	@constructor
+		 */
+		public function NthPersistentClient():void {
 			configureListeners();
 			_tryConnect();
+			
+			super();
 		}
 		
+		/**
+		 *	@private
+		 */
 		private function _tryConnect():void {
 	    	_attempts += 1;
-			this.connect("localhost", 1383);
+			super.connect("localhost", 1383);
 		}
 		
 	    override protected function connectHandler(event:Event):void {

@@ -33,51 +33,72 @@ package onyx.midi {
 	import flash.events.*;
 	import flash.utils.*;
 	
-	import onyx.controls.*;
-	import onyx.events.*;
-	import onyx.net.*;
 	import onyx.constants.*;
-	import onyx.layer.*;
 	import onyx.content.*;
+	import onyx.controls.*;
 	import onyx.display.Display;
+	import onyx.errors.*;
+	import onyx.events.*;
 	import onyx.layer.*;
- 	import onyx.errors.INVALID_CLASS_CREATION;
+	import onyx.net.*;
  	
+ 	/**
+ 	 * 	Base Midi Class
+ 	 */
 	public class Midi extends EventDispatcher implements IControlObject {
 		
-		private static var _instance:Midi;
-		private static var _creating:Boolean = false;
-		
-		private var _listen:Boolean = false;
+		/**
+		 * 
+		 */
+		public static function registerMidiMaster(module:IMidiDispatcher):void {
+			MIDI._client = module;
+			MIDI.start();
+		}
+
+		/**
+		 * 	@private
+		 */
 		private var _controls:Controls;
-		private var _client:NthEventClient;
+
+		/**
+		 * 	@private
+		 */
+		private var _client:IMidiDispatcher;
+
+		/**
+		 * 	@private
+		 */
 		private var _map:Array = new Array();
 
+		/**
+		 * 	@constructor
+		 */
 		public function Midi():void {
-			if ( !_creating ) {
+			
+			if (MIDI) {
 				throw INVALID_CLASS_CREATION;
 			}
-			_client = NthEventClient.getInstance();
+			
+			/*
 			_controls = new Controls(this,
 				new ControlRange('listen', 'midi control', BOOLEAN)
-				);
+			);
+			*/
+			_controls = new Controls(this);
 		}
 		
-		public static function getInstance():Midi {
-			if ( !_instance ) {
-				_creating = true;
-				_instance = new Midi();
-				_creating = false;
-			}
-			return _instance;
-		}
-		
+		/**
+		 * 	Register layers to listen for
+		 */
 		public function registerLayers(layers:Array):void {
 			for each (var layer:Layer in layers) {
 				layer.addEventListener(LayerEvent.LAYER_UNLOADED,_layerUnloaded);
 			}
 		}
 		
+		/**
+		 * 	@private
+		 */
 		private function _layerUnloaded(event:LayerEvent):void {
 			
 			var target:Layer = event.currentTarget as Layer;
@@ -90,7 +111,7 @@ package onyx.midi {
 				if (target == layers[i])
 					break;
 			}
-			if (i==layers.length){
+			if (i == layers.length){
 				trace("Couldn't find layer in _layerUnloaded!?");
 				return;
 			}
@@ -106,31 +127,29 @@ package onyx.midi {
 			}
 		}
 		
-		public function set listen(value:Boolean):void {
-			_listen = value;
-			if ( _listen ) {
-				start();
-			} else {
-				stop();
-			}
-		}
-		
-		public function get listen():Boolean {
-			return _listen;
-		}
-		
+		/**
+		 * 	Starts listening for midi events
+		 */
 		public function start():void {
 			_client.addEventListener(MidiMsg.NOTEON, _onNoteonoff);
 			_client.addEventListener(MidiMsg.NOTEOFF, _onNoteonoff);
 			_client.addEventListener(MidiMsg.CONTROLLER, _onController);
+//			_client.connect();
 		}
 		
+		/**
+		 * 	Stops listening for midi events
+		 */
 		public function stop():void {
 			_client.removeEventListener(MidiMsg.NOTEON, _onNoteonoff);
 			_client.removeEventListener(MidiMsg.NOTEOFF, _onNoteonoff);
 			_client.removeEventListener(MidiMsg.CONTROLLER, _onController);
 		}
 		
+		/**
+		 * 	@private
+		 * 	Remove map (need documentation)
+		 */
 		private function _removeMapForControl(c:Control):void {
 			for ( var i:int = 0; i<_map.length; i++ ) {
 				if ((_map[i] as MidiMap).control == c) {
@@ -142,7 +161,10 @@ package onyx.midi {
 			}
 		}
 		
-		public function _onController(e:MidiEvent):void {
+		/**
+		 * 
+		 */
+		private function _onController(e:MidiEvent):void {
 			for each (var m:MidiMap in _map) {
 				if ( m is MidiMapController ) {
 					if ( ! m.matchesEvent(e) || m.control == null ) {

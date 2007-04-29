@@ -40,6 +40,9 @@ package onyx.controls {
 	
 	use namespace onyx_ns;
 
+	/**
+	 * 
+	 */
 	dynamic public class Controls extends Array implements IEventDispatcher {
 		
 		/**

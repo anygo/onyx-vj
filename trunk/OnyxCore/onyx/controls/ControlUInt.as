@@ -30,10 +30,23 @@
  */
 package onyx.controls {
 	
+	/**
+	 * 
+	 */
 	public class ControlUInt extends Control {
 		
+		/**
+		 * 	@constructor
+		 */
 		public function ControlUInt(property:String, display:String, options:Object = null):void {
 			super(property, display, options);
+		}
+		
+		/**
+		 * 	Faster reflection method (rather than using getDefinition)
+		 */
+		override public function reflect():Class {
+			return ControlUInt;
 		}
 
 	}

@@ -34,13 +34,22 @@ package onyx.controls {
 	
 	use namespace onyx_ns;
 	
+	/**
+	 * 	Exeuction control
+	 */
 	public final class ControlExecute extends Control {
 		
+		/**
+		 * 	@constructor
+		 */
 		public function ControlExecute(name:String, display:String = null):void {
 			
 			super(name, display);
 		}
 		
+		/**
+		 * 	Execute
+		 */
 		public function execute():void {
 			if (super._target[name] is Function) {
 				var fn:Function = super._target[name];
@@ -48,6 +57,13 @@ package onyx.controls {
 			} else {
 				throw "ControlExecute error - the value of '"+name+"' in '"+_target+"' needs to be a Function!";
 			}
+		}
+		
+		/**
+		 * 
+		 */
+		override public function reflect():Class {
+			return ControlExecute;
 		}
 		
 	}

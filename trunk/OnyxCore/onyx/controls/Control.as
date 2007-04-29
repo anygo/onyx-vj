@@ -135,12 +135,22 @@ package onyx.controls {
 		 */
 		public function reset():void {
 		}
+
+		/**
+		 * 	Faster reflection method (rather than using getDefinition)
+		 */
+		public function reflect():Class {
+			return Control;
+		}
 		
 		/**
 		 * 	Returns xml representation of the control
 		 */
 		public function toXML():XML {
-			return <{name}>{_target[name].toString()}</{name}>;
+			var xml:XML = <{name}/>;
+			var value:Object = _target[name];
+			xml.appendChild((value) ? value.toString() : value);
+			return xml;
 		}
 	}
 }
