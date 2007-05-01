@@ -2,7 +2,24 @@
 
 	<!-- CORE SETTINGS -->
 	<core>
-		<bitmapData width="320" height="240" />
+
+		<render>
+			<!-- the width / height of bitmaps -->
+			<bitmapData>
+				<width>320</width>
+				<height>240</height>
+			</bitmapData>
+			
+			<!-- quality of flash -->
+			<quality>high</quality>
+		</render>
+		
+		<!-- midi settings -->
+		<midi>
+			<enabled>false</enabled>
+		</midi>
+		
+		<!-- custom ordering of blendmodes for blendmode controls -->
 		<blendModes>
 			<normal/>
 			<lighten/>
@@ -32,10 +49,9 @@
 		<window name="FILTERS" enabled="true" x="412" y="318"/>
 		<window name="TEMPO" enabled="true" x="200" y="544"/>
 		<window name="LAYERS" enabled="true" x="0" y="0"/>
-		<window name="MEMORY" enabled="false" x="200" y="200"/>
+		<window name="MEMORY" enabled="false" x="500" y="400"/>
 		<window name="DISPLAY" enabled="true" x="508" y="602"/>
 		<window name="KEY MAPPING" enabled="false" x="6" y="544"/>
-		<window name="MACROS" enabled="false" x="615" y="320"/>
 	</windows>
 	
 	<!-- KEY MAPPING -->
@@ -69,7 +85,7 @@
 		<ACTION_11>122</ACTION_11>
 		<ACTION_12>123</ACTION_12>
 	</keys>
-	
+
 	<!-- MACRO MAPPING -->
 	<actions>
 		<ACTION_1>
