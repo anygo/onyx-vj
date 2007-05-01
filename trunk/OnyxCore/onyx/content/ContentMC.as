@@ -109,11 +109,9 @@ package onyx.content {
 			// sets the last time we executed
 			_lastTime		= getTimer() - STAGE.frameRate;
 
-			// resize?
-			if (LAYER_AUTOSIZE) {
-				_ratioX = BITMAP_WIDTH / loader.contentLoaderInfo.width;
-				_ratioY = BITMAP_HEIGHT / loader.contentLoaderInfo.height;
-			}
+			// set the ratio (so all movies look like scale = 1 at 320x240)
+			_ratioX = BITMAP_WIDTH / loader.contentLoaderInfo.width;
+			_ratioY = BITMAP_HEIGHT / loader.contentLoaderInfo.height;
 			
 			super(layer, path, loader.content);
 		}

@@ -28,32 +28,24 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package onyx.render {
+package onyx.macro {
 	
-	import flash.display.*;
-	import flash.geom.*;
-	
-	import onyx.constants.*;
-	import onyx.content.ColorFilter;
-
-	/**
-	 * 	Renders content
-	 */
-	public function renderContent(source:BitmapData, content:IBitmapDrawable, transform:RenderTransform, filter:ColorFilter):void {
+	public final class MuteLayerMacro extends Macro {
 		
-		var matrix:Matrix = transform.matrix;
-		var rect:Rectangle = transform.rect;
+		public function MuteLayerMacro():void {
+		}
 		
-		// fill our source with nothing
-		source.fillRect(BITMAP_RECT, 0x00000000);
+		/**
+		 * 	Initializes the macro
+		 */
+		override public function initialize():void {
+		}
 		
-		// draw our content
-		source.draw(content, matrix, filter, null, rect, true);
-
-		// apply the color filter to the source
-		source.applyFilter(source, BITMAP_RECT, POINT, filter.filter);
+		/**
+		 * 	Terminates the macro
+		 */
+		override public function terminate():void {
+		}
 		
 	}
-
-	
 }

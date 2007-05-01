@@ -39,11 +39,9 @@ package onyx.content {
 	import onyx.constants.*;
 	import onyx.controls.*;
 	import onyx.core.*;
-	import onyx.events.FilterEvent;
-	import onyx.events.TransitionEvent;
+	import onyx.events.*;
 	import onyx.filter.Filter;
-	import onyx.layer.Layer;
-	import onyx.layer.LayerProperties;
+	import onyx.layer.*;
 	import onyx.render.*;
 	import onyx.transition.*;
 	

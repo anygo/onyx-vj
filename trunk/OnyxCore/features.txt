@@ -12,6 +12,7 @@ Changes:
 	- Loop Machine -- copies the display output for 10 seconds into a layer
 - Addition of a memory consumption graph
 - Addition of Midi Learn (not totally done)
+- Addition of an anchor point (for layer scaling/rotation)
 - Addition of Tempo beats 1/16, 1/8, 1/4, 1/2, 1.  Can sync tempo to specific beats.
 - Changed the random property in the FrameRND to off/start/end -- setting it to end makes the framerate smooth towards a new random time
 - Display properties of saturation, threshold, contrast, and brightness can now be affected
@@ -48,4 +49,3 @@ Dev Notes:
 Bugs:
 
 - performance error by setting threshold > 0 and then contrast < 0.  Onyx Hangs (looks like a bad color matrix)
-X clipping bug on colorpicker

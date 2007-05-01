@@ -705,6 +705,31 @@ package onyx.display {
 		override public function get y():Number {
 			return 0;
 		}
+		/**
+		 * 
+		 */
+		public function get anchorX():int {
+			return 0;
+		}
+		
+		/**
+		 * 
+		 */
+		public function set anchorX(value:int):void {
+		}
+		
+		/**
+		 * 
+		 */
+		public function get anchorY():int {
+			return 0;
+		}
+		
+		/**
+		 * 
+		 */
+		public function set anchorY(value:int):void {
+		}
 		
 		/**
 		 * 	Mutes a filter

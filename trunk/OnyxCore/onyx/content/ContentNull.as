@@ -306,7 +306,32 @@ package onyx.content {
 		public function get visible():Boolean {
 			return false;
 		}
-
+		
+		/**
+		 * 
+		 */
+		public function get anchorX():int {
+			return 0;
+		}
+		
+		/**
+		 * 
+		 */
+		public function set anchorX(value:int):void {
+		}
+		
+		/**
+		 * 
+		 */
+		public function get anchorY():int {
+			return 0;
+		}
+		
+		/**
+		 * 
+		 */
+		public function set anchorY(value:int):void {
+		}
 
 		/**
 		 * 

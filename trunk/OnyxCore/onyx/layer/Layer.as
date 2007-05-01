@@ -200,7 +200,8 @@ package onyx.layer {
 			_content.addEventListener(FilterEvent.FILTER_MOVED,			_forwardEvents);
 			_content.addEventListener(FilterEvent.FILTER_REMOVED,		_forwardEvents);
 			_content.addEventListener(TransitionEvent.TRANSITION_END,	_endTransition);
-			
+
+			// apply settings
 			if (settings) {
 				settings.apply(content);
 			}
@@ -520,6 +521,32 @@ package onyx.layer {
 		public function get x():Number {
 			return _content.x;
 		}
+		
+		/**
+		 * 
+		 */
+		public function get anchorX():int {
+			return 0;
+		}
+		
+		/**
+		 * 
+		 */
+		public function set anchorX(value:int):void {
+		}
+		
+		/**
+		 * 
+		 */
+		public function get anchorY():int {
+			return 0;
+		}
+		
+		/**
+		 * 
+		 */
+		public function set anchorY(value:int):void {
+		}
 
 		/**
 		 * 	Gets y for current content
@@ -704,13 +731,6 @@ package onyx.layer {
 		 * 	Returns xml representation of the layer
 		 */
 		public function toXML():XML {
-			// var props:XML = <properties2/>;
-			// for each (var c:Control in _properties ) {
-			// 	var cx:XML = c.toXML();
-			// 	props.appendChild( cx ) ;
-			// }
-			// var props3:XML = _properties.toXML();
-			
 			var xml:XML = 
 				<layer path={path}>
 					<properties>
@@ -718,6 +738,8 @@ package onyx.layer {
 						<y>{y}</y>
 						<scaleX>{scaleX.toFixed(3)}</scaleX>
 						<scaleY>{scaleY.toFixed(3)}</scaleY>
+						<anchorX>{anchorX}</anchorX>
+						<anchorY>{anchorY}</anchorY>
 						<rotation>{rotation.toFixed(3)}</rotation>
 						<alpha>{alpha.toFixed(3)}</alpha>
 						<brightness>{brightness.toFixed(3)}</brightness>
@@ -734,8 +756,10 @@ package onyx.layer {
 					</properties>
 				</layer>;
 
+			// add filters xml
 			xml.appendChild(_content.filters.toXML());
 			
+			// add control xml
 			if ( _content.controls ) {
 				xml.appendChild(_content.controls.toXML());
 			}

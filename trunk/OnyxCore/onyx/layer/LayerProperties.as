@@ -38,80 +38,64 @@ package onyx.layer {
 	 * 	Stores property names for layers
 	 */
 	public final class LayerProperties extends Controls {
-		
-		// display properties
-		public static const ALPHA:String		= 'alpha';
-		public static const BLENDMODE:String	= 'blendMode';
-		public static const BRIGHTNESS:String	= 'brightness';
-		public static const CONTRAST:String		= 'contrast';
-		public static const SCALEX:String		= 'scaleX';
-		public static const SCALEY:String		= 'scaleY';
-		public static const ROTATION:String		= 'rotation';
-		public static const SATURATION:String	= 'saturation';
-		public static const THRESHOLD:String	= 'threshold';
-		public static const COLOR:String		= 'color';
-		public static const TINT:String			= 'tint';
-		public static const X:String			= 'x';
-		public static const Y:String			= 'y';
-		public static const TIME:String			= 'time';
-		public static const MUTE:String			= 'mute';
-		
-		// playhead properties
-		public static const FRAMERATE:String	= 'framerate';
-		public static const LOOPSTART:String	= 'loopStart';
-		public static const LOOPEND:String		= 'loopEnd';
 
 		// stores controls
 		public var alpha:Control		=	new ControlNumber(
-												LayerProperties.ALPHA,				'alpha',	0,	1,	1
+												'alpha',				'alpha',	0,	1,	1
 											);
 		public var blendMode:Control	=	new ControlRange(
-												LayerProperties.BLENDMODE,			'blendmode',	BLEND_MODES,	0
+												'blendMode',			'blendmode',	BLEND_MODES,	0
 											);
 		public var brightness:Control	=	new ControlNumber(
-												LayerProperties.BRIGHTNESS,			'bright',		-1,		1,		0
+												'brightness',			'bright',		-1,		1,		0
 											);
 		public var contrast:Control		= 	new ControlNumber(
-												LayerProperties.CONTRAST,			'contrast',		-1,		2,		0
+												'contrast',				'contrast',		-1,		2,		0
 											);
 		public var rotation:Control		= 	new ControlNumber(
-												LayerProperties.ROTATION,			'rotation',		-360,	360,	0
+												'rotation',				'rotation',		-360,	360,	0
 											);
 		public var saturation:Control	= 	new ControlNumber(
-												LayerProperties.SATURATION,			'saturation',	0,		2,		1
+												'saturation',			'saturation',	0,		2,		1
 											);
 		public var threshold:Control	= 	new ControlInt(
-												LayerProperties.THRESHOLD,			'threshold',	0,		100,	0
+												'threshold',			'threshold',	0,		100,	0
 											);
 		public var tint:Control			= 	new ControlNumber(
-												LayerProperties.TINT,				'tint',			0,		1,		0
+												'tint',					'tint',			0,		1,		0
 											);
 		public var scaleX:Control		= 	new ControlNumber(
-												LayerProperties.SCALEX,			'scaleX',		-5,		5,		1
+												'scaleX',				'scaleX',		-5,		5,		1
 											);
 		public var scaleY:Control		= 	new ControlNumber(
-												LayerProperties.SCALEY,			'scaleY',		-5,		5,		1
+												'scaleY',				'scaleY',		-5,		5,		1
 											);
-		public var x:Control			= 	new ControlNumber(
-												LayerProperties.X,	'x',	-5000,	5000,	0
-											)
-		public var y:Control			=	new ControlNumber(
-												LayerProperties.Y,	'y',	-5000,	5000,	0
+		public var x:Control			= 	new ControlInt (
+												'x',					'x',	-5000,	5000,	0
+											);
+		public var y:Control			=	new ControlInt(
+												'y',					'y',	-5000,	5000,	0
+											);
+		public var anchorX:Control		= 	new ControlInt(
+												'anchorX',				'anchorX',	-640,	640,	0
+											);
+		public var anchorY:Control		=	new ControlInt(
+												'anchorY',				'anchorY',	-480,	480,	0
 											);
 		public var framerate:Control	=	new ControlFrameRate(
-												LayerProperties.FRAMERATE, 'play rate'
+												'framerate',			'play rate'
 											);
 		public var loopStart:Control	=	new ControlNumber(
-												LayerProperties.LOOPSTART,				'loop',			0,		1,	0
+												'loopStart',			'loop',			0,		1,	0
 											);
 		public var loopEnd:Control		=	new ControlNumber(
-												LayerProperties.LOOPEND,				'end',			0,		1,	1
+												'loopEnd',				'end',			0,		1,	1
 											);
 		public var time:Control			=	new ControlNumber(
-												LayerProperties.TIME,					null,			0,		1,	0
+												'time',					null,			0,		1,	0
 											);
 		public var color:Control		=	new ControlColor(
-												LayerProperties.COLOR, 					'color'
+												'color', 				'color'
 											);
 											
 		public var position:Control		=	new ControlProxy(
@@ -126,6 +110,11 @@ package onyx.layer {
 												{ multiplier: 100, invert: true }
 											);
 											
+		public var anchor:Control		=	new ControlProxy(
+												'anchor', 'anchor',
+												anchorX, anchorY,
+												{ invert: true }
+											);											
 		public var visible:ControlBoolean	=	new ControlBoolean('visible', 'visible', 1);
 													
 		/**
@@ -133,9 +122,11 @@ package onyx.layer {
 		 */
 		public function LayerProperties(content:IContent):void {
 			
-			super(content);
+			super(
 			
-			super.addControl(
+				content,
+				
+				// add controls
 				alpha,
 				blendMode,
 				brightness,
@@ -151,7 +142,8 @@ package onyx.layer {
 				time,
 				tint,
 				color,
-				visible
+				visible,
+				anchor
 			);
 		}
 		

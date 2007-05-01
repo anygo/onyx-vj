@@ -39,7 +39,6 @@ package onyx.content {
 	import onyx.controls.Controls;
 	import onyx.core.*;
 	import onyx.layer.*;
-	import onyx.settings.LAYER_AUTOSIZE;
 
 	
 	[Event(name="filter_applied",	type="onyx.events.FilterEvent")]
@@ -74,11 +73,9 @@ package onyx.content {
 			
 			_loader		= loader;
 
-			// resize?
-			if (LAYER_AUTOSIZE) {
-				_ratioX = BITMAP_WIDTH / loader.contentLoaderInfo.width;
-				_ratioY = BITMAP_HEIGHT / loader.contentLoaderInfo.height;
-			}
+			// store ratio
+			_ratioX = BITMAP_WIDTH / loader.contentLoaderInfo.width;
+			_ratioY = BITMAP_HEIGHT / loader.contentLoaderInfo.height;
 			
 			// pass controls
 			super(layer, path, loader.content);

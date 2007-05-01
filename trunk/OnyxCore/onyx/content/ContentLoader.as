@@ -42,6 +42,7 @@ package onyx.content {
 	import onyx.layer.LayerSettings;
 	import onyx.net.*;
 	import onyx.render.*;
+	import onyx.settings.*;
 	import onyx.transition.Transition;
 	import onyx.utils.string.*;
 
@@ -143,7 +144,7 @@ package onyx.content {
 		public function load(path:String, settings:LayerSettings, transition:Transition):void {
 			
 			_path		= path;
-			_settings	= settings || new LayerSettings();
+			_settings	= settings;
 			_transition = transition;
 			
 			var extension:String	= getExtension(path);
@@ -298,16 +299,33 @@ package onyx.content {
 		 * 	@private
 		 */
 		private function _createLoaderContent(info:LoaderInfo, event:Event = null):void {
-			var loader:Loader	= info.loader;
 			
-			if (loader.content is MovieClip) {
+			var loader:Loader			= info.loader;
+			var content:DisplayObject	= loader.content;
+			
+			if (content is MovieClip) {
 				var type:Class = ContentMC;
-			} else if (loader.content is IRenderObject) {
+			} else if (content is IRenderObject) {
 				type = ContentCustom;
 			} else {
 				type = ContentSprite;
 			}
+			
+			if (!_settings) {
 
+				var settings:LayerSettings = new LayerSettings();
+				
+				// auto-center?
+				if (LAYER_AUTO_CENTER) {
+					settings.anchorX	= content.width / 2;
+					settings.anchorY	= content.height / 2;
+				}
+				
+				// store the new settings
+				_settings = settings;
+
+			}
+			
 			_dispatchContent(type, loader, event || new Event(Event.COMPLETE));
 		}
 		
@@ -315,14 +333,14 @@ package onyx.content {
 		 * 	@private
 		 */
 		private function _dispatchContent(contentType:Class, reference:Object, event:Event):void {
-			
+		
 			if (event is ErrorEvent) {
 				dispatchEvent(event);
 			} else {
 				var dispatch:LayerContentEvent	= new LayerContentEvent(Event.COMPLETE);
 				dispatch.contentType			= contentType;
 				dispatch.reference				= reference;
-				dispatch.settings				= _settings;
+				dispatch.settings				= _settings || new LayerSettings();
 				dispatch.transition 			= _transition;
 				dispatch.path					= _path;
 				dispatchEvent(dispatch);

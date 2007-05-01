@@ -39,6 +39,12 @@ package onyx.core {
 	 */
 	public interface IColorObject extends IEventDispatcher {
 		
+		function set anchorX(value:int):void;
+		function get anchorX():int;
+		
+		function set anchorY(value:int):void;
+		function get anchorY():int;
+		
 		function set color(value:uint):void;
 		function get color():uint;
 

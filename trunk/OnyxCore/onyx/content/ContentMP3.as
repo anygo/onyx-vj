@@ -130,34 +130,37 @@ package onyx.content {
 		 */
 		override public function render():RenderTransform {
 			
-			var position:Number = Math.ceil(_channel.position);
-			
-			if (position >= _loopEnd || position < _loopStart || position >= _length) {
-				_channel.stop();
-				_channel = _sound.play(_loopStart);
-			}
-
-			// draw ourselves			
-			if (_visualizer) {
+			if (_channel) {
 				
-				var transform:RenderTransform		= _visualizer.render();
+				var position:Number = Math.ceil(_channel.position);
 				
-				transform = (transform) ? transform.concat(getTransform()) : getTransform();
-							
-				// get local references
-				var rect:Rectangle					= transform.rect;
-				var matrix:Matrix					= transform.matrix;
-				
-				// render content
-				renderContent(_source, transform.content, transform, _filter);
-				
-				// render filters
-				renderFilters(_source, _rendered, _filters);
+				if (position >= _loopEnd || position < _loopStart || position >= _length) {
+					_channel.stop();
+					_channel = _sound.play(_loopStart);
+				}
 	
-				// return transformation
-				return transform;
+				// draw ourselves			
+				if (_visualizer) {
+					
+					var transform:RenderTransform		= _visualizer.render();
+					
+					transform = (transform) ? transform.concat(getTransform()) : getTransform();
+								
+					// get local references
+					var rect:Rectangle					= transform.rect;
+					var matrix:Matrix					= transform.matrix;
+					
+					// render content
+					renderContent(_source, transform.content, transform, _filter);
+					
+					// render filters
+					renderFilters(_source, _rendered, _filters);
+		
+					// return transformation
+					return transform;
+				}
 			}
-			
+				
 			return null;
 		}
 		

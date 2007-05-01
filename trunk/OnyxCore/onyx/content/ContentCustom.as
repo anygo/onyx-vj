@@ -41,12 +41,6 @@ package onyx.content {
 	import onyx.core.*;
 	import onyx.layer.*;
 	import onyx.render.*;
-	import onyx.settings.LAYER_AUTOSIZE;
-
-	
-	[Event(name="filter_applied",	type="onyx.events.FilterEvent")]
-	[Event(name="filter_removed",	type="onyx.events.FilterEvent")]
-	[Event(name="filter_moved",		type="onyx.events.FilterEvent")]
 	
 	[ExcludeClass]
 	public class ContentCustom extends Content {
@@ -76,11 +70,9 @@ package onyx.content {
 			
 			_loader		= loader;
 
-			// resize?
-			if (LAYER_AUTOSIZE) {
-				_ratioX = BITMAP_WIDTH / loader.contentLoaderInfo.width;
-				_ratioY = BITMAP_HEIGHT / loader.contentLoaderInfo.height;
-			}
+			// store ratio
+			_ratioX = BITMAP_WIDTH / loader.contentLoaderInfo.width;
+			_ratioY = BITMAP_HEIGHT / loader.contentLoaderInfo.height;
 			
 			// pass controls
 			super(layer, path, loader.content);

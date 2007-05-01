@@ -45,6 +45,7 @@ package onyx.content {
 	import onyx.plugin.*;
 	import onyx.render.*;
 	import onyx.tween.*;
+	import onyx.settings.*;
 	import onyx.utils.array.*;
 	
 	[Event(name="filter_applied",	type="onyx.events.FilterEvent")]
@@ -87,7 +88,7 @@ package onyx.content {
 		 * 	@private
 		 * 	Stores the matrix for the content
 		 */
-		onyx_ns var _renderMatrix:Matrix				= new Matrix();
+		onyx_ns var _renderMatrix:Matrix				= null;
 		
 		/**
 		 * 	@private
@@ -97,23 +98,24 @@ package onyx.content {
 		
 		/**
 		 * 	@private
+		 * 	Stores local rotation
 		 */
 		private var _rotation:Number;
 		
 		/**
 		 * 
 		 */
-		protected var _paused:Boolean = false;
+		protected var _paused:Boolean	= false;
 
 		/**
 		 * 	@private
 		 */
-		private var _scaleX:Number;
+		private var _scaleX:Number		= 1;
 
 		/**
 		 * 	@private
 		 */
-		private var _scaleY:Number;
+		private var _scaleY:Number		= 1;
 
 		/**
 		 * 	@private
@@ -124,6 +126,16 @@ package onyx.content {
 		 * 	@private
 		 */
 		private var _y:int;
+
+		/**
+		 * 	@private
+		 */
+		protected var _anchorX:int;
+
+		/**
+		 * 	@private
+		 */
+		protected var _anchorY:int;
 
 		/**
 		 * 	@private
@@ -238,6 +250,17 @@ package onyx.content {
 		 * 	@private
 		 */
 		protected var __visible:Control;
+		
+		/**
+		 * 	@private
+		 */
+		protected var __anchorX:Control;
+		
+		
+		/**
+		 * 	@private
+		 */
+		protected var __anchorY:Control;
 
 		/**
 		 * 	@private
@@ -259,7 +282,7 @@ package onyx.content {
 			_layer = layer;
 			_path  = path;
 			
-			// store controls
+			// store controls (why?  performance gain)
 			__color			= props.color;
 			__alpha 		= props.alpha;
 			__brightness	= props.brightness;
@@ -277,6 +300,8 @@ package onyx.content {
 			__loopEnd		= props.loopEnd;
 			__blendMode		= props.blendMode;
 			__visible		= props.visible;
+			__anchorX		= props.anchorX;
+			__anchorY		= props.anchorY;
 			
 			// set targets
 			props.target	= this;
@@ -344,7 +369,7 @@ package onyx.content {
 		 */
 		public function set x(value:Number):void {
 			_x				= __x.setValue(value);
-			_buildMatrix();
+			_renderMatrix	= null;
 		}	
 
 		/**
@@ -352,7 +377,7 @@ package onyx.content {
 		 */
 		public function set y(value:Number):void {
 			_y				= __y.setValue(value);
-			_buildMatrix();
+			_renderMatrix	= null;
 		}
 
 		/**
@@ -360,7 +385,7 @@ package onyx.content {
 		 */
 		public function set scaleX(value:Number):void {
 			_scaleX			= __scaleX.setValue(value);
-			_buildMatrix();
+			_renderMatrix	= null;
 		}
 
 		/**
@@ -368,7 +393,7 @@ package onyx.content {
 		 */
 		public function set scaleY(value:Number):void {
 			_scaleY			= __scaleY.setValue(value);
-			_buildMatrix();
+			_renderMatrix	= null;
 		}
 		
 		/**
@@ -383,6 +408,36 @@ package onyx.content {
 		 */
 		public function get scaleY():Number {
 			return _scaleY;
+		}
+		
+		/**
+		 * 
+		 */
+		public function get anchorX():int {
+			return _anchorX;
+		}
+		
+		/**
+		 * 
+		 */
+		public function set anchorX(value:int):void {
+			_anchorX = __anchorX.setValue(value);
+			_renderMatrix	= null;
+		}
+		
+		/**
+		 * 
+		 */
+		public function get anchorY():int {
+			return _anchorY;
+		}
+		
+		/**
+		 * 
+		 */
+		public function set anchorY(value:int):void {
+			_anchorY = __anchorY.setValue(value);
+			_renderMatrix	= null;
 		}
 
 		/**
@@ -468,7 +523,7 @@ package onyx.content {
 		 */
 		public function set rotation(value:Number):void {
 			_rotation = value;
-			_buildMatrix();
+			_renderMatrix	= null;
 		}
 
 		/**
@@ -524,6 +579,8 @@ package onyx.content {
 		 * 	Sets the time
 		 */
 		public function set time(value:Number):void {
+			// do nothing
+			// this needs to be overridden
 		}
 		
 		/**
@@ -556,7 +613,35 @@ package onyx.content {
 
 			// if rotation is 0, send a clipRect, otherwise, don't clip
 			var rect:Rectangle = (_rotation === 0) ? new Rectangle(0, 0, Math.max(BITMAP_WIDTH / _scaleX, BITMAP_WIDTH), Math.max(BITMAP_HEIGHT / _scaleY, BITMAP_HEIGHT)) : null;
-
+			
+			// build a matrix
+			if (!_renderMatrix) {
+				var ANCHORX:Number=_anchorX*Math.abs(_scaleX);
+				var ANCHORY:Number=_anchorY*Math.abs(_scaleY);
+				
+				var H:Number=Math.sqrt(Math.pow(ANCHORX,2)+Math.pow(ANCHORY,2));
+				var OFFANG:Number=Math.atan(ANCHORY/ANCHORX);
+				var OFFROTX:Number=((H*Math.cos((_rotation+OFFANG)))-ANCHORX);
+				var OFFROTY:Number=((H*Math.sin((_rotation+OFFANG)))-ANCHORY);
+				var OFFSCALEX:Number=(_anchorX*(1-_scaleX));
+				var OFFSCALEY:Number=(_anchorY*(1-_scaleY));
+				
+				_renderMatrix = new Matrix();
+				_renderMatrix.scale(_scaleX, _scaleY);		
+				_renderMatrix.rotate(_rotation);
+				
+				if (_anchorX==0 || _anchorY==0){
+					_renderMatrix.translate(_x, _y);
+				} else {
+					_renderMatrix.translate(_x+OFFSCALEX-OFFROTX, _y+OFFSCALEY-OFFROTY);	
+				}
+				
+				if (_matrix) {
+					_renderMatrix.concat(_matrix);
+				}
+			}
+			
+			// pass back the render transform
 			transform.matrix			= _renderMatrix;
 			transform.rect				= rect;
 
@@ -660,7 +745,7 @@ package onyx.content {
 		 */
 		public function set matrix(value:Matrix):void {
 			_matrix = value;
-			_buildMatrix();
+			_renderMatrix	= null;
 		}
 		
 		/**
@@ -688,21 +773,6 @@ package onyx.content {
 		 */
 		public function get path():String {
 			return _path;
-		}
-		
-		/**
-		 * 	@private
-		 * 	Builds the rendering matrix
-		 */
-		private function _buildMatrix():void {
-			_renderMatrix = new Matrix();
-			_renderMatrix.scale(_scaleX, _scaleY);
-			_renderMatrix.rotate(_rotation);
-			_renderMatrix.translate(_x, _y);
-			
-			if (_matrix) {
-				_renderMatrix.concat(_matrix);
-			}
 		}
 		
 		/**
@@ -741,7 +811,7 @@ package onyx.content {
 				(_content as IDisposable).dispose();
 			}
 			
-			// remove references
+			// remove control references
 			__color			= null;
 			__alpha 		= null;
 			__brightness	= null;
@@ -758,6 +828,8 @@ package onyx.content {
 			__loopStart		= null;
 			__loopEnd		= null;
 			__blendMode		= null;
+			__anchorX		= null;
+			__anchorY		= null;
 			
 			// kill all filters
 			_filters.clear();
@@ -782,7 +854,6 @@ package onyx.content {
 		public function set visible(value:Boolean):void {
 			_visible = __visible.setValue(value);
 		}
-
 
 		/**
 		 * 	Return visible

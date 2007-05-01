@@ -32,13 +32,12 @@ package onyx.layer {
 	
 	import flash.events.EventDispatcher;
 	
-	import onyx.content.Content;
-	import onyx.content.IContent;
+	import onyx.constants.*;
+	import onyx.content.*;
 	import onyx.controls.*;
 	import onyx.core.*;
-	import onyx.filter.Filter;
+	import onyx.filter.*;
 	import onyx.plugin.Plugin;
-	import onyx.filter.FilterArray;
 	
 	use namespace onyx_ns;
 
@@ -49,9 +48,11 @@ package onyx.layer {
 
 		public var x:int				= 0;
 		public var y:int				= 0;
+		public var anchorX:int			= BITMAP_WIDTH / 2;
+		public var anchorY:int			= BITMAP_HEIGHT / 2;
 		public var scaleX:Number		= 1;
 		public var scaleY:Number		= 1;
-		public var rotation:Number		= 0;
+		public var rotation:int			= 0;
 
 		public var alpha:Number			= 1;
 		public var brightness:Number	= 0;
@@ -72,12 +73,6 @@ package onyx.layer {
 		public var loopStart:Number		= 0;
 		public var loopEnd:Number		= 1;
 		public var path:String;
-		
-		/**
-		 * 	@constructor
-		 */
-		public function LayerSettings():void {
-		}
 		
 		/**
 		 * 	Gets variables from a layer
@@ -159,13 +154,15 @@ package onyx.layer {
 		/**
 		 * 	Applies values to a layer
 		 */
-		public function apply(content:Content):void {
+		public function apply(content:IContent):void {
 			
 			content.x			= x;
 			content.y			= y;
 			content.scaleX		= scaleX;
 			content.scaleY		= scaleY;
 			content.rotation	= rotation;
+			content.anchorX		= anchorX;
+			content.anchorY		= anchorY;
 			
 			content.alpha		= alpha;
 			

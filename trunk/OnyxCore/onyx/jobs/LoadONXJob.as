@@ -132,6 +132,7 @@ package onyx.jobs {
 						
 						// DH: TBD -- load midi stuff into layersettings
 						
+						// TT:
 						// Need to load the MIDI stuff, but after the other stuff gets loaded.
 						// This is a hack - there should be some way of calling it
 						// exactly when everything about the display is loaded.

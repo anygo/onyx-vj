@@ -30,6 +30,6 @@
  */
 package onyx.settings {
 
-	public var LAYER_AUTOSIZE:Boolean				= true;
+	public const LAYER_AUTO_CENTER:Boolean	= true;
 	
 }

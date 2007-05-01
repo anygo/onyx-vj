@@ -28,32 +28,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package onyx.render {
-	
-	import flash.display.*;
-	import flash.geom.*;
-	
-	import onyx.constants.*;
-	import onyx.content.ColorFilter;
+package onyx.settings {
 
-	/**
-	 * 	Renders content
-	 */
-	public function renderContent(source:BitmapData, content:IBitmapDrawable, transform:RenderTransform, filter:ColorFilter):void {
-		
-		var matrix:Matrix = transform.matrix;
-		var rect:Rectangle = transform.rect;
-		
-		// fill our source with nothing
-		source.fillRect(BITMAP_RECT, 0x00000000);
-		
-		// draw our content
-		source.draw(content, matrix, filter, null, rect, true);
-
-		// apply the color filter to the source
-		source.applyFilter(source, BITMAP_RECT, POINT, filter.filter);
-		
-	}
-
+	public var LAYER_AUTO_SIZE:Boolean				= true;
 	
 }
