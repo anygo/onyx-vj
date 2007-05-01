@@ -242,6 +242,7 @@ package ui.window {
 		private function _onDoubleClick(event:MouseEvent):void {
 			var control:FileControl = event.target as FileControl;
 
+			// try to preserve settings
 			if (event.ctrlKey && UILayer.selectedLayer.layer.path) {
 				var settings:LayerSettings = new LayerSettings();
 				settings.load(UILayer.selectedLayer.layer);

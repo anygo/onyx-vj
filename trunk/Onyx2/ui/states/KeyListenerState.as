@@ -42,6 +42,10 @@ package ui.states {
 	import ui.core.KeyDefinition;
 	import ui.core.UIManager;
 	import ui.layer.UILayer;
+	
+	// TBD, this should be a hash map to the key codes
+	// - Keys should have down and up states
+	// All key definitions should be mapped to macros (how do we deal with ui macros?)
 
 	/**
 	 * 	Listens for keyboard events
@@ -64,6 +68,10 @@ package ui.states {
 			new KeyDefinition('SELECT_LAYER_2', 'Select layer 2'),
 			new KeyDefinition('SELECT_LAYER_3', 'Select layer 3'),
 			new KeyDefinition('SELECT_LAYER_4', 'Select layer 4'),
+			/*
+			DH: TBD
+			DEFERRED TIL POST 3.03
+
 			new KeyDefinition('ACTION_1', 'Executes Macro 1'),
 			new KeyDefinition('ACTION_2', 'Executes Macro 2'),
 			new KeyDefinition('ACTION_3', 'Executes Macro 3'),
@@ -76,6 +84,7 @@ package ui.states {
 			new KeyDefinition('ACTION_10', 'Executes Macro 10'),
 			new KeyDefinition('ACTION_11', 'Executes Macro 11'),
 			new KeyDefinition('ACTION_12', 'Executes Macro 12')
+			*/
 		]
 		
 		public var SELECT_FILTER_UP:int		= 38;
@@ -92,6 +101,9 @@ package ui.states {
 		public var SELECT_LAYER_3:int			= 52;
 		public var SELECT_LAYER_4:int			= 53;
 		
+		/* 	DH: TBD
+			DEFERRED to post 3.0.3
+
 		public var ACTION_1:int					= 112;
 		public var ACTION_2:int					= 113;
 		public var ACTION_3:int					= 114;
@@ -105,18 +117,21 @@ package ui.states {
 		public var ACTION_11:int				= 122;
 		public var ACTION_12:int				= 123;
 		
-		public var ACTION_MACRO_1:Macro;
-		public var ACTION_MACRO_2:Macro;
-		public var ACTION_MACRO_3:Macro;
-		public var ACTION_MACRO_4:Macro;
-		public var ACTION_MACRO_5:Macro;
-		public var ACTION_MACRO_6:Macro;
-		public var ACTION_MACRO_7:Macro;
-		public var ACTION_MACRO_8:Macro;
-		public var ACTION_MACRO_9:Macro;
-		public var ACTION_MACRO_10:Macro;
-		public var ACTION_MACRO_11:Macro;
-		public var ACTION_MACRO_12:Macro;
+
+			
+			public var ACTION_MACRO_1:Macro;
+			public var ACTION_MACRO_2:Macro;
+			public var ACTION_MACRO_3:Macro;
+			public var ACTION_MACRO_4:Macro;
+			public var ACTION_MACRO_5:Macro;
+			public var ACTION_MACRO_6:Macro;
+			public var ACTION_MACRO_7:Macro;
+			public var ACTION_MACRO_8:Macro;
+			public var ACTION_MACRO_9:Macro;
+			public var ACTION_MACRO_10:Macro;
+			public var ACTION_MACRO_11:Macro;
+			public var ACTION_MACRO_12:Macro;
+		 */
 		
 		/**
 		 * 	Initialize
@@ -206,11 +221,6 @@ package ui.states {
 						layer.selectPage(2);
 					}
 					
-					break;
-				case ACTION_1:
-					if (ACTION_MACRO_1) {
-						// trace('ys');
-					}
 					break;
 					
 				default:
