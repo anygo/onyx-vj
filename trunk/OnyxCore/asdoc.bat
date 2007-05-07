@@ -1,1 +1,0 @@
-asdoc.exe -source-path C:\Projects\Personal\Onyx2\ C:\Projects\Personal\OnyxCore\ -doc-sources C:\Projects\Personal\Onyx2\ -main-title "Onyx UI Documentation" -window-title "Onyx UI Documentation" -output c:\projects\Personal\OnyxDocs\

@@ -1,5 +1,0 @@
-28-Nov-06: Revision 1-20: Daniel Hai (dan@danielhai.com)
-
-Added Project
-Added ChangeLog
-Added License Info
