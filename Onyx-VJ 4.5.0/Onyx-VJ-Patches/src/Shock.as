@@ -20,13 +20,13 @@ package
 	
 	public class Shock extends Patch
 	{
-		private var sprite:Sprite;
 		private var cnt:int = 0;
 		private var trail:Bitmap;
 		private var ovals:Array;
 		private var color:uint; 
 		private var mx:Number = 320;
 		private var my:Number = 240;		
+		private var sprite:Sprite;
 		
 		public function Shock():void
 		{
