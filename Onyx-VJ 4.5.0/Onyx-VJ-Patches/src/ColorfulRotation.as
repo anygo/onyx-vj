@@ -39,7 +39,6 @@ package {
 			sprite.addChild(_mySprite);
 		}	
 		override public function render(info:RenderInfo):void  {
-			//Console.output(sprite.numChildren);
 			if ( sprite.numChildren > 500 ) 
 			{
 				sprite.removeChildren( 0, 200 );
