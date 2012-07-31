@@ -76,9 +76,9 @@ package
 		private function getMatrix(rotate:Number):Matrix
 		{
 			var mat:Matrix = new Matrix();
-			mat.translate(-232, -232);
+			mat.translate(-DISPLAY_WIDTH/2, -DISPLAY_HEIGHT/2);
 			mat.rotate(rotate);
-			mat.translate(232, 232);
+			mat.translate(DISPLAY_WIDTH/2, DISPLAY_HEIGHT/2);
 			return mat;
 		}
 		

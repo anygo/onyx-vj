@@ -30,7 +30,7 @@ package {
 		
 		private var circle:Sprite = new Sprite();
 		private var pnt:Point = new Point();
-		private var dot;
+		private var dot:BitmapData;
 		
 		public function PseudoSoundwave() {
 			
