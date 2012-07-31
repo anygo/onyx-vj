@@ -87,8 +87,8 @@ package {
 				particles[i].x += particles[i].tx;
 				particles[i].y += particles[i].ty;
 				
-				//canvas.setPixel32( particles[i].x,particles[i].y,0xFF000000 );  //0xff000000*Math.random());  //0xff000000);
-				canvas.setPixel32( particles[i].x,particles[i].y, 0xff000000 + color );  //0xff000000*Math.random());  //0xff000000);
+				//canvas.setPixel32( particles[i].x,particles[i].y,0xFF000000 );  //0xff000000*Math.random());
+				canvas.setPixel32( particles[i].x,particles[i].y, 0xff000000 + color ); 
 				
 				if(  particles[i].x > DISPLAY_WIDTH || particles[i].x <0 || particles[i].y > DISPLAY_HEIGHT || particles[i].y < 0  ) 
 				{    

@@ -4,16 +4,11 @@ package EmbeddedAssets {
 	
 	[ExcludeSDK]
 	
-	//[Embed(source='../assets/ekkoballsphere50.png')]
-	//[Embed(source='../assets/wh.png')]
-	[Embed(source='../assets/oeil.png')]
+	[Embed(source='../assets/ganesh75.png')]
 	public final class AssetForBallSphere extends BitmapData {
 		
-		/**
-		 * 
-		 */
 		public function AssetForBallSphere() {
-			super(50, 50);
+			super(75, 75);
 		}
 		
 	}
