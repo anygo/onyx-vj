@@ -37,9 +37,13 @@ package {
 		private var mx:Number;
 		private var my:Number;
 		private var sprite:Sprite;
+		private var _color:uint = 0xFFFFFF00;
 		
 		public function PerfectPulse() {
 			
+			parameters.addParameters(
+				new ParameterColor('color', 'draw color', _color)
+			)
 			sprite = new Sprite();
 			cTrs  = new ColorTransform(  1.0, 1.0, 1.0, 0.95  );  // 0.4, 0.0, 0.95, 0.95  );  //1, 1, 1, 0.95  );
 			cTrs2 = new ColorTransform(  1.0, 1.0, 1.0, 0.95  );  //  0.6, 0.0, 0.95, 0.95  );  //1, 1, 1, 0.95  );
@@ -47,7 +51,7 @@ package {
 			rect  = new Rectangle( 0,0,DISPLAY_WIDTH,DISPLAY_HEIGHT );
 			point = new Point( 0,0 );
 			
-			canvas = new BitmapData(DISPLAY_WIDTH, DISPLAY_HEIGHT);
+			canvas = new BitmapData(DISPLAY_WIDTH, DISPLAY_HEIGHT,true, 0xFF000000);
 			sprite.addChild(new Bitmap(canvas));
 			fxbmd = new BitmapData(DISPLAY_WIDTH, DISPLAY_HEIGHT);
 			sprite.addChild(new Bitmap(fxbmd));
@@ -83,7 +87,8 @@ package {
 				particles[i].x += particles[i].tx;
 				particles[i].y += particles[i].ty;
 				
-				canvas.setPixel32( particles[i].x,particles[i].y,0xFF000000 );  //0xff000000*Math.random());  //0xff000000);
+				//canvas.setPixel32( particles[i].x,particles[i].y,0xFF000000 );  //0xff000000*Math.random());  //0xff000000);
+				canvas.setPixel32( particles[i].x,particles[i].y, 0xff000000 + color );  //0xff000000*Math.random());  //0xff000000);
 				
 				if(  particles[i].x > DISPLAY_WIDTH || particles[i].x <0 || particles[i].y > DISPLAY_HEIGHT || particles[i].y < 0  ) 
 				{    
@@ -105,6 +110,14 @@ package {
 			
 			info.render( sprite );		
 		}
+		public function set color(value:uint):void 
+		{
+			_color = value;
+		}
+		public function get color():uint 
+		{
+			return _color;
+		}
 	}
 }
 
@@ -119,7 +132,7 @@ dynamic class Particle
 	public var c:uint;
 	public function Particle()
 	{
-		c = 0xFFFFFF * Math.random()
+		c = 0xFFFFFF * Math.random();
 	}
 	
 	

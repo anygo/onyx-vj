@@ -5,13 +5,14 @@
  */
 
 package {
+    import EmbeddedAssets.AssetForPixelDistortion;
+    
     import flash.display.*;
     import flash.events.*;
     import flash.filters.ShaderFilter;
     import flash.net.*;
     
     import onyx.utils.Base64Decoder;
-    import EmbeddedAssets.AssetForPixelDistortion;
 
 	public class Quaternion extends Sprite {
 
@@ -38,6 +39,7 @@ package {
 			"QAAdCQAgBQCAADIFABA/gAAAHQkAEAUAwAAdAgDzCQAbAA=="]);
 		public var filter:ShaderFilter, shader:Shader;
 		public var bIncreasing:Boolean, fMagnitude:Number;
+		private var delta:Number = 0.05;
 		
 		public function Quaternion():void { 
 
@@ -55,20 +57,19 @@ package {
 		}
 		
 		public function UpdateShader():void {
+			fMagnitude = Math.min(fMagnitude + delta, 5);
+			if (fMagnitude == 5 || fMagnitude == 0) delta = -delta;
 			shader.data.magnitude.value = [fMagnitude];
 			filters = [filter];
 		}
 		
 		public function Move(ev:MouseEvent):void {
-			shader.data.center.value = [300, 200];
-			fMagnitude = Math.min(fMagnitude + 0.05, 5);
+			shader.data.center.value = [ev.localX, ev.localY];
 			UpdateShader();
 		}
 
 		public function Down(ev:MouseEvent):void {
-			//fMagnitude = 0;
-			shader.data.center.value = [300, 200];
-			fMagnitude = Math.min(fMagnitude + 0.05, 5);
+			shader.data.center.value = [ev.localX, ev.localY];
 			UpdateShader();
 		}
 	}

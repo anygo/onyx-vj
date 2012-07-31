@@ -53,9 +53,7 @@ package {
 		
 		function QuaternionLights() {
 			
-			bd = new BitmapData(DISPLAY_WIDTH,DISPLAY_HEIGHT, true, 0xff8080ff);
-			var bitmap :Bitmap = new Bitmap( bd );
-			addChild( bitmap );
+			bd = new BitmapData(DISPLAY_WIDTH,DISPLAY_HEIGHT, true, 0xff000000);
 
 			var dec:Base64Decoder = new Base64Decoder;
 			dec.decode(asShader.join(""));

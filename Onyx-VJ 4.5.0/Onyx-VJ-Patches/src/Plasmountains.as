@@ -28,22 +28,16 @@ package {
 		private var texture:BitmapData = new BitmapData(SIZE, SIZE);
 		private var projection:PerspectiveProjection = new PerspectiveProjection();
 		private var viewport:Shape = new Shape();
-		
-		//private var stats:Sprite = new Sprite;
+
 		private var sprite:Sprite;
 		
 		public function Plasmountains() {
 			sprite = new Sprite();
-			//addChild(sprite);
 			
 			viewport.x = viewport.y = DISPLAY_HEIGHT / 2;
 			sprite.addChild(viewport);
-			projection.fieldOfView = 20;
-			
-			/*stats.addChild(new Bitmap(heightMap));
-			stats.addChild(new Bitmap(tmpBmd1)).y=SIZE*1.1;
-			stats.addChild(new Bitmap(texture)).y=SIZE*2.2;
-			sprite.addChild(stats).visible = true;*/
+			projection.fieldOfView = 13;
+
 		}
 		
 		override public function render(info:RenderInfo):void 
