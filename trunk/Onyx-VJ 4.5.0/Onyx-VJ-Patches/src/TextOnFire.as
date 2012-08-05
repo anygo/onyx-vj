@@ -41,7 +41,7 @@ package {
 		private var _zeroArray:Array;
 		private var tf:TextField = new TextField();
 		private var format:TextFormat = new TextFormat('Verdana', 80, clr, true);
-		private var _text:String = 'batchass';
+		private var _text:String = 'ekkosystem';
 		
 		public function TextOnFire() {
 			Console.output('TextOnFire adapted by Bruce LANE (http://www.batchass.fr)');

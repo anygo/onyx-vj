@@ -59,7 +59,7 @@ package
 			Console.output('Nutsu (http://wonderfl.net/user/nutsu)');
 			Console.output('Adapted by Bruce LANE (http://www.batchass.fr)');
 			//BitmapDataを作成して表示リストに追加
-			bmpdata = new BitmapData( DISPLAY_WIDTH, DISPLAY_HEIGHT, false, 0 );
+			bmpdata = new BitmapData( DISPLAY_WIDTH, DISPLAY_HEIGHT, true, 0 );
 			addChild( new Bitmap(bmpdata) );
 			//グラフィックの生成
 			sprite = newFig( 0, 0, 40, 0xFFFFFF );

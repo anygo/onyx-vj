@@ -13,29 +13,41 @@ package
 	import onyx.parameter.*;
 	import onyx.plugin.*;
 	
-	
 	public class Morph3D extends Patch
 	{
 		private var PV:PVMorph;
 		private var sprite:Sprite;
+		private var _depth:int = 24;
 		
 		public function Morph3D() 
 		{
 			Console.output('Morph3D v 0.0.8');
 			Console.output('Adapted by Bruce LANE (http://www.batchass.fr)');
+			parameters.addParameters(
+				new ParameterInteger( 'depth', 'depth:', 1, 300, _depth )
+			);
 			PV = new PVMorph();
 			
 			sprite = new Sprite();
 			//addChild(sprite);
 			sprite.addChild(PV);
 		}	
-		
-
-		
 		override public function render(info:RenderInfo):void 
 		{			
 			info.render( sprite );		
 		}		
+
+		public function get depth():int
+		{
+			return _depth;
+		}
+
+		public function set depth(value:int):void
+		{
+			_depth = value;
+			PV.depth = _depth;
+		}
+
 	}
 }
 
@@ -77,31 +89,27 @@ import org.papervision3d.objects.primitives.Plane;
 import org.papervision3d.objects.primitives.Sphere;
 import org.papervision3d.view.BasicView;
 
-
 class PVMorph extends BasicView
 {
 	private static const FOCUS_POSITION:int = 1000;
 	private static const MAX_NUM:int = 150;
-	private static const SNOW_MAX_DEPTH:int = 24;
+	//private static const SNOW_MAX_DEPTH:int = 24;
 	private var _blurs:Vector.<BitmapData>;
 	private var _particles:Vector.<Plane>;
 	private var _pitch:Number = 0;
 	private var _radius:Number = 1000;
 	private var _targetVertexs:Vector.<Vertex3D>;
 	private var _yaw:Number = 0;
-
-
+	private var _depth:int = 24;
+	private var sp:Sprite = new Sprite();
+	private var bmd:BitmapData = new AssetForMorph3D();
 	
 	public function PVMorph() 
 	{
 		// bmp
-		var bmd:BitmapData = new AssetForMorph3D();
 		// create blur field material
-		_blurs = new Vector.<BitmapData>(SNOW_MAX_DEPTH, true);
-		for (var i:int = 0; i < SNOW_MAX_DEPTH; i++) {
-			// create circle graphics
-			var sp:Sprite = new Sprite();
-			//sp.addChild(new BallImage());
+		_blurs = new Vector.<BitmapData>(depth, true);
+		for (var i:int = 0; i < depth; i++) {
 			sp.addChild(new Bitmap(bmd));
 			// ã¼ã‹ã—ã®é©ç”¨å€¤
 			var blurFilter:BlurFilter = new BlurFilter(i, i, 4);
@@ -188,17 +196,15 @@ class PVMorph extends BasicView
 		masterTw.play();
 		// start render
 		startRendering();
-
 	}	
 	
 	override protected function onRenderTick(event:Event = null):void {
 		// camera
-		
-		_pitch += (mouseY / DISPLAY_WIDTH - 0.5) * 1;
+		/*_pitch += (mouseY / DISPLAY_WIDTH - 0.5) * 1;
 		_yaw += (mouseX / DISPLAY_HEIGHT - 0.5) * 4;
-		//camera.x = Math.sin(_yaw * Number3D.toRADIANS) * _radius;
+		camera.x = Math.sin(_yaw * Number3D.toRADIANS) * _radius;
 		camera.z = Math.cos(_yaw * Number3D.toRADIANS) * _radius;
-		camera.y = _pitch * _radius * 0.01;
+		camera.y = _pitch * _radius * 0.01;*/
 		// particle
 		for (var i:int = 0; i < MAX_NUM; i++) {
 			var p:Plane = _particles[ i ];
@@ -211,7 +217,7 @@ class PVMorph extends BasicView
 			var deg:Number = (f ^ (f >> 31)) - (f >> 31); // Math.abs(f)ã¨åŒç­‰
 			// calc blur val
 			var blurVal:int = deg * .02 << 1; //ã‚³ã‚³ã®èª¿æ•´ãŒçµ¶å¦™
-			blurVal = blurVal > SNOW_MAX_DEPTH - 1 ? SNOW_MAX_DEPTH - 1 : blurVal;
+			blurVal = blurVal > depth - 1 ? depth - 1 : blurVal;
 			p.material.bitmap = _blurs[ blurVal ];
 			// lookat camera
 			p.lookAt(camera);
@@ -219,4 +225,30 @@ class PVMorph extends BasicView
 		}
 		super.onRenderTick(event);
 	}
+
+	public function get depth():int
+	{
+		return _depth;
+	}
+
+	public function set depth(value:int):void
+	{
+		_depth = value;
+		_blurs = null;
+		_blurs = new Vector.<BitmapData>(depth, true);
+		sp.removeChildren();
+		for (var i:int = 0; i < depth; i++) {
+			sp.addChild(new Bitmap(bmd));
+			// ã¼ã‹ã—ã®é©ç”¨å€¤
+			var blurFilter:BlurFilter = new BlurFilter(i, i, 4);
+			// add Fileter
+			sp.filters = [ blurFilter ];
+			// copy bitmapdata
+			var bitmapData:BitmapData = new BitmapData(100, 100, true, 0x00000000);
+			bitmapData.draw(sp);
+			// save
+			_blurs[ i ] = bitmapData;
+		}
+	}
+
 }

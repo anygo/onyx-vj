@@ -72,7 +72,7 @@ class mySprite extends Sprite {
 	public function mySprite(color:uint) {
 		
 		this.graphics.beginFill(int(color),1.5);
-		this.graphics.drawRect(0,0,3,45);
+		this.graphics.drawRect(0,0,30,45);
 		this.graphics.endFill();
 		this.addEventListener(Event.ENTER_FRAME,xEnter2,false,0,true);
 		
